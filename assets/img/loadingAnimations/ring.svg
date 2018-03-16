@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid" viewBox="0 0 100 100">
+  <g transform="rotate(144 50 50)">
+    <path fill="none" stroke="#9acd32" stroke-width="10" d="M80 50a30 30 0 0 1-15 25.98076211"/>
+    <path fill="none" stroke="#ea8e4a" stroke-width="10" d="M65 75.98076211a30 30 0 0 1-30 0"/>
+    <path fill="none" stroke="#aebd38" stroke-width="10" d="M35 75.98076211A30 30 0 0 1 20 50"/>
+    <path fill="none" stroke="coral" stroke-width="10" d="M20 50a30 30 0 0 1 15-25.98076211"/>
+    <path fill="none" stroke="#c2ad3e" stroke-width="10" d="M35 24.01923789a30 30 0 0 1 30 0"/>
+    <path fill="none" stroke="#d69e44" stroke-width="10" d="M65 24.01923789A30 30 0 0 1 80 50"/>
+    <animateTransform attributeName="transform" dur="2" repeatCount="indefinite" type="rotate" values="0 50 50;360 50 50"/>
+  </g>
+</svg>

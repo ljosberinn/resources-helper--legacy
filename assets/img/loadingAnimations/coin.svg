@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid" viewBox="0 0 100 100">
+  <defs>
+    <filter id="a" width="100" height="100" x="0" y="0" filterUnits="userSpaceOnUse">
+      <feColorMatrix values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 -1 -1 -1 1 0"/>
+    </filter>
+    <mask id="b" width="100" height="100" x="0" y="0" maskUnits="userSpaceOnUse">
+      <image width="100" height="100" filter="url(#a)" xlink:href="data:image/svg+xml;base64, PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBmaWxsPSIjMDAwIiBkPSJNNDkuOTk5LDEyLjQ3OWMtMjAuNjg5LDAtMzcuNTIsMTYuODMxLTM3LjUyLDM3LjUyYzAsMjAuNjg5LDE2LjgzMSwzNy41MjIsMzcuNTIsMzcuNTIyIHMzNy41MjItMTYuODMzLDM3LjUyMi0zNy41MjJDODcuNTIxLDI5LjMxLDcwLjY4OCwxMi40NzksNDkuOTk5LDEyLjQ3OXogTTUyLjg4OCw2OS42MzJ2My40MDFjMCwxLjczNi0xLjQwNywzLjE0NC0zLjE0NCwzLjE0NCBoLTAuMDAyYy0xLjczNiwwLTMuMTQ0LTEuNDA3LTMuMTQ0LTMuMTQ0di0yLjk1MmMtMi43NjMtMC4xMjMtNS40NzQtMC42NDUtNy43MDUtMS4zNzdjLTEuODUyLTAuNjA3LTIuOS0yLjU1Ny0yLjQxNi00LjQ0NSBsMC4wNzctMC4zMDFjMC41MzUtMi4wODUsMi43MzctMy4yMDYsNC43NzQtMi41MTJjMi4wNzMsMC43MDYsNC40MzcsMS4xOTIsNi45MzksMS4xOTJjMy42NTcsMCw2LjE1OS0xLjQxLDYuMTU5LTMuOTc3IGMwLTIuNDM3LTIuMDUyLTMuOTc3LTYuODAxLTUuNTgyYy02Ljg2NS0yLjMxLTExLjU0OS01LjUxOC0xMS41NDktMTEuNzQxYzAtNS42NDcsMy45NzktMTAuMDczLDEwLjg0NC0xMS40MjF2LTIuOTUgYzAtMS43MzYsMS40MDctMy4xNDQsMy4xNDQtMy4xNDRzMy4xNDQsMS40MDcsMy4xNDQsMy4xNDR2Mi41MDFjMi4yOTYsMC4xMDMsNC4xODksMC40MDgsNS43NzgsMC44MjUgYzEuOTkzLDAuNTI0LDMuMjA4LDIuNTI3LDIuNjk2LDQuNTIzYy0wLjUxNiwyLjAxMi0yLjU5MiwzLjI0NS00LjU4MiwyLjY1MmMtMS41MTctMC40NTItMy4zOTctMC44MTUtNS42ODgtMC44MTUgYy00LjE3MSwwLTUuNTE4LDEuNzk2LTUuNTE4LDMuNTk0YzAsMi4xMTcsMi4yNDUsMy40NjQsNy42OTksNS41MTZjNy42MzUsMi42OTYsMTAuNzE2LDYuMjI1LDEwLjcxNiwxMS45OTggQzY0LjMwOCw2My40NzMsNjAuMjY1LDY4LjM0OSw1Mi44ODgsNjkuNjMyeiIvPjwvc3ZnPgo=" style="width:100px!important;height:100px!important"/>
+    </mask>
+  </defs>
+  <g mask="url(#b)">
+    <rect width="17.66666667" height="100" fill="#342f2d">
+      <animate attributeName="fill" begin="-2s" dur="2s" keyTimes="0;0.25;0.5;0.75;1" repeatCount="indefinite" values="#ffc107;#fd7e14;#342f2d;#786d68;#ffc107"/>
+    </rect>
+    <rect width="17.66666667" height="100" x="16.66666667" fill="#786d68">
+      <animate attributeName="fill" begin="-1.6666666666666667s" dur="2s" keyTimes="0;0.25;0.5;0.75;1" repeatCount="indefinite" values="#ffc107;#fd7e14;#342f2d;#786d68;#ffc107"/>
+    </rect>
+    <rect width="17.66666667" height="100" x="33.33333333" fill="#ffc107">
+      <animate attributeName="fill" begin="-1.3333333333333333s" dur="2s" keyTimes="0;0.25;0.5;0.75;1" repeatCount="indefinite" values="#ffc107;#fd7e14;#342f2d;#786d68;#ffc107"/>
+    </rect>
+    <rect width="17.66666667" height="100" x="50" fill="#fd7e14">
+      <animate attributeName="fill" begin="-1s" dur="2s" keyTimes="0;0.25;0.5;0.75;1" repeatCount="indefinite" values="#ffc107;#fd7e14;#342f2d;#786d68;#ffc107"/>
+    </rect>
+    <rect width="17.66666667" height="100" x="66.66666667" fill="#342f2d">
+      <animate attributeName="fill" begin="-0.6666666666666666s" dur="2s" keyTimes="0;0.25;0.5;0.75;1" repeatCount="indefinite" values="#ffc107;#fd7e14;#342f2d;#786d68;#ffc107"/>
+    </rect>
+    <rect width="17.66666667" height="100" x="83.33333333" fill="#786d68">
+      <animate attributeName="fill" begin="-0.3333333333333333s" dur="2s" keyTimes="0;0.25;0.5;0.75;1" repeatCount="indefinite" values="#ffc107;#fd7e14;#342f2d;#786d68;#ffc107"/>
+    </rect>
+  </g>
+</svg>

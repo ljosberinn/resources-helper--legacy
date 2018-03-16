@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid" viewBox="0 0 100 100">
+  <g transform="rotate(180 50 50)">
+    <rect width="10" height="66.223" x="15" y="15" fill="#ff7f50">
+      <animate attributeName="height" begin="-0.4s" calcMode="spline" dur="2" keySplines="0.5 0 0.5 1;0.5 0 0.5 1;0.5 0 0.5 1" keyTimes="0;0.33;0.66;1" repeatCount="indefinite" values="50;70;30;50"/>
+    </rect>
+    <rect width="10" height="50.1376" x="35" y="15" fill="#dd9946">
+      <animate attributeName="height" begin="-0.2s" calcMode="spline" dur="2" keySplines="0.5 0 0.5 1;0.5 0 0.5 1;0.5 0 0.5 1" keyTimes="0;0.33;0.66;1" repeatCount="indefinite" values="50;70;30;50"/>
+    </rect>
+    <rect width="10" height="64.5022" x="55" y="15" fill="#bbb33c">
+      <animate attributeName="height" begin="-0.6s" calcMode="spline" dur="2" keySplines="0.5 0 0.5 1;0.5 0 0.5 1;0.5 0 0.5 1" keyTimes="0;0.33;0.66;1" repeatCount="indefinite" values="50;70;30;50"/>
+    </rect>
+    <rect width="10" height="39.1975" x="75" y="15" fill="#9acd32">
+      <animate attributeName="height" begin="0s" calcMode="spline" dur="2" keySplines="0.5 0 0.5 1;0.5 0 0.5 1;0.5 0 0.5 1" keyTimes="0;0.33;0.66;1" repeatCount="indefinite" values="50;70;30;50"/>
+    </rect>
+  </g>
+</svg>
