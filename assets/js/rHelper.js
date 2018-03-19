@@ -23,6 +23,14 @@ var rHelper = {
 
 				rHelper.fn.INSRT_flowRate(materialId, "material");
 
+				rHelper.fn.INSRT_warehouseFillAmount(materialId, "material");
+				rHelper.fn.INSRT_warehouseLevel(materialId, "material");
+				rHelper.fn.INSRT_warehouseFillStatus(materialId, "material");
+				rHelper.fn.INSRT_warehouseCapacity(materialId, "material");
+				rHelper.fn.INSRT_warehouseWorth(materialId, "material");
+				rHelper.fn.INSRT_warehouseRemainingTimeToFull(materialId, "material");
+				rHelper.fn.EVNT_warehouseInput(materialId, "material");
+
 			});
 
 			rHelper.fn.INSRT_totalMineWorth(rHelper.fn.CALC_totalMineWorth());
@@ -53,6 +61,15 @@ var rHelper = {
 				rHelper.fn.INSRT_diamondProfit(factoryId);
 
 				rHelper.fn.INSRT_flowRate(factoryId, "product");
+
+				rHelper.fn.INSRT_warehouseFillAmount(index, "products");
+				rHelper.fn.INSRT_warehouseLevel(index, "products");
+				rHelper.fn.INSRT_warehouseFillStatus(index, "products");
+				rHelper.fn.INSRT_warehouseCapacity(index, "products");
+				rHelper.fn.INSRT_warehouseWorth(index, "products");
+				rHelper.fn.INSRT_warehouseRemainingTimeToFull(factoryId, "products");
+				rHelper.fn.EVNT_warehouseInput(factoryId, "products");
+
 			});
 
 			rHelper.fn.INSRT_totalFactoryUpgrades();
@@ -62,6 +79,25 @@ var rHelper = {
 			rHelper.fn.INSRT_diamondTotalProfit();
 
 			rHelper.fn.INSRT_flowDistributionGlobal();
+
+			$.each(rHelper.data.loot, function (index, lootId) {
+				rHelper.fn.INSRT_warehouseFillAmount(index, "loot");
+				rHelper.fn.INSRT_warehouseLevel(index, "loot");
+				rHelper.fn.INSRT_warehouseFillStatus(index, "loot");
+				rHelper.fn.INSRT_warehouseCapacity(index, "loot");
+				rHelper.fn.INSRT_warehouseWorth(index, "loot");
+			});
+
+			$.each(rHelper.data.units, function (index, unitId) {
+				rHelper.fn.INSRT_warehouseFillAmount(index, "units");
+				rHelper.fn.INSRT_warehouseLevel(index, "units");
+				rHelper.fn.INSRT_warehouseFillStatus(index, "units");
+				rHelper.fn.INSRT_warehouseCapacity(index, "units");
+				rHelper.fn.INSRT_warehouseWorth(index, "units");
+			});
+
+			rHelper.fn.INSRT_warehouseTotalLevel();
+			rHelper.fn.INSRT_warehouseTotalWorth();
 
 			rHelper.init.enableTippy();
 		},
@@ -399,8 +435,15 @@ var rHelper = {
 
 
 		SET_globalObject(selector, index, key, value) {
-			rHelper.data[selector][index][key] = value;
-			console.log(selector, index, key, value);
+
+			if ($.isArray(key)) {
+				rHelper.data[selector][index][key[0]][key[1]] = value;
+				console.log(selector, index, key[0], key[1], value);
+			} else {
+				rHelper.data[selector][index][key] = value;
+				console.log(selector, index, key, value);
+			}
+
 		},
 		SET_save() {
 			localStorage.setItem("rGame", JSON.stringify(rHelper.data));
@@ -494,7 +537,56 @@ var rHelper = {
 				rHelper.fn.INSRT_totalMineCount(rHelper.fn.CALC_totalMineCount());
 			});
 		},
+		EVNT_warehouseInput(id, type) {
+			$("#warehouse-" + type + "-calc-2-" + id).on("input", function () {
+				var value = parseInt(this.value);
+				if (isNaN(value)) {
+					value = 0;
+				}
 
+				rHelper.fn.INSRT_warehouseUpgradeCost(id, type, value);
+				rHelper.fn.INSRT_warehouseUpgradeAmortisation(id, type, value);
+			});
+
+			$("#warehouse-" + type + "-calc-1-" + id).on("change", function () {
+				$("#warehouse-" + type + "-upgrade-cost-" + id).empty();
+				$("#warehouse-" + type + "-calc-2-" + id).val(0);
+			});
+
+			$("#warehouse-" + type + "-stock-current-" + id).on("input", function () {
+				var value = parseInt(this.value);
+				if (isNaN(value)) {
+					value = 0;
+				}
+
+				var newFillStatus = value / rHelper.data[type][id].warehouse.contingent;
+
+				rHelper.fn.SET_globalObject(type, id, ["warehouse", "fillAmount"], value);
+				rHelper.fn.SET_globalObject(type, id, ["warehouse", "fillStatus"], newFillStatus);
+
+				rHelper.fn.INSRT_warehouseWorth(id, type);
+				rHelper.fn.INSRT_warehouseFillStatus(id, type);
+				rHelper.fn.INSRT_warehouseRemainingTimeToFull(id, type);
+				rHelper.fn.INSRT_warehouseTotalWorth();
+			});
+
+			$("#warehouse-" + type + "-level-" + id).on("input", function () {
+				var value = parseInt(this.value);
+				if (isNaN(value)) {
+					value = 0;
+				}
+
+				var el = rHelper.data[type][id].warehouse;
+
+				rHelper.fn.SET_globalObject(type, id, ["warehouse", "level"], value);
+				rHelper.fn.SET_globalObject(type, id, ["warehouse", "contingent"], rHelper.fn.CALC_warehouseContingent(value));
+				rHelper.fn.SET_globalObject(type, id, ["warehouse", "fillStatus"], el.fillAmount / el.contingent);
+
+				rHelper.fn.INSRT_warehouseFillStatus(id, type);
+				rHelper.fn.INSRT_warehouseRemainingTimeToFull(id, type);
+				rHelper.fn.INSRT_warehouseTotalLevel();
+			});
+		},
 		INSRT_totalMineWorth(totalMineWorth) {
 			$("#material-total-worth").text(totalMineWorth.toLocaleString("en-US"));
 		},
@@ -824,16 +916,16 @@ var rHelper = {
 				case 0:
 				case 2:
 					$(column + arrayMin).addClass("text-success");
-          if(arrayMin != arrayMax) {
-            $(column + arrayMax).addClass("text-danger");
-          }
+					if (arrayMin != arrayMax) {
+						$(column + arrayMax).addClass("text-danger");
+					}
 					break;
 				case 1:
 				case 3:
 					$(column + arrayMax).addClass("text-success");
-          if(arrayMin != arrayMax) {
-					  $(column + arrayMin).addClass("text-danger");
-          }
+					if (arrayMin != arrayMax) {
+						$(column + arrayMin).addClass("text-danger");
+					}
 					break;
 				}
 			});
@@ -958,7 +1050,7 @@ var rHelper = {
 			var materialTotal = 0;
 			var productsTotal = 0;
 			var materialColor = "yellowgreen";
-      var productColor = "yellowgreen";
+			var productColor = "yellowgreen";
 
 			$.each(rHelper.data.material, function (materialId) {
 				materialTotal += rHelper.fn.INSRT_flowDistributionSingle(materialId, "material");
@@ -982,7 +1074,7 @@ var rHelper = {
 
 			$("#flow-material-total").text(materialTotal.toLocaleString("en-US")).css("color", materialColor);
 			$("#flow-products-total").text(productsTotal.toLocaleString("en-US")).css("color", productColor);
-      $("#effective-hourly-income").text((materialTotal + productsTotal).toLocaleString("en-US"));
+			$("#effective-hourly-income").text((materialTotal + productsTotal).toLocaleString("en-US"));
 		},
 		INSRT_flowSurplus(id, type, remainingAmount) {
 			var surplusTarget = $("#flow-" + type + "-surplus-" + id);
@@ -1040,6 +1132,232 @@ var rHelper = {
 
 			return worth;
 		},
+
+		INSRT_warehouseFillAmount(id, type) {
+			$("#warehouse-" + type + "-stock-current-" + id).val(rHelper.data[type][id].warehouse.fillAmount);
+		},
+		INSRT_warehouseLevel(id, type) {
+			var warehouseLevel = rHelper.data[type][id].warehouse.level;
+
+			$("#warehouse-" + type + "-level-" + id).val(warehouseLevel);
+			$("#warehouse-" + type + "-stock-current-" + id).attr("max", rHelper.fn.CALC_warehouseContingent(warehouseLevel));
+		},
+		INSRT_warehouseFillStatus(id, type) {
+			var target = $("#warehouse-" + type + "-fill-percent-" + id);
+			var percent = (rHelper.data[type][id].warehouse.fillStatus * 100).toFixed(2);
+
+			if (percent < 75) {
+				color = "rgb(70, 252, 6)";
+			} else if (percent >= 75 && percent < 90) {
+				color = "rgb(255, 252, 38)";
+			} else if (percent >= 90 && percent < 95) {
+				color = "rgb(255, 155, 38)";
+			} else if (percent >= 95) {
+				color = "rgb(255, 38, 41)";
+			}
+
+			target.text(percent);
+			target.css("color", color);
+		},
+		INSRT_warehouseCapacity(id, type) {
+			$("#warehouse-" + type + "-stock-cap-" + id).text(rHelper.data[type][id].warehouse.contingent.toLocaleString("en-US"));
+		},
+		INSRT_warehouseWorth(id, type) {
+
+			var price = rHelper.fn.CALC_warehouseWorth(id, type);
+
+			var worth = price * rHelper.data[type][id].warehouse.fillAmount;
+
+			$("#warehouse-" + type + "-worth-" + id).text(worth.toLocaleString("en-US"));
+		},
+		INSRT_warehouseTotalWorth() {
+			var warehouseTotalWorth = rHelper.fn.CALC_warehouseTotalWorth();
+
+			$("#warehouse-total-worth").text(warehouseTotalWorth.toLocaleString("en-US"));
+		},
+		INSRT_warehouseTotalLevel() {
+			var warehouseTotalLevel = rHelper.fn.CALC_warehouseTotalLevel();
+
+			$("#warehouse-total-level").text(warehouseTotalLevel.toLocaleString("en-US"));
+		},
+		INSRT_warehouseRemainingTimeToFull(id, type) {
+			var remainingTime = rHelper.fn.CALC_warehouseRemainingTimeToFull(id, type);
+
+			$("#warehouse-" + type + "-remaining-" + id).text(remainingTime);
+		},
+
+		INSRT_warehouseUpgradeAmortisation(id, type, value) {
+			var target = $("#warehouse-" + type + "-upgrade-amortisation-" + id);
+			var upgradeCost = rHelper.fn.CALC_warehouseUpgradeCostOnInput(id, type, value);
+			var amortisation = rHelper.fn.CALC_warehouseUpgradeAmortisation(id, type, upgradeCost);
+
+			if (typeof (amortisation) == "number") {
+
+				if (amortisation > 24) {
+					amortisation = "> " + (amortisation / 24).toFixed(2) + " days";
+				} else {
+					amortisation = "> " + amortisation.toFixed(2) + " hours";
+				}
+			}
+
+			target.text(amortisation);
+		},
+		CALC_warehouseUpgradeAmortisation(id, type, upgradeCost) {
+			var el = rHelper.data[type][id];
+			var priceId = 0;
+
+			switch (type) {
+			case "material":
+				priceId = id;
+				break;
+			case "products":
+				priceId = id + 14;
+				break;
+			case "loot":
+				priceId = id + 36;
+				break;
+			case "units":
+				priceId = id + 51;
+				break;
+			}
+
+			var price = rHelper.fn.CALC_returnPriceViaId(priceId);
+
+			if (type == "material") {
+				divisor = el.perHour;
+			} else if (type == "products")  {
+				divisor = el.scaling * el.factoryLevel * rHelper.fn.CALC_factoryMinWorkload(id);
+			}
+
+			var amortisation = upgradeCost / (divisor * price);
+
+			if (type == "products" && el.turnover <= 0) {
+				amortisation = "∞";
+			}
+
+			return amortisation;
+		},
+		INSRT_warehouseUpgradeCost(id, type, value) {
+			var target = $("#warehouse-" + type + "-upgrade-cost-" + id);
+			var upgradeCost = rHelper.fn.CALC_warehouseUpgradeCostOnInput(id, type, value);
+
+			target.text(upgradeCost.toLocaleString("en-US"));
+		},
+
+		CALC_warehouseUpgradeCost(targetLevel) {
+			return Math.pow(targetLevel - 1, 2) * 1250000;
+		},
+		CALC_warehouseCostFromTo(start, end) {
+			var warehouseCost = 0;
+
+			for (var i = end; i > start; i -= 1) {
+				warehouseCost += rHelper.fn.CALC_warehouseUpgradeCost(i);
+			}
+
+			return warehouseCost;
+		},
+		CALC_warehouseContingent(level) {
+			return Math.pow(level, 2) * 5000;
+		},
+		CALC_warehouseUpgradeCostContigentBased(startLevel, endContingent) {
+			var warehouseCost = 0;
+			var nextBiggerTargetLevel = Math.ceil(Math.sqrt(endContingent / 5000));
+
+			warehouseCost += rHelper.fn.CALC_warehouseCostFromTo(startLevel, nextBiggerTargetLevel);
+
+			return warehouseCost;
+		},
+		CALC_warehouseUpgradeCostOnInput(id, type, value) {
+			var mode = $("#warehouse-" + type + "-calc-1-" + id).val();
+			var currentWarehouseLevel = rHelper.data[type][id].warehouse.level;
+			var upgradeCost = 0;
+
+			switch (mode) {
+			case "level":
+				upgradeCost = rHelper.fn.CALC_warehouseCostFromTo(currentWarehouseLevel, value);
+				break;
+			case "contingent":
+				upgradeCost = rHelper.fn.CALC_warehouseUpgradeCostContigentBased(currentWarehouseLevel, value);
+				break;
+			}
+
+			return upgradeCost;
+		},
+		CALC_warehouseWorth(id, type) {
+			var price = 0;
+			var priceId = 0;
+
+			switch (type) {
+			case "material":
+				priceId = id;
+				break;
+			case "products":
+				priceId = id + 14;
+				break;
+			case "loot":
+				priceId = id + 36;
+				break;
+			case "units":
+				priceId = id + 51;
+				break;
+			}
+
+			price = rHelper.fn.CALC_returnPriceViaId(priceId);
+
+			return price;
+		},
+		CALC_warehouseRemainingTimeToFull(id, type) {
+			var el = rHelper.data[type][id];
+			var remainingCapacity = el.warehouse.contingent - el.warehouse.fillAmount;
+			var remainingTime = 0;
+			var divisor = 1;
+
+			if (type == "material") {
+				divisor = el.perHour;
+			} else if (type == "products")  {
+				divisor = el.scaling * el.factoryLevel * rHelper.fn.CALC_factoryMinWorkload(id);
+			}
+
+			remainingTime = remainingCapacity / divisor;
+
+			if (remainingTime > 24) {
+				remainingTime = "> " + (remainingTime / 24).toFixed(2) + " days";
+			} else {
+				remainingTime = "> " + remainingTime.toFixed(2) + " hours";
+			}
+
+			if (type == "products" && el.turnover <= 0) {
+				remainingTime = "∞";
+			}
+
+			return remainingTime;
+		},
+		CALC_warehouseTotalLevel() {
+			var total = 0;
+
+			var arr = ["material", "products", "loot", "units"];
+
+			$.each(arr, function (index, pointer) {
+				$.each(rHelper.data[pointer], function (index, el) {
+					total += el.warehouse.level;
+				});
+			});
+
+			return total;
+		},
+		CALC_warehouseTotalWorth() {
+			var total = 0;
+
+			var arr = ["material", "products", "loot", "units"];
+
+			$.each(arr, function (index, pointer) {
+				$.each(rHelper.data[pointer], function (index, el) {
+					total += rHelper.fn.CALC_warehouseWorth(index, pointer) * el.warehouse.fillAmount;
+				});
+			});
+
+			return total;
+		},
 		CALC_flowDistribution(id, type) {
 
 			function insertDistributionReturnRequiredAmount(type, dependantFactory, id, i) {
@@ -1082,7 +1400,18 @@ var rHelper = {
 				string += requiredAmount.toLocaleString("en-US") + " " + arrow + " ";
 				string += '<span class="resources-product-' + (dependantIconIndex + 1) + '"></span> ';
 
-				$("#flow-" + type + "-distribution-" + id + "-" + i).html(string);
+				var name1 = "";
+				var name2 = dependantObj.name;
+				switch (type) {
+				case "material":
+					name1 = rHelper.data.material[id].name;
+					break;
+				case "product":
+					name1 = rHelper.data.products[id].name;
+					break;
+				}
+
+				$("#flow-" + type + "-distribution-" + id + "-" + i).html(string).attr("data-th", name1 + " to " + name2);
 
 				return requiredAmount;
 			}
@@ -1500,7 +1829,7 @@ var rHelper = {
 						className = "material";
 					} else if (upgradeMaterial >= 14 && upgradeMaterial <= 35) {
 						upgradeMaterial -= 14;
-						className = "products";
+						className = "product";
 					} else if (upgradeMaterial >= 36 && upgradeMaterial <= 51) {
 						upgradeMaterial -= 36;
 						className = "loot";
