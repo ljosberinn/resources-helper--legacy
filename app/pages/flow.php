@@ -5,15 +5,15 @@
 	<h6><span></span> Material Flow</h6>
 	<hr class="mb-3">
 
-	<h7><span></span> Material</h7>
+	<p>Material</p>
 
 	<table class="table table-responsive table-break-medium table-striped mb-3">
 		<thead>
 			<tr class="text-small">
 				<th>Rate/hour</th>
-				<th class="text-center" colspan="4">Distribution</th>
-				<th class="text-md-right text-sm-left">Surplus/hour</th>
-				<th class="text-md-right text-sm-left">Worth</th>
+				<th class="text-center " colspan="4">Distribution</th>
+				<th class="text-md-right text-sm-left ">Surplus/hour</th>
+				<th class="text-md-right text-sm-left ">Worth</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -23,7 +23,7 @@
 		for ($i = 0; $i <= 13; $i += 1) {
 			echo '
 			<tr>
-				<td data-th="Rate/hour"><span class="resources-material-' .($i + 1). '"></span> <span id="flow-material-rate-' .$i. '"></span></td>
+				<td data-th="Rate/hour"><span class="resources-material-' .$i. '"></span> <span id="flow-material-rate-' .$i. '"></span></td>
 				<td id="flow-material-distribution-' .$i. '-0"></td>
 				<td id="flow-material-distribution-' .$i. '-1"></td>
 				<td id="flow-material-distribution-' .$i. '-2"></td>
@@ -37,19 +37,19 @@
 		</tbody>
 		<tfoot>
 			<tr>
-				<td class="text-md-right text-sm-left" colspan="7" id="flow-material-total"></td>
+				<td class="text-md-right text-sm-left" colspan="7" data-th="Effective hourly mine income" id="flow-material-total"></td>
 			</tr>
 		</tfoot>
 	</table>
 
-	<h7><span></span> Products</h7>
+	<p>Products</p>
 
 	<table class="table table-responsive table-break-medium table-striped mb-3">
 		<thead>
 			<tr class="text-small">
 				<th>Effective rate/hour</th>
-				<th class="text-center" colspan="3">Distribution</th>
-				<th class="text-md-right text-sm-left">Surplus/hour</th>
+				<th class="text-center " colspan="3">Distribution</th>
+				<th class="text-md-right text-sm-left ">Surplus/hour</th>
 				<th class="text-md-right text-sm-left">Worth</th>
 			</tr>
 		</thead>
@@ -60,7 +60,7 @@
 		for ($i = 0; $i <= 21; $i += 1) {
 			echo '
 			<tr>
-				<td data-th="Effective rate/hour"><span class="resources-product-' .($i + 1). '"></span> <span id="flow-product-rate-' .$i. '"></span></td>
+				<td data-th="Effective rate/hour"><span class="resources-product-' .$i. '"></span> <span id="flow-product-rate-' .$i. '"></span></td>
 				<td id="flow-product-distribution-' .$i. '-0"></td>
 				<td id="flow-product-distribution-' .$i. '-1"></td>
 				<td id="flow-product-distribution-' .$i. '-2"></td>
@@ -73,7 +73,7 @@
 		</tbody>
 		<tfoot>
 			<tr>
-				<td class="text-md-right text-sm-left" colspan="6" id="flow-products-total"></td>
+				<td class="text-md-right text-sm-left" colspan="6" data-th="Effective hourly factories income" id="flow-products-total"></td>
 			</tr>
 		</tfoot>
 	</table>

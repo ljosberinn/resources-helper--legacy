@@ -17,7 +17,6 @@
             <th class="text-md-right text-sm-left">Warehouse level</th>
             <th class="text-md-right text-sm-left" colspan="2">Upgrade calculator</th>
             <th class="text-md-right text-sm-left">Upgrade cost</th>
-            <th class="text-md-right text-sm-left">Upgrade amortisation</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -25,30 +24,26 @@
 				<?php
 
         $trBreak = '
-        <tr><td class="table-hr" colspan="10"></td></tr>';
+        <tr><td class="table-hr" colspan="9"></td></tr>';
 
         for ($i = 0; $i < 58; $i += 1) {
 
           if($i >= 0 && $i <= 13) {
             $imgClass = "material";
             $idClass = $imgClass;
-            $img = $i + 1;
-            $k = $img - 1;
+            $k = $i ;
           } else if($i >= 14 && $i <= 35) {
             $imgClass = "product";
             $idClass = "products";
-            $img = $i - 14 + 1;
-            $k = $img - 1;
+            $k = $i - 14;
           } else if($i > 35 && $i < 52) {
             $imgClass = "loot";
             $idClass = $imgClass;
-            $img = $i - 36 + 1;
-            $k = $img - 1;
+            $k = $i - 36;
           } else {
             $imgClass = "unit";
             $idClass = "units";
-            $img = $i - 52 + 1;
-            $k = $img - 1;
+            $k = $i - 52;
           }
 
           if($i == 14 || $i == 36 || $i == 52) {
@@ -58,7 +53,7 @@
           echo '
 					<tr>
             <td data-th="Type">
-             <span class="resources-' .$imgClass. '-' .$img. '"></span>
+             <span class="resources-' .$imgClass. '-' .$k. '"></span>
             </td>
             <td data-th="Stock">
               <input class="form-control form-control-sm text-md-right text-sm-left" type="number" min="0" id="warehouse-' .$idClass. '-stock-current-' .$k. '" />
@@ -88,8 +83,6 @@
             </td>
 
             <td data-th="Upgrade cost" class="text-md-right text-sm-left" id="warehouse-' .$idClass. '-upgrade-cost-' .$k. '">0</td>
-
-            <td data-th="Upgrade amortisation" class="text-md-right text-sm-left" id="warehouse-' .$idClass. '-upgrade-amortisation-' .$k. '"></td>
 					</tr>';
         }
 
@@ -99,7 +92,7 @@
           <tr>
             <td colspan="5" class="text-md-right text-sm-left" id="warehouse-total-worth"></td>
             <td class="text-md-right text-sm-left" id="warehouse-total-level"></td>
-            <td colspan="4"></td>
+            <td colspan="3"></td>
           </tr>
 				</tfoot>
 			</table>

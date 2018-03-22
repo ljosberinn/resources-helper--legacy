@@ -1,25 +1,27 @@
 <!-- #module-mines -->
 
-<div class="bg-light mt-3 mb-3 p-4 col-12 rounded sortable" id="module-mines">
+<div class="bg-light mt-3 mb-3 p-4 col-12 rounded" id="module-mines">
 	<h6><span class="nav-icon-mines"></span> Mines</h6>
 	<hr class="mb-3">
 
 	<div class="row">
 		<div class="col-xs-12 col-md-12">
 
-			<table class="table table-responsive table-break-medium table-striped mb-3 tablesorter">
+			<table class="table table-responsive table-break-medium table-striped mb-3">
 				<thead>
 					<tr class="text-small">
 						<?php
 
 						$mineTH = [
-							"" => "",
-							"Your rate per hour" => 'class="text-md-right text-sm-left"',
-							"Your amount of mines" => 'class="text-md-right text-sm-left"',
-							"Worth @ 100% condition" => 'class="text-md-right text-sm-left sorttable_numeric"',
-							"Mine price" => 'class="text-md-right text-sm-left sorttable_numeric"',
-							"100% quality income" => 'class="text-md-right text-sm-left sorttable_numeric"',
-							"Return on Investment (100% | 505% | 505% + your HQ level)" => 'class="text-md-right text-sm-left" colspan="3"'
+							"" => 'class="sorttable_nosort"',
+							"Your rate per hour" => 'class="text-md-right text-sm-left sorttable_nosort"',
+							"Your amount of mines" => 'class="text-md-right text-sm-left sorttable_nosort"',
+							"Worth @ 100% condition" => 'class="text-md-right text-sm-left"',
+							"Mine price" => 'class="text-md-right text-sm-left"',
+							"100% quality income" => 'class="text-md-right text-sm-left"',
+							"Return on Investment: 100%" => 'class="text-md-right text-sm-left"',
+              "505%" => 'class="text-md-right text-sm-left"',
+              "505% + your HQ level" => 'class="text-md-right text-sm-left"',
 						];
 
 						foreach($mineTH as $row => $attr) {
@@ -40,7 +42,7 @@
         echo '
           <tr>
 						<td data-th="Mine type">
-							<div class="resources-material-' .($i+1). '"></div> <span id="material-name-' .$i. '"></span>
+							<div class="resources-material-' .$i. '"></div> <span id="material-name-' .$i. '"></span>
 						</td>
 						<td data-th="Your rate per hour">
 							<input class="form-control form-control-sm text-md-right text-sm-left" id="material-rate-' .$i. '" type="number" min="0" max="999999999" placeholder="rate/h" />

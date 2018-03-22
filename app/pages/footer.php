@@ -15,4 +15,6 @@ foreach ($footerArray as $anchor => $link) {
 
 ?>
 
+<a href="#">Source Code</a>
+
 </div>

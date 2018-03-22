@@ -9,7 +9,7 @@ var rHelper = {
 		core() {
 			rHelper.fn.SET_tabSwitcherAnchorBased();
 
-			rHelper.fn.SET_transportCost();
+			rHelper.fn.SET_transportCost("init");
 
 			$.each(rHelper.data.material, function (materialId) {
 
@@ -44,7 +44,6 @@ var rHelper = {
 
 				rHelper.fn.EVNT_factoryInput(factoryId);
 
-				rHelper.fn.INSRT_factoryName(factoryId);
 				rHelper.fn.INSRT_factoryLevel(factoryId);
 				rHelper.fn.INSRT_factoryOutput(factoryId);
 				rHelper.fn.INSRT_factoryUpgradeCost(factoryId);
@@ -80,35 +79,41 @@ var rHelper = {
 
 			rHelper.fn.INSRT_flowDistributionGlobal();
 
-			$.each(rHelper.data.loot, function (index, lootId) {
+			$.each(rHelper.data.loot, function (index, loot) {
 				rHelper.fn.INSRT_warehouseFillAmount(index, "loot");
 				rHelper.fn.INSRT_warehouseLevel(index, "loot");
 				rHelper.fn.INSRT_warehouseFillStatus(index, "loot");
 				rHelper.fn.INSRT_warehouseCapacity(index, "loot");
 				rHelper.fn.INSRT_warehouseWorth(index, "loot");
+				rHelper.fn.EVNT_warehouseInput(index, "loot");
 			});
 
-			$.each(rHelper.data.units, function (index, unitId) {
+			$.each(rHelper.data.units, function (index, unit) {
 				rHelper.fn.INSRT_warehouseFillAmount(index, "units");
 				rHelper.fn.INSRT_warehouseLevel(index, "units");
 				rHelper.fn.INSRT_warehouseFillStatus(index, "units");
 				rHelper.fn.INSRT_warehouseCapacity(index, "units");
 				rHelper.fn.INSRT_warehouseWorth(index, "units");
+				rHelper.fn.EVNT_warehouseInput(index, "units");
 			});
 
 			rHelper.fn.INSRT_warehouseTotalLevel();
 			rHelper.fn.INSRT_warehouseTotalWorth();
 
-			rHelper.init.enableTippy();
-		},
-		enableTippy() {
-			$.each($("[title]"), function (i, el) {
-				if (!el._tippy) {
-					tippy(el, {
-						dynamicTitle: true
-					});
-				}
+			$.each(rHelper.data.buildings, function (buildingId) {
+				rHelper.fn.INSRT_buildingName(buildingId);
+				rHelper.fn.SET_buildingBackgroundColor(buildingId);
+				rHelper.fn.INSRT_buildingData(buildingId);
+				rHelper.fn.INSRT_buildingToLevel10(buildingId);
+
+				rHelper.fn.EVNT_buildingChange(buildingId);
 			});
+
+			rHelper.fn.INSRT_techUpgradeRows();
+
+			rHelper.fn.EVNT_sortableTables();
+
+			rHelper.fn.EVNT_enableTippy();
 		}
 	},
 	"fn": {
@@ -467,13 +472,97 @@ var rHelper = {
 				}
 			});
 		},
-		SET_transportCost() {
+		SET_transportCost(init) {
 			rHelper.data.buildings[9].transportCost = 1 + (15 - rHelper.data.buildings[9].level) / 100;
+
+			if (!init) {
+				$.each(rHelper.data.buildings, function (buildingId) {
+
+					rHelper.fn.SET_buildingBackgroundColor(buildingId);
+					rHelper.fn.INSRT_buildingData(buildingId);
+					rHelper.fn.INSRT_buildingToLevel10(buildingId);
+
+				});
+
+				var calculationOrder = rHelper.fn.GET_calculationOrder();
+
+				$.each(calculationOrder, function (index, factoryId) {
+
+					rHelper.fn.INSRT_factoryUpgradeCost(factoryId);
+					rHelper.fn.INSRT_factoryROI(factoryId);
+
+					rHelper.fn.INSRT_flowDistributionGlobal();
+
+				});
+			}
+		},
+		SET_buildingBackgroundColor(buildingId) {
+			var colorArray = [
+				"rgba(255, 127, 80, 0.25)",
+				"rgba(244, 134, 77, 0.25)",
+				"rgba(234, 142, 74, 0.25)",
+				"rgba(224, 150, 71, 0.25)",
+				"rgba(214, 158, 68, 0.25)",
+				"rgba(204, 166, 65, 0.25)",
+				"rgba(194, 173, 62, 0.25)",
+				"rgba(184, 181, 59, 0.25)",
+				"rgba(174, 189, 56, 0.25)",
+				"rgba(164, 197, 53, 0.25)",
+				"rgba(154, 205, 50, 0.25)"
+			];
+
+			$("#building-" + buildingId).css("background-color", colorArray[rHelper.data.buildings[buildingId].level]);
+		},
+		SET_buildingTableVisibility(buildingId, state) {
+			var tbody = $("#building-" + buildingId + " tbody");
+			var tfoot = $("#building-" + buildingId + " tfoot");
+
+			$.each([tbody, tfoot], function (i, el) {
+
+				switch (state) {
+				case "show":
+					if (el.css("display") == "none") {
+						el.css("display", "table-row-group");
+					}
+					break;
+				case "hide":
+					if (el.css("display") != "none") {
+						el.css("display", "none");
+					}
+					break;
+				}
+			});
 		},
 
+		EVNT_enableTippy() {
+			$.each($("[title]"), function (i, el) {
+				if (!el._tippy) {
+					tippy(el, {
+						dynamicTitle: true
+					});
+				}
+			});
+		},
+		EVNT_sortableTables() {
+			var tables = [
+				$("#module-mines table")[0],
+				$("#module-factories table")[0],
+				$("#module-diamond table")[0],
+				$("#techupgrades-combinations-tbl")[0],
+			];
 
+			$.each(tables, function (index, table) {
+				sorttable.makeSortable(table);
 
-
+				if (index == 2) {
+					sorttable.innerSortFunction.apply($("#module-diamond th")[5], []);
+				} else if (index == 4) {
+					// sorting twice for cheapest price first...
+					sorttable.innerSortFunction.apply($("#techupgrades-combinations-tbl th")[5], []);
+					sorttable.innerSortFunction.apply($("#techupgrades-combinations-tbl th")[5], []);
+				}
+			});
+		},
 		EVNT_factoryInput(factoryId) {
 			$("#factories-level-" + factoryId).on("input", function () {
 				var factoryId = parseInt(this.id.replace("factories-level-", ""));
@@ -538,6 +627,7 @@ var rHelper = {
 			});
 		},
 		EVNT_warehouseInput(id, type) {
+			// on upgrade calculator input
 			$("#warehouse-" + type + "-calc-2-" + id).on("input", function () {
 				var value = parseInt(this.value);
 				if (isNaN(value)) {
@@ -545,14 +635,15 @@ var rHelper = {
 				}
 
 				rHelper.fn.INSRT_warehouseUpgradeCost(id, type, value);
-				rHelper.fn.INSRT_warehouseUpgradeAmortisation(id, type, value);
 			});
 
+			// reset upgrade cost on select swap
 			$("#warehouse-" + type + "-calc-1-" + id).on("change", function () {
 				$("#warehouse-" + type + "-upgrade-cost-" + id).empty();
 				$("#warehouse-" + type + "-calc-2-" + id).val(0);
 			});
 
+			// on increase of current stock
 			$("#warehouse-" + type + "-stock-current-" + id).on("input", function () {
 				var value = parseInt(this.value);
 				if (isNaN(value)) {
@@ -570,6 +661,7 @@ var rHelper = {
 				rHelper.fn.INSRT_warehouseTotalWorth();
 			});
 
+			// on increase of warehouse level
 			$("#warehouse-" + type + "-level-" + id).on("input", function () {
 				var value = parseInt(this.value);
 				if (isNaN(value)) {
@@ -582,11 +674,27 @@ var rHelper = {
 				rHelper.fn.SET_globalObject(type, id, ["warehouse", "contingent"], rHelper.fn.CALC_warehouseContingent(value));
 				rHelper.fn.SET_globalObject(type, id, ["warehouse", "fillStatus"], el.fillAmount / el.contingent);
 
+				rHelper.fn.INSRT_warehouseCapacity(id, type);
 				rHelper.fn.INSRT_warehouseFillStatus(id, type);
 				rHelper.fn.INSRT_warehouseRemainingTimeToFull(id, type);
 				rHelper.fn.INSRT_warehouseTotalLevel();
 			});
 		},
+		EVNT_buildingChange(buildingId) {
+			$("#buildings-level-" + buildingId).on("change", function () {
+				var value = parseInt(this.value);
+				rHelper.fn.SET_globalObject("buildings", buildingId, "level", value);
+
+				if (buildingId == 9) {
+					rHelper.fn.SET_transportCost();
+				}
+
+				rHelper.fn.INSRT_buildingData(buildingId);
+				rHelper.fn.INSRT_buildingToLevel10(buildingId);
+				rHelper.fn.SET_buildingBackgroundColor(buildingId);
+			});
+		},
+
 		INSRT_totalMineWorth(totalMineWorth) {
 			$("#material-total-worth").text(totalMineWorth.toLocaleString("en-US"));
 		},
@@ -736,9 +844,6 @@ var rHelper = {
 			});
 
 		},
-		INSRT_factoryName(factoryId) {
-			$("#factories-name-" + factoryId).text(rHelper.data.products[factoryId].factoryName);
-		},
 		INSRT_factoryLevel(factoryId) {
 			var factoryLevel = rHelper.data.products[factoryId].factoryLevel;
 			$("#factories-level-" + factoryId).val(factoryLevel);
@@ -776,15 +881,15 @@ var rHelper = {
 
 					var addClass = rHelper.fn.CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount);
 
-					var outerSpan = crEl("span");
-					var imgSpan = crEl("span");
-					var innerSpan = crEl("span");
+					var outerSpan = $(crEl("span"));
+					var imgSpan = $(crEl("span"));
+					var innerSpan = $(crEl("span"));
 
-					$(imgSpan).addClass(dependantObj.icon).attr("title", price.toLocaleString("en-US"));
-					$(innerSpan).addClass(addClass).text(requiredAmount.toLocaleString("en-US"));
-					$(outerSpan).append(imgSpan.outerHTML + " " + innerSpan.outerHTML + " ");
+					imgSpan.addClass(dependantObj.icon).attr("title", price.toLocaleString("en-US"));
+					innerSpan.addClass(addClass).text(requiredAmount.toLocaleString("en-US"));
+					outerSpan.append(imgSpan[0].outerHTML + " " + innerSpan[0].outerHTML + " ");
 
-					dependencyString += outerSpan.outerHTML;
+					dependencyString += outerSpan[0].outerHTML;
 
 				});
 			} else {
@@ -796,15 +901,15 @@ var rHelper = {
 
 				var addClass = rHelper.fn.CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount);
 
-				var outerSpan = crEl("span");
-				var imgSpan = crEl("span");
-				var innerSpan = crEl("span");
+				var outerSpan = $(crEl("span"));
+				var imgSpan = $(crEl("span"));
+				var innerSpan = $(crEl("span"));
 
-				$(imgSpan).addClass(dependantObj.icon).attr("title", price.toLocaleString("en-US"));
-				$(innerSpan).addClass(addClass).text(requiredAmount.toLocaleString("en-US"));
-				$(outerSpan).append(imgSpan.outerHTML + " " + innerSpan.outerHTML + " ");
+				imgSpan.addClass(dependantObj.icon).attr("title", price.toLocaleString("en-US"));
+				innerSpan.addClass(addClass).text(requiredAmount.toLocaleString("en-US"));
+				outerSpan.append(imgSpan[0].outerHTML + " " + innerSpan[0].outerHTML + " ");
 
-				dependencyString += outerSpan.outerHTML;
+				dependencyString += outerSpan[0].outerHTML;
 			}
 
 			$("#factories-dependencies-" + factoryId).html(dependencyString);
@@ -963,12 +1068,30 @@ var rHelper = {
 
 			$("#diamond-product-warehouse-" + factoryId).text(requiredWarehouseLevel.toLocaleString("en-US"));
 		},
+		INSRT_diamondDependenciesHelper(dependantObj, price, requiredAmount, factoryId, warehouseIconSpan) {
+			var requiredWarehouseLevel = rHelper.fn.CALC_nextGreaterWarehouseLevel(requiredAmount);
+
+			rHelper.data.products[factoryId].diamond.dependenciesWorth += price * requiredAmount;
+
+			var outerSpan = $(crEl("span"));
+			var imgSpan = $(crEl("span"));
+			var innerSpan = $(crEl("span"));
+			var kbd = $(crEl("kbd"));
+			var warehouseSamp = $(crEl("span"));
+
+			imgSpan.addClass(dependantObj.icon).attr("title", price.toLocaleString("en-US"));
+			innerSpan.text(requiredAmount.toLocaleString("en-US"));
+			warehouseSamp.text(requiredWarehouseLevel);
+			kbd.append(warehouseIconSpan[0].outerHTML + " " + warehouseSamp[0].outerHTML);
+			outerSpan.append(imgSpan[0].outerHTML + " " + innerSpan[0].outerHTML + " " + kbd[0].outerHTML + " ");
+
+			return outerSpan[0].outerHTML;
+		},
 		INSRT_diamondDependencies(factoryId) {
 			var product = rHelper.data.products[factoryId];
 			var dependencies = product.dependencies;
 			var dependencyString = "";
-			var warehouseIconSpan = crEl("span");
-			$(warehouseIconSpan).addClass("nav-icon-warehouses");
+			var warehouseIconSpan = $(crEl("span")).addClass("nav-icon-warehouses");
 
 			if ($.isArray(dependencies)) {
 				$.each(dependencies, function (dependencyIndex, dependency) {
@@ -977,47 +1100,16 @@ var rHelper = {
 					var price = rHelper.fn.CALC_returnPriceViaId(dependency);
 
 					var requiredAmount = rHelper.fn.CALC_factoryDependencyRequiredAmount(factoryId, dependencyIndex) * 5 * 24;
-					var requiredWarehouseLevel = rHelper.fn.CALC_nextGreaterWarehouseLevel(requiredAmount);
 
-					rHelper.data.products[factoryId].diamond.dependenciesWorth += price * requiredAmount;
-
-					var outerSpan = crEl("span");
-					var imgSpan = crEl("span");
-					var innerSpan = crEl("span");
-					var kbd = crEl("kbd");
-					var warehouseSamp = crEl("span");
-
-					$(imgSpan).addClass(dependantObj.icon).attr("title", price.toLocaleString("en-US"));
-					$(innerSpan).text(requiredAmount.toLocaleString("en-US"));
-					$(warehouseSamp).text(requiredWarehouseLevel);
-					$(kbd).append(warehouseIconSpan.outerHTML + " " + warehouseSamp.outerHTML);
-					$(outerSpan).append(imgSpan.outerHTML + " " + innerSpan.outerHTML + " " + kbd.outerHTML + " ");
-
-					dependencyString += outerSpan.outerHTML;
-
+					dependencyString += rHelper.fn.INSRT_diamondDependenciesHelper(dependantObj, price, requiredAmount, factoryId, warehouseIconSpan);
 				});
 			} else {
 				var dependantObj = rHelper.fn.CALC_convertId(dependencies);
 				var price = rHelper.fn.CALC_returnPriceViaId(dependencies);
 
 				var requiredAmount = rHelper.fn.CALC_factoryDependencyRequiredAmount(factoryId, 0) * 5 * 24;
-				var requiredWarehouseLevel = rHelper.fn.CALC_nextGreaterWarehouseLevel(requiredAmount);
 
-				rHelper.data.products[factoryId].diamond.dependenciesWorth += price * requiredAmount;
-
-				var outerSpan = crEl("span");
-				var imgSpan = crEl("span");
-				var innerSpan = crEl("span");
-				var kbd = crEl("kbd");
-				var warehouseSamp = crEl("span");
-
-				$(imgSpan).addClass(dependantObj.icon).attr("title", price.toLocaleString("en-US"));
-				$(innerSpan).text(requiredAmount.toLocaleString("en-US"));
-				$(warehouseSamp).text(requiredWarehouseLevel);
-				$(kbd).append(warehouseIconSpan.outerHTML + " " + warehouseSamp.outerHTML);
-				$(outerSpan).append(imgSpan.outerHTML + " " + innerSpan.outerHTML + " " + kbd.outerHTML + " ");
-
-				dependencyString += outerSpan.outerHTML;
+				dependencyString += rHelper.fn.INSRT_diamondDependenciesHelper(dependantObj, price, requiredAmount, factoryId, warehouseIconSpan);
 			}
 
 			$("#diamond-dependencies-" + factoryId).html(dependencyString);
@@ -1081,7 +1173,7 @@ var rHelper = {
 			if (remainingAmount < 0) {
 				surplusTarget.css("color", "coral");
 			}
-			surplusTarget.html('<span class="resources-' + type + '-' + (id + 1) + '"></span> ' + remainingAmount.toLocaleString("en-US"));
+			surplusTarget.html('<span class="resources-' + type + '-' + id + '"></span> ' + remainingAmount.toLocaleString("en-US"));
 		},
 		INSRT_flowDistributionSingle(id, type) {
 			var distributionTarget = $("#flow-" + type + "-distribution-" + id);
@@ -1132,7 +1224,6 @@ var rHelper = {
 
 			return worth;
 		},
-
 		INSRT_warehouseFillAmount(id, type) {
 			$("#warehouse-" + type + "-stock-current-" + id).val(rHelper.data[type][id].warehouse.fillAmount);
 		},
@@ -1185,65 +1276,265 @@ var rHelper = {
 
 			$("#warehouse-" + type + "-remaining-" + id).text(remainingTime);
 		},
-
-		INSRT_warehouseUpgradeAmortisation(id, type, value) {
-			var target = $("#warehouse-" + type + "-upgrade-amortisation-" + id);
-			var upgradeCost = rHelper.fn.CALC_warehouseUpgradeCostOnInput(id, type, value);
-			var amortisation = rHelper.fn.CALC_warehouseUpgradeAmortisation(id, type, upgradeCost);
-
-			if (typeof (amortisation) == "number") {
-
-				if (amortisation > 24) {
-					amortisation = "> " + (amortisation / 24).toFixed(2) + " days";
-				} else {
-					amortisation = "> " + amortisation.toFixed(2) + " hours";
-				}
-			}
-
-			target.text(amortisation);
-		},
-		CALC_warehouseUpgradeAmortisation(id, type, upgradeCost) {
-			var el = rHelper.data[type][id];
-			var priceId = 0;
-
-			switch (type) {
-			case "material":
-				priceId = id;
-				break;
-			case "products":
-				priceId = id + 14;
-				break;
-			case "loot":
-				priceId = id + 36;
-				break;
-			case "units":
-				priceId = id + 51;
-				break;
-			}
-
-			var price = rHelper.fn.CALC_returnPriceViaId(priceId);
-
-			if (type == "material") {
-				divisor = el.perHour;
-			} else if (type == "products")  {
-				divisor = el.scaling * el.factoryLevel * rHelper.fn.CALC_factoryMinWorkload(id);
-			}
-
-			var amortisation = upgradeCost / (divisor * price);
-
-			if (type == "products" && el.turnover <= 0) {
-				amortisation = "∞";
-			}
-
-			return amortisation;
-		},
 		INSRT_warehouseUpgradeCost(id, type, value) {
 			var target = $("#warehouse-" + type + "-upgrade-cost-" + id);
 			var upgradeCost = rHelper.fn.CALC_warehouseUpgradeCostOnInput(id, type, value);
 
 			target.text(upgradeCost.toLocaleString("en-US"));
 		},
+		INSRT_buildingName(buildingId) {
+			$("#buildings-name-" + buildingId).text(rHelper.data.buildings[buildingId].name);
+		},
+		INSRT_buildingData(buildingId) {
 
+			var building = rHelper.data.buildings[buildingId];
+			var buildingLevel = building.level;
+
+			var dropdown = $("#buildings-level-" + buildingId);
+			if (parseInt(dropdown.val()) != buildingLevel) {
+				$(dropdown[0][buildingLevel]).attr("selected", "true");
+			}
+
+			var materialWorthSum = 0;
+			var materialTransportationSum = 0;
+
+			if (buildingLevel != 10) {
+
+				rHelper.fn.SET_buildingTableVisibility(buildingId, "show");
+
+				for (var i = 0; i <= 3; i += 1) {
+
+					if (i === 0) {
+						var cashTarget = $("#buildings-cash-" + buildingId);
+						var cash = building.materialAmount0[buildingLevel];
+						if (typeof (cash) == "undefined") {
+							cash = 0;
+						}
+						materialWorthSum += cash;
+						cashTarget.text(cash.toLocaleString("en-US"));
+					} else {
+						var selector = "materialAmount" + i;
+						var material = rHelper.fn.CALC_convertId(building.material[i]);
+						$("#buildings-mat-" + i + "-" + buildingId).addClass(material.icon);
+
+						var materialAmount = building[selector][buildingLevel];
+
+						if (typeof (materialAmount) == "number") {
+							$("#buildings-amount-" + i + "-" + buildingId).text(materialAmount.toLocaleString("en-US"));
+
+							var materialPrice = rHelper.fn.CALC_returnPriceViaId(building.material[i]);
+							var materialWorth = materialPrice * materialAmount;
+							var transportation = (rHelper.data.buildings[9].transportCost - 1) * materialWorth;
+
+							materialWorthSum += materialWorth;
+							materialTransportationSum += transportation;
+
+							$("#buildings-worth-" + i + "-" + buildingId).text(materialWorth.toLocaleString("en-US"));
+							$("#buildings-transportation-" + i + "-" + buildingId).text(transportation.toLocaleString("en-US"));
+						}
+					}
+				}
+			} else {
+				rHelper.fn.SET_buildingTableVisibility(buildingId, "hide");
+			}
+
+			$("#buildings-sum-" + buildingId).text(materialWorthSum.toLocaleString("en-US"));
+			$("#buildings-transportation-sum-" + buildingId).text(Math.round(materialTransportationSum).toLocaleString("en-US"));
+		},
+		INSRT_buildingToLevel10(buildingId) {
+			var buildingToLevel10 = rHelper.fn.CALC_buildingToLevel10(buildingId);
+
+			$("#buildings-cap-" + buildingId).text(buildingToLevel10.level10Cost.toLocaleString("en-US"));
+			$("#buildings-transportation-cap-" + buildingId).text(buildingToLevel10.level10Transportation.toLocaleString("en-US"));
+		},
+		INSRT_techUpgradeRows(tu4Trigger) {
+			var techUpgradeTbody = $("#techupgrades-combinations-tbl tbody");
+
+			if (techUpgradeTbody[0].childNodes.length > 0) {
+				techUpgradeTbody.empty();
+			}
+
+			var prices = [];
+
+			for (var i = 46; i <= 49; i += 1) {
+				prices.push(rHelper.fn.CALC_returnPriceViaId(i, 0));
+			}
+
+			$.each(rHelper.tu, function (index, combination) {
+
+				if (typeof (tu4Trigger) == "undefined" && combination.tu4 != 0) {
+					return;
+				}
+
+				var tr = $(crEl("tr"));
+
+				for (var i = 0; i <= 6; i += 1) {
+					var td = $(crEl("td"));
+					td.addClass("text-md-right text-sm-left");
+
+					var tus = [
+						combination.tu1,
+						combination.tu2,
+						combination.tu3,
+						combination.tu4
+					];
+
+					switch (i) {
+					case 0:
+					case 1:
+					case 2:
+					case 3:
+						td.text(tus[i]).attr("data-th", "Tech-Upgrade " + i);
+						break;
+					case 4:
+						td.text(combination.factor).attr("data-th", "Boost");
+						break;
+					case 5:
+						var price = 0;
+						for (var k = 0; k < tus.length; k += 1) {
+							price += tus[k] * prices[k];
+						}
+						td.text(price.toLocaleString("en-US")).attr("data-th", "Price");
+						break;
+					case 6:
+						var count = tus[0] * 1 + tus[1] * 2 + tus[2] * 3 + tus[3] * 5;
+						td.text(count).attr("data-th", "Pimp my mine count");
+						break;
+					}
+
+					tr.append(td[0]);
+				}
+				techUpgradeTbody.append(tr[0]);
+			});
+		},
+		INSRT_techUpgradeCalculator(value, tu4Inclusion) {
+
+			toggleTechUpgradeInfo("start");
+
+			var table = $("#techupgrades-calc-tbl");
+			if (table.css("display") == "none") {
+				table.css("display", "table");
+			}
+
+			var target = $("#techupgrades-calc-tbl tbody");
+			if (target[0].childNodes.length > 0) {
+				target.empty();
+			}
+
+			var url = "api/getTechCombination.php?factor=" + value;
+
+			if(typeof(tu4Inclusion) == "string") {
+				url += "&tu4=allowed";
+			}
+
+			console.log(url);
+			
+			$.getJSON(url, function (data) {
+
+					var prices = [];
+
+					for (var i = 46; i <= 49; i += 1) {
+						prices.push(rHelper.fn.CALC_returnPriceViaId(i, 0));
+					}
+
+					$.each(data, function (i, combination) {
+						var tr = $(crEl("tr"));
+
+						for (var k = 0; k <= 6; k += 1) {
+							var td = $(crEl("td"));
+							td.addClass("text-md-right text-sm-left");
+							td.attr("data-th", "missing Tech-Upgrade " + (k + 1));
+
+							var tus = [
+								combination.tu1,
+								combination.tu2,
+								combination.tu3,
+								combination.tu4
+							];
+
+							switch (k) {
+							case 0:
+							case 1:
+							case 2:
+							case 3:
+								td.text(tus[k]);
+								break;
+							case 4:
+								td.text(combination.factor).attr("data-th", "resulting Boost");
+								break;
+							case 5:
+								var price = 0;
+								for (var l = 0; l < tus.length; l += 1) {
+									price += tus[l] * prices[l];
+								}
+								td.text(price.toLocaleString("en-US")).attr("data-th", "Price");
+								break;
+							case 6:
+								var count = tus[0] * 1 + tus[1] * 2 + tus[2] * 3 + tus[3] * 5;
+								td.text(count).attr("data-th", "remaining Pimp my mine count");
+								break;
+							}
+
+							tr.append(td[0]);
+						}
+						target.append(tr[0].outerHTML);
+					});
+
+					sorttable.makeSortable(table[0]);
+					sorttable.innerSortFunction.apply($("#techupgrades-calc-tbl th")[5], []);
+					sorttable.innerSortFunction.apply($("#techupgrades-calc-tbl th")[5], []);
+
+					toggleTechUpgradeInfo("end");
+				})
+				.fail(function () {
+					var tr = $(crEl("tr"));
+					var td = $(crEl("td"));
+
+					td.addClass("text-warning text-center").attr("data-th", "Attention").attr("colspan", 7).text("No entries found or invalid value. Try to lower the value a bit – up to 5 decimals are allowed (e.g. 3.00005).");
+					tr.append(td[0]);
+					target.append(tr[0]);
+
+					toggleTechUpgradeInfo("end");
+				});
+		},
+
+		CALC_buildingToLevel10(buildingId) {
+			var building = rHelper.data.buildings[buildingId];
+			var buildingLevel = building.level;
+
+			var level10Cost = 0;
+			var level10Transportation = 0;
+
+			for (var level = buildingLevel; level < 10; level += 1) {
+				for (var i = 0; i <= 3; i += 1) {
+
+					if (i === 0) {
+						var cash = building.materialAmount0[level];
+						level10Cost += cash;
+					} else {
+						var selector = "materialAmount" + i;
+						var material = rHelper.fn.CALC_convertId(building.material[i]);
+
+						var materialAmount = building[selector][level];
+
+						if (typeof (materialAmount) == "number") {
+
+							var materialPrice = rHelper.fn.CALC_returnPriceViaId(building.material[i]);
+							var materialWorth = materialPrice * materialAmount;
+							var transportation = (rHelper.data.buildings[9].transportCost - 1) * materialWorth;
+
+							level10Cost += materialWorth;
+							level10Transportation += transportation;
+
+						}
+					}
+				}
+			}
+			return {
+				"level10Cost": level10Cost,
+				"level10Transportation": Math.round(level10Transportation)
+			}
+		},
 		CALC_warehouseUpgradeCost(targetLevel) {
 			return Math.pow(targetLevel - 1, 2) * 1250000;
 		},
@@ -1326,7 +1617,7 @@ var rHelper = {
 				remainingTime = "> " + remainingTime.toFixed(2) + " hours";
 			}
 
-			if (type == "products" && el.turnover <= 0) {
+			if ((type == "products" && el.turnover <= 0) || type == "loot" ||  type == "units") {
 				remainingTime = "∞";
 			}
 
@@ -1358,63 +1649,62 @@ var rHelper = {
 
 			return total;
 		},
-		CALC_flowDistribution(id, type) {
+		CALC_flowDistributionHelper(type, dependantFactory, id, i) {
+			var originalIndex = 0;
+			var dependantIconIndex = 0;
+			var requiredAmountPerLevel = 0;
+			var dependantObj = {};
+			var requiredAmount = 0;
+			var string = "";
+			var arrow = '<svg xmlns="http://www.w3.org/2000/svg" width="15" fill="#fff" viewBox="0 0 31.49 31.49"><path d="M21.205 5.007c-.429-.444-1.143-.444-1.587 0-.429.429-.429 1.143 0 1.571l8.047 8.047H1.111C.492 14.626 0 15.118 0 15.737c0 .619.492 1.127 1.111 1.127h26.554l-8.047 8.032c-.429.444-.429 1.159 0 1.587.444.444 1.159.444 1.587 0l9.952-9.952c.444-.429.444-1.143 0-1.571l-9.952-9.953z"/></svg>';
 
-			function insertDistributionReturnRequiredAmount(type, dependantFactory, id, i) {
-				var originalIndex = 0;
-				var dependantIconIndex = 0;
-				var requiredAmountPerLevel = 0;
-				var dependantObj = {};
-				var requiredAmount = 0;
-				var string = "";
-				var arrow = '<svg xmlns="http://www.w3.org/2000/svg" width="15" fill="#fff" viewBox="0 0 31.49 31.49"><path d="M21.205 5.007c-.429-.444-1.143-.444-1.587 0-.429.429-.429 1.143 0 1.571l8.047 8.047H1.111C.492 14.626 0 15.118 0 15.737c0 .619.492 1.127 1.111 1.127h26.554l-8.047 8.032c-.429.444-.429 1.159 0 1.587.444.444 1.159.444 1.587 0l9.952-9.952c.444-.429.444-1.143 0-1.571l-9.952-9.953z"/></svg>';
+			if (type == "material") {
+				dependantIconIndex = (dependantFactory - 14);
+				dependantObj = rHelper.data.products[dependantIconIndex];
 
-				if (type == "material") {
-					dependantIconIndex = (dependantFactory - 14);
-					dependantObj = rHelper.data.products[dependantIconIndex];
-
-					if ($.isArray(dependantObj.dependencies)) {
-						originalIndex = dependantObj.dependencies.indexOf(id);
-						requiredAmountPerLevel = dependantObj.requiredAmount[originalIndex];
-					} else {
-						originalIndex = dependantObj.dependencies;
-						requiredAmountPerLevel = dependantObj.requiredAmount;
-					}
+				if ($.isArray(dependantObj.dependencies)) {
+					originalIndex = dependantObj.dependencies.indexOf(id);
+					requiredAmountPerLevel = dependantObj.requiredAmount[originalIndex];
 				} else {
-					dependantIconIndex = dependantFactory;
-					dependantObj = rHelper.data.products[dependantFactory];
-					if ($.isArray(dependantObj.dependencies)) {
-						originalIndex = dependantObj.dependencies.indexOf((id + 14));
-						requiredAmountPerLevel = dependantObj.requiredAmount[originalIndex];
-					} else {
-						originalIndex = dependantObj.dependencies;
-						requiredAmountPerLevel = dependantObj.requiredAmount;
-					}
+					originalIndex = dependantObj.dependencies;
+					requiredAmountPerLevel = dependantObj.requiredAmount;
 				}
-
-				if (dependantObj.turnover > 0) {
-					requiredAmount = dependantObj.factoryLevel * requiredAmountPerLevel;
+			} else {
+				dependantIconIndex = dependantFactory;
+				dependantObj = rHelper.data.products[dependantFactory];
+				if ($.isArray(dependantObj.dependencies)) {
+					originalIndex = dependantObj.dependencies.indexOf((id + 14));
+					requiredAmountPerLevel = dependantObj.requiredAmount[originalIndex];
+				} else {
+					originalIndex = dependantObj.dependencies;
+					requiredAmountPerLevel = dependantObj.requiredAmount;
 				}
-
-				string += '<span class="resources-' + type + '-' + (id + 1) + '"></span> ';
-				string += requiredAmount.toLocaleString("en-US") + " " + arrow + " ";
-				string += '<span class="resources-product-' + (dependantIconIndex + 1) + '"></span> ';
-
-				var name1 = "";
-				var name2 = dependantObj.name;
-				switch (type) {
-				case "material":
-					name1 = rHelper.data.material[id].name;
-					break;
-				case "product":
-					name1 = rHelper.data.products[id].name;
-					break;
-				}
-
-				$("#flow-" + type + "-distribution-" + id + "-" + i).html(string).attr("data-th", name1 + " to " + name2);
-
-				return requiredAmount;
 			}
+
+			if (dependantObj.turnover > 0) {
+				requiredAmount = dependantObj.factoryLevel * requiredAmountPerLevel;
+			}
+
+			string += '<span class="resources-' + type + '-' + id + '"></span> ';
+			string += requiredAmount.toLocaleString("en-US") + " " + arrow + " ";
+			string += '<span class="resources-product-' + dependantIconIndex + '"></span> ';
+
+			var name1 = "";
+			var name2 = dependantObj.name;
+			switch (type) {
+			case "material":
+				name1 = rHelper.data.material[id].name;
+				break;
+			case "product":
+				name1 = rHelper.data.products[id].name;
+				break;
+			}
+
+			$("#flow-" + type + "-distribution-" + id + "-" + i).html(string).attr("data-th", name1 + " to " + name2);
+
+			return requiredAmount;
+		},
+		CALC_flowDistribution(id, type) {
 
 			var string = "";
 			var perHour = 0;
@@ -1440,12 +1730,12 @@ var rHelper = {
 			if ($.isArray(dependantFactories)) {
 				$.each(dependantFactories, function (i, dependantFactory) {
 
-					requiredAmount += insertDistributionReturnRequiredAmount(type, dependantFactory, id, i);
+					requiredAmount += rHelper.fn.CALC_flowDistributionHelper(type, dependantFactory, id, i);
 
 				});
 			} else if (dependantFactories != "") {
 
-				requiredAmount += insertDistributionReturnRequiredAmount(type, dependantFactories, id, 0);
+				requiredAmount += rHelper.fn.CALC_flowDistributionHelper(type, dependantFactories, id, 0);
 
 			}
 
@@ -1779,38 +2069,38 @@ var rHelper = {
 			var nextLevel = factoryLevel + 1;
 			var sum = 0;
 			var sumTransportation = 0;
-			var table = crEl("table");
-			var tbody = crEl("tbody");
+			var table = $(crEl("table"));
+			var tbody = $(crEl("tbody"));
 			var td;
 			var small;
 
 			$.each(rHelper.data.products[factoryId].upgradeMaterialAmount, function (i, amount) {
-				var tr = crEl("tr");
+				var tr = $(crEl("tr"));
 				var k = 0;
 
 				if (i === 0) {
 					sum += amount * Math.pow(nextLevel, 2);
 
 					for (k = 0; k <= 2; k += 1) {
-						td = crEl("td");
+						td = $(crEl("td"));
 
 						switch (k) {
 						case 0:
-							var img = crEl("img");
-							$(img).attr("src", "assets/img/cash.png").attr("alt", "Cash");
-							$(td).append(img);
+							var img = $(crEl("img"));
+							img.attr("src", "assets/img/cash.png").attr("alt", "Cash");
+							td.append(img[0]);
 							break;
 						case 1:
-							$(td).addClass("text-right").attr("colspan", 3).text(sum.toLocaleString("en-US"));
+							td.addClass("text-right").attr("colspan", 3).text(sum.toLocaleString("en-US"));
 							break;
 						case 2:
-							small = crEl("small");
-							$(small).text("Transportation");
-							$(td).addClass("text-right").append(small);
+							small = $(crEl("small"));
+							small.text("Transportation");
+							td.addClass("text-right text-warning").append(small[0]);
 							break;
 						}
 
-						tr.append(td);
+						tr.append(td[0]);
 					}
 				} else {
 					var upgradeMaterial = rHelper.data.products[factoryId].upgradeMaterial[i];
@@ -1839,54 +2129,54 @@ var rHelper = {
 					}
 
 					for (k = 0; k <= 4; k += 1) {
-						td = crEl("td");
+						td = $(crEl("td"));
 						switch (k) {
 						case 0:
-							$(td).addClass("resources-" + className + "-" + upgradeMaterial);
+							td.addClass("resources-" + className + "-" + (upgradeMaterial - 1));
 							break;
 						case 1:
-							$(td).addClass("text-right").text(upgradeMaterialAmount.toLocaleString("en-US"));
+							td.addClass("text-right").text(upgradeMaterialAmount.toLocaleString("en-US"));
 							break;
 						case 2:
-							$(td).text("≙");
+							td.text("≙");
 							break;
 						case 3:
-							$(td).addClass("text-right").text(materialWorth.toLocaleString("en-US"));
+							td.addClass("text-right").text(materialWorth.toLocaleString("en-US"));
 							break;
 						case 4:
-							small = crEl("small");
-							$(small).addClass("text-warning").text("+" + transportation.toLocaleString("en-US"));
-							$(td).addClass("text-right").append(small);
+							small = $(crEl("small"));
+							small.addClass("text-warning").text(transportation.toLocaleString("en-US"));
+							td.addClass("text-right").append(small[0]);
 							break;
 						}
-						$(tr).append(td);
+						tr.append(td[0]);
 					}
 				}
-				$(tbody).append(tr);
+				tbody.append(tr[0]);
 			});
 
-			var tr = crEl("tr");
+			var tr = $(crEl("tr"));
 			for (var k = 0; k <= 1; k += 1) {
-				td = crEl("td");
-				$(td).addClass("text-right");
+				td = $(crEl("td"));
+				td.addClass("text-right");
 
 				if (k === 0) {
-					$(td).attr("colspan", 4).text(sum.toLocaleString("en-US"));
+					td.attr("colspan", 4).text(sum.toLocaleString("en-US"));
 				} else {
-					small = crEl("small");
-					$(small).addClass("text-warning").text("+" + sumTransportation.toLocaleString("en-US"));
-					$(td).append(small);
+					small = $(crEl("small"));
+					small.addClass("text-warning").text(sumTransportation.toLocaleString("en-US"));
+					td.append(small[0]);
 				}
-				$(tr).append(td);
+				tr.append(td[0]);
 			}
-			$(tbody).append(tr);
-			$(table).append(tbody);
+			tbody.append(tr[0]);
+			table.append(tbody[0]);
 
 			rHelper.data.products[factoryId].upgradeCost = sum;
 
 			var result = {
 				"sum": sum,
-				"title": table.outerHTML
+				"title": table[0].outerHTML
 			};
 
 			return result;
@@ -1913,7 +2203,7 @@ var rHelper = {
 
 			return totalMineWorth;
 		},
-		CALC_returnPriceViaId(id) {
+		CALC_returnPriceViaId(id, period) {
 
 			var possiblePrices = [
 				"current",
@@ -1927,7 +2217,14 @@ var rHelper = {
 				"max"
 			];
 
-			var index = possiblePrices[rHelper.data.settings[7].value];
+			var index = 0;
+
+			if (typeof (period) == "undefined") {
+				index = possiblePrices[rHelper.data.settings[7].value];
+			} else if (typeof (period) == "number") {
+				index = possiblePrices[period];
+			}
+
 			var target = rHelper.fn.CALC_convertId(id);
 			var targetPrices = target.prices[index];
 
@@ -2002,7 +2299,1628 @@ var rHelper = {
 			return customTUPrice;
 		}
 	},
-	"data": {}
+	"data": {},
+	"tu": [{
+		"tu1": 145,
+		"tu2": 1,
+		"tu3": 2,
+		"tu4": 2,
+		"factor": 5.049546987548256
+	}, {
+		"tu1": 142,
+		"tu2": 4,
+		"tu3": 1,
+		"tu4": 2,
+		"factor": 5.049537328215894
+	}, {
+		"tu1": 141,
+		"tu2": 1,
+		"tu3": 5,
+		"tu4": 1,
+		"factor": 5.049975808955912
+	}, {
+		"tu1": 139,
+		"tu2": 7,
+		"tu3": 0,
+		"tu4": 2,
+		"factor": 5.04952766890201
+	}, {
+		"tu1": 138,
+		"tu2": 4,
+		"tu3": 4,
+		"tu4": 1,
+		"factor": 5.049966148803255
+	}, {
+		"tu1": 135,
+		"tu2": 7,
+		"tu3": 3,
+		"tu4": 1,
+		"factor": 5.049956488669072
+	}, {
+		"tu1": 135,
+		"tu2": 2,
+		"tu3": 8,
+		"tu4": 0,
+		"factor": 5.049909577605985
+	}, {
+		"tu1": 132,
+		"tu2": 10,
+		"tu3": 2,
+		"tu4": 1,
+		"factor": 5.049946828553374
+	}, {
+		"tu1": 132,
+		"tu2": 5,
+		"tu3": 7,
+		"tu4": 0,
+		"factor": 5.049899917580023
+	}, {
+		"tu1": 129,
+		"tu2": 13,
+		"tu3": 1,
+		"tu4": 1,
+		"factor": 5.049937168456153
+	}, {
+		"tu1": 129,
+		"tu2": 8,
+		"tu3": 6,
+		"tu4": 0,
+		"factor": 5.049890257572537
+	}, {
+		"tu1": 126,
+		"tu2": 16,
+		"tu3": 0,
+		"tu4": 1,
+		"factor": 5.049927508377411
+	}, {
+		"tu1": 126,
+		"tu2": 11,
+		"tu3": 5,
+		"tu4": 0,
+		"factor": 5.049880597583531
+	}, {
+		"tu1": 123,
+		"tu2": 14,
+		"tu3": 4,
+		"tu4": 0,
+		"factor": 5.0498709376130035
+	}, {
+		"tu1": 120,
+		"tu2": 17,
+		"tu3": 3,
+		"tu4": 0,
+		"factor": 5.0498612776609555
+	}, {
+		"tu1": 117,
+		"tu2": 20,
+		"tu3": 2,
+		"tu4": 0,
+		"factor": 5.049851617727384
+	}, {
+		"tu1": 114,
+		"tu2": 23,
+		"tu3": 1,
+		"tu4": 0,
+		"factor": 5.049841957812293
+	}, {
+		"tu1": 111,
+		"tu2": 26,
+		"tu3": 0,
+		"tu4": 0,
+		"factor": 5.049832297915679
+	}, {
+		"tu1": 99,
+		"tu2": 0,
+		"tu3": 0,
+		"tu4": 13,
+		"factor": 5.0498315619730025
+	}, {
+		"tu1": 93,
+		"tu2": 1,
+		"tu3": 3,
+		"tu4": 12,
+		"factor": 5.049765332514903
+	}, {
+		"tu1": 90,
+		"tu2": 4,
+		"tu3": 2,
+		"tu4": 12,
+		"factor": 5.049755672764868
+	}, {
+		"tu1": 87,
+		"tu2": 7,
+		"tu3": 1,
+		"tu4": 12,
+		"factor": 5.049746013033308
+	}, {
+		"tu1": 87,
+		"tu2": 2,
+		"tu3": 6,
+		"tu4": 11,
+		"factor": 5.0496991039254135
+	}, {
+		"tu1": 84,
+		"tu2": 10,
+		"tu3": 0,
+		"tu4": 12,
+		"factor": 5.04973635332023
+	}, {
+		"tu1": 84,
+		"tu2": 5,
+		"tu3": 5,
+		"tu4": 11,
+		"factor": 5.049689444302067
+	}, {
+		"tu1": 84,
+		"tu2": 0,
+		"tu3": 10,
+		"tu4": 10,
+		"factor": 5.049642535719661
+	}, {
+		"tu1": 81,
+		"tu2": 8,
+		"tu3": 4,
+		"tu4": 11,
+		"factor": 5.049679784697198
+	}, {
+		"tu1": 81,
+		"tu2": 3,
+		"tu3": 9,
+		"tu4": 10,
+		"factor": 5.049632876204525
+	}, {
+		"tu1": 78,
+		"tu2": 11,
+		"tu3": 3,
+		"tu4": 11,
+		"factor": 5.049670125110809
+	}, {
+		"tu1": 78,
+		"tu2": 6,
+		"tu3": 8,
+		"tu4": 10,
+		"factor": 5.049623216707865
+	}, {
+		"tu1": 78,
+		"tu2": 1,
+		"tu3": 13,
+		"tu4": 9,
+		"factor": 5.049576308740673
+	}, {
+		"tu1": 75,
+		"tu2": 14,
+		"tu3": 2,
+		"tu4": 11,
+		"factor": 5.049660465542896
+	}, {
+		"tu1": 75,
+		"tu2": 9,
+		"tu3": 7,
+		"tu4": 10,
+		"factor": 5.0496135572296845
+	}, {
+		"tu1": 75,
+		"tu2": 4,
+		"tu3": 12,
+		"tu4": 9,
+		"factor": 5.049566649352222
+	}, {
+		"tu1": 72,
+		"tu2": 17,
+		"tu3": 1,
+		"tu4": 11,
+		"factor": 5.049650805993463
+	}, {
+		"tu1": 72,
+		"tu2": 12,
+		"tu3": 6,
+		"tu4": 10,
+		"factor": 5.049603897769982
+	}, {
+		"tu1": 72,
+		"tu2": 7,
+		"tu3": 11,
+		"tu4": 9,
+		"factor": 5.049556989982251
+	}, {
+		"tu1": 72,
+		"tu2": 2,
+		"tu3": 16,
+		"tu4": 8,
+		"factor": 5.049510082630265
+	}, {
+		"tu1": 71,
+		"tu2": 4,
+		"tu3": 15,
+		"tu4": 8,
+		"factor": 5.049995472429614
+	}, {
+		"tu1": 69,
+		"tu2": 20,
+		"tu3": 0,
+		"tu4": 11,
+		"factor": 5.049641146462505
+	}, {
+		"tu1": 69,
+		"tu2": 15,
+		"tu3": 5,
+		"tu4": 10,
+		"factor": 5.049594238328755
+	}, {
+		"tu1": 69,
+		"tu2": 10,
+		"tu3": 10,
+		"tu4": 9,
+		"factor": 5.049547330630755
+	}, {
+		"tu1": 69,
+		"tu2": 5,
+		"tu3": 15,
+		"tu4": 8,
+		"factor": 5.0495004233685
+	}, {
+		"tu1": 68,
+		"tu2": 7,
+		"tu3": 14,
+		"tu4": 8,
+		"factor": 5.049985812239343
+	}, {
+		"tu1": 68,
+		"tu2": 2,
+		"tu3": 19,
+		"tu4": 7,
+		"factor": 5.049938900903856
+	}, {
+		"tu1": 66,
+		"tu2": 18,
+		"tu3": 4,
+		"tu4": 10,
+		"factor": 5.049584578906008
+	}, {
+		"tu1": 66,
+		"tu2": 13,
+		"tu3": 9,
+		"tu4": 9,
+		"factor": 5.049537671297738
+	}, {
+		"tu1": 65,
+		"tu2": 10,
+		"tu3": 13,
+		"tu4": 8,
+		"factor": 5.049976152067548
+	}, {
+		"tu1": 65,
+		"tu2": 5,
+		"tu3": 18,
+		"tu4": 7,
+		"factor": 5.0499292408218
+	}, {
+		"tu1": 65,
+		"tu2": 0,
+		"tu3": 23,
+		"tu4": 6,
+		"factor": 5.049882330011827
+	}, {
+		"tu1": 63,
+		"tu2": 21,
+		"tu3": 3,
+		"tu4": 10,
+		"factor": 5.049574919501737
+	}, {
+		"tu1": 63,
+		"tu2": 16,
+		"tu3": 8,
+		"tu4": 9,
+		"factor": 5.049528011983197
+	}, {
+		"tu1": 62,
+		"tu2": 13,
+		"tu3": 12,
+		"tu4": 8,
+		"factor": 5.049966491914233
+	}, {
+		"tu1": 62,
+		"tu2": 8,
+		"tu3": 17,
+		"tu4": 7,
+		"factor": 5.049919580758222
+	}, {
+		"tu1": 62,
+		"tu2": 3,
+		"tu3": 22,
+		"tu4": 6,
+		"factor": 5.049872670037985
+	}, {
+		"tu1": 60,
+		"tu2": 24,
+		"tu3": 2,
+		"tu4": 10,
+		"factor": 5.049565260115945
+	}, {
+		"tu1": 60,
+		"tu2": 19,
+		"tu3": 7,
+		"tu4": 9,
+		"factor": 5.0495183526871354
+	}, {
+		"tu1": 59,
+		"tu2": 16,
+		"tu3": 11,
+		"tu4": 8,
+		"factor": 5.049956831779397
+	}, {
+		"tu1": 59,
+		"tu2": 11,
+		"tu3": 16,
+		"tu4": 7,
+		"factor": 5.049909920713121
+	}, {
+		"tu1": 59,
+		"tu2": 6,
+		"tu3": 21,
+		"tu4": 6,
+		"factor": 5.049863010082621
+	}, {
+		"tu1": 59,
+		"tu2": 1,
+		"tu3": 26,
+		"tu4": 5,
+		"factor": 5.049816099887894
+	}, {
+		"tu1": 57,
+		"tu2": 27,
+		"tu3": 1,
+		"tu4": 10,
+		"factor": 5.049555600748631
+	}, {
+		"tu1": 57,
+		"tu2": 22,
+		"tu3": 6,
+		"tu4": 9,
+		"factor": 5.049508693409551
+	}, {
+		"tu1": 56,
+		"tu2": 24,
+		"tu3": 5,
+		"tu4": 9,
+		"factor": 5.049994083075359
+	}, {
+		"tu1": 56,
+		"tu2": 19,
+		"tu3": 10,
+		"tu4": 8,
+		"factor": 5.0499471716630415
+	}, {
+		"tu1": 56,
+		"tu2": 14,
+		"tu3": 15,
+		"tu4": 7,
+		"factor": 5.049900260686504
+	}, {
+		"tu1": 56,
+		"tu2": 9,
+		"tu3": 20,
+		"tu4": 6,
+		"factor": 5.049853350145739
+	}, {
+		"tu1": 56,
+		"tu2": 4,
+		"tu3": 25,
+		"tu4": 5,
+		"factor": 5.049806440040745
+	}, {
+		"tu1": 54,
+		"tu2": 30,
+		"tu3": 0,
+		"tu4": 10,
+		"factor": 5.049545941399794
+	}, {
+		"tu1": 53,
+		"tu2": 27,
+		"tu3": 4,
+		"tu4": 9,
+		"factor": 5.049984422887742
+	}, {
+		"tu1": 53,
+		"tu2": 22,
+		"tu3": 9,
+		"tu4": 8,
+		"factor": 5.049937511565163
+	}, {
+		"tu1": 53,
+		"tu2": 17,
+		"tu3": 14,
+		"tu4": 7,
+		"factor": 5.049890600678362
+	}, {
+		"tu1": 53,
+		"tu2": 12,
+		"tu3": 19,
+		"tu4": 6,
+		"factor": 5.049843690227331
+	}, {
+		"tu1": 53,
+		"tu2": 7,
+		"tu3": 24,
+		"tu4": 5,
+		"factor": 5.049796780212072
+	}, {
+		"tu1": 53,
+		"tu2": 2,
+		"tu3": 29,
+		"tu4": 4,
+		"factor": 5.04974987063258
+	}, {
+		"tu1": 50,
+		"tu2": 30,
+		"tu3": 3,
+		"tu4": 9,
+		"factor": 5.049974762718609
+	}, {
+		"tu1": 50,
+		"tu2": 25,
+		"tu3": 8,
+		"tu4": 8,
+		"factor": 5.049927851485765
+	}, {
+		"tu1": 50,
+		"tu2": 20,
+		"tu3": 13,
+		"tu4": 7,
+		"factor": 5.0498809406887
+	}, {
+		"tu1": 50,
+		"tu2": 15,
+		"tu3": 18,
+		"tu4": 6,
+		"factor": 5.049834030327405
+	}, {
+		"tu1": 50,
+		"tu2": 10,
+		"tu3": 23,
+		"tu4": 5,
+		"factor": 5.049787120401883
+	}, {
+		"tu1": 50,
+		"tu2": 5,
+		"tu3": 28,
+		"tu4": 4,
+		"factor": 5.049740210912124
+	}, {
+		"tu1": 50,
+		"tu2": 0,
+		"tu3": 33,
+		"tu4": 3,
+		"factor": 5.049693301858126
+	}, {
+		"tu1": 47,
+		"tu2": 33,
+		"tu3": 2,
+		"tu4": 9,
+		"factor": 5.04996510256795
+	}, {
+		"tu1": 47,
+		"tu2": 28,
+		"tu3": 7,
+		"tu4": 8,
+		"factor": 5.049918191424844
+	}, {
+		"tu1": 47,
+		"tu2": 23,
+		"tu3": 12,
+		"tu4": 7,
+		"factor": 5.049871280717514
+	}, {
+		"tu1": 47,
+		"tu2": 18,
+		"tu3": 17,
+		"tu4": 6,
+		"factor": 5.049824370445955
+	}, {
+		"tu1": 47,
+		"tu2": 13,
+		"tu3": 22,
+		"tu4": 5,
+		"factor": 5.049777460610167
+	}, {
+		"tu1": 47,
+		"tu2": 8,
+		"tu3": 27,
+		"tu4": 4,
+		"factor": 5.049730551210141
+	}, {
+		"tu1": 47,
+		"tu2": 3,
+		"tu3": 32,
+		"tu4": 3,
+		"factor": 5.049683642245876
+	}, {
+		"tu1": 45,
+		"tu2": 1,
+		"tu3": 1,
+		"tu4": 23,
+		"factor": 5.04955486484628
+	}, {
+		"tu1": 44,
+		"tu2": 36,
+		"tu3": 1,
+		"tu4": 9,
+		"factor": 5.049955442435773
+	}, {
+		"tu1": 44,
+		"tu2": 31,
+		"tu3": 6,
+		"tu4": 8,
+		"factor": 5.0499085313824015
+	}, {
+		"tu1": 44,
+		"tu2": 26,
+		"tu3": 11,
+		"tu4": 7,
+		"factor": 5.04986162076481
+	}, {
+		"tu1": 44,
+		"tu2": 21,
+		"tu3": 16,
+		"tu4": 6,
+		"factor": 5.049814710582987
+	}, {
+		"tu1": 44,
+		"tu2": 16,
+		"tu3": 21,
+		"tu4": 5,
+		"factor": 5.049767800836931
+	}, {
+		"tu1": 44,
+		"tu2": 11,
+		"tu3": 26,
+		"tu4": 4,
+		"factor": 5.049720891526639
+	}, {
+		"tu1": 44,
+		"tu2": 6,
+		"tu3": 31,
+		"tu4": 3,
+		"factor": 5.049673982652109
+	}, {
+		"tu1": 44,
+		"tu2": 1,
+		"tu3": 36,
+		"tu4": 2,
+		"factor": 5.049627074213331
+	}, {
+		"tu1": 42,
+		"tu2": 4,
+		"tu3": 0,
+		"tu4": 23,
+		"factor": 5.04954520549885
+	}, {
+		"tu1": 41,
+		"tu2": 39,
+		"tu3": 0,
+		"tu4": 9,
+		"factor": 5.049945782322073
+	}, {
+		"tu1": 41,
+		"tu2": 34,
+		"tu3": 5,
+		"tu4": 8,
+		"factor": 5.049898871358441
+	}, {
+		"tu1": 41,
+		"tu2": 29,
+		"tu3": 10,
+		"tu4": 7,
+		"factor": 5.049851960830583
+	}, {
+		"tu1": 41,
+		"tu2": 24,
+		"tu3": 15,
+		"tu4": 6,
+		"factor": 5.049805050738495
+	}, {
+		"tu1": 41,
+		"tu2": 19,
+		"tu3": 20,
+		"tu4": 5,
+		"factor": 5.049758141082175
+	}, {
+		"tu1": 41,
+		"tu2": 14,
+		"tu3": 25,
+		"tu4": 4,
+		"factor": 5.0497112318616155
+	}, {
+		"tu1": 41,
+		"tu2": 9,
+		"tu3": 30,
+		"tu4": 3,
+		"factor": 5.049664323076817
+	}, {
+		"tu1": 41,
+		"tu2": 4,
+		"tu3": 35,
+		"tu4": 2,
+		"factor": 5.049617414727771
+	}, {
+		"tu1": 41,
+		"tu2": 1,
+		"tu3": 4,
+		"tu4": 22,
+		"factor": 5.049983686922897
+	}, {
+		"tu1": 38,
+		"tu2": 37,
+		"tu3": 4,
+		"tu4": 8,
+		"factor": 5.049889211352958
+	}, {
+		"tu1": 38,
+		"tu2": 32,
+		"tu3": 9,
+		"tu4": 7,
+		"factor": 5.049842300914835
+	}, {
+		"tu1": 38,
+		"tu2": 27,
+		"tu3": 14,
+		"tu4": 6,
+		"factor": 5.0497953909124815
+	}, {
+		"tu1": 38,
+		"tu2": 22,
+		"tu3": 19,
+		"tu4": 5,
+		"factor": 5.049748481345896
+	}, {
+		"tu1": 38,
+		"tu2": 17,
+		"tu3": 24,
+		"tu4": 4,
+		"factor": 5.04970157221507
+	}, {
+		"tu1": 38,
+		"tu2": 12,
+		"tu3": 29,
+		"tu4": 3,
+		"factor": 5.049654663520003
+	}, {
+		"tu1": 38,
+		"tu2": 7,
+		"tu3": 34,
+		"tu4": 2,
+		"factor": 5.049607755260688
+	}, {
+		"tu1": 38,
+		"tu2": 4,
+		"tu3": 3,
+		"tu4": 22,
+		"factor": 5.049974026755169
+	}, {
+		"tu1": 38,
+		"tu2": 2,
+		"tu3": 39,
+		"tu4": 1,
+		"factor": 5.0495608474371245
+	}, {
+		"tu1": 35,
+		"tu2": 40,
+		"tu3": 3,
+		"tu4": 8,
+		"factor": 5.049879551365952
+	}, {
+		"tu1": 35,
+		"tu2": 35,
+		"tu3": 8,
+		"tu4": 7,
+		"factor": 5.049832641017565
+	}, {
+		"tu1": 35,
+		"tu2": 30,
+		"tu3": 13,
+		"tu4": 6,
+		"factor": 5.049785731104946
+	}, {
+		"tu1": 35,
+		"tu2": 25,
+		"tu3": 18,
+		"tu4": 5,
+		"factor": 5.049738821628093
+	}, {
+		"tu1": 35,
+		"tu2": 20,
+		"tu3": 23,
+		"tu4": 4,
+		"factor": 5.049691912587002
+	}, {
+		"tu1": 35,
+		"tu2": 15,
+		"tu3": 28,
+		"tu4": 3,
+		"factor": 5.049645003981666
+	}, {
+		"tu1": 35,
+		"tu2": 10,
+		"tu3": 33,
+		"tu4": 2,
+		"factor": 5.049598095812083
+	}, {
+		"tu1": 35,
+		"tu2": 7,
+		"tu3": 2,
+		"tu4": 22,
+		"factor": 5.049964366605918
+	}, {
+		"tu1": 35,
+		"tu2": 5,
+		"tu3": 38,
+		"tu4": 1,
+		"factor": 5.04955118807825
+	}, {
+		"tu1": 35,
+		"tu2": 2,
+		"tu3": 7,
+		"tu4": 21,
+		"factor": 5.04991745546965
+	}, {
+		"tu1": 35,
+		"tu2": 0,
+		"tu3": 43,
+		"tu4": 0,
+		"factor": 5.049504280780161
+	}, {
+		"tu1": 34,
+		"tu2": 2,
+		"tu3": 42,
+		"tu4": 0,
+		"factor": 5.049989670021802
+	}, {
+		"tu1": 32,
+		"tu2": 43,
+		"tu3": 2,
+		"tu4": 8,
+		"factor": 5.049869891397425
+	}, {
+		"tu1": 32,
+		"tu2": 38,
+		"tu3": 7,
+		"tu4": 7,
+		"factor": 5.049822981138776
+	}, {
+		"tu1": 32,
+		"tu2": 33,
+		"tu3": 12,
+		"tu4": 6,
+		"factor": 5.0497760713158915
+	}, {
+		"tu1": 32,
+		"tu2": 28,
+		"tu3": 17,
+		"tu4": 5,
+		"factor": 5.049729161928772
+	}, {
+		"tu1": 32,
+		"tu2": 23,
+		"tu3": 22,
+		"tu4": 4,
+		"factor": 5.049682252977412
+	}, {
+		"tu1": 32,
+		"tu2": 18,
+		"tu3": 27,
+		"tu4": 3,
+		"factor": 5.049635344461809
+	}, {
+		"tu1": 32,
+		"tu2": 13,
+		"tu3": 32,
+		"tu4": 2,
+		"factor": 5.049588436381957
+	}, {
+		"tu1": 32,
+		"tu2": 10,
+		"tu3": 1,
+		"tu4": 22,
+		"factor": 5.049954706475151
+	}, {
+		"tu1": 32,
+		"tu2": 8,
+		"tu3": 37,
+		"tu4": 1,
+		"factor": 5.049541528737853
+	}, {
+		"tu1": 32,
+		"tu2": 5,
+		"tu3": 6,
+		"tu4": 21,
+		"factor": 5.049907795428617
+	}, {
+		"tu1": 32,
+		"tu2": 0,
+		"tu3": 11,
+		"tu4": 20,
+		"factor": 5.0498608848178606
+	}, {
+		"tu1": 31,
+		"tu2": 5,
+		"tu3": 41,
+		"tu4": 0,
+		"factor": 5.049980009842626
+	}, {
+		"tu1": 29,
+		"tu2": 46,
+		"tu3": 1,
+		"tu4": 8,
+		"factor": 5.049860231447379
+	}, {
+		"tu1": 29,
+		"tu2": 41,
+		"tu3": 6,
+		"tu4": 7,
+		"factor": 5.049813321278463
+	}, {
+		"tu1": 29,
+		"tu2": 36,
+		"tu3": 11,
+		"tu4": 6,
+		"factor": 5.0497664115453125
+	}, {
+		"tu1": 29,
+		"tu2": 31,
+		"tu3": 16,
+		"tu4": 5,
+		"factor": 5.049719502247926
+	}, {
+		"tu1": 29,
+		"tu2": 26,
+		"tu3": 21,
+		"tu4": 4,
+		"factor": 5.049672593386299
+	}, {
+		"tu1": 29,
+		"tu2": 21,
+		"tu3": 26,
+		"tu4": 3,
+		"factor": 5.049625684960429
+	}, {
+		"tu1": 29,
+		"tu2": 16,
+		"tu3": 31,
+		"tu4": 2,
+		"factor": 5.049578776970308
+	}, {
+		"tu1": 29,
+		"tu2": 13,
+		"tu3": 0,
+		"tu4": 22,
+		"factor": 5.049945046362859
+	}, {
+		"tu1": 29,
+		"tu2": 11,
+		"tu3": 36,
+		"tu4": 1,
+		"factor": 5.049531869415934
+	}, {
+		"tu1": 29,
+		"tu2": 8,
+		"tu3": 5,
+		"tu4": 21,
+		"factor": 5.049898135406062
+	}, {
+		"tu1": 29,
+		"tu2": 3,
+		"tu3": 10,
+		"tu4": 20,
+		"factor": 5.049851224885041
+	}, {
+		"tu1": 28,
+		"tu2": 8,
+		"tu3": 40,
+		"tu4": 0,
+		"factor": 5.0499703496819315
+	}, {
+		"tu1": 26,
+		"tu2": 49,
+		"tu3": 0,
+		"tu4": 8,
+		"factor": 5.049850571515811
+	}, {
+		"tu1": 26,
+		"tu2": 44,
+		"tu3": 5,
+		"tu4": 7,
+		"factor": 5.04980366143663
+	}, {
+		"tu1": 26,
+		"tu2": 39,
+		"tu3": 10,
+		"tu4": 6,
+		"factor": 5.049756751793213
+	}, {
+		"tu1": 26,
+		"tu2": 34,
+		"tu3": 15,
+		"tu4": 5,
+		"factor": 5.049709842585562
+	}, {
+		"tu1": 26,
+		"tu2": 29,
+		"tu3": 20,
+		"tu4": 4,
+		"factor": 5.049662933813666
+	}, {
+		"tu1": 26,
+		"tu2": 24,
+		"tu3": 25,
+		"tu4": 3,
+		"factor": 5.049616025477527
+	}, {
+		"tu1": 26,
+		"tu2": 19,
+		"tu3": 30,
+		"tu4": 2,
+		"factor": 5.049569117577137
+	}, {
+		"tu1": 26,
+		"tu2": 14,
+		"tu3": 35,
+		"tu4": 1,
+		"factor": 5.049522210112495
+	}, {
+		"tu1": 26,
+		"tu2": 11,
+		"tu3": 4,
+		"tu4": 21,
+		"factor": 5.049888475401987
+	}, {
+		"tu1": 26,
+		"tu2": 6,
+		"tu3": 9,
+		"tu4": 20,
+		"factor": 5.049841564970703
+	}, {
+		"tu1": 26,
+		"tu2": 1,
+		"tu3": 14,
+		"tu4": 19,
+		"factor": 5.049794654975186
+	}, {
+		"tu1": 25,
+		"tu2": 11,
+		"tu3": 39,
+		"tu4": 0,
+		"factor": 5.049960689539718
+	}, {
+		"tu1": 23,
+		"tu2": 47,
+		"tu3": 4,
+		"tu4": 7,
+		"factor": 5.049794001613272
+	}, {
+		"tu1": 23,
+		"tu2": 42,
+		"tu3": 9,
+		"tu4": 6,
+		"factor": 5.049747092059591
+	}, {
+		"tu1": 23,
+		"tu2": 37,
+		"tu3": 14,
+		"tu4": 5,
+		"factor": 5.049700182941672
+	}, {
+		"tu1": 23,
+		"tu2": 32,
+		"tu3": 19,
+		"tu4": 4,
+		"factor": 5.0496532742595095
+	}, {
+		"tu1": 23,
+		"tu2": 27,
+		"tu3": 24,
+		"tu4": 3,
+		"factor": 5.0496063660131005
+	}, {
+		"tu1": 23,
+		"tu2": 22,
+		"tu3": 29,
+		"tu4": 2,
+		"factor": 5.049559458202443
+	}, {
+		"tu1": 23,
+		"tu2": 17,
+		"tu3": 34,
+		"tu4": 1,
+		"factor": 5.049512550827528
+	}, {
+		"tu1": 23,
+		"tu2": 14,
+		"tu3": 3,
+		"tu4": 21,
+		"factor": 5.04987881541639
+	}, {
+		"tu1": 23,
+		"tu2": 9,
+		"tu3": 8,
+		"tu4": 20,
+		"factor": 5.049831905074838
+	}, {
+		"tu1": 23,
+		"tu2": 4,
+		"tu3": 13,
+		"tu4": 19,
+		"factor": 5.049784995169057
+	}, {
+		"tu1": 22,
+		"tu2": 19,
+		"tu3": 33,
+		"tu4": 1,
+		"factor": 5.049997940864136
+	}, {
+		"tu1": 22,
+		"tu2": 14,
+		"tu3": 38,
+		"tu4": 0,
+		"factor": 5.049951029415983
+	}, {
+		"tu1": 20,
+		"tu2": 50,
+		"tu3": 3,
+		"tu4": 7,
+		"factor": 5.0497843418083965
+	}, {
+		"tu1": 20,
+		"tu2": 45,
+		"tu3": 8,
+		"tu4": 6,
+		"factor": 5.049737432344448
+	}, {
+		"tu1": 20,
+		"tu2": 40,
+		"tu3": 13,
+		"tu4": 5,
+		"factor": 5.0496905233162614
+	}, {
+		"tu1": 20,
+		"tu2": 35,
+		"tu3": 18,
+		"tu4": 4,
+		"factor": 5.0496436147238315
+	}, {
+		"tu1": 20,
+		"tu2": 30,
+		"tu3": 23,
+		"tu4": 3,
+		"factor": 5.049596706567155
+	}, {
+		"tu1": 20,
+		"tu2": 25,
+		"tu3": 28,
+		"tu4": 2,
+		"factor": 5.0495497988462255
+	}, {
+		"tu1": 20,
+		"tu2": 20,
+		"tu3": 33,
+		"tu4": 1,
+		"factor": 5.049502891561041
+	}, {
+		"tu1": 20,
+		"tu2": 17,
+		"tu3": 2,
+		"tu4": 21,
+		"factor": 5.049869155449271
+	}, {
+		"tu1": 20,
+		"tu2": 12,
+		"tu3": 7,
+		"tu4": 20,
+		"factor": 5.049822245197458
+	}, {
+		"tu1": 20,
+		"tu2": 7,
+		"tu3": 12,
+		"tu4": 19,
+		"factor": 5.049775335381408
+	}, {
+		"tu1": 20,
+		"tu2": 2,
+		"tu3": 17,
+		"tu4": 18,
+		"factor": 5.049728426001126
+	}, {
+		"tu1": 19,
+		"tu2": 22,
+		"tu3": 32,
+		"tu4": 1,
+		"factor": 5.04998828066914
+	}, {
+		"tu1": 19,
+		"tu2": 17,
+		"tu3": 37,
+		"tu4": 0,
+		"factor": 5.049941369310724
+	}, {
+		"tu1": 17,
+		"tu2": 53,
+		"tu3": 2,
+		"tu4": 7,
+		"factor": 5.049774682021998
+	}, {
+		"tu1": 17,
+		"tu2": 48,
+		"tu3": 7,
+		"tu4": 6,
+		"factor": 5.049727772647783
+	}, {
+		"tu1": 17,
+		"tu2": 43,
+		"tu3": 12,
+		"tu4": 5,
+		"factor": 5.049680863709329
+	}, {
+		"tu1": 17,
+		"tu2": 38,
+		"tu3": 17,
+		"tu4": 4,
+		"factor": 5.049633955206633
+	}, {
+		"tu1": 17,
+		"tu2": 33,
+		"tu3": 22,
+		"tu4": 3,
+		"factor": 5.049587047139687
+	}, {
+		"tu1": 17,
+		"tu2": 28,
+		"tu3": 27,
+		"tu4": 2,
+		"factor": 5.049540139508489
+	}, {
+		"tu1": 17,
+		"tu2": 20,
+		"tu3": 1,
+		"tu4": 21,
+		"factor": 5.049859495500633
+	}, {
+		"tu1": 17,
+		"tu2": 15,
+		"tu3": 6,
+		"tu4": 20,
+		"factor": 5.049812585338551
+	}, {
+		"tu1": 17,
+		"tu2": 10,
+		"tu3": 11,
+		"tu4": 19,
+		"factor": 5.04976567561224
+	}, {
+		"tu1": 17,
+		"tu2": 5,
+		"tu3": 16,
+		"tu4": 18,
+		"factor": 5.04971876632169
+	}, {
+		"tu1": 17,
+		"tu2": 0,
+		"tu3": 21,
+		"tu4": 17,
+		"factor": 5.049671857466898
+	}, {
+		"tu1": 16,
+		"tu2": 25,
+		"tu3": 31,
+		"tu4": 1,
+		"factor": 5.0499786204926265
+	}, {
+		"tu1": 16,
+		"tu2": 20,
+		"tu3": 36,
+		"tu4": 0,
+		"factor": 5.049931709223946
+	}, {
+		"tu1": 14,
+		"tu2": 56,
+		"tu3": 1,
+		"tu4": 7,
+		"factor": 5.049765022254077
+	}, {
+		"tu1": 14,
+		"tu2": 51,
+		"tu3": 6,
+		"tu4": 6,
+		"factor": 5.049718112969596
+	}, {
+		"tu1": 14,
+		"tu2": 46,
+		"tu3": 11,
+		"tu4": 5,
+		"factor": 5.049671204120877
+	}, {
+		"tu1": 14,
+		"tu2": 41,
+		"tu3": 16,
+		"tu4": 4,
+		"factor": 5.0496242957079085
+	}, {
+		"tu1": 14,
+		"tu2": 36,
+		"tu3": 21,
+		"tu4": 3,
+		"factor": 5.049577387730693
+	}, {
+		"tu1": 14,
+		"tu2": 31,
+		"tu3": 26,
+		"tu4": 2,
+		"factor": 5.049530480189225
+	}, {
+		"tu1": 14,
+		"tu2": 23,
+		"tu3": 0,
+		"tu4": 21,
+		"factor": 5.04984983557047
+	}, {
+		"tu1": 14,
+		"tu2": 18,
+		"tu3": 5,
+		"tu4": 20,
+		"factor": 5.049802925498126
+	}, {
+		"tu1": 14,
+		"tu2": 13,
+		"tu3": 10,
+		"tu4": 19,
+		"factor": 5.049756015861548
+	}, {
+		"tu1": 14,
+		"tu2": 8,
+		"tu3": 15,
+		"tu4": 18,
+		"factor": 5.049709106660732
+	}, {
+		"tu1": 14,
+		"tu2": 3,
+		"tu3": 20,
+		"tu4": 17,
+		"factor": 5.049662197895673
+	}, {
+		"tu1": 13,
+		"tu2": 28,
+		"tu3": 30,
+		"tu4": 1,
+		"factor": 5.049968960334589
+	}, {
+		"tu1": 13,
+		"tu2": 23,
+		"tu3": 35,
+		"tu4": 0,
+		"factor": 5.049922049155645
+	}, {
+		"tu1": 11,
+		"tu2": 59,
+		"tu3": 0,
+		"tu4": 7,
+		"factor": 5.049755362504633
+	}, {
+		"tu1": 11,
+		"tu2": 54,
+		"tu3": 5,
+		"tu4": 6,
+		"factor": 5.049708453309886
+	}, {
+		"tu1": 11,
+		"tu2": 49,
+		"tu3": 10,
+		"tu4": 5,
+		"factor": 5.049661544550898
+	}, {
+		"tu1": 11,
+		"tu2": 44,
+		"tu3": 15,
+		"tu4": 4,
+		"factor": 5.049614636227664
+	}, {
+		"tu1": 11,
+		"tu2": 39,
+		"tu3": 20,
+		"tu4": 3,
+		"factor": 5.049567728340177
+	}, {
+		"tu1": 11,
+		"tu2": 34,
+		"tu3": 25,
+		"tu4": 2,
+		"factor": 5.04952082088844
+	}, {
+		"tu1": 11,
+		"tu2": 21,
+		"tu3": 4,
+		"tu4": 20,
+		"factor": 5.049793265676176
+	}, {
+		"tu1": 11,
+		"tu2": 16,
+		"tu3": 9,
+		"tu4": 19,
+		"factor": 5.049746356129333
+	}, {
+		"tu1": 11,
+		"tu2": 11,
+		"tu3": 14,
+		"tu4": 18,
+		"factor": 5.049699447018249
+	}, {
+		"tu1": 11,
+		"tu2": 6,
+		"tu3": 19,
+		"tu4": 17,
+		"factor": 5.049652538342924
+	}, {
+		"tu1": 11,
+		"tu2": 1,
+		"tu3": 24,
+		"tu4": 16,
+		"factor": 5.0496056301033505
+	}, {
+		"tu1": 10,
+		"tu2": 31,
+		"tu3": 29,
+		"tu4": 1,
+		"factor": 5.049959300195031
+	}, {
+		"tu1": 10,
+		"tu2": 26,
+		"tu3": 34,
+		"tu4": 0,
+		"factor": 5.049912389105826
+	}, {
+		"tu1": 8,
+		"tu2": 57,
+		"tu3": 4,
+		"tu4": 6,
+		"factor": 5.0496987936686555
+	}, {
+		"tu1": 8,
+		"tu2": 52,
+		"tu3": 9,
+		"tu4": 5,
+		"factor": 5.049651884999401
+	}, {
+		"tu1": 8,
+		"tu2": 47,
+		"tu3": 14,
+		"tu4": 4,
+		"factor": 5.049604976765895
+	}, {
+		"tu1": 8,
+		"tu2": 42,
+		"tu3": 19,
+		"tu4": 3,
+		"factor": 5.0495580689681425
+	}, {
+		"tu1": 8,
+		"tu2": 37,
+		"tu3": 24,
+		"tu4": 2,
+		"factor": 5.049511161606134
+	}, {
+		"tu1": 8,
+		"tu2": 24,
+		"tu3": 3,
+		"tu4": 20,
+		"factor": 5.049783605872708
+	}, {
+		"tu1": 8,
+		"tu2": 19,
+		"tu3": 8,
+		"tu4": 19,
+		"factor": 5.049736696415597
+	}, {
+		"tu1": 8,
+		"tu2": 14,
+		"tu3": 13,
+		"tu4": 18,
+		"factor": 5.0496897873942475
+	}, {
+		"tu1": 8,
+		"tu2": 9,
+		"tu3": 18,
+		"tu4": 17,
+		"factor": 5.049642878808654
+	}, {
+		"tu1": 8,
+		"tu2": 4,
+		"tu3": 23,
+		"tu4": 16,
+		"factor": 5.049595970658812
+	}, {
+		"tu1": 7,
+		"tu2": 39,
+		"tu3": 23,
+		"tu4": 2,
+		"factor": 5.0499965515092
+	}, {
+		"tu1": 7,
+		"tu2": 34,
+		"tu3": 28,
+		"tu4": 1,
+		"factor": 5.049949640073952
+	}, {
+		"tu1": 7,
+		"tu2": 29,
+		"tu3": 33,
+		"tu4": 0,
+		"factor": 5.049902729074482
+	}, {
+		"tu1": 5,
+		"tu2": 60,
+		"tu3": 3,
+		"tu4": 6,
+		"factor": 5.049689134045903
+	}, {
+		"tu1": 5,
+		"tu2": 55,
+		"tu3": 8,
+		"tu4": 5,
+		"factor": 5.0496422254663775
+	}, {
+		"tu1": 5,
+		"tu2": 50,
+		"tu3": 13,
+		"tu4": 4,
+		"factor": 5.049595317322606
+	}, {
+		"tu1": 5,
+		"tu2": 45,
+		"tu3": 18,
+		"tu4": 3,
+		"factor": 5.049548409614583
+	}, {
+		"tu1": 5,
+		"tu2": 40,
+		"tu3": 23,
+		"tu4": 2,
+		"factor": 5.049501502342305
+	}, {
+		"tu1": 5,
+		"tu2": 27,
+		"tu3": 2,
+		"tu4": 20,
+		"factor": 5.049773946087716
+	}, {
+		"tu1": 5,
+		"tu2": 22,
+		"tu3": 7,
+		"tu4": 19,
+		"factor": 5.049727036720341
+	}, {
+		"tu1": 5,
+		"tu2": 17,
+		"tu3": 12,
+		"tu4": 18,
+		"factor": 5.049680127788722
+	}, {
+		"tu1": 5,
+		"tu2": 12,
+		"tu3": 17,
+		"tu4": 17,
+		"factor": 5.04963321929286
+	}, {
+		"tu1": 5,
+		"tu2": 7,
+		"tu3": 22,
+		"tu4": 16,
+		"factor": 5.0495863112327495
+	}, {
+		"tu1": 5,
+		"tu2": 2,
+		"tu3": 27,
+		"tu4": 15,
+		"factor": 5.049539403608389
+	}, {
+		"tu1": 4,
+		"tu2": 42,
+		"tu3": 22,
+		"tu4": 2,
+		"factor": 5.0499868913168635
+	}, {
+		"tu1": 4,
+		"tu2": 37,
+		"tu3": 27,
+		"tu4": 1,
+		"factor": 5.049939979971354
+	}, {
+		"tu1": 4,
+		"tu2": 32,
+		"tu3": 32,
+		"tu4": 0,
+		"factor": 5.049893069061621
+	}, {
+		"tu1": 2,
+		"tu2": 63,
+		"tu3": 2,
+		"tu4": 6,
+		"factor": 5.049679474441627
+	}, {
+		"tu1": 2,
+		"tu2": 58,
+		"tu3": 7,
+		"tu4": 5,
+		"factor": 5.049632565951837
+	}, {
+		"tu1": 2,
+		"tu2": 53,
+		"tu3": 12,
+		"tu4": 4,
+		"factor": 5.0495856578977945
+	}, {
+		"tu1": 2,
+		"tu2": 48,
+		"tu3": 17,
+		"tu4": 3,
+		"factor": 5.049538750279503
+	}, {
+		"tu1": 2,
+		"tu2": 30,
+		"tu3": 1,
+		"tu4": 20,
+		"factor": 5.049764286321205
+	}, {
+		"tu1": 2,
+		"tu2": 25,
+		"tu3": 6,
+		"tu4": 19,
+		"factor": 5.049717377043561
+	}, {
+		"tu1": 2,
+		"tu2": 20,
+		"tu3": 11,
+		"tu4": 18,
+		"factor": 5.049670468201676
+	}, {
+		"tu1": 2,
+		"tu2": 15,
+		"tu3": 16,
+		"tu4": 17,
+		"factor": 5.049623559795545
+	}, {
+		"tu1": 2,
+		"tu2": 10,
+		"tu3": 21,
+		"tu4": 16,
+		"factor": 5.0495766518251655
+	}, {
+		"tu1": 2,
+		"tu2": 5,
+		"tu3": 26,
+		"tu4": 15,
+		"factor": 5.049529744290536
+	}, {
+		"tu1": 1,
+		"tu2": 45,
+		"tu3": 21,
+		"tu4": 2,
+		"factor": 5.049977231143005
+	}, {
+		"tu1": 1,
+		"tu2": 40,
+		"tu3": 26,
+		"tu4": 1,
+		"factor": 5.049930319887234
+	}, {
+		"tu1": 1,
+		"tu2": 35,
+		"tu3": 31,
+		"tu4": 0,
+		"factor": 5.049883409067237
+	}, {
+		"tu1": 1,
+		"tu2": 2,
+		"tu3": 30,
+		"tu4": 14,
+		"factor": 5.0499682243719946
+	}]
 };
 
 (function () {

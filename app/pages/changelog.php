@@ -36,6 +36,7 @@
       – NEW: World Map now also show Headquarters depending on user settings<br />
       – NEW: User Index consists of users attacked by or traded with others<br />
 			- CHANGED: Personal Mine Map, Trade Log and Attack Log are only available for registered users due to their huge data nature which this server cannot handle easily in all cases<br />
+      – NEW: missing Tech upgrade calculator: shows which upgrades you're missing for a messed up teching process<br />
       <br />
       <strong>Bugfixes</strong><br />
       - Giant Diamond calculator: fixed top 10 profit calculation, fixed a bug where sometimes wrong efficiency values would be calculated<br />
@@ -62,7 +63,7 @@
 	?>
 
 	<div class="row">
-		<div class="col-4">
+		<div class="col-lg-4 col-md-12">
 			<div class="list-group" id="list-tab" role="tablist">
 				<?php
 				foreach($changelogIndex as $index => $array) {
@@ -72,7 +73,7 @@
 				?>
 			</div>
 		</div>
-		<div class="col-8">
+		<div class="col-lg-8 col-md-12 mt-3">
 				<div class="tab-content" id="nav-tabContent">
 					<?php
 					foreach($changelogContent as $index => $array) {

@@ -49,7 +49,7 @@
         for ($i = 1; $i <= 4; $i += 1) {
             echo '
 			<div class="input-group mb-1 mt-1">
-        <div class="input-group-addon resources-loot-1' .$i. '" id="custom-tu-desc-' .$i. '"></div>
+        <div class="input-group-addon resources-loot-1' .($i - 1). '" id="custom-tu-desc-' .$i. '"></div>
 
 				<input
 					class="form-control col-md-12 col-xl-6"

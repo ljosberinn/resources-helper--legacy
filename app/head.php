@@ -17,7 +17,6 @@
 <!-- DNS prefetch -->
 <link rel="dns-prefetch" href="//code.highcharts.com" />
 <link rel="dns-prefetch" href="//code.jquery.com" />
-<link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
 <link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
 <link rel="dns-prefetch" href="//unpkg.com" />
 
@@ -26,9 +25,26 @@
 
 <!-- internal stylesheets -->
 <link rel="stylesheet" href="assets/css/GoogleFonts_OpenSans.min.css" />
-<link rel="stylesheet" href="assets/css/bootstrap.custom.min.css" />
 <link rel="stylesheet" href="assets/css/sweetalert2.min.css" />
-<link rel="stylesheet" href="assets/css/custom.min.css" />
+
+<?php
+
+$cssFiles = [
+  "assets/css/bootstrap.custom.min.css" => [
+    "mode" => "",
+    "params" => "",
+    "type" => "css",
+  ],
+  "assets/css/custom.min.css" => [
+    "mode" => "",
+    "params" => "",
+    "type" => "css",
+  ],
+];
+
+appendFiles($cssFiles);
+
+?>
 
 <!-- hacky inline stylesheets -->
 <?php
@@ -83,13 +99,19 @@ if (isset($_SESSION["id"])) {
 <!-- JS internal -->
 <?php
 
-$files = [
+$jsFiles = [
   "assets/js/functions.min.js" => [
     "mode" => "",
-    "params" => ""
+    "params" => "",
+    "type" => "js",
+  ],
+  "assets/js/sorttable.min.js" => [
+    "mode" => "",
+    "params" => "",
+    "type" => "js",
   ],
 ];
 
-appendFiles($files);
+appendFiles($jsFiles);
 
 ?>

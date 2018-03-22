@@ -211,3 +211,48 @@ $(".nav-link").each(function (i, navLink) {
 		toggleTab(navLink.id, navLink.dataset.target);
 	});
 });
+
+$("#techupgrades-toggle").on("click", function () {
+	var el = $(this);
+
+	if (el.prop("checked") === true) {
+		rHelper.fn.INSRT_techUpgradeRows("tu4");
+		sorttable.innerSortFunction.apply($("#module-techupgrades th")[4], []);
+		sorttable.innerSortFunction.apply($("#module-techupgrades th")[5], []);
+		sorttable.innerSortFunction.apply($("#module-techupgrades th")[5], []);
+	} else {
+		rHelper.fn.INSRT_techUpgradeRows();
+	}
+});
+
+$("#techupgrades-input").on("input", function () {
+
+	var tu4Allowance = $("#techupgrades-calc-tu4-allowance");
+	var value = parseFloat(this.value);
+
+	if (value >= 1.01 && value <= 5) {
+		if(tu4Allowance.prop("checked") === true) {
+			rHelper.fn.INSRT_techUpgradeCalculator(value, "tu4Included");
+		} else {
+			rHelper.fn.INSRT_techUpgradeCalculator(value);
+		}
+	}
+});
+
+
+function toggleTechUpgradeInfo(mode) {
+
+	var loading = $("#techupgrades-loading");
+	var finished = $("#techupgrades-finished");
+
+	switch (mode) {
+	case "start":
+		loading.css("display", "flex");
+		finished.css("display", "none");
+		break;
+	case "end":
+		loading.css("display", "none");
+		finished.css("display", "inline-block");
+		break;
+	}
+}

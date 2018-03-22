@@ -35,10 +35,10 @@
 .nav-icon-showhq,
 .nav-icon-tradelog,
 .nav-icon-warehouses,
+.resources-building-0,
 .resources-building-1,
 .resources-building-10,
 .resources-building-11,
-.resources-building-12,
 .resources-building-2,
 .resources-building-3,
 .resources-building-4,
@@ -47,6 +47,7 @@
 .resources-building-7,
 .resources-building-8,
 .resources-building-9,
+.resources-factories-0,
 .resources-factories-1,
 .resources-factories-10,
 .resources-factories-11,
@@ -61,7 +62,6 @@
 .resources-factories-2,
 .resources-factories-20,
 .resources-factories-21,
-.resources-factories-22,
 .resources-factories-3,
 .resources-factories-4,
 .resources-factories-5,
@@ -69,6 +69,7 @@
 .resources-factories-7,
 .resources-factories-8,
 .resources-factories-9,
+.resources-loot-0,
 .resources-loot-1,
 .resources-loot-10,
 .resources-loot-11,
@@ -76,7 +77,6 @@
 .resources-loot-13,
 .resources-loot-14,
 .resources-loot-15,
-.resources-loot-16,
 .resources-loot-2,
 .resources-loot-3,
 .resources-loot-4,
@@ -85,12 +85,12 @@
 .resources-loot-7,
 .resources-loot-8,
 .resources-loot-9,
+.resources-material-0,
 .resources-material-1,
 .resources-material-10,
 .resources-material-11,
 .resources-material-12,
 .resources-material-13,
-.resources-material-14,
 .resources-material-2,
 .resources-material-3,
 .resources-material-4,
@@ -99,6 +99,7 @@
 .resources-material-7,
 .resources-material-8,
 .resources-material-9,
+.resources-product-0,
 .resources-product-1,
 .resources-product-10,
 .resources-product-11,
@@ -113,7 +114,6 @@
 .resources-product-2,
 .resources-product-20,
 .resources-product-21,
-.resources-product-22,
 .resources-product-3,
 .resources-product-4,
 .resources-product-5,
@@ -121,12 +121,12 @@
 .resources-product-7,
 .resources-product-8,
 .resources-product-9,
-.resources-units-1,
-.resources-units-2,
-.resources-units-3,
-.resources-units-4,
-.resources-units-5,
-.resources-units-6 {
+.resources-unit-0,
+.resources-unit-1,
+.resources-unit-2,
+.resources-unit-3,
+.resources-unit-4,
+.resources-unit-5 {
 	border-radius : 3px;
 	display       : inline-block;
 	height        : 1.5625em;
@@ -141,19 +141,19 @@
 	background: url("../img/sprite.png") no-repeat;
 }
 
-.resources-building-1 {
+.resources-building-0 {
 	background-position: -0px -0px;
 }
 
-.resources-building-10 {
+.resources-building-1 {
 	background-position: -25px -0px;
 }
 
-.resources-building-11 {
+.resources-building-10 {
 	background-position: -50px -0px;
 }
 
-.resources-building-12 {
+.resources-building-11 {
 	background-position: -75px -0px;
 }
 
@@ -189,63 +189,63 @@
 	background-position: -50px -25px;
 }
 
-.resources-factories-1 {
+.resources-factories-0 {
 	background-position: -75px -25px;
 }
 
-.resources-factories-10 {
+.resources-factories-1 {
 	background-position: -100px -25px;
 }
 
-.resources-factories-11 {
+.resources-factories-10 {
 	background-position: -125px -25px;
 }
 
-.resources-factories-12 {
+.resources-factories-11 {
 	background-position: -150px -25px;
 }
 
-.resources-factories-13 {
+.resources-factories-12 {
 	background-position: -175px -25px;
 }
 
-.resources-factories-14 {
+.resources-factories-13 {
 	background-position: -200px -25px;
 }
 
-.resources-factories-15 {
+.resources-factories-14 {
 	background-position: -0px -50px;
 }
 
-.resources-factories-16 {
+.resources-factories-15 {
 	background-position: -25px -50px;
 }
 
-.resources-factories-17 {
+.resources-factories-16 {
 	background-position: -50px -50px;
 }
 
-.resources-factories-18 {
+.resources-factories-17 {
 	background-position: -75px -50px;
 }
 
-.resources-factories-19 {
+.resources-factories-18 {
 	background-position: -100px -50px;
 }
 
-.resources-factories-2 {
+.resources-factories-19 {
 	background-position: -125px -50px;
 }
 
-.resources-factories-20 {
+.resources-factories-2 {
 	background-position: -150px -50px;
 }
 
-.resources-factories-21 {
+.resources-factories-20 {
 	background-position: -175px -50px;
 }
 
-.resources-factories-22 {
+.resources-factories-21 {
 	background-position: -200px -50px;
 }
 
@@ -277,35 +277,35 @@
 	background-position: -150px -75px;
 }
 
-.resources-loot-1 {
+.resources-loot-0 {
 	background-position: -175px -75px;
 }
 
-.resources-loot-10 {
+.resources-loot-1 {
 	background-position: -200px -75px;
 }
 
-.resources-loot-11 {
+.resources-loot-10 {
 	background-position: -0px -100px;
 }
 
-.resources-loot-12 {
+.resources-loot-11 {
 	background-position: -25px -100px;
 }
 
-.resources-loot-13 {
+.resources-loot-12 {
 	background-position: -50px -100px;
 }
 
-.resources-loot-14 {
+.resources-loot-13 {
 	background-position: -75px -100px;
 }
 
-.resources-loot-15 {
+.resources-loot-14 {
 	background-position: -100px -100px;
 }
 
-.resources-loot-16 {
+.resources-loot-15 {
 	background-position: -125px -100px;
 }
 
@@ -341,27 +341,27 @@
 	background-position: -100px -125px;
 }
 
-.resources-material-1 {
+.resources-material-0 {
 	background-position: -125px -125px;
 }
 
-.resources-material-10 {
+.resources-material-1 {
 	background-position: -150px -125px;
 }
 
-.resources-material-11 {
+.resources-material-10 {
 	background-position: -175px -125px;
 }
 
-.resources-material-12 {
+.resources-material-11 {
 	background-position: -200px -125px;
 }
 
-.resources-material-13 {
+.resources-material-12 {
 	background-position: -0px -150px;
 }
 
-.resources-material-14 {
+.resources-material-13 {
 	background-position: -25px -150px;
 }
 
@@ -397,63 +397,63 @@
 	background-position: -0px -175px;
 }
 
-.resources-product-1 {
+.resources-product-0 {
 	background-position: -25px -175px;
 }
 
-.resources-product-10 {
+.resources-product-1 {
 	background-position: -50px -175px;
 }
 
-.resources-product-11 {
+.resources-product-10 {
 	background-position: -75px -175px;
 }
 
-.resources-product-12 {
+.resources-product-11 {
 	background-position: -100px -175px;
 }
 
-.resources-product-13 {
+.resources-product-12 {
 	background-position: -125px -175px;
 }
 
-.resources-product-14 {
+.resources-product-13 {
 	background-position: -150px -175px;
 }
 
-.resources-product-15 {
+.resources-product-14 {
 	background-position: -175px -175px;
 }
 
-.resources-product-16 {
+.resources-product-15 {
 	background-position: -200px -175px;
 }
 
-.resources-product-17 {
+.resources-product-16 {
 	background-position: -0px -200px;
 }
 
-.resources-product-18 {
+.resources-product-17 {
 	background-position: -25px -200px;
 }
 
-.resources-product-19 {
+.resources-product-18 {
 	background-position: -50px -200px;
 }
 
-.resources-product-2 {
+.resources-product-19 {
 	background-position: -75px -200px;
 }
 
-.resources-product-20 {
+.resources-product-2 {
 	background-position: -100px -200px;
 }
 
-.resources-product-21 {
+.resources-product-20 {
 	background-position: -125px -200px;
 }
 
-.resources-product-22 {
+.resources-product-21 {
 	background-position: -150px -200px;
 }
 
@@ -485,27 +485,27 @@
 	background-position: -100px -225px;
 }
 
-.resources-units-1 {
+.resources-unit-0 {
 	background-position: -125px -225px;
 }
 
-.resources-units-2 {
+.resources-unit-1 {
 	background-position: -150px -225px;
 }
 
-.resources-units-3 {
+.resources-unit-2 {
 	background-position: -175px -225px;
 }
 
-.resources-units-4 {
+.resources-unit-3 {
 	background-position: -200px -225px;
 }
 
-.resources-units-5 {
+.resources-unit-4 {
 	background-position: -0px -250px;
 }
 
-.resources-units-6 {
+.resources-unit-5 {
 	background-position: -25px -250px;
 }
 
@@ -1179,5 +1179,118 @@ mark {
 }
 
 kbd {
-	padding: 0.4rem;
+	padding    : 0.4rem;
+	white-space: nowrap;
+}
+@media(max-width: 768px) {
+	[id*="flow-material-distribution-"] {
+		display: none;
+	}
+
+	#flow-material-distribution-0-2,
+	#flow-material-distribution-0-3,
+	#flow-material-distribution-10-1,
+	#flow-material-distribution-10-2,
+	#flow-material-distribution-10-3,
+	#flow-material-distribution-11-1,
+	#flow-material-distribution-11-2,
+	#flow-material-distribution-11-3,
+	#flow-material-distribution-12-1,
+	#flow-material-distribution-12-2,
+	#flow-material-distribution-12-3,
+	#flow-material-distribution-13-1,
+	#flow-material-distribution-13-2,
+	#flow-material-distribution-13-3,
+	#flow-material-distribution-2-1,
+	#flow-material-distribution-2-2,
+	#flow-material-distribution-2-3,
+	#flow-material-distribution-3-1,
+	#flow-material-distribution-3-2,
+	#flow-material-distribution-3-3,
+	#flow-material-distribution-4-1,
+	#flow-material-distribution-4-2,
+	#flow-material-distribution-4-3,
+	#flow-material-distribution-5-2,
+	#flow-material-distribution-5-3,
+	#flow-material-distribution-6-2,
+	#flow-material-distribution-6-3,
+	#flow-material-distribution-7-1,
+	#flow-material-distribution-7-2,
+	#flow-material-distribution-7-3,
+	#flow-material-distribution-8-1,
+	#flow-material-distribution-8-2,
+	#flow-material-distribution-8-3,
+	#flow-material-distribution-9-1,
+	#flow-material-distribution-9-2,
+	#flow-material-distribution-9-3,
+	#flow-product-distribution-0-0,
+	#flow-product-distribution-0-1,
+	#flow-product-distribution-0-2,
+	#flow-product-distribution-1-0,
+	#flow-product-distribution-1-1,
+	#flow-product-distribution-1-2,
+	#flow-product-distribution-10-1,
+	#flow-product-distribution-10-2,
+	#flow-product-distribution-12-0,
+	#flow-product-distribution-12-1,
+	#flow-product-distribution-12-2,
+	#flow-product-distribution-13-1,
+	#flow-product-distribution-13-2,
+	#flow-product-distribution-14-1,
+	#flow-product-distribution-14-2,
+	#flow-product-distribution-15-2,
+	#flow-product-distribution-16-0,
+	#flow-product-distribution-16-1,
+	#flow-product-distribution-16-2,
+	#flow-product-distribution-17-2,
+	#flow-product-distribution-18-1,
+	#flow-product-distribution-18-2,
+	#flow-product-distribution-19-0,
+	#flow-product-distribution-19-1,
+	#flow-product-distribution-19-2,
+	#flow-product-distribution-2-0,
+	#flow-product-distribution-2-1,
+	#flow-product-distribution-2-2,
+	#flow-product-distribution-20-0,
+	#flow-product-distribution-20-1,
+	#flow-product-distribution-20-2,
+	#flow-product-distribution-21-0,
+	#flow-product-distribution-21-1,
+	#flow-product-distribution-21-2,
+	#flow-product-distribution-3-2,
+	#flow-product-distribution-4-2,
+	#flow-product-distribution-5-0,
+	#flow-product-distribution-5-1,
+	#flow-product-distribution-5-2,
+	#flow-product-distribution-6-0,
+	#flow-product-distribution-6-1,
+	#flow-product-distribution-6-2,
+	#flow-product-distribution-7-2,
+	#flow-product-distribution-8-2 {
+		display: none;
+	}
+}
+
+.table-hr {
+	background-color: rgba(255, 165, 0, 1);
+	padding         : 1px !important;
+}
+
+#module-factories table th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after,
+#module-mines table th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after,
+#modules-diamond table th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after,
+#modules-techupgrades table th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after {
+	content: " \25B4\25BE";
+}
+
+#module-techupgrades tr:first-of-type td:nth-of-type(6) {
+	color: yellowgreen;
+}
+
+#techupgrades-calc-tbl {
+	display: none;
+}
+
+#techupgrades-finished svg {
+	margin-left: 0;
 }

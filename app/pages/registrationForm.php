@@ -21,7 +21,7 @@
 		aria-describedby="registration-help" />
 
 		<small id="registration-help" class="form-text text-muted">
-			Registration is purely for authentification purposes. You will not recieve any mails.
+			Registration is purely for authentification purposes. You will not receive any mails.
 		</small>
 	</div>
 

@@ -153,23 +153,28 @@ ob_end_flush();
     $JSFiles = [
         "assets/js/sorttable.min.js" => [
           "mode" => "",
-          "params" => ""
+          "params" => "",
+          "type" => "js",
         ],
         "assets/js/bootstrap.bundle.min.js" => [
           "mode" => "",
-          "params" => ""
+          "params" => "",
+          "type" => "js",
         ],
         "assets/js/general.min.js" => [
           "mode" => "",
-          "params" => ""
+          "params" => "",
+          "type" => "js",
         ],
         "assets/js/rHelper.min.js" => [
           "mode" => "",
-          "params" => ""
+          "params" => "",
+          "type" => "js",
         ],
         "assets/js/variableJS.php" => [
           "mode" => "",
-          "params" => explodeGET($_GET)
+          "params" => explodeGET($_GET),
+          "type" => "js",
         ],
     ];
 
