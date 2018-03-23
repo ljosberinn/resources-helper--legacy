@@ -42,7 +42,7 @@
         echo '
           <tr>
 						<td data-th="Mine type">
-							<div class="resources-material-' .$i. '"></div> <span id="material-name-' .$i. '"></span>
+							<span class="resources-material-' .$i. '"></span>
 						</td>
 						<td data-th="Your rate per hour">
 							<input class="form-control form-control-sm text-md-right text-sm-left" id="material-rate-' .$i. '" type="number" min="0" max="999999999" placeholder="rate/h" />

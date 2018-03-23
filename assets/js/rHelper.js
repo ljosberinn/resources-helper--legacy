@@ -79,13 +79,29 @@ var rHelper = {
 
 			rHelper.fn.INSRT_flowDistributionGlobal();
 
-			$.each(rHelper.data.loot, function (index, loot) {
+			// warehouses
+
+
+			$.each(rHelper.data.loot, function (index) {
 				rHelper.fn.INSRT_warehouseFillAmount(index, "loot");
 				rHelper.fn.INSRT_warehouseLevel(index, "loot");
 				rHelper.fn.INSRT_warehouseFillStatus(index, "loot");
 				rHelper.fn.INSRT_warehouseCapacity(index, "loot");
 				rHelper.fn.INSRT_warehouseWorth(index, "loot");
 				rHelper.fn.EVNT_warehouseInput(index, "loot");
+
+
+				// recycling table
+				if (index == 4 || index >= 10 && index <= 13) {
+					return;
+				}
+
+				rHelper.fn.SET_recyclingProfitObj(index);
+				rHelper.fn.INSRT_recyclingRequirement(index);
+				rHelper.fn.INSRT_recyclingProducts(index);
+				rHelper.fn.INSRT_recyclingOutputWorth(index);
+				rHelper.fn.INSRT_recyclingInputWorth(index);
+				rHelper.fn.INSRT_recyclingProfit(index);
 			});
 
 			$.each(rHelper.data.units, function (index, unit) {
@@ -95,10 +111,18 @@ var rHelper = {
 				rHelper.fn.INSRT_warehouseCapacity(index, "units");
 				rHelper.fn.INSRT_warehouseWorth(index, "units");
 				rHelper.fn.EVNT_warehouseInput(index, "units");
+
+				// units table
+				rHelper.fn.SET_UnitProfitObj(index);
+				rHelper.fn.INSRT_unitsCraftingPrice(index);
+				rHelper.fn.INSRT_unitsMarketPrice(index);
+				rHelper.fn.INSRT_unitsProfit(index);
 			});
 
 			rHelper.fn.INSRT_warehouseTotalLevel();
 			rHelper.fn.INSRT_warehouseTotalWorth();
+
+			// buildings
 
 			$.each(rHelper.data.buildings, function (buildingId) {
 				rHelper.fn.INSRT_buildingName(buildingId);
@@ -109,10 +133,13 @@ var rHelper = {
 				rHelper.fn.EVNT_buildingChange(buildingId);
 			});
 
+			// techupgrades
+
 			rHelper.fn.INSRT_techUpgradeRows();
 
 			rHelper.fn.EVNT_sortableTables();
 
+			rHelper.fn.EVNT_assignTitleToIcons();
 			rHelper.fn.EVNT_enableTippy();
 		}
 	},
@@ -533,6 +560,32 @@ var rHelper = {
 				}
 			});
 		},
+		SET_recyclingProfitObj(lootId) {
+			rHelper.data.loot[lootId].profit = {
+				"outputWorth": 0,
+				"inputWorth": 0,
+				"profit": 0
+			};
+		},
+		SET_recyclingPlantLevel() {
+			$.each(rHelper.data.loot, function (lootId) {
+				if (lootId == 4 || lootId >= 10 && lootId <= 13) {
+					return;
+				}
+
+				rHelper.fn.INSRT_recyclingProducts(lootId);
+				rHelper.fn.INSRT_recyclingOutputWorth(lootId);
+				rHelper.fn.INSRT_recyclingInputWorth(lootId);
+				rHelper.fn.INSRT_recyclingProfit(lootId);
+			})
+		},
+		SET_UnitProfitObj(unitId) {
+			rHelper.data.units[unitId].profit = {
+				"craftingPrice": 0,
+				"marketPrice": 0,
+				"profit": 0
+			}
+		},
 
 		EVNT_enableTippy() {
 			$.each($("[title]"), function (i, el) {
@@ -543,12 +596,30 @@ var rHelper = {
 				}
 			});
 		},
+		EVNT_assignTitleToIconsHelper(min, max, subSelector, incrementor) {
+			for (var i = min; i <= max; i += 1) {
+				$.each($(".resources-" + subSelector + "-" + i + ""), function (k, el) {
+					if (!$(el).attr("title")) {
+						var convertedId = i + incrementor;
+						$(el).attr("title", rHelper.fn.CALC_returnPriceViaId(convertedId).toLocaleString("en-US"));
+					}
+				});
+			}
+		},
+		EVNT_assignTitleToIcons() {
+			rHelper.fn.EVNT_assignTitleToIconsHelper(0, 13, "material", 0);
+			rHelper.fn.EVNT_assignTitleToIconsHelper(0, 21, "product", 14);
+			rHelper.fn.EVNT_assignTitleToIconsHelper(0, 16, "loot", 36);
+			rHelper.fn.EVNT_assignTitleToIconsHelper(0, 5, "unit", 52);
+		},
 		EVNT_sortableTables() {
 			var tables = [
 				$("#module-mines table")[0],
 				$("#module-factories table")[0],
 				$("#module-diamond table")[0],
 				$("#techupgrades-combinations-tbl")[0],
+				$("#recycling-tbl")[0],
+				$("#units-tbl")[0],
 			];
 
 			$.each(tables, function (index, table) {
@@ -689,6 +760,10 @@ var rHelper = {
 					rHelper.fn.SET_transportCost();
 				}
 
+				if (buildingId == 5) {
+					rHelper.fn.SET_recyclingPlantLevel();
+				}
+
 				rHelper.fn.INSRT_buildingData(buildingId);
 				rHelper.fn.INSRT_buildingToLevel10(buildingId);
 				rHelper.fn.SET_buildingBackgroundColor(buildingId);
@@ -709,14 +784,20 @@ var rHelper = {
 		},
 		INSRT_userSettings() {
 
-			$("#security-token").text(rHelper.data.userInformation.securityToken);
+			var userInfo = rHelper.data.userInformation;
 
-			if (rHelper.data.userInformation.realKey != "" && typeof (rHelper.data.userInformation.realKey) != "undefined") {
-				$("#api-key").val(rHelper.data.userInformation.realKey);
-				rHelper.fn.INSRT_API_remainingCredits(rHelper.data.userInformation.remainingCredits);
+			$("#security-token").text(userInfo.securityToken);
+
+			if (userInfo.realKey != "" && typeof (userInfo.realKey) != "undefined") {
+				$("#api-key").val(userInfo.realKey);
+				rHelper.fn.INSRT_API_remainingCredits(userInfo.remainingCredits);
 			}
 
-			rHelper.data.settings.forEach(function (setting) {
+			if (userInfo.name != "") {
+				$("#api-player-anonymity")[0].parentNode.remove();
+			}
+
+			$.each(rHelper.data.settings, function (index, setting) {
 				var value = 0;
 				switch (setting.setting) {
 				case "lang":
@@ -753,18 +834,10 @@ var rHelper = {
 						$("#settings-ideal-conditions").prop("checked", true);
 					}
 					break;
-				case "factoryNames":
-					if (setting.value === 1) {
-						$("#settings-toggle-factory-names").prop("checked", true);
-					}
-					break;
 				case "transportCostInclusion":
 					if (setting.value === 1) {
 						$("#settings-toggle-transport-cost-inclusion").prop("checked", true);
 					}
-					break;
-				case "theBigShort":
-					$("#settings-thebigshort").val(setting.value);
 					break;
 				case "mapVisibleHQ":
 					if (setting.value === 1) {
@@ -1423,12 +1496,12 @@ var rHelper = {
 
 			var url = "api/getTechCombination.php?factor=" + value;
 
-			if(typeof(tu4Inclusion) == "string") {
+			if (typeof (tu4Inclusion) == "string") {
 				url += "&tu4=allowed";
 			}
 
 			console.log(url);
-			
+
 			$.getJSON(url, function (data) {
 
 					var prices = [];
@@ -1497,7 +1570,177 @@ var rHelper = {
 					toggleTechUpgradeInfo("end");
 				});
 		},
+		INSRT_recyclingRequirement(lootId) {
+			$("#recycling-requirement-" + lootId).text(rHelper.fn.CALC_recyclingRequirement(lootId).toLocaleString("en-US"));
+		},
+		INSRT_recyclingProducts(lootId) {
 
+			var recyclingPlantLevel = rHelper.data.buildings[5].level;
+			var recyclingProducts = rHelper.fn.CALC_recyclingProducts(lootId, recyclingPlantLevel);
+
+			$("#recycling-products-" + lootId).html(recyclingProducts);
+		},
+		INSRT_recyclingOutputWorth(lootId) {
+			var recyclingPlantLevel = rHelper.data.buildings[5].level;
+
+			$("#recycling-output-" + lootId).text(rHelper.fn.CALC_recyclingOutputWorth(lootId, recyclingPlantLevel).toLocaleString("en-US"));
+		},
+		INSRT_recyclingInputWorth(lootId) {
+			$("#recycling-input-" + lootId).text(rHelper.fn.CALC_recyclingInputWorth(lootId).toLocaleString("en-US"));
+		},
+		INSRT_recyclingProfit(lootId) {
+
+			var target = $("#recycling-profit-" + lootId);
+			var profit = rHelper.fn.CALC_recyclingProfit(lootId);
+
+			if (profit > 0) {
+				$(target[0].parentNode).css("background-color", "#9acd3225");
+			} else {
+				$(target[0].parentNode).css("background-color", "#ff7f5025");
+			}
+
+			target.text(profit.toFixed(2).toLocaleString("en-US") + "%");
+		},
+		INSRT_unitsCraftingPrice(unitId) {
+			$("#units-crafting-" + unitId).text(rHelper.fn.CALC_unitsCraftingPrice(unitId).toLocaleString("en-US"));
+		},
+		INSRT_unitsMarketPrice(unitId) {
+			var convertedId = unitId + 52;
+
+			var marketPrice = rHelper.fn.CALC_returnPriceViaId(convertedId);
+			rHelper.data.units[unitId].profit.marketPrice = marketPrice;
+
+			$("#units-market-" + unitId).text(marketPrice.toLocaleString("en-US"));
+		},
+
+		INSRT_unitsProfit(unitId) {
+			var target = $("#units-profit-" + unitId);
+			var profit = rHelper.fn.CALC_unitsProfit(unitId);
+
+			if (profit > 0) {
+				$(target[0].parentNode).css("background-color", "#9acd3225");
+			} else {
+				$(target[0].parentNode).css("background-color", "#ff7f5025");
+			}
+
+			target.text(profit.toFixed(2).toLocaleString("en-US") + "%");
+		},
+		CALC_unitsCraftingPrice(unitId) {
+			var unit = rHelper.data.units[unitId];
+			var worth = unit.prices["current"].ai;
+			var requiredAmount = unit.requiredAmount;
+			var requirements = unit.requirements;
+
+			$.each(requirements, function (index, requirement) {
+				var price = rHelper.fn.CALC_returnPriceViaId(requirement);
+				worth += price * requiredAmount[index];
+			});
+
+			if (rHelper.data.settings[3].value == 1) {
+				worth *= rHelper.data.buildings[9].transportCost;
+			}
+
+			unit.profit.craftingPrice = worth;
+
+			return worth;
+		},
+		CALC_unitsProfit(unitId) {
+			var profitObj = rHelper.data.units[unitId].profit;
+			var profit = (1 - profitObj.marketPrice / profitObj.craftingPrice) * 100;
+
+			profit *= -1;
+
+			return profit;
+		},
+		CALC_recyclingProfit(lootId) {
+			var profitObj = rHelper.data.loot[lootId].profit;
+
+
+			var profit = (1 - profitObj.outputWorth / profitObj.inputWorth) * 100;
+			profit *= -1;
+
+			return profit;
+		},
+		CALC_recyclingInputWorth(lootId) {
+			var loot = rHelper.data.loot[lootId];
+			var amount = loot.recyclingDivisor;
+
+			var convertedId = lootId + 36;
+
+			var price = rHelper.fn.CALC_returnPriceViaId(convertedId, 0);
+			var worth = price * amount;
+
+			if (rHelper.data.settings[3].value == 1) {
+				worth *= rHelper.data.buildings[9].transportCost;
+			}
+
+			loot.profit.inputWorth = worth;
+			return worth;
+		},
+		CALC_recyclingOutputWorth(lootId, recyclingPlantLevel) {
+
+			var resultingAmount = rHelper.data.loot[lootId].recyclingAmount;
+			var resultingProducts = rHelper.data.loot[lootId].recyclingProduct;
+			var worth = 0;
+
+			if ($.isArray(resultingProducts)) {
+				$.each(resultingProducts, function (index, resultingProduct) {
+					worth += rHelper.fn.CALC_recyclingOutputWorthHelper(recyclingPlantLevel, resultingProduct, resultingAmount, index);
+				});
+			} else {
+				worth += rHelper.fn.CALC_recyclingOutputWorthHelper(recyclingPlantLevel, resultingProducts, resultingAmount);
+			}
+
+			rHelper.data.loot[lootId].profit.outputWorth = worth;
+
+			return worth;
+		},
+		CALC_recyclingOutputWorthHelper(recyclingPlantLevel, resultingProduct, resultingAmount, index) {
+			var price = rHelper.fn.CALC_returnPriceViaId(resultingProduct, 0);
+			var amount = resultingAmount * recyclingPlantLevel;
+
+			if ($.isArray(resultingAmount)) {
+				amount = resultingAmount[index] * recyclingPlantLevel;
+			}
+
+			var worth = amount * price;
+
+			return worth;
+		},
+		CALC_recyclingRequirement(lootId) {
+			return rHelper.data.loot[lootId].recyclingDivisor;
+		},
+		CALC_recyclingProducts(lootId, recyclingPlantLevel) {
+			var resultingAmount = rHelper.data.loot[lootId].recyclingAmount;
+			var resultingProducts = rHelper.data.loot[lootId].recyclingProduct;
+
+			var string = "";
+
+			if ($.isArray(resultingProducts)) {
+				$.each(resultingProducts, function (index, resultingProduct) {
+					string += rHelper.fn.CALC_recyclingProductsHelper(recyclingPlantLevel, resultingProduct, resultingAmount, index);
+				});
+			} else {
+				string += rHelper.fn.CALC_recyclingProductsHelper(recyclingPlantLevel, resultingProducts, resultingAmount);
+			}
+
+			return string;
+		},
+		CALC_recyclingProductsHelper(recyclingPlantLevel, resultingProduct, resultingAmount, index) {
+			var icon = $(crEl("span"));
+			var product = rHelper.fn.CALC_convertId(resultingProduct);
+			icon.addClass(product.icon);
+
+			var amount = resultingAmount * recyclingPlantLevel;
+
+			if ($.isArray(resultingAmount)) {
+				amount = resultingAmount[index] * recyclingPlantLevel;
+			}
+
+			var string = icon[0].outerHTML + " " + amount.toLocaleString("en-US") + " ";
+
+			return string;
+		},
 		CALC_buildingToLevel10(buildingId) {
 			var building = rHelper.data.buildings[buildingId];
 			var buildingLevel = building.level;
@@ -2220,7 +2463,7 @@ var rHelper = {
 			var index = 0;
 
 			if (typeof (period) == "undefined") {
-				index = possiblePrices[rHelper.data.settings[7].value];
+				index = possiblePrices[rHelper.data.settings[5].value];
 			} else if (typeof (period) == "number") {
 				index = possiblePrices[period];
 			}
@@ -2244,7 +2487,7 @@ var rHelper = {
 				id -= 36;
 				return rHelper.data.loot[id];
 			} else {
-				id -= 51;
+				id -= 52;
 				return rHelper.data.units[id];
 			}
 		},

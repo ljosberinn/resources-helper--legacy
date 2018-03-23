@@ -12,9 +12,7 @@ if (!isset($_SESSION["id"])) {
     "settings-custom-tu-3",
     "settings-custom-tu-4",
     "settings-ideal-conditions",
-    "settings-toggle-factory-names",
     "settings-toggle-transport-cost-inclusion",
-    "settings-thebigshort",
     "settings-hq-visibility",
     "settings-price-age",
   ];
@@ -53,34 +51,13 @@ if (!isset($_SESSION["id"])) {
             $query .= "`idealCondition` = ";
             if ($value == "on") {
                 $query .= "1, ";
-            } else {
-                $query .= "0, ";
-            }
-          break;
-          case "settings-toggle-factory-names":
-            $query .= "`factoryNames` = ";
-            if ($value == "on") {
-                $query .= "1, ";
-            } else {
-                $query .= "0, ";
             }
           break;
           case "settings-toggle-transport-cost-inclusion":
             $query .= "`transportCostInclusion` = ";
             if ($value == "on") {
                 $query .= "1, ";
-            } else {
-                $query .= "0, ";
             }
-          break;
-          case "settings-the-big-short":
-            $allowedValues = [1, 1000, 1000000, 1000000000, ];
-            if (in_array($value, $allowedValues)) {
-                $query .= "`theBigShort` = " .$value. ", ";
-            } else {
-                header("Location: ../index.php");
-            }
-
           break;
           case "settings-hq-visibility":
             $allowedValues = [0, 1];
@@ -99,6 +76,14 @@ if (!isset($_SESSION["id"])) {
             }
           break;
         }
+    }
+
+    if (!in_array("settings-ideal-conditions", array_keys($_POST))) {
+      $query .= "`idealCondition` = 0, ";
+    }
+
+    if (!in_array("settings-toggle-transport-cost-inclusion", array_keys($_POST))) {
+      $query .= "`transportCostInclusion` = 0, ";
     }
 
     $query = substr($query, 0, -2). " WHERE `id` = " .$_SESSION["id"];

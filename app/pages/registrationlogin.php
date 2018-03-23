@@ -25,7 +25,7 @@
                 echo showInvalidityWarning("some info is either missing or invalid. Please try again.");
             }
 
-            require "app/pages/registrationForm.php";
+            require "app/pages/registrationLogin/registrationForm.php";
 
              ?>
           </div>
@@ -43,7 +43,7 @@
           <div class="card-block p-4 bg-light">
             <?php
 
-            require "app/pages/loginForm.php";
+            require "app/pages/registrationLogin/loginForm.php";
 
             ?>
           </div>

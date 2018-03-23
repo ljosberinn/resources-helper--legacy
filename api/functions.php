@@ -56,8 +56,14 @@ function appendFiles($files)
             $link = $link."?";
         }
 
+        if($subInfo["type"] == "js") {
+
         echo '
-  		<script ' .$mode. ' src="' .$link. '' .$lastModified. '"></script>';
+  		    <script ' .$mode. ' src="' .$link. '' .$lastModified. '"></script>';
+        } else if($subInfo["type"] == "css") {
+          echo '
+          <link rel="stylesheet" href="' .$link. '' .$lastModified. '" />';
+        }
     }
 }
 

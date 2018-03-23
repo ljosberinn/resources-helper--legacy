@@ -84,13 +84,8 @@
         "href" => "userindex",
         "icon" => $table,
       ],
-      "Personal Mine Map" => [
-        "href" => "minemap",
-        "icon" => $map,
-        "login" => "required"
-      ],
-      "World Map" => [
-        "href" => "worldmap",
+      "Maps" => [
+        "href" => "maps",
         "icon" => $map,
       ],
       "Price History" => [

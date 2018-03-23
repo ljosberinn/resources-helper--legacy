@@ -75,8 +75,8 @@ if ($existingMailCheck->num_rows > 0) {
         "INSERT INTO `userFactories` (`id`) VALUES (" .$id. ")",
         "INSERT INTO `userMaterial` (`id`) VALUES (" .$id. ")",
         "INSERT INTO `userWarehouse` (`id`) VALUES (" .$id. ")",
-        "INSERT INTO `userHeadquarter` (`id`) VALUES (" .$id. ")",
         "INSERT INTO `userBuildings` (`id`) VALUES (" .$id. ")",
+        "INSERT INTO `userHeadquarter` (`id`, `level`) VALUES (" .$id. ", 1)",
     ];
 
     foreach ($templateQueries as $query) {

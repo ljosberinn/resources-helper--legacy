@@ -83,15 +83,6 @@
 		</label>
 	</div>
 
-	<!-- SETTING FACTORY NAMES -->
-	<div class="form-group">
-		<label class="custom-control custom-checkbox">
-			<input class="custom-control-input" id="settings-toggle-factory-names" name="settings-toggle-factory-names" type="checkbox" />
-			<span class="custom-control-indicator"></span>
-			<span class="custom-control-description">toggles <mark>factory names</mark> when loading page (section Factories)</span>
-		</label>
-	</div>
-
 	<!-- SETTING TRANSPORT COST -->
 	<div class="form-group">
 		<label class="custom-control custom-checkbox">
@@ -99,25 +90,6 @@
 			<span class="custom-control-indicator"></span>
 			<span class="custom-control-description">toggles automatical <mark>transport cost inclusion</mark> when loading page (Recycling & Units)</span>
 		</label>
-	</div>
-
-	<!-- SETTING NUMBERCRUNCHER / THEBIGSHORT -->
-	<div class="form-group">
-		<label class="text-success" for="settings-thebigshort">
-			<strong><?php echo file_get_contents("assets/img/icons/division.svg"); ?> Shortening of numbers</strong>
-		</label>
-
-		<br />
-
-		<select class="custom-select" id="settings-thebigshort" name="settings-thebigshort" aria-describedby="settings-thebigshort-help">
-				<option selected value="1">no shorting of numbers (default)</option>
-				<option value="1000">shorten by 1000 (Kilo)</option>
-				<option value="1000000">shorten by 1.000.000 (Million)</option>
-				<option value="1000000000">shorten by 1.000.000.000 (Billion)</option>
-		</select>
-		<small class="form-text text-muted" id="settings-thebigshort-help">
-			Divide numbers by X.
-		</small>
 	</div>
 
 	<!-- SETTING HQ VISIBILITY ON MAP -->

@@ -1,5 +1,9 @@
 <?php
 
+session_start([
+    'cookie_lifetime' => 86400,
+]);
+
 ob_start();
 
 $generalHeaders = [
@@ -15,11 +19,6 @@ foreach ($generalHeaders as $header) {
 
 require 'api/functions.php';
 require 'api/db.php';
-
-session_start([
-    'cookie_lifetime' => 86400,
-    'read_and_close'  => true,
-]);
 
 $conn = new mysqli($host, $user, $pw, $db);
 $conn->set_charset("utf-8");
@@ -107,7 +106,7 @@ ob_end_flush();
       "factories",
       "diamond",
       "changelog",
-      "worldmap",
+      "maps",
       "warehouses",
       "flow",
       "pricehistory",
@@ -124,7 +123,6 @@ ob_end_flush();
 
     if(isset($_SESSION["id"])) {
       $additionalFeatures = [
-        "minemap",
         "tradelog",
         "attacklog",
       ];

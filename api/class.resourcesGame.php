@@ -792,7 +792,7 @@
              $imgClass = "material";
              break;
          case "factories":
-             $imgClass = "products";
+             $imgClass = "product";
              break;
          case "loot":
              $imgClass = "loot";
@@ -814,7 +814,7 @@
          $getData = $this->conn->query($query);
 
          if ($getData->num_rows > 0) {
-             $image = 1;
+             $image = 0;
              $globalIndex = 0;
 
              while ($data = $getData->fetch_assoc()) {
@@ -913,11 +913,9 @@
                  $baseData[0]["value"] = self::LANGUAGES[$data["lang"]];
                  $baseData[1]["value"] = $this->convertArrayStringToArray($data["customTU"]);
                  $baseData[2]["value"] = $data["idealCondition"];
-                 $baseData[3]["value"] = $data["factoryNames"];
-                 $baseData[4]["value"] = $data["transportCostInclusion"];
-                 $baseData[5]["value"] = $data["theBigShort"];
-                 $baseData[6]["value"] = $data["mapVisibleHQ"];
-                 $baseData[7]["value"] = $data["priceAge"];
+                 $baseData[3]["value"] = $data["transportCostInclusion"];
+                 $baseData[4]["value"] = $data["mapVisibleHQ"];
+                 $baseData[5]["value"] = $data["priceAge"];
              }
          }
 
