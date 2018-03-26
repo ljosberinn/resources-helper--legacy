@@ -116,7 +116,6 @@ ob_end_flush();
       "techupgrades",
       "userindex",
       "headquarter",
-      "missions",
       "leaderboard",
       "discord",
     ];
@@ -125,6 +124,7 @@ ob_end_flush();
       $additionalFeatures = [
         "tradelog",
         "attacklog",
+        "missions",
       ];
       foreach($additionalFeatures as $link) {
         array_push($subPages, $link);

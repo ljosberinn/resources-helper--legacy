@@ -69,6 +69,7 @@
       "Missions" => [
         "href" => "missions",
         "spanClass" => "nav-icon-missions",
+        "login" => "required"
       ],
       "Trade Log" => [
         "href" => "tradelog",

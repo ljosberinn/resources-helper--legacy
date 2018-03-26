@@ -2006,22 +2006,25 @@ var rHelper = {
 		CALC_totalHeadquarterErectionSum() {
 			var total = 0;
 
-			var userHq = rHelper.data.headquarter.user;
-			var userHqLevel = userHq.level;
+			if (typeof (rHelper.data.headquarter.user) != "undefined") {
 
-			for (var i = (userHqLevel - 1); i > 1; i -= 1) {
-				var hqLevel = rHelper.data.headquarter[i];
-				$.each(hqLevel.material, function (k, material) {
-					total += hqLevel.amount * rHelper.fn.CALC_returnPriceViaId(material);
+				var userHq = rHelper.data.headquarter.user;
+				var userHqLevel = userHq.level;
+
+				for (var i = (userHqLevel - 1); i > 1; i -= 1) {
+					var hqLevel = rHelper.data.headquarter[i];
+					$.each(hqLevel.material, function (k, material) {
+						total += hqLevel.amount * rHelper.fn.CALC_returnPriceViaId(material);
+					});
+				}
+
+				$.each(userHq.paid, function (i, paid) {
+					if (paid != 0) {
+						var material = rHelper.data.headquarter[userHqLevel].material[i];
+						total += paid * rHelper.fn.CALC_returnPriceViaId(material);
+					}
 				});
 			}
-
-			$.each(userHq.paid, function (i, paid) {
-				if (paid != 0) {
-					var material = rHelper.data.headquarter[userHqLevel].material[i];
-					total += paid * rHelper.fn.CALC_returnPriceViaId(material);
-				}
-			});
 
 			return total;
 		},
@@ -2312,7 +2315,7 @@ var rHelper = {
 				remainingTime = "> " + remainingTime.toFixed(2) + " hours";
 			}
 
-			if ((type == "products" && el.turnover <= 0) || type == "loot" ||  type == "units") {
+			if ((type == "products" && el.turnover <= 0) || type == "loot" || type == "units" || isNaN(remainingTime)) {
 				remainingTime = "∞";
 			}
 

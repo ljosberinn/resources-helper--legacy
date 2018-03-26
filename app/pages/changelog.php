@@ -35,7 +35,7 @@
       – HEAVILY MODIFIED: moved clunky settings to own menu with more options and less clutter<br />
       – NEW: World Map now also show Headquarters depending on user settings<br />
       – NEW: User Index consists of users attacked by or traded with others<br />
-			- CHANGED: Personal Mine Map, Trade Log and Attack Log are only available for registered users due to their huge data nature which this server cannot handle easily in all cases<br />
+			- CHANGED: Missions, Personal Mine Map, Trade Log and Attack Log are only available for registered users due to their huge data nature which this server cannot handle easily in all cases<br />
       – NEW: missing Tech upgrade calculator: shows which upgrades you're missing for a messed up teching process<br />
       <br />
       <strong>Bugfixes</strong><br />
