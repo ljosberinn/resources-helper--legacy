@@ -80,8 +80,6 @@ var rHelper = {
 			rHelper.fn.INSRT_flowDistributionGlobal();
 
 			// warehouses
-
-
 			$.each(rHelper.data.loot, function (index) {
 				rHelper.fn.INSRT_warehouseFillAmount(index, "loot");
 				rHelper.fn.INSRT_warehouseLevel(index, "loot");
@@ -123,7 +121,6 @@ var rHelper = {
 			rHelper.fn.INSRT_warehouseTotalWorth();
 
 			// buildings
-
 			$.each(rHelper.data.buildings, function (buildingId) {
 				rHelper.fn.INSRT_buildingName(buildingId);
 				rHelper.fn.SET_buildingBackgroundColor(buildingId);
@@ -133,9 +130,35 @@ var rHelper = {
 				rHelper.fn.EVNT_buildingChange(buildingId);
 			});
 
-			// techupgrades
+			// headquarter
+			$.each(rHelper.data.headquarter, function (headquarterLevel) {
+				rHelper.fn.INSRT_headquarterOvwString(headquarterLevel);
+				rHelper.fn.INSRT_headquarterOvwRadius(headquarterLevel);
+				rHelper.fn.INSRT_headquarterOvwCost(headquarterLevel);
+				rHelper.fn.INSRT_headquarterOvwBoost(headquarterLevel);
+				rHelper.fn.INSRT_headquarterOvwTransportation(headquarterLevel);
+			});
 
+			// techupgrades
 			rHelper.fn.INSRT_techUpgradeRows();
+
+			// initiate graphs
+			var pieGraphs = [
+				"material",
+			];
+			$.each(pieGraphs, function (i, val) {
+				rHelper.fn.EVNT_buildGraph(val);
+			});
+
+			var gaugeGraphs = [
+				"buildings",
+				"headquarter",
+			];
+			$.each(gaugeGraphs, function (i, val) {
+				rHelper.fn.INSRT_gaugeGraph(val);
+			});
+
+			rHelper.fn.INSRT_companyWorth();
 
 			rHelper.fn.EVNT_sortableTables();
 
@@ -465,7 +488,6 @@ var rHelper = {
 			};
 		},
 
-
 		SET_globalObject(selector, index, key, value) {
 
 			if ($.isArray(key)) {
@@ -682,6 +704,8 @@ var rHelper = {
 				rHelper.fn.INSRT_flowRate(materialId, "material");
 				rHelper.fn.INSRT_flowDistributionGlobal();
 
+				rHelper.fn.EVNT_buildGraph("material");
+
 			});
 			$("#material-amount-of-mines-" + materialId).on("input", function () {
 				var materialId = this.id.replace("material-amount-of-mines-", "");
@@ -695,6 +719,8 @@ var rHelper = {
 
 				rHelper.fn.INSRT_materialMineAmortisation();
 				rHelper.fn.INSRT_totalMineCount(rHelper.fn.CALC_totalMineCount());
+
+				rHelper.fn.EVNT_buildGraph("material");
 			});
 		},
 		EVNT_warehouseInput(id, type) {
@@ -767,7 +793,201 @@ var rHelper = {
 				rHelper.fn.INSRT_buildingData(buildingId);
 				rHelper.fn.INSRT_buildingToLevel10(buildingId);
 				rHelper.fn.SET_buildingBackgroundColor(buildingId);
+
+				rHelper.fn.INSRT_gaugeGraph("buildings");
 			});
+		},
+		EVNT_buildGraph(type) {
+
+			rHelper.graphs = rHelper.graphs || {};
+
+			switch (type) {
+			case "material":
+
+				var parentGraphObj = rHelper.graphs.material;
+
+				rHelper.graphs.material.reference.mineCount = rHelper.fn.CALC_totalMineCount();
+				rHelper.graphs.material.reference.mineIncome = rHelper.fn.CALC_totalMineWorth();
+
+				$.each(rHelper.data.material, function (i, material) {
+
+					var iteration = {
+						y: 0,
+						color: "",
+						drilldown: {
+							categories: [],
+							data: [],
+							color: ""
+						}
+					};
+
+					var price = rHelper.fn.CALC_returnPriceViaId(i);
+					var mineAmountPercent = parseFloat(((material.amountOfMines / rHelper.graphs.material.reference.mineCount) * 100).toFixed(2));
+					var mineIncomePercent = parseFloat(((rHelper.fn.CALC_materialRateWorth(i) / rHelper.graphs.material.reference.mineIncome) * 100).toFixed(2));
+					var materialName = material.name;
+
+					if (!isNaN(mineAmountPercent)) {
+						iteration.y = mineAmountPercent;
+					} else {
+						iteration.y = 0;
+					}
+
+					iteration.color = rHelper.graphs.material.colors[i];
+					iteration.drilldown.color = rHelper.graphs.material.colors[i];
+
+					iteration.drilldown.categories[i] = materialName;
+					iteration.drilldown.name = materialName;
+					iteration.drilldown.categories[i] = materialName;
+
+					if (!isNaN(mineIncomePercent)) {
+						iteration.drilldown.data[i] = mineIncomePercent;
+					} else {
+						iteration.drilldown.data[i] = 0;
+					}
+
+					var mineDataObj = {
+						name: materialName,
+						y: iteration.y,
+						color: iteration.color
+					};
+
+					if (JSON.stringify(rHelper.graphs.material.mineData[i]) !== JSON.stringify(mineDataObj)) {
+						rHelper.graphs.material.mineData[i] = mineDataObj;
+					}
+
+					var drillDataLen = iteration.drilldown.data.length;
+					for (var j = 0; j < drillDataLen; j += 1) {
+						brightness = 0.2 - (j / drillDataLen) / 5;
+						rHelper.graphs.material.incomeData[i] = {
+							name: iteration.drilldown.categories[j],
+							y: iteration.drilldown.data[j],
+							color: Highcharts.Color(iteration.color).brighten(brightness).get()
+						};
+					}
+
+					if (JSON.stringify(rHelper.graphs.material.data[i]) !== JSON.stringify(iteration)) {
+						rHelper.graphs.material.data[i] = iteration;
+					}
+
+				});
+
+				rHelper.fn.INSRT_polygonGraph(parentGraphObj.target, parentGraphObj.titleText, parentGraphObj.seriesNames, parentGraphObj.responsiveId, type);
+
+				break;
+			case "products":
+				var titleText = "mine distribution vs mine income";
+				var seriesNames = [
+					"Mines",
+					"Mine income",
+				];
+				var responsiveId = "income";
+				var target = "graph-material";
+				break;
+			}
+		},
+		INSRT_polygonGraph(target, titleText, seriesNames, responsiveId, targetObj) {
+
+			var dataObj = rHelper.graphs[targetObj];
+
+			Highcharts.chart(target, {
+				chart: {
+					type: "pie",
+					backgroundColor: "transparent"
+				},
+				title: {
+					text: titleText,
+					style: {
+						color: "#ffffff"
+					}
+				},
+				plotOptions: {
+					pie: {
+						shadow: false,
+						center: [
+							"50%",
+							"50%"
+						]
+					}
+				},
+				tooltip: {
+					valueSuffix: "%"
+				},
+				series: [{
+					name: seriesNames[0],
+					data: dataObj.mineData,
+					size: "60%",
+					dataLabels: {
+						formatter: function () {
+							return this.y > 5 ? this.point.name : null;
+						},
+						color: "#ffffff",
+						distance: -30
+					}
+				}, {
+					name: seriesNames[1],
+					data: dataObj.incomeData,
+					size: "80%",
+					innerSize: "60%",
+					dataLabels: {
+						formatter: function () {
+							return this.y > 1 ? "<b>" + this.point.name + ":</b> " +
+								this.y + "%" : null;
+						},
+						style: {
+							color: "white",
+							textOutline: "none"
+						}
+					},
+					id: responsiveId
+				}],
+				responsive: {
+					rules: [{
+						condition: {
+							maxWidth: 400
+						},
+						chartOptions: {
+							series: [{
+								id: responsiveId,
+								dataLabels: {
+									enabled: false
+								}
+							}]
+						}
+					}]
+				}
+			});
+		},
+		INSRT_gaugeGraph(type) {
+
+			if (type == "buildings") {
+				var chart = Highcharts.chart('graph-buildings', Highcharts.merge(rHelper.graphs.gaugeOptions, {
+					yAxis: {
+						min: 0,
+						max: rHelper.fn.CALC_perfectWorth("buildings"),
+						title: {
+							text: "total building worth"
+						}
+					},
+					series: [{
+						name: "total building worth",
+						data: [rHelper.fn.CALC_totalBuildingErectionSum()]
+					}]
+				}));
+			} else if (type == "headquarter") {
+				var chart = Highcharts.chart('graph-headquarter', Highcharts.merge(rHelper.graphs.gaugeOptions, {
+					yAxis: {
+						min: 0,
+						max: rHelper.fn.CALC_perfectWorth("headquarter"),
+						title: {
+							text: "total headquarter worth"
+						}
+					},
+					series: [{
+						name: "total headquarter worth",
+						data: [rHelper.fn.CALC_totalHeadquarterErectionSum()]
+					}]
+				}));
+			}
 		},
 
 		INSRT_totalMineWorth(totalMineWorth) {
@@ -1208,6 +1428,12 @@ var rHelper = {
 			var target = $("#flow-" + type + "-rate-" + id);
 			var rate = rHelper.fn.CALC_flowRate(id, type);
 
+			if (type == "product") {
+				if (rHelper.data.products[id].turnover < 0) {
+					rate = 0;
+				}
+			}
+
 			target.text(rate.toLocaleString("en-US"));
 		},
 		INSRT_flowDistributionGlobal() {
@@ -1243,7 +1469,7 @@ var rHelper = {
 		},
 		INSRT_flowSurplus(id, type, remainingAmount) {
 			var surplusTarget = $("#flow-" + type + "-surplus-" + id);
-			if (remainingAmount < 0) {
+			if (remainingAmount <= 0) {
 				surplusTarget.css("color", "coral");
 			}
 			surplusTarget.html('<span class="resources-' + type + '-' + id + '"></span> ' + remainingAmount.toLocaleString("en-US"));
@@ -1256,6 +1482,7 @@ var rHelper = {
 			var worth = 0;
 			var remainingAmount = rHelper.fn.CALC_flowDistribution(id, type);
 			var color = "yellowgreen";
+			var productionCost = 0;
 
 			switch (type) {
 			case "material":
@@ -1267,8 +1494,14 @@ var rHelper = {
 			}
 
 			if (type == "product") {
+
 				if (rHelper.data.products[id].turnover < 0) {
-					remainingAmount = 0;
+					remainingAmount *= -1;
+					if (rHelper.data.products[id].dependantFactories == "") {
+						remainingAmount = 0;
+					}
+				} else {
+					productionCost = rHelper.fn.CALC_factoryCashCostPerHour(id);
 				}
 			}
 
@@ -1279,7 +1512,7 @@ var rHelper = {
 				color = "coral";
 			}
 
-			worth = Math.round(worth);
+			worth = Math.round(worth - productionCost);
 
 			switch (type) {
 			case "material":
@@ -1612,7 +1845,6 @@ var rHelper = {
 
 			$("#units-market-" + unitId).text(marketPrice.toLocaleString("en-US"));
 		},
-
 		INSRT_unitsProfit(unitId) {
 			var target = $("#units-profit-" + unitId);
 			var profit = rHelper.fn.CALC_unitsProfit(unitId);
@@ -1624,6 +1856,226 @@ var rHelper = {
 			}
 
 			target.text(profit.toFixed(2).toLocaleString("en-US") + "%");
+		},
+		INSRT_companyWorth() {
+			var companyWorth = rHelper.fn.CALC_companyWorth();
+			$("#company-worth").text(companyWorth.toLocaleString("en-US"));
+		},
+
+		INSRT_headquarterOvwTransportation(level) {
+
+			var hqLevel = rHelper.data.headquarter[level];
+
+			if ($.isArray(hqLevel.material)) {
+				var hqCost = rHelper.fn.CALC_headquarterLevelCost(level);
+				var transportation = Math.round(hqCost * (rHelper.data.buildings[9].transportCost - 1));
+
+				$("#hq-ovw-transportation-" + level).text(transportation.toLocaleString("en-US"));
+			}
+		},
+
+		INSRT_headquarterOvwCost(level) {
+			var hqCost = rHelper.fn.CALC_headquarterLevelCost(level);
+
+			$("#hq-ovw-sum-" + level).text(hqCost.toLocaleString("en-US"));
+		},
+		INSRT_headquarterOvwRadius(level) {
+			var hqLevel = rHelper.data.headquarter[level];
+
+			$("#hq-ovw-radius-" + level).text(hqLevel.radius + "m | " + rHelper.fn.CALC_convertMeterToYards(hqLevel.radius) + " yards");
+		},
+		INSRT_headquarterOvwBoost(level) {
+			var hqLevel = rHelper.data.headquarter[level];
+			$("#hq-ovw-boost-" + level).text(hqLevel.boost);
+		},
+		INSRT_headquarterOvwString(level) {
+			var hqLevel = rHelper.data.headquarter[level];
+
+			if ($.isArray(hqLevel.material)) {
+				var string = rHelper.fn.CALC_headquarterOvwMaterial(level) + " x " + hqLevel.amount.toLocaleString("en-US");
+
+				$("#hq-ovw-mat-" + level).html(string);
+			}
+		},
+		CALC_convertMeterToYards(meter) {
+			return Math.round(meter * 1.09361);
+		},
+		CALC_headquarterLevelCost(level) {
+			var cost = 0;
+			var hqLevel = rHelper.data.headquarter[level];
+
+			if ($.isArray(hqLevel.material)) {
+
+				$.each(hqLevel.material, function (k, material) {
+					cost += hqLevel.amount * rHelper.fn.CALC_returnPriceViaId(material);
+				});
+
+			}
+
+			return cost;
+		},
+		CALC_headquarterOvwMaterial(level) {
+			var hqLevel = rHelper.data.headquarter[level];
+			var string = "";
+
+			if ($.isArray(hqLevel.material)) {
+
+				var hqCost = rHelper.fn.CALC_headquarterLevelCost(level);
+
+				$.each(hqLevel.material, function (k, material) {
+					var addClass;
+
+					if (material <= 13) {
+						addClass = rHelper.data.material[material].icon;
+					} else if (material >= 14 && material <= 35) {
+						material -= 14;
+						addClass = rHelper.data.products[material].icon;
+					} else if (material >= 36 && material <= 51) {
+						material -= 36;
+						addClass = rHelper.data.loot[material].icon;
+					} else {
+						material -= 52;
+						addClass = rHelper.data.units[material].icon;
+					}
+
+					var span = $(crEl("span"));
+					span.addClass(addClass);
+
+					string += span[0].outerHTML + " ";
+				});
+			}
+
+			return string;
+		},
+		CALC_totalBuildingErectionSum(type) {
+			var total = 0;
+
+			$.each(rHelper.data.buildings, function (i, building) {
+				for (var level = 0; level < building.level; level += 1) {
+					$.each(building.material, function (k, material) {
+						if (material != -1) {
+							total += rHelper.fn.CALC_returnPriceViaId(material) * building["materialAmount" + k][level];
+						} else {
+							total += building["materialAmount" + k][level];
+						}
+					});
+				}
+			});
+
+			return total;
+		},
+		CALC_perfectWorth(type) {
+			var total = 0;
+
+			if (type == "headquarter") {
+
+				$.each(rHelper.data.headquarter, function (i, hqLevel) {
+					$.each(hqLevel.material, function (k, material) {
+						total += hqLevel.amount * rHelper.fn.CALC_returnPriceViaId(material);
+					});
+				});
+
+			} else if (type == "buildings") {
+
+				$.each(rHelper.data.buildings, function (i, building) {
+					for (var level = 0; level < 10; level += 1) {
+						$.each(building.material, function (k, material) {
+							if (material != -1) {
+								total += rHelper.fn.CALC_returnPriceViaId(material) * building["materialAmount" + k][level];
+							} else {
+								total += building["materialAmount" + k][level];
+							}
+						});
+					}
+				});
+			}
+
+			return total;
+		},
+		CALC_companyWorth() {
+			var companyWorth = 0;
+
+			companyWorth += rHelper.fn.CALC_totalHeadquarterErectionSum();
+			companyWorth += rHelper.fn.CALC_totalFactoryErectionWorth();
+			companyWorth += rHelper.fn.CALC_totalWarehouseErectionWorth();
+			companyWorth += rHelper.fn.CALC_totalBuildingErectionSum();
+			companyWorth += rHelper.fn.CALC_totalMineErectionSum();
+
+			return companyWorth;
+		},
+		CALC_totalHeadquarterErectionSum() {
+			var total = 0;
+
+			var userHq = rHelper.data.headquarter.user;
+			var userHqLevel = userHq.level;
+
+			for (var i = (userHqLevel - 1); i > 1; i -= 1) {
+				var hqLevel = rHelper.data.headquarter[i];
+				$.each(hqLevel.material, function (k, material) {
+					total += hqLevel.amount * rHelper.fn.CALC_returnPriceViaId(material);
+				});
+			}
+
+			$.each(userHq.paid, function (i, paid) {
+				if (paid != 0) {
+					var material = rHelper.data.headquarter[userHqLevel].material[i];
+					total += paid * rHelper.fn.CALC_returnPriceViaId(material);
+				}
+			});
+
+			return total;
+		},
+		CALC_totalMineErectionSum() {
+			var total = 0;
+
+			var totalMines = rHelper.fn.CALC_totalMineCount();
+
+			$.each(rHelper.data.material, function (i, material) {
+				total += material.basePrice * (1 + 0.01 * totalMines) * material.amountOfMines;
+			});
+
+			return Math.round(total);
+		},
+		CALC_totalWarehouseErectionWorth() {
+			var total = 0;
+
+			var subArrays = [
+				"material",
+				"products",
+				"loot",
+				"units",
+			];
+
+			$.each(subArrays, function (i, index) {
+				$.each(rHelper.data[index], function (k, obj) {
+					for (var k = 1; k <= obj.warehouse.level; k += 1) {
+						total += Math.pow((k - 1), 2) * 1250000;
+					}
+				});
+			});
+
+			return total;
+		},
+		CALC_totalFactoryErectionWorth() {
+			var total = 0;
+
+			$.each(rHelper.data.products, function (i, factory) {
+				for (var level = 0; level <= factory.factoryLevel; level += 1) {
+
+					$.each(factory.upgradeMaterial, function (k, material) {
+
+						var value = Math.pow(level, 2) * factory.upgradeMaterialAmount[k]
+
+						if (material != -1) {
+							total += value * rHelper.fn.CALC_returnPriceViaId(material);
+						} else {
+							total += value;
+						}
+					});
+				}
+			});
+
+			return total;
 		},
 		CALC_unitsCraftingPrice(unitId) {
 			var unit = rHelper.data.units[unitId];
@@ -1915,6 +2367,7 @@ var rHelper = {
 			} else {
 				dependantIconIndex = dependantFactory;
 				dependantObj = rHelper.data.products[dependantFactory];
+
 				if ($.isArray(dependantObj.dependencies)) {
 					originalIndex = dependantObj.dependencies.indexOf((id + 14));
 					requiredAmountPerLevel = dependantObj.requiredAmount[originalIndex];
@@ -2540,6 +2993,90 @@ var rHelper = {
 			}
 
 			return customTUPrice;
+		}
+	},
+	"graphs": {
+		"gaugeOptions": {
+			chart: {
+				type: "solidgauge",
+				backgroundColor: "transparent"
+			},
+			title: null,
+			pane: {
+				center: [
+					"50%",
+					"85%"
+				],
+				size: "140%",
+				startAngle: -90,
+				endAngle: 90,
+				background: {
+					backgroundColor: "#EEE",
+					innerRadius: "60%",
+					outerRadius: "100%",
+					shape: "arc"
+				}
+			},
+			tooltip: {
+				enabled: false
+			},
+			yAxis: {
+				minColor: "rgba(255, 127, 80, 0.75)",
+				maxColor: "rgba(154, 205, 50, 0.75)",
+				lineWidth: 0,
+				minorTickInterval: null,
+				title: {
+					y: -70
+				},
+				labels: {
+					y: 16
+				}
+			},
+			plotOptions: {
+				solidgauge: {
+					dataLabels: {
+						y: 5,
+						borderWidth: 0,
+						style: {
+							color: "#ffffff"
+						},
+						useHTML: true
+					}
+				}
+			}
+		},
+		"material": {
+			"target": "graph-material",
+			"categories": [],
+			"mineData": [],
+			"incomeData": [],
+			"data": [],
+			"colors": [
+				"#8a4f3e",
+				"#a4938e",
+				"#aba59a",
+				"#2d2c2b",
+				"#8a5a3a",
+				"#d8d8d8",
+				"#b58359",
+				"#b87259",
+				"#9b7953",
+				"#c4b9ab",
+				"#957e60",
+				"#cccbc2",
+				"#b28b3d",
+				"#b0a17d"
+			],
+			"reference": {
+				"mineCount": 0,
+				"mineIncome": 0
+			},
+			"seriesNames": [
+				"Mines",
+				"Mine income",
+			],
+			"responsiveId": "income",
+			"titleText": "mine distribution vs mine income"
 		}
 	},
 	"data": {},

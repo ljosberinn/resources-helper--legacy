@@ -75,5 +75,6 @@
 				</tfoot>
 			</table>
 		</div>
+    <div class="col-xs-12 col-md-12" id="graph-material"></div>
 	</div>
 </div>

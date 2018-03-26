@@ -23,6 +23,7 @@
 <!-- external stylesheets
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans"> -->
 
+
 <!-- internal stylesheets -->
 <link rel="stylesheet" href="assets/css/GoogleFonts_OpenSans.min.css" />
 <link rel="stylesheet" href="assets/css/sweetalert2.min.css" />
@@ -86,11 +87,16 @@ if (isset($_SESSION["id"])) {
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <script async src="https://cdn.jsdelivr.net/npm/sweetalert2@7.13.3/dist/sweetalert2.min.js" integrity="sha384-Y9tUtxNOtZ6td2fohELS1rJiv9Ktkpt6RVox+UOGikRop45QwDrzTAaUe6zsZdQ1" crossorigin="anonymous"></script>
 <script async src="https://unpkg.com/tippy.js@2.2.3/dist/tippy.all.min.js" integrity="sha384-7iCQEHkOskB8DnHBeVzB1nkyndqNZ1Tk7C4tc4hQkeSJpLDJ1CJWxmCPtnM6WoQ8" crossorigin="anonymous"></script>
+<script src="https://code.highcharts.com/highcharts.js" async></script>
+<script src="https://code.highcharts.com/modules/exporting.js" defer></script>
+<script src="https://code.highcharts.com/highcharts-more.js" defer></script>
+<script src="https://code.highcharts.com/modules/solid-gauge.js" defer></script>
+
 
 <!--
 
 <script src="https://cdn.jsdelivr.net/npm/blazy@1.8.2/blazy.min.js" defer integrity="sha384-FlX58eB2jw6JYcxbyEMdW++p13qEtlQOjzF8zIX4n0t6TfNZq9KV0vNdMoSg6Gqn" crossorigin="anonymous"></script>
-<script src="https://code.highcharts.com/highcharts.js" defer></script>
+
 <script src="https://code.highcharts.com/highcharts-more.js" defer></script>
 <script src="https://code.highcharts.com/modules/solid-gauge.js" defer></script>
 <script src="https://code.highcharts.com/modules/sankey.js" defer></script>

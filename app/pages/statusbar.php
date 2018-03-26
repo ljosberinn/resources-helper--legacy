@@ -16,6 +16,11 @@
 
   <div class="row">
     <div class="col text-right mt-1">
+      Company worth: <span id="company-worth">0</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col text-right mt-1">
       Effective hourly income: <span id="effective-hourly-income">0</span>
     </div>
   </div>

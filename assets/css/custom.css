@@ -1304,3 +1304,24 @@ kbd {
 [id^="building-"] tfoot {
 	display: none;
 }
+
+.highcharts-credits {
+	display: none;
+}
+
+#graph-buildings svg,
+#graph-headquarter svg,
+#graph-material svg {
+	width : 100%;
+	height: auto;
+}
+
+#module-diamond tr:nth-of-type(10) {
+	border-bottom: 1px solid orange;
+}
+
+#collapse-headquarter-ovw tr td:first-of-type,
+#collapse-headquarter-ovw tr td:last-of-type,
+#collapse-headquarter-ovw tr td:nth-of-type(2) {
+	vertical-align: middle;
+}
