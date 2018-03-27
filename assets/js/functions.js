@@ -69,7 +69,6 @@ function applyTippyOnNewElement(el) {
 		tippy(el[0], {
 			dynamicTitle: true
 		});
-		el.addClass("tippied");
 	}
 }
 
@@ -93,8 +92,7 @@ function changeElementClasses(el, rmvClass, addClass) {
 	}
 }
 
-function toggleTab(selectedNav, targetId) {
-
+function switchActiveNavigationLink(selectedNav) {
   $(".nav-link").each(function(i, navLink) {
 		if(selectedNav == navLink.id) {
 			$(navLink).addClass("active");
@@ -102,12 +100,20 @@ function toggleTab(selectedNav, targetId) {
 			$(navLink).removeClass("active");
 		}
 	});
+}
 
-	$("main > div").each(function(i, moduleEl) {
+function switchActiveModule(targetId) {
+  $("main > div").each(function(i, moduleEl) {
 		if(targetId == moduleEl.id) {
 			$(moduleEl).css("display", "block");
 		} else {
 			$(moduleEl).css("display", "none");
 		}
 	});
+}
+
+function toggleTab(selectedNav, targetId) {
+
+  switchActiveNavigationLink(selectedNav);
+  switchActiveModule(targetId);	
 }

@@ -137,7 +137,10 @@ var rHelper = {
 				rHelper.fn.INSRT_headquarterOvwCost(headquarterLevel);
 				rHelper.fn.INSRT_headquarterOvwBoost(headquarterLevel);
 				rHelper.fn.INSRT_headquarterOvwTransportation(headquarterLevel);
+				rHelper.fn.EVNT_switchHeadquarter(headquarterLevel);
 			});
+			rHelper.fn.SET_hqLevel();
+			rHelper.fn.EVNT_headquarterInput();
 
 			// techupgrades
 			rHelper.fn.INSRT_techUpgradeRows();
@@ -543,6 +546,10 @@ var rHelper = {
 					rHelper.fn.INSRT_flowDistributionGlobal();
 
 				});
+
+				$.each(rHelper.data.headquarter, function (headquarterLevel) {
+					rHelper.fn.INSRT_headquarterOvwTransportation(headquarterLevel);
+				});
 			}
 		},
 		SET_buildingBackgroundColor(buildingId) {
@@ -606,6 +613,26 @@ var rHelper = {
 				"craftingPrice": 0,
 				"marketPrice": 0,
 				"profit": 0
+			}
+		},
+		SET_hqLevel() {
+			var headquarter = rHelper.data.headquarter;
+			if (headquarter.user) {
+				var userHqLevel = headquarter.user.level;
+				rHelper.fn.SET_hqSelectorClass((userHqLevel - 1));
+				rHelper.fn.INSRT_headquarterContentRequiredAmount(userHqLevel);
+				rHelper.fn.INSRT_headquarterPaid();
+				rHelper.fn.INSRT_headquarterMissing(userHqLevel);
+				rHelper.fn.INSRT_headquarterRemainingCost(userHqLevel);
+			}
+		},
+		SET_hqSelectorClass(userHqLevel) {
+			for (var i = 0; i <= 9; i += 1) {
+				if (userHqLevel != i) {
+					$(".hq-thumb-" + i).addClass("disabled-hq");
+				} else {
+					$(".hq-thumb-" + i).removeClass("disabled-hq");
+				}
 			}
 		},
 
@@ -885,6 +912,50 @@ var rHelper = {
 				break;
 			}
 		},
+		EVNT_switchHeadquarter(clickedHq) {
+
+			$(".hq-thumb-" + clickedHq).on("click", function () {
+				var actualLevel = parseInt(clickedHq) + 1;
+
+				rHelper.data.headquarter.user = rHelper.data.headquarter.user || {};
+				rHelper.data.headquarter.user.paid = rHelper.data.headquarter.user.paid || [0, 0, 0, 0];
+				rHelper.data.headquarter.user.level = rHelper.data.headquarter.user.level || actualLevel;
+
+
+				rHelper.fn.SET_globalObject("headquarter", "user", "level", actualLevel);
+				rHelper.fn.SET_hqSelectorClass(clickedHq);
+				rHelper.fn.INSRT_gaugeGraph("headquarter");
+				rHelper.fn.INSRT_headquarterContentRequiredAmount(actualLevel);
+				rHelper.fn.INSRT_headquarterPaid();
+				for (var i = 0; i <= 3; i += 1) {
+					rHelper.fn.INSRT_headquarterMissing(i);
+				}
+				rHelper.fn.INSRT_headquarterRemainingCost(actualLevel);
+				rHelper.fn.INSRT_companyWorth();
+			});
+		},
+		EVNT_headquarterInput() {
+			$.each($("[id*='hq-content-input-']"), function (i, el) {
+				$(el).on("input", function () {
+					var thisId = parseInt(this.id.replace(/hq-content-input-/, ""));
+					var thisValue = parseInt(this.value);
+					if (isNaN(thisValue)) {
+						thisValue = 0;
+					}
+					if (thisValue > 50000000) {
+						thisValue = 50000000;
+					}
+
+					rHelper.fn.SET_globalObject("headquarter", "user", ["paid", thisId], thisValue);
+					rHelper.fn.INSRT_headquarterMissing(i);
+					rHelper.fn.INSRT_headquarterRemainingCost(rHelper.data.headquarter.user.level);
+					rHelper.fn.INSRT_gaugeGraph("headquarter");
+					rHelper.fn.INSRT_companyWorth();
+				});
+			});
+		},
+
+
 		INSRT_polygonGraph(target, titleText, seriesNames, responsiveId, targetObj) {
 
 			var dataObj = rHelper.graphs[targetObj];
@@ -958,7 +1029,6 @@ var rHelper = {
 			});
 		},
 		INSRT_gaugeGraph(type) {
-
 			if (type == "buildings") {
 				var chart = Highcharts.chart('graph-buildings', Highcharts.merge(rHelper.graphs.gaugeOptions, {
 					yAxis: {
@@ -989,7 +1059,6 @@ var rHelper = {
 				}));
 			}
 		},
-
 		INSRT_totalMineWorth(totalMineWorth) {
 			$("#material-total-worth").text(totalMineWorth.toLocaleString("en-US"));
 		},
@@ -1861,7 +1930,6 @@ var rHelper = {
 			var companyWorth = rHelper.fn.CALC_companyWorth();
 			$("#company-worth").text(companyWorth.toLocaleString("en-US"));
 		},
-
 		INSRT_headquarterOvwTransportation(level) {
 
 			var hqLevel = rHelper.data.headquarter[level];
@@ -1873,7 +1941,6 @@ var rHelper = {
 				$("#hq-ovw-transportation-" + level).text(transportation.toLocaleString("en-US"));
 			}
 		},
-
 		INSRT_headquarterOvwCost(level) {
 			var hqCost = rHelper.fn.CALC_headquarterLevelCost(level);
 
@@ -1896,6 +1963,106 @@ var rHelper = {
 
 				$("#hq-ovw-mat-" + level).html(string);
 			}
+		},
+		INSRT_headquarterContentRequiredAmount(level) {
+
+			var hqContent = $("#hq-content");
+
+			if (level != 10) {
+				hqContent.css("display", "block");
+				var headquarter = rHelper.data.headquarter[level];
+				var amount = headquarter.amount;
+
+				$.each(headquarter.material, function (i, material) {
+
+					var icon = rHelper.fn.CALC_headquarterContentIcon(material);
+					$("#hq-content-icon-" + i).html(icon);
+
+					var span = rHelper.fn.CALC_headquarterContentRequiredAmount(amount);
+					$("#hq-content-requirement-" + i).html(span);
+
+				});
+			} else {
+				hqContent.css("display", "none");
+			}
+		},
+		INSRT_headquarterPaid() {
+			var paid = rHelper.data.headquarter.user.paid;
+
+			$.each(paid, function (i, amount) {
+				$("#hq-content-paid-" + i).val(amount);
+			});
+		},
+		INSRT_headquarterMissing(i) {
+
+			var userHqLevel = rHelper.data.headquarter.user.level;
+
+			if (userHqLevel != 10) {
+
+				var requiredAmount = rHelper.data.headquarter[userHqLevel].amount
+				var paid = rHelper.data.headquarter.user.paid[i];
+				var missing = requiredAmount - paid;
+
+				if (missing < 0) {
+					missing = 0;
+				}
+
+				$("#hq-content-missing-" + i).text(missing.toLocaleString("en-US"));
+			}
+		},
+		INSRT_headquarterRemainingCost(userHqLevel) {
+
+			if (userHqLevel != 10) {
+
+				var headquarter = rHelper.data.headquarter[userHqLevel];
+				var totalCost = 0;
+				var totalTransportation = 0;
+
+				$.each(headquarter.material, function (i, material) {
+					var worth = rHelper.fn.CALC_headquarterRemainingCost(i, material, userHqLevel);
+					totalCost += worth;
+
+					var transportation = Math.round(worth * (rHelper.data.buildings[9].transportCost - 1));
+					totalTransportation += transportation;
+
+					$("#hq-content-cost-" + i).text(worth.toLocaleString("en-US"));
+					$("#hq-content-transportation-" + i).text(transportation.toLocaleString("en-US"));
+				});
+
+				rHelper.fn.INSRT_headquarterTotalCost(totalCost);
+				rHelper.fn.INSRT_headquarterTotalTransportation(totalTransportation);
+			}
+		},
+		INSRT_headquarterTotalCost(sum) {
+			$("#hq-content-cost-sum").text(sum.toLocaleString("en-US"));
+		},
+		INSRT_headquarterTotalTransportation(sum) {
+			$("#hq-content-transportation-sum").text(sum.toLocaleString("en-US"));
+		},
+
+		CALC_headquarterRemainingCost(i, material, userHqLevel) {
+
+			var missing = rHelper.data.headquarter[userHqLevel].amount - rHelper.data.headquarter.user.paid[i];
+
+			if (missing < 0) {
+				missing = 0;
+			}
+
+			var price = rHelper.fn.CALC_returnPriceViaId(material);
+
+			return price * missing;
+		},
+		CALC_headquarterContentIcon(material) {
+			var container = $(crEl("span"));
+
+			container.addClass(rHelper.fn.CALC_convertId(material).icon);
+
+			return container[0].outerHTML;
+		},
+		CALC_headquarterContentRequiredAmount(amount) {
+			var span = $(crEl("span")).html(amount.toLocaleString("en-US"));
+
+			return span[0].outerHTML;
 		},
 		CALC_convertMeterToYards(meter) {
 			return Math.round(meter * 1.09361);
@@ -2005,25 +2172,28 @@ var rHelper = {
 		},
 		CALC_totalHeadquarterErectionSum() {
 			var total = 0;
+			var headquarter = rHelper.data.headquarter;
 
-			if (typeof (rHelper.data.headquarter.user) != "undefined") {
+			if (headquarter.user) {
 
-				var userHq = rHelper.data.headquarter.user;
+				var userHq = headquarter.user;
 				var userHqLevel = userHq.level;
 
-				for (var i = (userHqLevel - 1); i > 1; i -= 1) {
+				for (var i = (userHqLevel - 1); i >= 1; i -= 1) {
 					var hqLevel = rHelper.data.headquarter[i];
 					$.each(hqLevel.material, function (k, material) {
 						total += hqLevel.amount * rHelper.fn.CALC_returnPriceViaId(material);
 					});
 				}
 
-				$.each(userHq.paid, function (i, paid) {
-					if (paid != 0) {
-						var material = rHelper.data.headquarter[userHqLevel].material[i];
-						total += paid * rHelper.fn.CALC_returnPriceViaId(material);
-					}
-				});
+				if (userHqLevel != 10) {
+					$.each(userHq.paid, function (i, paid) {
+						if (paid != 0) {
+							var material = rHelper.data.headquarter[(userHqLevel - 1)].material[i];
+							total += paid * rHelper.fn.CALC_returnPriceViaId(material);
+						}
+					});
+				}
 			}
 
 			return total;
@@ -2309,14 +2479,14 @@ var rHelper = {
 
 			remainingTime = remainingCapacity / divisor;
 
-			if (remainingTime > 24) {
-				remainingTime = "> " + (remainingTime / 24).toFixed(2) + " days";
-			} else {
-				remainingTime = "> " + remainingTime.toFixed(2) + " hours";
-			}
-
-			if ((type == "products" && el.turnover <= 0) || type == "loot" || type == "units" || isNaN(remainingTime)) {
+			if (isNaN(remainingTime) ||  (type == "products" && el.turnover <= 0) || type == "loot" || type == "units") {
 				remainingTime = "∞";
+			} else {
+				if (remainingTime > 24) {
+					remainingTime = "> " + (remainingTime / 24).toFixed(2) + " days";
+				} else {
+					remainingTime = "> " + remainingTime.toFixed(2) + " hours";
+				}
 			}
 
 			return remainingTime;

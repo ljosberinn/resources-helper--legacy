@@ -9,7 +9,7 @@
 
 			<table class="table table-responsive table-break-medium table-striped mb-3">
 				<thead>
-					<tr class="text-small">
+					<tr class="small">
 						<?php
 
 						$mineTH = [

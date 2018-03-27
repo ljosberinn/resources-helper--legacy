@@ -9,7 +9,7 @@
 
 			<table class="table table-responsive table-break-medium table-striped mb-3">
 				<thead>
-					<tr class="text-small">
+					<tr class="small">
 						<th class="sorttable_nosort">Factory</th>
 						<th class="text-md-right text-sm-left sorttable_nosort">Factory Level</th>
 						<th class="text-md-right text-sm-left sorttable_nosort">Product</th>

@@ -31,7 +31,7 @@
 
     <table class="table table-responsive table-break-medium table-striped mb-3" id="techupgrades-calc-tbl">
 			<thead>
-				<tr class="text-small">
+				<tr class="small">
           <th class="text-md-right text-sm-left">missing Tech-Upgrade 1</th>
 					<th class="text-md-right text-sm-left">missing Tech-Upgrade 2</th>
 					<th class="text-md-right text-sm-left">missing Tech-Upgrade 3</th>

@@ -9,7 +9,7 @@
 
 	<table class="table table-responsive table-break-medium table-striped mb-3">
 		<thead>
-			<tr class="text-small">
+			<tr class="small">
 				<th>Rate/hour</th>
 				<th class="text-center" colspan="4">Distribution</th>
 				<th class="text-md-right text-sm-left">Surplus/hour</th>
@@ -49,7 +49,7 @@
 
 	<table class="table table-responsive table-break-medium table-striped mb-3">
 		<thead>
-			<tr class="text-small">
+			<tr class="small">
 				<th>Effective rate/hour</th>
 				<th class="text-center" colspan="3">Distribution</th>
 				<th class="text-md-right text-sm-left ">Surplus/hour</th>

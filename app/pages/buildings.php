@@ -45,7 +45,7 @@
             </td>
             <td data-th="Required amount" class="text-md-right text-sm-left" id="buildings-amount-1-' .$i. '"></td>
             <td data-th="Cost" class="text-md-right text-sm-left" id="buildings-worth-1-' .$i. '"></td>
-            <td data-th="Transportation" class="text-md-right text-sm-left text-small">
+            <td data-th="Transportation" class="text-md-right text-sm-left small">
               <small class="text-danger" id="buildings-transportation-1-' .$i. '"></small>
             </td>
           </tr>
@@ -55,7 +55,7 @@
             </td>
             <td data-th="Required amount" class="text-md-right text-sm-left" id="buildings-amount-2-' .$i. '"></td>
             <td data-th="Cost" class="text-md-right text-sm-left" id="buildings-worth-2-' .$i. '"></td>
-            <td data-th="Transportation" class="text-md-right text-sm-left text-small">
+            <td data-th="Transportation" class="text-md-right text-sm-left small">
               <small class="text-danger" id="buildings-transportation-2-' .$i. '"></small>
             </td>
           </tr>
@@ -65,7 +65,7 @@
             </td>
             <td data-th="Required amount" class="text-md-right text-sm-left" id="buildings-amount-3-' .$i. '"></td>
             <td data-th="Cost" class="text-md-right text-sm-left" id="buildings-worth-3-' .$i. '"></td>
-            <td data-th="Transportation" class="text-md-right text-sm-left text-small">
+            <td data-th="Transportation" class="text-md-right text-sm-left small">
               <small class="text-danger" id="buildings-transportation-3-' .$i. '"></small>
             </td>
           </tr>
@@ -73,7 +73,7 @@
         <tfoot>
           <tr>
             <td data-th="Total cost" class="text-md-right text-sm-left" colspan="3" id="buildings-sum-' . $i. '"></td>
-            <td data-th="Total transportation" class="text-md-right text-sm-left text-small">
+            <td data-th="Total transportation" class="text-md-right text-sm-left small">
               <small class="text-danger" id="buildings-transportation-sum-' . $i. '"></small>
             </td>
           </tr>

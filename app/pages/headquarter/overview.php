@@ -3,7 +3,7 @@
 
 		<table class="table table-responsive table-break-medium table-striped mb-3">
 			<thead>
-				<tr class="text-small">
+				<tr class="small">
 					<th class="text-md-right text-sm-left">Level</th>
 					<th class="text-md-right text-sm-left">Required material & amount</th>
 					<th class="text-md-right text-sm-left">Total cost</th>
@@ -25,7 +25,7 @@
             <td class="' .$textOrientation. '">' .($i + 1). '</td>
 						<td class="' .$textOrientation. '" id="hq-ovw-mat-' .$i. '"></td>
 						<td class="' .$textOrientation. '" id="hq-ovw-sum-' .$i. '"></td>
-						<td class="' .$textOrientation. ' text-danger" id="hq-ovw-transportation-' .$i. '"></td>
+						<td class="' .$textOrientation. ' text-danger small" id="hq-ovw-transportation-' .$i. '"></td>
 						<td class="' .$textOrientation. '" id="hq-ovw-radius-' .$i. '"></td>
 						<td class="' .$textOrientation. '" id="hq-ovw-boost-' .$i. '"></td>
           </tr>

@@ -10,8 +10,8 @@
 
 			<table class="table table-responsive table-break-medium table-striped mb-3">
 				<thead>
-					<tr class="text-small">
-						<th class="text-md-right text-sm-left" colspan="3">Stock</th>
+					<tr class="small">
+						<th class="text-md-right text-sm-left">Type & Stock</th>
             <th class="text-md-right text-sm-left">Min. time until full</th>
             <th class="text-md-right text-sm-left">Worth</th>
             <th class="text-md-right text-sm-left">Warehouse level</th>
@@ -24,7 +24,7 @@
 				<?php
 
         $trBreak = '
-        <tr><td class="table-hr" colspan="9"></td></tr>';
+        <tr><td class="table-hr" colspan="7"></td></tr>';
 
         for ($i = 0; $i < 58; $i += 1) {
 
@@ -52,26 +52,23 @@
 
           echo '
 					<tr>
-            <td data-th="Type">
-             <span class="resources-' .$imgClass. '-' .$k. '"></span>
-            </td>
-            <td data-th="Stock">
-              <input class="form-control form-control-sm text-md-right text-sm-left" type="number" min="0" id="warehouse-' .$idClass. '-stock-current-' .$k. '" />
-            </td>
-
-            <td data-th="Fill status">
-             / <span id="warehouse-' .$idClass. '-stock-cap-' .$k. '"></span> (<span id="warehouse-' .$idClass. '-fill-percent-' .$k. '"></span> %)
+            <td data-th="Type & Stock">
+              <div class="input-group">
+                <span class="input-group-addon"><span class="resources-' .$imgClass. '-' .$k. '"></span></span>
+                <input class="form-control form-control-sm text-md-right text-sm-left" type="number" min="0" id="warehouse-' .$idClass. '-stock-current-' .$k. '" />
+                <span class="input-group-addon"><span>/ <span id="warehouse-' .$idClass. '-stock-cap-' .$k. '"></span> (<span id="warehouse-' .$idClass. '-fill-percent-' .$k. '"></span>%)</span></span>
+              </div>
             </td>
 
             <td data-th="Min. time until full" class="text-md-right text-sm-left" id="warehouse-' .$idClass. '-remaining-' .$k. '"></td>
 
-            <td  data-th="Worth" class="text-md-right text-sm-left" id="warehouse-' .$idClass. '-worth-' .$k. '"></td>
+            <td data-th="Worth" class="text-md-right text-sm-left" id="warehouse-' .$idClass. '-worth-' .$k. '"></td>
 
             <td data-th="Warehouse level">
              <input class="form-control form-control-sm text-md-right text-sm-left" type="number" min="0" max="10000" id="warehouse-' .$idClass. '-level-' .$k. '" />
             </td>
 
-            <td  data-th="Upgrade selection" class="text-md-right text-sm-left">
+            <td data-th="Upgrade selection" class="text-md-right text-sm-left">
               <select class="custom-select" id="warehouse-' .$idClass. '-calc-1-' .$k. '">
                 <option value="level">level</option>
                 <option value="contingent">contingent</option>
@@ -90,7 +87,7 @@
 				</tbody>
 				<tfoot>
           <tr>
-            <td colspan="5" class="text-md-right text-sm-left" id="warehouse-total-worth"></td>
+            <td colspan="3" class="text-md-right text-sm-left" id="warehouse-total-worth"></td>
             <td class="text-md-right text-sm-left" id="warehouse-total-level"></td>
             <td colspan="3"></td>
           </tr>

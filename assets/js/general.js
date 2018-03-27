@@ -13,11 +13,11 @@ $("#registration-reset-fields").click(function () {
 });
 
 $("#registration-form").submit(function (event) {
-	var passwordRegex = new RegExp("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{4,}$"),
-		pw1El = $("#registration-pw-1"),
-		pw2El = $("#registration-pw-2"),
-		pw1Val = pw1El.val(),
-		pw2Val = pw2El.val();
+	var passwordRegex = new RegExp("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{4,}$");
+	var pw1El = $("#registration-pw-1");
+	var pw2El = $("#registration-pw-2");
+	var pw1Val = pw1El.val();
+	var pw2Val = pw2El.val();
 
 	$.each([pw1Val, pw2Val], function (i, value) {
 		if (value === "") {
@@ -45,13 +45,13 @@ $("#registration-form").submit(function (event) {
 });
 
 $("#password-change-form").submit(function (event) {
-	var passwordRegex = new RegExp("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{4,}$"),
-		pwOldEl = $("#settings-current-password"),
-		pw1El = $("#settings-new-password-1"),
-		pw2El = $("#settings-new-password-2"),
-		pwOldElVal = pwOldEl.val(),
-		pw1Val = pw1El.val(),
-		pw2Val = pw2El.val();
+	var passwordRegex = new RegExp("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{4,}$");
+	var pwOldEl = $("#settings-current-password");
+	var pw1El = $("#settings-new-password-1");
+	var pw2El = $("#settings-new-password-2");
+	var pwOldElVal = pwOldEl.val();
+	var pw1Val = pw1El.val();
+	var pw2Val = pw2El.val();
 
 	$.each([pwOldEl, pw1Val, pw2Val], function (i, value) {
 		if (value === "") {
@@ -231,7 +231,7 @@ $("#techupgrades-input").on("input", function () {
 	var value = parseFloat(this.value);
 
 	if (value >= 1.01 && value <= 5) {
-		if(tu4Allowance.prop("checked") === true) {
+		if (tu4Allowance.prop("checked") === true) {
 			rHelper.fn.INSRT_techUpgradeCalculator(value, "tu4Included");
 		} else {
 			rHelper.fn.INSRT_techUpgradeCalculator(value);

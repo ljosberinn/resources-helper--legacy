@@ -1,3 +1,15 @@
+<?php
+
+if($_SESSION["id"]) {
+  $show1 = "show";
+  $show2 = "";
+} else {
+  $show1 = "";
+  $show2 = "show";
+}
+
+?>
+
 <!-- #module-headquarter -->
 
 <div class="bg-light mt-3 mb-3 p-4 col-12 rounded" id="module-headquarter">
@@ -15,12 +27,12 @@
 				</h5>
 			</div>
 
-			<div id="collapse-headquarter-info" class="collapse show" role="tabpanel" aria-labelledby="heading-hq-1">
+			<div id="collapse-headquarter-info" class="collapse <?php echo $show1; ?>" role="tabpanel" aria-labelledby="heading-hq-1">
 				<div class="card-block p-4 bg-light">
 
 				<?php
 
-				require "app/pages/headquarter/headquarter.html";
+				require "app/pages/headquarter/headquarter.php";
 
 				?>
 
@@ -38,7 +50,7 @@
 			</div>
 
 
-			<div id="collapse-headquarter-ovw" class="collapse" role="tabpanel" aria-labelledby="heading-hq-2">
+			<div id="collapse-headquarter-ovw" class="collapse <?php echo $show2; ?>" role="tabpanel" aria-labelledby="heading-hq-2">
 				<div class="card-block p-4 bg-light">
 
 					<?php
