@@ -183,6 +183,7 @@ $("#api-submit").on("click", function (e) {
 		"player",
 		"attack-log",
 		"trade-log",
+    "missions",
 	];
 
 	var queries = [];

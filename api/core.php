@@ -15,7 +15,8 @@ if (isset($_SESSION["id"])) {
     $userId = 0;
 }
 
-$resourcesGame = new resourcesGame($host, $user, $pw, $db);
+$prices = "off";
+$resourcesGame = new resourcesGame($host, $user, $pw, $db, $prices);
 
 if (isset($_GET["key"]) && isset($_GET["query"]) && $userId != 0) {
 
@@ -30,6 +31,10 @@ if (isset($_GET["key"]) && isset($_GET["query"]) && $userId != 0) {
 } elseif(isset($_GET["missions"])) {
     $output = json_encode($resourcesGame->getMissions($userId), JSON_NUMERIC_CHECK);
 } else {
+
+    $prices = "on";
+    $resourcesGame = new resourcesGame($host, $user, $pw, $db, $prices);
+
     $baseData = [
     "material" => $resourcesGame->getRawData("resources"),
     "products" => $resourcesGame->getRawData("factories"),
@@ -53,10 +58,10 @@ if (isset($_GET["key"]) && isset($_GET["query"]) && $userId != 0) {
         $baseData["settings"] = $resourcesGame->getUserSettings($baseData["settings"], $userId); // stable
         $baseData = $resourcesGame->getUserWarehouseContent($baseData, $userId); // stable
         $baseData["userInformation"] = $resourcesGame->getUserInfo($userId); // stable
-        $baseData["attackLog"] = $resourcesGame->getAttackLog($userId); // stable
-        $baseData["mineMap"] = $resourcesGame->getPersonalMineMap($userId); // stable
+        #$baseData["attackLog"] = $resourcesGame->getAttackLog($userId); // stable
+        #$baseData["mineMap"] = $resourcesGame->getPersonalMineMap($userId); // stable
         $baseData["missions"] = $resourcesGame->getMissions($userId); // stable
-        $baseData["tradeLog"] = $resourcesGame->getTradeLog($userId); // dummy
+        #$baseData["tradeLog"] = $resourcesGame->getTradeLog($userId); // stable
     }
 
     $baseData = $resourcesGame->getLanguageVariables($baseData); // stable

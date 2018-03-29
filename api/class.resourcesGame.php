@@ -199,7 +199,7 @@
       * @param  mixed $db   [database to select]
       * @return mixed [returns $this->conn as new mysqli() and $this->prices as global price array]
       */
-     public function __construct($host, $user, $pw, $db)
+     public function __construct($host, $user, $pw, $db, $prices)
      {
          $this->host = $host;
          $this->user = $user;
@@ -207,7 +207,10 @@
          $this->db = $db;
 
          $this->conn = $this->DBConnection();
-         $this->prices = $this->getAllPrices();
+
+         if($prices == "on") {
+           $this->prices = $this->getAllPrices();
+         }
      }
 
      /**

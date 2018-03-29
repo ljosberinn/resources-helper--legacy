@@ -1187,9 +1187,7 @@ kbd {
 	display: none;
 }
 
-#graph-buildings svg,
-#graph-headquarter svg,
-#graph-material svg {
+[id*="graph-"] svg {
 	width : 100%;
 	height: auto;
 }
@@ -1264,4 +1262,8 @@ kbd {
 
 .disabled-hq:hover {
 	filter: none;
+}
+
+#pricehistory-svg {
+	height: 300px;
 }

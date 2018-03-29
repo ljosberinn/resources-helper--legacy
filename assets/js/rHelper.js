@@ -31,6 +31,7 @@ var rHelper = {
 				rHelper.fn.INSRT_warehouseRemainingTimeToFull(materialId, "material");
 				rHelper.fn.EVNT_warehouseInput(materialId, "material");
 
+				rHelper.fn.INSRT_priceHistoryName("material", materialId);
 			});
 
 			rHelper.fn.INSRT_totalMineWorth(rHelper.fn.CALC_totalMineWorth());
@@ -69,6 +70,8 @@ var rHelper = {
 				rHelper.fn.INSRT_warehouseRemainingTimeToFull(factoryId, "products");
 				rHelper.fn.EVNT_warehouseInput(factoryId, "products");
 
+				rHelper.fn.INSRT_priceHistoryName("products", factoryId);
+
 			});
 
 			rHelper.fn.INSRT_totalFactoryUpgrades();
@@ -79,14 +82,18 @@ var rHelper = {
 
 			rHelper.fn.INSRT_flowDistributionGlobal();
 
-			// warehouses
+			// loot
 			$.each(rHelper.data.loot, function (index) {
+				// warehouses
 				rHelper.fn.INSRT_warehouseFillAmount(index, "loot");
 				rHelper.fn.INSRT_warehouseLevel(index, "loot");
 				rHelper.fn.INSRT_warehouseFillStatus(index, "loot");
 				rHelper.fn.INSRT_warehouseCapacity(index, "loot");
 				rHelper.fn.INSRT_warehouseWorth(index, "loot");
 				rHelper.fn.EVNT_warehouseInput(index, "loot");
+
+				// price history
+				rHelper.fn.INSRT_priceHistoryName("loot", index);
 
 
 				// recycling table
@@ -115,6 +122,9 @@ var rHelper = {
 				rHelper.fn.INSRT_unitsCraftingPrice(index);
 				rHelper.fn.INSRT_unitsMarketPrice(index);
 				rHelper.fn.INSRT_unitsProfit(index);
+
+				// price history
+				rHelper.fn.INSRT_priceHistoryName("units", index);
 			});
 
 			rHelper.fn.INSRT_warehouseTotalLevel();
@@ -146,6 +156,8 @@ var rHelper = {
 			rHelper.fn.INSRT_techUpgradeRows();
 
 			// initiate graphs
+			rHelper.fn.EVNT_priceHistoryOnChange();
+
 			var pieGraphs = [
 				"material",
 			];
@@ -918,8 +930,8 @@ var rHelper = {
 				var actualLevel = parseInt(clickedHq) + 1;
 
 				rHelper.data.headquarter.user = rHelper.data.headquarter.user || {};
-				rHelper.data.headquarter.user.paid = rHelper.data.headquarter.user.paid || [0, 0, 0, 0];
-				rHelper.data.headquarter.user.level = rHelper.data.headquarter.user.level || actualLevel;
+				rHelper.data.headquarter.user.paid = rHelper.data.headquarter.user.paid ||  [0, 0, 0, 0];
+				rHelper.data.headquarter.user.level = rHelper.data.headquarter.user.level ||  actualLevel;
 
 
 				rHelper.fn.SET_globalObject("headquarter", "user", "level", actualLevel);
@@ -954,8 +966,147 @@ var rHelper = {
 				});
 			});
 		},
+		EVNT_priceHistoryOnChange() {
+			$("#pricehistory-selector").on("change", function (i, el) {
+
+				var thisVal = parseInt(this.value);
+				var url = "api/getPriceHistory.php?id=" + thisVal;
+				var resource = rHelper.fn.CALC_convertId(thisVal);
+				var materialName = "<span style=\"height: 25px; width: 25px;\" class=" + resource.icon + "></span> " + resource.name;
+
+				rHelper.fn.EVNT_priceHistoryToggler("loading");
+
+				$.getJSON(url, function (response) {
+					var averageKI = response.avg.ki;
+					var averagePlayer = response.avg.player;
+
+					var timestamps = [];
+					var player = [];
+					var ki = [];
+
+					$.each(response.data, function (i, dataset) {
+						var date = new Date(dataset.ts * 1000);
+						timestamps.push(date);
+
+						if (dataset.player == 0) {
+							dataset.player = null;
+						}
+
+						player.push(dataset.player);
+						ki.push(dataset.ki);
+					});
+
+					rHelper.fn.EVNT_priceHistoryToggler("finished");
+					rHelper.fn.INSRT_priceHistoryGraph(materialName, averageKI, averagePlayer, timestamps, player, ki);
+				});
+			});
+		},
+		EVNT_priceHistoryToggler(state) {
+
+			var container = $("#graph-pricehistory");
+			var selector = $("#pricehistory-selector");
+
+			switch (state) {
+			case "loading":
+				var svg = '<svg id="pricehistory-svg" xmlns="http://www.w3.org/2000/svg" style="background:0 0" preserveAspectRatio="xMidYMid" viewBox="0 0 100 100"><g transform="translate(50 50)"><g transform="matrix(.6 0 0 .6 -19 -19)"><g transform="rotate(242)"><animateTransform attributeName="transform" begin="0s" dur="3s" keyTimes="0;1" repeatCount="indefinite" type="rotate" values="0;360"/><path fill="#9acd32" d="M37.3496988-7h10V7h-10a38 38 0 0 1-1.50391082 5.61267157l8.66025404 5-7 12.12435565-8.66025404-5a38 38 0 0 1-4.10876076 4.10876076l5 8.66025404-12.12435565 7-5-8.66025404A38 38 0 0 1 7 37.34969879v10H-7v-10a38 38 0 0 1-5.61267157-1.50391081l-5 8.66025404-12.12435565-7 5-8.66025404a38 38 0 0 1-4.10876076-4.10876076l-8.66025404 5-7-12.12435565 8.66025404-5A38 38 0 0 1-37.34969879 7h-10V-7h10a38 38 0 0 1 1.50391081-5.61267157l-8.66025404-5 7-12.12435565 8.66025404 5a38 38 0 0 1 4.10876076-4.10876076l-5-8.66025404 12.12435565-7 5 8.66025404A38 38 0 0 1-7-37.34969879v-10H7v10a38 38 0 0 1 5.61267157 1.50391081l5-8.66025404 12.12435565 7-5 8.66025404a38 38 0 0 1 4.10876076 4.10876076l8.66025404-5 7 12.12435565-8.66025404 5A38 38 0 0 1 37.34969879-7M0-30a30 30 0 1 0 0 60 30 30 0 1 0 0-60"/></g></g><g transform="matrix(.6 0 0 .6 19 19)"><g transform="rotate(103)"><animateTransform attributeName="transform" begin="-0.125s" dur="3s" keyTimes="0;1" repeatCount="indefinite" type="rotate" values="360;0"/><path fill="coral" d="M37.3496988-7h10V7h-10a38 38 0 0 1-1.50391082 5.61267157l8.66025404 5-7 12.12435565-8.66025404-5a38 38 0 0 1-4.10876076 4.10876076l5 8.66025404-12.12435565 7-5-8.66025404A38 38 0 0 1 7 37.34969879v10H-7v-10a38 38 0 0 1-5.61267157-1.50391081l-5 8.66025404-12.12435565-7 5-8.66025404a38 38 0 0 1-4.10876076-4.10876076l-8.66025404 5-7-12.12435565 8.66025404-5A38 38 0 0 1-37.34969879 7h-10V-7h10a38 38 0 0 1 1.50391081-5.61267157l-8.66025404-5 7-12.12435565 8.66025404 5a38 38 0 0 1 4.10876076-4.10876076l-5-8.66025404 12.12435565-7 5 8.66025404A38 38 0 0 1-7-37.34969879v-10H7v10a38 38 0 0 1 5.61267157 1.50391081l5-8.66025404 12.12435565 7-5 8.66025404a38 38 0 0 1 4.10876076 4.10876076l8.66025404-5 7 12.12435565-8.66025404 5A38 38 0 0 1 37.34969879-7M0-30a30 30 0 1 0 0 60 30 30 0 1 0 0-60"/></g></g></g></svg>';
+
+				container.html(svg);
+				selector.attr("disabled", true);
+				break;
+			case "finished":
+				container.empty();
+				selector.attr("disabled", false);
+				break;
+			}
+		},
 
 
+
+		INSRT_priceHistoryGraph(materialName, averageKI, averagePlayer, timestamps, player, ki) {
+
+			Highcharts.chart("graph-pricehistory", {
+				chart: {
+					type: "spline",
+					zoomType: "x"
+				},
+				title: {
+					useHTML: true,
+					text: "Price history for " + materialName
+				},
+				subtitle: {
+					text: "last 28 days"
+				},
+				xAxis: {
+					categories: timestamps
+				},
+				yAxis: {
+					title: {
+						text: "Price"
+					},
+					labels: {
+						formatter: function () {
+							return this.value.toLocaleString("en-US");
+						}
+					},
+					plotLines: [{
+						color: "red",
+						value: averageKI,
+						width: "1",
+						zIndex: 5,
+						label: {
+							text: "average KI price of " + averageKI.toLocaleString("en-US"),
+							align: "right",
+							style: {
+								color: "darkgreen"
+							}
+						}
+					}, {
+						color: "darkgreen",
+						value: averagePlayer,
+						width: "1",
+						zIndex: 5,
+						label: {
+							text: "average player price of " + averagePlayer.toLocaleString("en-US"),
+							align: "right",
+							style: {
+								color: "orange"
+							}
+						}
+					}]
+				},
+				legend: {
+					enabled: false
+				},
+				tooltip: {
+					crosshairs: true,
+					shared: true
+				},
+				plotOptions: {
+					spline: {
+						marker: {
+							radius: 4,
+							lineColor: "#666666",
+							lineWidth: 1
+						}
+					}
+				},
+				series: [{
+					name: "KI",
+					marker: {
+						symbol: "square"
+					},
+					color: "darkgreen",
+					data: ki
+				}, {
+					name: "Player",
+					marker: {
+						symbol: "diamond"
+					},
+					color: "orange",
+					data: player
+				}]
+			});
+		},
 		INSRT_polygonGraph(target, titleText, seriesNames, responsiveId, targetObj) {
 
 			var dataObj = rHelper.graphs[targetObj];
@@ -1802,8 +1953,6 @@ var rHelper = {
 				url += "&tu4=allowed";
 			}
 
-			console.log(url);
-
 			$.getJSON(url, function (data) {
 
 					var prices = [];
@@ -2038,6 +2187,9 @@ var rHelper = {
 		},
 		INSRT_headquarterTotalTransportation(sum) {
 			$("#hq-content-transportation-sum").text(sum.toLocaleString("en-US"));
+		},
+		INSRT_priceHistoryName(type, id) {
+			$("#pricehistory-" + type + "-" + id).text(rHelper.data[type][id].name);
 		},
 
 		CALC_headquarterRemainingCost(i, material, userHqLevel) {

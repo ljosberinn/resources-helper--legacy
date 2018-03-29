@@ -109,8 +109,8 @@ ob_end_flush();
       "maps",
       "warehouses",
       "flow",
-      "pricehistory",
       "buildings",
+      "pricehistory",
       "recyclingunits",
       "qualitycomparator",
       "techupgrades",
@@ -118,6 +118,7 @@ ob_end_flush();
       "headquarter",
       "leaderboard",
       "discord",
+      "contact",
     ];
 
     if(isset($_SESSION["id"])) {

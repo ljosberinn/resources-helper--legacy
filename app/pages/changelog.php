@@ -32,11 +32,14 @@
       <strong>General</strong><br />
       – NEW: added API options for: Trade Log and Missions<br />
 			- NEW: official support for this page via Discord - please report any bugs you find, visual or mathematical!<br />
+			– NEW: World Map now also show Headquarters depending on user settings<br />
+			– NEW: User Index consists of users attacked by or traded with others<br />
+			– NEW: missing Tech upgrade calculator: shows which upgrades you're missing for a messed up teching process<br />
+			<br />
       – HEAVILY MODIFIED: moved clunky settings to own menu with more options and less clutter<br />
-      – NEW: World Map now also show Headquarters depending on user settings<br />
-      – NEW: User Index consists of users attacked by or traded with others<br />
+			<br />
 			- CHANGED: Missions, Personal Mine Map, Trade Log and Attack Log are only available for registered users due to their huge data nature which this server cannot handle easily in all cases<br />
-      – NEW: missing Tech upgrade calculator: shows which upgrades you're missing for a messed up teching process<br />
+      – CHANGED: Price History shows both KI and Player price now, including averages. Last 28 days/4 weeks are shown. Downloadable .csv has properly named columns now.<br />
       <br />
       <strong>Bugfixes</strong><br />
       - Giant Diamond calculator: fixed top 10 profit calculation, fixed a bug where sometimes wrong efficiency values would be calculated<br />

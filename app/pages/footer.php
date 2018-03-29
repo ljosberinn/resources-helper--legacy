@@ -15,6 +15,6 @@ foreach ($footerArray as $anchor => $link) {
 
 ?>
 
-<a href="https://github.com/ljosberinn/resources-helper" target="_blank" rel="noopener noreferrer">Source Code</a>
+<a href="https://github.com/ljosberinn/resources-helper" target="_blank" rel="noopener noreferrer">Github</a>
 
 </div>
