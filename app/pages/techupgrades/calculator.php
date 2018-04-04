@@ -1,3 +1,10 @@
+
+<?php
+
+$textOrientation = "text-md-right text-sm-left";
+
+?>
+
 <div class="row">
 	<div class="col-12 justify-content-center">
 
@@ -17,7 +24,7 @@
 
 		<div class="input-group">
 
-			<input class="form-control col-md-6 col-sm-12 form-control-sm text-md-right text-sm-left" id="techupgrades-input" type="number" min="0" max="5" placeholder="current factor" />
+			<input class="form-control col-md-6 col-sm-12 form-control-sm <?php echo $textOrientation; ?>" id="techupgrades-input" type="number" min="0" max="5" placeholder="current factor" />
 
 			<span class="input-group-addon">
 				<span id="techupgrades-loading" class="circles-to-rhombuses-spinner">
@@ -32,13 +39,13 @@
     <table class="table table-responsive table-break-medium table-striped mb-3" id="techupgrades-calc-tbl">
 			<thead>
 				<tr class="small">
-          <th class="text-md-right text-sm-left">missing Tech-Upgrade 1</th>
-					<th class="text-md-right text-sm-left">missing Tech-Upgrade 2</th>
-					<th class="text-md-right text-sm-left">missing Tech-Upgrade 3</th>
-					<th class="text-md-right text-sm-left">missing Tech-Upgrade 4</th>
-					<th class="text-md-right text-sm-left">resulting Factor</th>
-					<th class="text-md-right text-sm-left sorttable_reverse">Price</th>
-					<th class="text-md-right text-sm-left">remaining Pimp my mine Count</th>
+          <th class="<?php echo $textOrientation; ?>">missing Tech-Upgrade 1</th>
+					<th class="<?php echo $textOrientation; ?>">missing Tech-Upgrade 2</th>
+					<th class="<?php echo $textOrientation; ?>">missing Tech-Upgrade 3</th>
+					<th class="<?php echo $textOrientation; ?>">missing Tech-Upgrade 4</th>
+					<th class="<?php echo $textOrientation; ?>">resulting Factor</th>
+					<th class="<?php echo $textOrientation; ?> sorttable_reverse">Price</th>
+					<th class="<?php echo $textOrientation; ?>">remaining Pimp my mine Count</th>
 				</tr>
 			</thead>
 			<tbody>

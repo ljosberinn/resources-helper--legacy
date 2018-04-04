@@ -183,7 +183,7 @@ $("#api-submit").on("click", function (e) {
 		"player",
 		"attack-log",
 		"trade-log",
-    "missions",
+		"missions",
 	];
 
 	var queries = [];
@@ -203,7 +203,7 @@ $("#api-submit").on("click", function (e) {
 		anonymity = true;
 	}
 
-	rHelper.fn.API_init(key, queries, anonymity);
+	rHelper.methods.API_init(key, queries, anonymity);
 });
 
 $(".nav-link").each(function (i, navLink) {
@@ -217,12 +217,12 @@ $("#techupgrades-toggle").on("click", function () {
 	var el = $(this);
 
 	if (el.prop("checked") === true) {
-		rHelper.fn.INSRT_techUpgradeRows("tu4");
+		rHelper.methods.INSRT_techUpgradeRows("tu4");
 		sorttable.innerSortFunction.apply($("#module-techupgrades th")[4], []);
 		sorttable.innerSortFunction.apply($("#module-techupgrades th")[5], []);
 		sorttable.innerSortFunction.apply($("#module-techupgrades th")[5], []);
 	} else {
-		rHelper.fn.INSRT_techUpgradeRows();
+		rHelper.methods.INSRT_techUpgradeRows();
 	}
 });
 
@@ -233,27 +233,19 @@ $("#techupgrades-input").on("input", function () {
 
 	if (value >= 1.01 && value <= 5) {
 		if (tu4Allowance.prop("checked") === true) {
-			rHelper.fn.INSRT_techUpgradeCalculator(value, "tu4Included");
+			rHelper.methods.INSRT_techUpgradeCalculator(value, "tu4Included");
 		} else {
-			rHelper.fn.INSRT_techUpgradeCalculator(value);
+			rHelper.methods.INSRT_techUpgradeCalculator(value);
 		}
 	}
 });
 
-
-function toggleTechUpgradeInfo(mode) {
-
-	var loading = $("#techupgrades-loading");
-	var finished = $("#techupgrades-finished");
-
-	switch (mode) {
-	case "start":
-		loading.css("display", "flex");
-		finished.css("display", "none");
-		break;
-	case "end":
-		loading.css("display", "none");
-		finished.css("display", "inline-block");
-		break;
+$("#personalmap-create").on("click", function () {
+	if (rHelper.data.mineMap.length == 0) {
+		rHelper.methods.API_getMineMap();
 	}
-}
+});
+
+$("#worldmap-selector").on("change", function () {
+	rHelper.methods.API_getWorldMap(this.value);	
+});

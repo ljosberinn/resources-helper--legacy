@@ -43,7 +43,7 @@
 
 					<?php
 
-					require "app/pages/techupgrades/combinations.html";
+					require "app/pages/techupgrades/combinations.php";
 
 					?>
 
@@ -51,6 +51,5 @@
 			</div>
 		</div>
 	</div>
-
-
+  
 </div>

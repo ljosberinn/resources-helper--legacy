@@ -1314,6 +1314,82 @@
      }
 
      /**
+      * fetches getWorldMap depending on type
+      *
+      * @method public getWorldMap($type)
+      * @param  int $type [resource type, 0-13]
+      * @return array [returns worldMap]
+      */
+     public function getWorldMap($type)
+     {
+         $result = [
+           "hqs" => [],
+           "mines" => [],
+         ];
+
+         $userIds = [];
+
+         $queryUserIds = "SELECT `id` FROM `userOverview`";
+
+         $getUserIds = $this->conn->query($queryUserIds);
+
+         if($getUserIds->num_rows > 0) {
+           while($id = $getUserIds->fetch_assoc()) {
+             array_push($userIds, $id["id"]);
+           }
+         }
+
+         foreach($userIds as $userId) {
+
+           // check whether this mine will be friendly or not
+            if($userId == $_SESSION["id"]) {
+              $relation = "friend";
+            } else {
+              $relation = "enemy";
+            }
+
+          // check setting for hq visibility
+          $hqVisibility = 0; // define default
+          $querySetting = "SELECT `mapVisibleHQ` FROM `userSettings` WHERE `id` = " .$userId. "";
+          $getUserSetting = $this->conn->query($querySetting);
+
+          if($getUserSetting->num_rows == 1) {
+            while($data = $getUserSetting->fetch_assoc()) {
+              $hqVisibility = $data["mapVisibleHQ"];
+            }
+          }
+
+          if($hqVisibility == 1) {
+            $getHQData = "SELECT `lat`, `lon`, `level` FROM `userHeadquarter` WHERE `id` = " .$userId. "";
+            $getUserHQ = $this->conn->query($getHQData);
+
+            if($getUserHQ->num_rows == 1) {
+              while($data = $getUserHQ->fetch_assoc()) {
+                // prevent default entries with visible hq to be shown
+                if($data["lat"] != 0.000000 && $data["lon"] != 0.000000) {
+                  array_push($result["hqs"], $data);
+                }
+              }
+            }
+          }
+
+          // get this users mines of $type
+          $mineMapQuery = "SELECT * FROM `userMineMap_" .$userId. "` WHERE `type` = " .$type. "";
+
+          $getUserMineMap = $this->conn->query($mineMapQuery);
+
+          if ($getUserMineMap->num_rows > 0) {
+            while ($data = $getUserMineMap->fetch_assoc()) {
+              $data["relation"] = $relation;
+              array_push($result["mines"], $data);
+            }
+          }
+        }
+
+         return $result;
+     }
+
+     /**
       * fetches missions depending on current $_SESSION["id"]
       *
       * @method public getMissions($userId)
@@ -1331,6 +1407,29 @@
          if ($getMissions->num_rows > 0) {
              while ($data = $getMissions->fetch_assoc()) {
                  $data["img"] = "missions/" .$data["id"]. ".png";
+                 array_push($result, $data);
+             }
+         }
+
+         return $result;
+     }
+
+     /**
+      * fetches userIndex
+      *
+      * @method public getUserIndex()
+      * @return array [returns userIndex]
+      */
+     public function getUserIndex()
+     {
+         $result = [];
+
+         $query = "SELECT  `userName`, `userLevel`, `firstSeen`, `lastSeen`, `lastTradedWith`, `sell`, `buy`, `transportCost` FROM `userIndex` ORDER BY `lastSeen` DESC LIMIT 500";
+
+         $getUser = $this->conn->query($query);
+
+         if ($getUser->num_rows > 0) {
+             while ($data = $getUser->fetch_assoc()) {
                  array_push($result, $data);
              }
          }
@@ -1694,7 +1793,7 @@
            "level" => $data["lvl"],
            "lon" => $data["lon"],
            "lat" => $data["lat"],
-           "paid" => $data["progress1"],
+           "progress0" => $data["progress1"],
            "progress1" => $data["progress2"],
            "progress2" => $data["progress3"],
            "progress3" => $data["progress4"]
@@ -1961,7 +2060,7 @@
              }
          }
 
-         $answer["callback"] = "rHelper.fn.API_getTradeLog()";
+         $answer["callback"] = "rHelper.methods.API_getTradeLog()";
 
          return json_encode($answer);
      }
@@ -2046,7 +2145,7 @@
              $result[$id]["status"] = $status;
          }
 
-         $answer["callback"] = "rHelper.fn.API_getMissions()";
+         $answer["callback"] = "rHelper.methods.API_getMissions()";
 
          return json_encode($answer);
      }
@@ -2187,7 +2286,7 @@
              }
         }
 
-        $answer["callback"] = "rHelper.fn.API_getAttackLog()";
+        $answer["callback"] = "rHelper.methods.API_getAttackLog()";
 
         return json_encode($answer);
      }
@@ -2282,7 +2381,7 @@
 
          $insertion = $this->conn->query($insertionQuery);
 
-         $answer["callback"] = "rHelper.fn.API_getMineMap()";
+         $answer["callback"] = "rHelper.methods.API_getMineMap()";
 
          return json_encode($answer);
      }

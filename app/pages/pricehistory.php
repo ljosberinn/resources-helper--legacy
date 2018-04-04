@@ -33,7 +33,7 @@
       }
 
       echo '
-      <option value="' .$i. '" id="pricehistory-' .$imgClass. '-' .$k. '"></option>';
+      <option value="' .$i. '" id="pricehistory-' .$imgClass. '-' .$k. '">placeholder</option>';
     }
 
     ?>

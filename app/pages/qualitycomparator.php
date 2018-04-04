@@ -5,6 +5,6 @@
 	<h6><span class="nav-icon-qualitycomparator"></span> Quality Comparator</h6>
 	<hr class="mb-3">
 
-  
+
 
 </div>

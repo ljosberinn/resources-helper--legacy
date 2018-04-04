@@ -31,7 +31,7 @@
 			"description" => "
       <strong>General</strong><br />
       – NEW: added API options for: Trade Log and Missions<br />
-			- NEW: official support for this page via Discord - please report any bugs you find, visual or mathematical!<br />
+			– NEW: official support for this page via Discord - please report any bugs you find, visual or mathematical!<br />
 			– NEW: World Map now also show Headquarters depending on user settings<br />
 			– NEW: User Index consists of users attacked by or traded with others<br />
 			– NEW: missing Tech upgrade calculator: shows which upgrades you're missing for a messed up teching process<br />

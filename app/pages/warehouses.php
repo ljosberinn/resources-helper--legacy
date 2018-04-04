@@ -1,5 +1,23 @@
 <!-- #module-warehouses -->
 
+<?php
+
+$columns = [
+  "Type & Stock" => "",
+  "Min. time until full" => "",
+  "Worth" => "",
+  "Warehouse level" => "",
+  "Upgrade calculator" => "",
+  "Upgrade target" => "",
+  "Upgrade cost" => ""
+];
+
+$textOrientation = "text-md-right text-sm-left";
+
+$arrayKeys = array_keys($columns);
+
+?>
+
 <div class="bg-light mt-3 mb-3 p-4 col-12 rounded" id="module-warehouses">
 
 	<h6><span class="nav-icon-warehouses"></span> Warehouses</h6>
@@ -11,12 +29,15 @@
 			<table class="table table-responsive table-break-medium table-striped mb-3">
 				<thead>
 					<tr class="small">
-						<th class="text-md-right text-sm-left">Type & Stock</th>
-            <th class="text-md-right text-sm-left">Min. time until full</th>
-            <th class="text-md-right text-sm-left">Worth</th>
-            <th class="text-md-right text-sm-left">Warehouse level</th>
-            <th class="text-md-right text-sm-left" colspan="2">Upgrade calculator</th>
-            <th class="text-md-right text-sm-left">Upgrade cost</th>
+
+            <?php
+
+            foreach($columns as $column => $specialClasses) {
+
+              echo '<th class="' .$textOrientation. ' ' .$specialClasses. '">' .$column. '</th>';
+            }
+
+            ?>
 					</tr>
 				</thead>
 				<tbody>
@@ -52,34 +73,34 @@
 
           echo '
 					<tr>
-            <td data-th="Type & Stock">
+            <td data-th="' .$arrayKeys[0]. '">
               <div class="input-group">
                 <span class="input-group-addon"><span class="resources-' .$imgClass. '-' .$k. '"></span></span>
-                <input class="form-control form-control-sm text-md-right text-sm-left" type="number" min="0" id="warehouse-' .$idClass. '-stock-current-' .$k. '" />
+                <input class="form-control form-control-sm ' .$textOrientation. '" type="number" min="0" id="warehouse-' .$idClass. '-stock-current-' .$k. '" />
                 <span class="input-group-addon"><span>/ <span id="warehouse-' .$idClass. '-stock-cap-' .$k. '"></span> (<span id="warehouse-' .$idClass. '-fill-percent-' .$k. '"></span>%)</span></span>
               </div>
             </td>
 
-            <td data-th="Min. time until full" class="text-md-right text-sm-left" id="warehouse-' .$idClass. '-remaining-' .$k. '"></td>
+            <td data-th="' .$arrayKeys[1]. '" class="' .$textOrientation. '" id="warehouse-' .$idClass. '-remaining-' .$k. '"></td>
 
-            <td data-th="Worth" class="text-md-right text-sm-left" id="warehouse-' .$idClass. '-worth-' .$k. '"></td>
+            <td data-th="' .$arrayKeys[2]. '" class="' .$textOrientation. '" id="warehouse-' .$idClass. '-worth-' .$k. '"></td>
 
-            <td data-th="Warehouse level">
-             <input class="form-control form-control-sm text-md-right text-sm-left" type="number" min="0" max="10000" id="warehouse-' .$idClass. '-level-' .$k. '" />
+            <td data-th="' .$arrayKeys[3]. '">
+             <input class="form-control form-control-sm ' .$textOrientation. '" type="number" min="0" max="10000" id="warehouse-' .$idClass. '-level-' .$k. '" />
             </td>
 
-            <td data-th="Upgrade selection" class="text-md-right text-sm-left">
+            <td data-th="' .$arrayKeys[4]. '" class="' .$textOrientation. '">
               <select class="custom-select" id="warehouse-' .$idClass. '-calc-1-' .$k. '">
                 <option value="level">level</option>
                 <option value="contingent">contingent</option>
               </select>
             </td>
 
-            <td data-th="Upgrade target">
-              <input class="form-control form-control-sm text-md-right text-sm-left" type="number" min="0" id="warehouse-' .$idClass. '-calc-2-' .$k. '" />
+            <td data-th="' .$arrayKeys[5]. '">
+              <input class="form-control form-control-sm ' .$textOrientation. '" type="number" min="0" id="warehouse-' .$idClass. '-calc-2-' .$k. '" />
             </td>
 
-            <td data-th="Upgrade cost" class="text-md-right text-sm-left" id="warehouse-' .$idClass. '-upgrade-cost-' .$k. '">0</td>
+            <td data-th="' .$arrayKeys[6]. '" class="' .$textOrientation. '" id="warehouse-' .$idClass. '-upgrade-cost-' .$k. '">0</td>
 					</tr>';
         }
 
@@ -87,8 +108,8 @@
 				</tbody>
 				<tfoot>
           <tr>
-            <td colspan="3" class="text-md-right text-sm-left" id="warehouse-total-worth"></td>
-            <td class="text-md-right text-sm-left" id="warehouse-total-level"></td>
+            <td colspan="3" class="<?php echo $textOrientation; ?>" id="warehouse-total-worth"></td>
+            <td class="<?php echo $textOrientation; ?>" id="warehouse-total-level"></td>
             <td colspan="3"></td>
           </tr>
 				</tfoot>

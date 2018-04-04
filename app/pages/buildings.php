@@ -1,5 +1,11 @@
 <!-- #module-buildings -->
 
+<?php
+
+$textOrientation = "text-md-right text-sm-left";
+
+?>
+
 <div class="bg-light mt-3 mb-3 p-4 col-12 rounded" id="module-buildings">
 
 	<h6><span class="nav-icon-buildings"></span> Special Buildings</h6>
@@ -34,8 +40,8 @@
             <td data-th="Requirement">
               <img src="assets/img/cash.png" alt="Cash" />
             </td>
-            <td data-th="Required amount" class="text-md-right text-sm-left" colspan="2" id="buildings-cash-' .$i. '"></td>
-            <td class="text-md-right text-sm-left">
+            <td data-th="Required amount" class="' .$textOrientation. '" colspan="2" id="buildings-cash-' .$i. '"></td>
+            <td class="' .$textOrientation. '">
               <small class="text-danger">Transportation</small>
             </td>
           </tr>
@@ -43,9 +49,9 @@
             <td data-th="Requirement">
               <span id="buildings-mat-1-' .$i. '"></span>
             </td>
-            <td data-th="Required amount" class="text-md-right text-sm-left" id="buildings-amount-1-' .$i. '"></td>
-            <td data-th="Cost" class="text-md-right text-sm-left" id="buildings-worth-1-' .$i. '"></td>
-            <td data-th="Transportation" class="text-md-right text-sm-left small">
+            <td data-th="Required amount" class="' .$textOrientation. '" id="buildings-amount-1-' .$i. '"></td>
+            <td data-th="Cost" class="' .$textOrientation. '" id="buildings-worth-1-' .$i. '"></td>
+            <td data-th="Transportation" class="' .$textOrientation. ' small">
               <small class="text-danger" id="buildings-transportation-1-' .$i. '"></small>
             </td>
           </tr>
@@ -53,9 +59,9 @@
             <td data-th="Requirement">
               <span id="buildings-mat-2-' .$i. '"></span>
             </td>
-            <td data-th="Required amount" class="text-md-right text-sm-left" id="buildings-amount-2-' .$i. '"></td>
-            <td data-th="Cost" class="text-md-right text-sm-left" id="buildings-worth-2-' .$i. '"></td>
-            <td data-th="Transportation" class="text-md-right text-sm-left small">
+            <td data-th="Required amount" class="' .$textOrientation. '" id="buildings-amount-2-' .$i. '"></td>
+            <td data-th="Cost" class="' .$textOrientation. '" id="buildings-worth-2-' .$i. '"></td>
+            <td data-th="Transportation" class="' .$textOrientation. ' small">
               <small class="text-danger" id="buildings-transportation-2-' .$i. '"></small>
             </td>
           </tr>
@@ -63,28 +69,28 @@
             <td data-th="Requirement">
               <span id="buildings-mat-3-' .$i. '"></span>
             </td>
-            <td data-th="Required amount" class="text-md-right text-sm-left" id="buildings-amount-3-' .$i. '"></td>
-            <td data-th="Cost" class="text-md-right text-sm-left" id="buildings-worth-3-' .$i. '"></td>
-            <td data-th="Transportation" class="text-md-right text-sm-left small">
+            <td data-th="Required amount" class="' .$textOrientation. '" id="buildings-amount-3-' .$i. '"></td>
+            <td data-th="Cost" class="' .$textOrientation. '" id="buildings-worth-3-' .$i. '"></td>
+            <td data-th="Transportation" class="' .$textOrientation. ' small">
               <small class="text-danger" id="buildings-transportation-3-' .$i. '"></small>
             </td>
           </tr>
         </tbody>
         <tfoot>
           <tr>
-            <td data-th="Total cost" class="text-md-right text-sm-left" colspan="3" id="buildings-sum-' . $i. '"></td>
-            <td data-th="Total transportation" class="text-md-right text-sm-left small">
+            <td data-th="Total cost" class="' .$textOrientation. '" colspan="3" id="buildings-sum-' . $i. '"></td>
+            <td data-th="Total transportation" class="' .$textOrientation. ' small">
               <small class="text-danger" id="buildings-transportation-sum-' . $i. '"></small>
             </td>
           </tr>
           <tr>
-            <td data-th="Remaining cost" colspan="2" class="text-md-right text-sm-left">
+            <td data-th="Remaining cost" colspan="2" class="' .$textOrientation. '">
               <small>to level 10:</small>
             </td>
-            <td class="text-md-right text-sm-left">
+            <td class="' .$textOrientation. '">
               <small id="buildings-cap-' .$i. '"></small>
             </td>
-            <td data-th="Remaining transportation to 10" class="text-md-right text-sm-left">
+            <td data-th="Remaining transportation to 10" class="' .$textOrientation. '">
               <small class="text-danger" id="buildings-transportation-cap-' .$i. '"></small>
             </td>
           </tr>

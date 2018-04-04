@@ -1,3 +1,10 @@
+
+<?php
+
+$textOrientation = "text-md-right text-sm-left";
+
+?>
+
 <div class="row">
 	<div class="col-12">
 
@@ -12,13 +19,13 @@
 		<table class="table table-responsive table-break-medium table-striped mb-3" id="techupgrades-combinations-tbl">
 			<thead>
 				<tr class="small">
-					<th class="text-md-right text-sm-left">Tech-Upgrade 1</th>
-					<th class="text-md-right text-sm-left">Tech-Upgrade 2</th>
-					<th class="text-md-right text-sm-left">Tech-Upgrade 3</th>
-					<th class="text-md-right text-sm-left">Tech-Upgrade 4</th>
-					<th class="text-md-right text-sm-left">Factor</th>
-					<th class="text-md-right text-sm-left sorttable_reverse">Price</th>
-					<th class="text-md-right text-sm-left">Pimp my mine Count</th>
+					<th class="<?php echo $textOrientation; ?>">Tech-Upgrade 1</th>
+					<th class="<?php echo $textOrientation; ?>">Tech-Upgrade 2</th>
+					<th class="<?php echo $textOrientation; ?>">Tech-Upgrade 3</th>
+					<th class="<?php echo $textOrientation; ?>">Tech-Upgrade 4</th>
+					<th class="<?php echo $textOrientation; ?>">Factor</th>
+					<th class="<?php echo $textOrientation; ?> sorttable_reverse">Price</th>
+					<th class="<?php echo $textOrientation; ?>">Pimp my mine Count</th>
 				</tr>
 			</thead>
 			<tbody>

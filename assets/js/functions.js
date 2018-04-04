@@ -115,5 +115,23 @@ function switchActiveModule(targetId) {
 function toggleTab(selectedNav, targetId) {
 
   switchActiveNavigationLink(selectedNav);
-  switchActiveModule(targetId);	
+  switchActiveModule(targetId);
+}
+
+
+function toggleTechUpgradeInfo(mode) {
+
+	var loading = $("#techupgrades-loading");
+	var finished = $("#techupgrades-finished");
+
+	switch (mode) {
+	case "start":
+		loading.css("display", "flex");
+		finished.css("display", "none");
+		break;
+	case "end":
+		loading.css("display", "none");
+		finished.css("display", "inline-block");
+		break;
+	}
 }

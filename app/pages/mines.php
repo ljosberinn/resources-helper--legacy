@@ -1,7 +1,28 @@
 <!-- #module-mines -->
 
+<?php
+
+$columns = [
+	"Mine type" => "sorttable_nosort",
+	"Your rate per hour" => "sorttable_nosort",
+	"Your amount of mines" => "sorttable_nosort",
+	"Worth @ 100% condition" => "",
+	"Mine price" => "",
+	"100% quality income" => "",
+	"Return on Investment: 100%" => "",
+	"505%" => "",
+	"505% + your HQ level" => "",
+];
+
+$textOrientation = "text-md-right text-sm-left";
+
+$arrayKeys = array_keys($columns);
+
+?>
+
 <div class="bg-light mt-3 mb-3 p-4 col-12 rounded" id="module-mines">
-	<h6><span class="nav-icon-mines"></span> Mines</h6>
+
+  <h6><span class="nav-icon-mines"></span> Mines</h6>
 	<hr class="mb-3">
 
 	<div class="row">
@@ -12,23 +33,11 @@
 					<tr class="small">
 						<?php
 
-						$mineTH = [
-							"" => 'class="sorttable_nosort"',
-							"Your rate per hour" => 'class="text-md-right text-sm-left sorttable_nosort"',
-							"Your amount of mines" => 'class="text-md-right text-sm-left sorttable_nosort"',
-							"Worth @ 100% condition" => 'class="text-md-right text-sm-left"',
-							"Mine price" => 'class="text-md-right text-sm-left"',
-							"100% quality income" => 'class="text-md-right text-sm-left"',
-							"Return on Investment: 100%" => 'class="text-md-right text-sm-left"',
-              "505%" => 'class="text-md-right text-sm-left"',
-              "505% + your HQ level" => 'class="text-md-right text-sm-left"',
-						];
-
-						foreach($mineTH as $row => $attr) {
-							echo "
-							<th " .$attr. ">
-								" .$row. "
-							</th>";
+						foreach($columns as $row => $specialClasses) {
+							echo '
+							<th class="' .$textOrientation. ' ' .$specialClasses. '">
+								' .$row. '
+							</th>';
 						}
 
 						?>
@@ -41,21 +50,21 @@
       for ($i = 0; $i <= 13; $i += 1) {
         echo '
           <tr>
-						<td data-th="Mine type">
+						<td class="' .$textOrientation. '" data-th="' .$arrayKeys[0]. '">
 							<span class="resources-material-' .$i. '"></span>
 						</td>
-						<td data-th="Your rate per hour">
-							<input class="form-control form-control-sm text-md-right text-sm-left" id="material-rate-' .$i. '" type="number" min="0" max="999999999" placeholder="rate/h" />
+						<td data-th="' .$arrayKeys[1]. '">
+							<input class="form-control form-control-sm ' .$textOrientation. '" id="material-rate-' .$i. '" type="number" min="0" max="999999999" placeholder="rate/h" />
 						</td>
-						<td data-th="Your amount of mines">
-							<input class="form-control form-control-sm text-md-right text-sm-left" id="material-amount-of-mines-' .$i. '" type="number" min="0" max="35000" placeholder="# mines" />
+						<td data-th="' .$arrayKeys[2]. '">
+							<input class="form-control form-control-sm ' .$textOrientation. '" id="material-amount-of-mines-' .$i. '" type="number" min="0" max="35000" placeholder="# mines" />
 						</td>
-						<td class="text-md-right text-sm-left" id="material-worth-' .$i. '" data-th="Worth @ 100% condition"></td>
-						<td class="text-md-right text-sm-left" id="material-new-price-' .$i. '" data-th="Mine price"></td>
-						<td class="text-md-right text-sm-left" id="material-perfect-income-' .$i. '" data-th="100% quality income"></td>
-						<td class="text-md-right text-sm-left" id="material-roi-100-' .$i. '" data-th="Return on Investment - 100%"></td>
-						<td class="text-md-right text-sm-left" id="material-roi-500-' .$i. '" data-th="Return on Investment - 505%"></td>
-						<td class="text-md-right text-sm-left" id="material-roi-x-' .$i. '" data-th="Return on Investment - 505% + your HQ level"></td>
+						<td class="' .$textOrientation. '" id="material-worth-' .$i. '" data-th="' .$arrayKeys[3]. '"></td>
+						<td class="' .$textOrientation. '" id="material-new-price-' .$i. '" data-th="' .$arrayKeys[4]. '"></td>
+						<td class="' .$textOrientation. '" id="material-perfect-income-' .$i. '" data-th="1' .$arrayKeys[5]. '"></td>
+						<td class="' .$textOrientation. '" id="material-roi-100-' .$i. '" data-th="' .$arrayKeys[6]. '"></td>
+						<td class="' .$textOrientation. '" id="material-roi-500-' .$i. '" data-th="' .$arrayKeys[7]. '"></td>
+						<td class="' .$textOrientation. '" id="material-roi-x-' .$i. '" data-th="' .$arrayKeys[8]. '"></td>
 					</tr>';
       }
 
@@ -63,10 +72,10 @@
 				</tbody>
 				<tfoot>
 					<tr>
-						<td class="text-muted text-md-right text-sm-left" data-th="Total amount of mines" colspan="3">
+						<td class="text-muted <?php echo $textOrientation; ?>" data-th="Total amount of mines" colspan="3">
 							<strong id="material-total-mine-count"></strong>
 						</td>
-						<td class="text-muted text-md-right text-sm-left" data-th="Total worth/h @ 100% condition">
+						<td class="text-muted <?php echo $textOrientation; ?>" data-th="Total worth/h @ 100% condition">
 							<strong id="material-total-worth"></strong>
 						</td>
 						<td colspan="2"></td>

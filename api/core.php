@@ -30,6 +30,10 @@ if (isset($_GET["key"]) && isset($_GET["query"]) && $userId != 0) {
     $output = json_encode($resourcesGame->getAttackLog($userId), JSON_NUMERIC_CHECK);
 } elseif(isset($_GET["missions"])) {
     $output = json_encode($resourcesGame->getMissions($userId), JSON_NUMERIC_CHECK);
+} elseif(isset($_GET["userIndex"])) {
+    $output = json_encode($resourcesGame->getUserIndex(), JSON_NUMERIC_CHECK);
+} elseif(isset($_GET["worldMap"]) && $_GET["worldMap"] >= 0 && $_GET["worldmap"] <= 13) {
+    $output = json_encode($resourcesGame->getWorldMap($_GET["worldMap"]), JSON_NUMERIC_CHECK);
 } else {
 
     $prices = "on";
