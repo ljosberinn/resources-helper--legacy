@@ -2,6 +2,12 @@
 
 <nav class="col-12 p-4 bg-light rounded">
 
+  <p class="text-danger text-center">
+    working: API, Mines, Factories, Calc, Flow, Warehouses, Special Buildings, Headquarter, Recycling/Units, Tech-Upgrades, Headquarter, Price History, Maps, Discord, Changelog<br />
+    not working/placeholder: everything else within Navigation & Terms of Service/Contact/Donate (on bottom)<br />
+    known issues: - no possibility of saving the API key if not during registration - only English available (might stay this way) - data wont save locally; only API is permanent right now
+  </p>
+
 	<ul class="nav nav-tabs">
 		<?php
 
@@ -80,10 +86,6 @@
         "href" => "attacklog",
         "icon" => $table,
         "login" => "required"
-      ],
-      "User Index" => [
-        "href" => "userindex",
-        "icon" => $table,
       ],
       "Maps" => [
         "href" => "maps",

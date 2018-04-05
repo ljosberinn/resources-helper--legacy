@@ -1606,18 +1606,20 @@
          $supposedLength = self::TABLE_NAMES["factories"]["length"];
          $factoryArray = $this->fillUpArrayWithZeroes($factoryArray, $supposedLength, "noarray");
 
-         $query = "SELECT `id` FROM `userFactories` WHERE `id` = " .$userId. "";
+         if($userId != 0) {
 
-         $checkForPreviousEntry = $this->conn->query($query);
+           $query = "SELECT `id` FROM `userFactories` WHERE `id` = " .$userId. "";
+           $checkForPreviousEntry = $this->conn->query($query);
 
-         if ($checkForPreviousEntry->num_rows === 1) {
+           if ($checkForPreviousEntry->num_rows === 1) {
+
              $stmt = "UPDATE `userFactories` SET ";
 
              foreach ($factoryArray as $factoryId => $factoryLevel) {
                  $stmt .= "`factory" .$factoryId. "` = " .$factoryLevel. ",";
              }
              $stmt = substr($stmt, 0, -1). " WHERE `id` = " .$userId. ";";
-         } elseif ($checkForPreviousEntry->num_rows === 0) {
+           } elseif ($checkForPreviousEntry->num_rows === 0) {
              $stmt = "INSERT INTO `userFactories` (`id`,";
 
              for ($i = 0; $i < $supposedLength; $i += 1) {
@@ -1631,9 +1633,10 @@
              }
              $stmt = substr($stmt, 0, -1);
              $stmt .= ");";
-         }
+           }
 
-         $insertion = $this->conn->query($stmt);
+           $insertion = $this->conn->query($stmt);
+         }
 
          echo json_encode($factoryArray, JSON_NUMERIC_CHECK);
      }
@@ -1667,18 +1670,19 @@
          $supposedLength = self::TABLE_NAMES["resources"]["length"]+self::TABLE_NAMES["factories"]["length"]+self::TABLE_NAMES["loot"]["length"]+self::TABLE_NAMES["units"]["length"];
          $warehouseArray = $this->fillUpArrayWithZeroes($warehouseArray, $supposedLength, "warehouse");
 
-         $query = "SELECT `id` FROM `userWarehouse` WHERE `id` = " .$userId. "";
+         if($userId != 0) {
 
-         $checkForPreviousEntry = $this->conn->query($query);
+           $query = "SELECT `id` FROM `userWarehouse` WHERE `id` = " .$userId. "";
+           $checkForPreviousEntry = $this->conn->query($query);
 
-         if ($checkForPreviousEntry->num_rows === 1) {
+           if ($checkForPreviousEntry->num_rows === 1) {
              $stmt = "UPDATE `userWarehouse` SET ";
 
              foreach ($warehouseArray as $warehouseId => $warehouseData) {
                  $stmt .= "`level" .$warehouseId. "` = " .$warehouseData["level"]. ",`fillAmount" .$warehouseId. "` = " .$warehouseData["amount"]. ",";
              }
              $stmt = substr($stmt, 0, -1). " WHERE `id` = " .$userId. ";";
-         } elseif ($checkForPreviousEntry->num_rows === 0) {
+           } elseif ($checkForPreviousEntry->num_rows === 0) {
              $stmt = "INSERT INTO `userWarehouse` (`id`,";
 
              for ($i = 0; $i < $supposedLength; $i += 1) {
@@ -1693,9 +1697,10 @@
              }
              $stmt = substr($stmt, 0, -1);
              $stmt .= ");";
-         }
+           }
 
-         $insertion = $this->conn->query($stmt);
+           $insertion = $this->conn->query($stmt);
+         }
 
          return json_encode($warehouseArray, JSON_NUMERIC_CHECK);
      }
@@ -1774,18 +1779,19 @@
          $supposedLength = self::BUILDING_AMOUNT;
          $buildingArray = $this->fillUpArrayWithZeroes($buildingArray, $supposedLength, "noarray");
 
-         $query = "SELECT `id` FROM `userBuildings` WHERE `id` = " .$userId. "";
+         if($userId != 0) {
 
-         $checkForPreviousEntry = $this->conn->query($query);
+           $query = "SELECT `id` FROM `userBuildings` WHERE `id` = " .$userId. "";
+           $checkForPreviousEntry = $this->conn->query($query);
 
-         if ($checkForPreviousEntry->num_rows === 1) {
+           if ($checkForPreviousEntry->num_rows === 1) {
              $stmt = "UPDATE `userBuildings` SET ";
 
              foreach ($buildingArray as $buildingId => $buildingLevel) {
                  $stmt .= "`building" .$buildingId. "` = " .$buildingLevel. ",";
              }
              $stmt = substr($stmt, 0, -1). " WHERE `id` = " .$userId. ";";
-         } elseif ($checkForPreviousEntry->num_rows === 0) {
+           } elseif ($checkForPreviousEntry->num_rows === 0) {
              $stmt = "INSERT INTO `userBuildings` (`id`,";
 
              for ($i = 0; $i < $supposedLength; $i += 1) {
@@ -1800,9 +1806,10 @@
              }
              $stmt = substr($stmt, 0, -1);
              $stmt .= ");";
-         }
+           }
 
-         $insertion = $this->conn->query($stmt);
+           $insertion = $this->conn->query($stmt);
+         }
 
          return json_encode($buildingArray, JSON_NUMERIC_CHECK);
      }
@@ -1829,11 +1836,12 @@
            "progress3" => $data["progress4"]
          ];
 
-         $query = "SELECT `id` FROM `userHeadquarter` WHERE `id` = " .$userId. "";
+         if($userId != 0) {
 
-         $checkForPreviousEntry = $this->conn->query($query);
+           $query = "SELECT `id` FROM `userHeadquarter` WHERE `id` = " .$userId. "";
+           $checkForPreviousEntry = $this->conn->query($query);
 
-         if ($checkForPreviousEntry->num_rows === 1) {
+           if ($checkForPreviousEntry->num_rows === 1) {
              $stmt = "UPDATE `userHeadquarter` SET ";
 
              foreach ($headquarterArray as $column => $value) {
@@ -1841,7 +1849,7 @@
              }
 
              $stmt = substr($stmt, 0, -1). " WHERE `id` = " .$userId. ";";
-         } elseif ($checkForPreviousEntry->num_rows === 0) {
+           } elseif ($checkForPreviousEntry->num_rows === 0) {
              $stmt = "INSERT INTO `userHeadquarter` (`id`,";
 
              foreach ($headquarterArray as $column => $value) {
@@ -1853,16 +1861,20 @@
                  $stmt .= $value. ",";
              }
              $stmt = substr($stmt, 0, -1). ");";
-         }
+           }
 
-         $insertion = $this->conn->query($stmt);
+           $insertion = $this->conn->query($stmt);
+         }
 
          $headquarterArray = [
            "level" => $data["lvl"],
            "lon" => $data["lon"],
            "lat" => $data["lat"],
            "paid" => [
-                $data["progress1"], $data["progress2"], $data["progress3"], $data["progress4"]
+                $data["progress1"],
+                $data["progress2"],
+                $data["progress3"],
+                $data["progress4"]
            ],
          ];
 
@@ -1893,11 +1905,12 @@
 
          $materialArray = $this->fillUpArrayWithZeroes($materialArray, 14, "mineSummary");
 
-         $query = "SELECT `id` FROM `userMaterial` WHERE `id` = " .$userId. "";
+         if($userId != 0) {
 
-         $checkForPreviousEntry = $this->conn->query($query);
+           $query = "SELECT `id` FROM `userMaterial` WHERE `id` = " .$userId. "";
+           $checkForPreviousEntry = $this->conn->query($query);
 
-         if ($checkForPreviousEntry->num_rows === 1) {
+           if ($checkForPreviousEntry->num_rows === 1) {
              $stmt = "UPDATE `userMaterial` SET ";
 
              for ($i = 0; $i <= 13; $i += 1) {
@@ -1905,7 +1918,7 @@
              }
 
              $stmt = substr($stmt, 0, -1). " WHERE `id` = " .$userId. ";";
-         } elseif ($checkForPreviousEntry->num_rows === 0) {
+           } elseif ($checkForPreviousEntry->num_rows === 0) {
              $stmt = "INSERT INTO `userMaterial` (`id`,";
 
              for ($i = 0; $i <= 13; $i += 1) {
@@ -1917,9 +1930,10 @@
                  $stmt .= $materialArray[$i]["perHour"]. "," .$materialArray[$i]["amountOfMines"]. ",";
              }
              $stmt = substr($stmt, 0, -1). ");";
-         }
+           }
 
-         $insertion = $this->conn->query($stmt);
+           $insertion = $this->conn->query($stmt);
+         }
 
          return json_encode($materialArray, JSON_NUMERIC_CHECK);
      }
@@ -1978,7 +1992,9 @@
 
          $query = substr($query, 0, -1). " WHERE `id` = " .$userId. ";";
 
-         $insertion = $this->conn->query($query);
+         if($userId != 0) {
+           $insertion = $this->conn->query($query);
+         }
 
          return json_encode($result, JSON_NUMERIC_CHECK);
      }
@@ -2034,6 +2050,8 @@
       */
      private function insertAPITradeLog($data, $userId)
      {
+
+       if($userId != 0) {
          $tableBuilder = $this->createTable("tradeLog", $userId);
          $buildTable = $this->conn->query($tableBuilder);
 
@@ -2048,32 +2066,32 @@
          }
 
          foreach ($data as $tradeAction) {
-             $timestamp = $tradeAction["ts"];
+           $timestamp = $tradeAction["ts"];
 
-             if ($timestamp > $mostRecentTradeTS) {
-                 $query = "INSERT INTO `userTradeLog_" .$userId. "` (`timestamp`, `event`, `amount`, `price`, `transportCost`, `itemId`, `actor`, `actorLevel`) VALUES ";
+           if ($timestamp > $mostRecentTradeTS) {
+             $query = "INSERT INTO `userTradeLog_" .$userId. "` (`timestamp`, `event`, `amount`, `price`, `transportCost`, `itemId`, `actor`, `actorLevel`) VALUES ";
 
-                 switch ($tradeAction["event"]) {
-                             case "buy":
-                             $event = 0;
-                             $buyValue = $tradeAction["amount"] * $tradeAction["ppstk"];
-                             $sellValue = 0;
-                             $transportCost = $tradeAction["transcost"];
-                             break;
-                             case "sell":
-                             $event = 1;
-                             $buyValue = 0;
-                             $sellValue = $tradeAction["amount"] * $tradeAction["ppstk"];
-                             $transportCost = 0;
-                             break;
+             switch ($tradeAction["event"]) {
+               case "buy":
+               $event = 0;
+               $buyValue = $tradeAction["amount"] * $tradeAction["ppstk"];
+               $sellValue = 0;
+               $transportCost = $tradeAction["transcost"];
+               break;
+               case "sell":
+               $event = 1;
+               $buyValue = 0;
+               $sellValue = $tradeAction["amount"] * $tradeAction["ppstk"];
+               $transportCost = 0;
+               break;
              }
 
-                 $tradingUserName = $this->removeEmojis($tradeAction["username"]);
-                 $tradingPartnerLevel = $tradeAction["ulvl"];
+             $tradingUserName = $this->removeEmojis($tradeAction["username"]);
+             $tradingPartnerLevel = $tradeAction["ulvl"];
 
-                 $itemId = $this->convertOfficialIdToInternalId($tradeAction["itemID"]);
+             $itemId = $this->convertOfficialIdToInternalId($tradeAction["itemID"]);
 
-                 $query .= "(
+             $query .= "(
                " .$timestamp. ",
                "  .$event. ",
                " .$tradeAction["amount"]. ",
@@ -2084,15 +2102,15 @@
                " .$tradingPartnerLevel. "
              );";
 
-                 $insertIntoIndex = $this->insertUserToIndex($timestamp, $tradingUserName, $tradingPartnerLevel, $userId, $sellValue, $buyValue, $transportCost);
-
-                 $insertion = $this->conn->query($query);
-             }
+             $insertIntoIndex = $this->insertUserToIndex($timestamp, $tradingUserName, $tradingPartnerLevel, $userId, $sellValue, $buyValue, $transportCost);
+             $insertion = $this->conn->query($query);
+            }
          }
+        }
 
-         $answer["callback"] = "rHelper.methods.API_getTradeLog()";
+        $answer["callback"] = "rHelper.methods.API_getTradeLog()";
 
-         return json_encode($answer);
+        return json_encode($answer);
      }
 
      /**
@@ -2105,74 +2123,76 @@
       */
      private function insertAPIMissions($data, $userId)
      {
-         $tableBuilder = $this->createTable("missions", $userId);
-         $buildTable = $this->conn->query($tableBuilder);
+        if($userId != 0) {
+          $tableBuilder = $this->createTable("missions", $userId);
+          $buildTable = $this->conn->query($tableBuilder);
 
-         $result = [];
+          $result = [];
 
-         foreach ($data as $mission) {
-             $id = $mission["questID"];
-             $startTimestamp = $mission["starttime"];
-             $endTimestamp = $mission["endtime"];
-             $progress = $mission["progress"];
-             $goal = $mission["missiongoal"];
-             $cooldown = $mission["cooldown"];
-             $rewardAmount = $mission["rewardamount"];
-             $penalty = $mission["penalty"];
-             $status = $mission["status"];
+          foreach ($data as $mission) {
+            $id = $mission["questID"];
+            $startTimestamp = $mission["starttime"];
+            $endTimestamp = $mission["endtime"];
+            $progress = $mission["progress"];
+            $goal = $mission["missiongoal"];
+            $cooldown = $mission["cooldown"];
+            $rewardAmount = $mission["rewardamount"];
+            $penalty = $mission["penalty"];
+            $status = $mission["status"];
 
-             $checkExistingMissionQuery = "SELECT * FROM `userMissions_" .$userId. "` WHERE `id` = " .$id. "";
-             $checkExistingMission = $this->conn->query($checkExistingMissionQuery);
+            $checkExistingMissionQuery = "SELECT * FROM `userMissions_" .$userId. "` WHERE `id` = " .$id. "";
+            $checkExistingMission = $this->conn->query($checkExistingMissionQuery);
 
-             if ($checkExistingMission->num_rows === 0) {
-                 $query = "INSERT INTO `userMissions_" .$userId. "` (`id`, `startTimestamp`, `endTimestamp`, `progress`, `goal`, `cooldown`, `rewardAmount`, `penalty`, `status`) VALUES ";
+            if ($checkExistingMission->num_rows === 0) {
+              $query = "INSERT INTO `userMissions_" .$userId. "` (`id`, `startTimestamp`, `endTimestamp`, `progress`, `goal`, `cooldown`, `rewardAmount`, `penalty`, `status`) VALUES ";
 
-                 $query .= "(
-                   " .$id. ",
-                   " .$startTimestamp. ",
-                   " .$endTimestamp. ",
-                   " .$progress. ",
-                   " .$goal. ",
-                   " .$cooldown. ",
-                   " .$rewardAmount. ",
-                   " .$penalty. ",
-                   " .$status. "
-                 );";
-             } else {
-                 $query = "UPDATE `userMissions_" .$userId. "`
-                 SET `startTimestamp` = " .$startTimestamp. ",
-                 `endTimestamp` = " .$endTimestamp. ",
-                 `progress` = " .$progress. ",
-                 `goal` = " .$goal. ",
-                 `cooldown` =   " .$cooldown. ",
-                 `rewardAmount` = " .$rewardAmount. ",
-                 `penalty` = " .$penalty. ",
-                 `status` = " .$status. "
-                 WHERE `id` = " .$id. "";
-             }
+              $query .= "(
+                " .$id. ",
+                " .$startTimestamp. ",
+                " .$endTimestamp. ",
+                " .$progress. ",
+                " .$goal. ",
+                " .$cooldown. ",
+                " .$rewardAmount. ",
+                " .$penalty. ",
+                " .$status. "
+              );";
+            } else {
+              $query = "UPDATE `userMissions_" .$userId. "`
+                SET `startTimestamp` = " .$startTimestamp. ",
+                `endTimestamp` = " .$endTimestamp. ",
+                `progress` = " .$progress. ",
+                `goal` = " .$goal. ",
+                `cooldown` =   " .$cooldown. ",
+                `rewardAmount` = " .$rewardAmount. ",
+                `penalty` = " .$penalty. ",
+                `status` = " .$status. "
+                WHERE `id` = " .$id. "";
+            }
 
-             $setMission = $this->conn->query($query);
+            $setMission = $this->conn->query($query);
 
-             if ($startTimestamp != 0) {
-                 $startTimestamp = $this->convertUnixTimestampToDateTime($startTimestamp);
-             }
+            if ($startTimestamp != 0) {
+              $startTimestamp = $this->convertUnixTimestampToDateTime($startTimestamp);
+            }
 
-             if ($endTimestamp != 0) {
-                 $endTimestamp = $this->convertUnixTimestampToDateTime($endTimestamp);
-             }
+            if ($endTimestamp != 0) {
+              $endTimestamp = $this->convertUnixTimestampToDateTime($endTimestamp);
+            }
 
-             $result[$id]["startData"]["dateTime"] = $startTimestamp;
-             $result[$id]["startData"]["timestamp"] = $mission["starttime"];
+            $result[$id]["startData"]["dateTime"] = $startTimestamp;
+            $result[$id]["startData"]["timestamp"] = $mission["starttime"];
 
-             $result[$id]["endData"]["dateTime"] = $endTimestamp;
-             $result[$id]["endData"]["timestamp"] = $mission["endtime"];
+            $result[$id]["endData"]["dateTime"] = $endTimestamp;
+            $result[$id]["endData"]["timestamp"] = $mission["endtime"];
 
-             $result[$id]["progress"] = $progress;
-             $result[$id]["goal"] = $goal;
-             $result[$id]["cooldown"] = $cooldown;
-             $result[$id]["rewardAmount"] = $rewardAmount;
-             $result[$id]["penalty"] = $penalty;
-             $result[$id]["status"] = $status;
+            $result[$id]["progress"] = $progress;
+            $result[$id]["goal"] = $goal;
+            $result[$id]["cooldown"] = $cooldown;
+            $result[$id]["rewardAmount"] = $rewardAmount;
+            $result[$id]["penalty"] = $penalty;
+            $result[$id]["status"] = $status;
+          }
          }
 
          $answer["callback"] = "rHelper.methods.API_getMissions()";
@@ -2190,135 +2210,137 @@
       */
      private function insertAPIAttackLog($data, $userId)
      {
-         $tableBuilder = $this->createTable("attackLog", $userId);
-         $createTable = $this->conn->query($tableBuilder);
+         if($userId != 0) {
+           $tableBuilder = $this->createTable("attackLog", $userId);
+           $createTable = $this->conn->query($tableBuilder);
 
-         $mostRecentAttackQuery = "SELECT `timestamp` FROM `userAttackLog_" .$userId. "` ORDER BY `timestamp` DESC LIMIT 1";
-         $mostRecentAttack = $this->conn->query($mostRecentAttackQuery);
-         if ($mostRecentAttack->num_rows == 1) {
+           $mostRecentAttackQuery = "SELECT `timestamp` FROM `userAttackLog_" .$userId. "` ORDER BY `timestamp` DESC LIMIT 1";
+           $mostRecentAttack = $this->conn->query($mostRecentAttackQuery);
+
+           if ($mostRecentAttack->num_rows == 1) {
              while ($recentAttackData = $mostRecentAttack->fetch_assoc()) {
                  $mostRecentAttackTS = $recentAttackData["timestamp"];
              }
-         } else {
+           } else {
              $mostRecentAttackTS = 0;
-         }
+           }
 
-         foreach ($data as $attack) {
+           foreach ($data as $attack) {
              $timestamp = $attack["unixts"];
 
              if ($timestamp > $mostRecentAttackTS) {
-                 $query = "INSERT INTO `userAttackLog_" .$userId. "` (
-                      `target`, `targetLevel`, `timestamp`,
-                      `aUnit1`, `aUnit2`, `aUnit3`,
-                      `dUnit1`, `dUnit2`, `dUnit3`,
-                      `aUnit1Price`, `aUnit2Price`, `aUnit3Price`,
-                      `dUnit1Price`, `dUnit2Price`, `dUnit3Price`,
-                      `lat`, `lon`,
-                      `action`, `result`, `factor`,
-                      `lootId1`, `lootQty1`, `lootPrice1`,
-                      `lootId2`, `lootQty2`, `lootPrice2`,
-                      `worth`, `profit`) VALUES ";
+               $query = "INSERT INTO `userAttackLog_" .$userId. "` (
+                 `target`, `targetLevel`, `timestamp`,
+                 `aUnit1`, `aUnit2`, `aUnit3`,
+                 `dUnit1`, `dUnit2`, `dUnit3`,
+                 `aUnit1Price`, `aUnit2Price`, `aUnit3Price`,
+                 `dUnit1Price`, `dUnit2Price`, `dUnit3Price`,
+                 `lat`, `lon`,
+                 `action`, `result`, `factor`,
+                 `lootId1`, `lootQty1`, `lootPrice1`,
+                 `lootId2`, `lootQty2`, `lootPrice2`,
+                 `worth`, `profit`) VALUES ";
 
-                 switch ($attack["result"]) {
-                           case "won":
-                           $outcome = 1;
-                           break;
-                           case "lost": default:
-                           $outcome = 0;
-                           break;
-                      }
+                switch ($attack["result"]) {
+                  case "won":
+                  $outcome = 1;
+                  break;
+                  case "lost": default:
+                  $outcome = 0;
+                  break;
+                }
 
-                 // convert officially recieved ID to internal ID, then convert it to the old structure
-                 $currentPrice1Id = $this->convertOfficialIdToInternalId($attack["loot1ItemID"]);
-                 $currentPrice2Id = $this->convertOfficialIdToInternalId($attack["loot2ItemID"]);
+                // convert officially recieved ID to internal ID, then convert it to the old structure
+                $currentPrice1Id = $this->convertOfficialIdToInternalId($attack["loot1ItemID"]);
+                $currentPrice2Id = $this->convertOfficialIdToInternalId($attack["loot2ItemID"]);
 
-                 $oldPrice1Id = $this->convertInternalIdToOldStructure($currentPrice1Id);
-                 $oldPrice2Id = $this->convertInternalIdToOldStructure($currentPrice2Id);
+                $oldPrice1Id = $this->convertInternalIdToOldStructure($currentPrice1Id);
+                $oldPrice2Id = $this->convertInternalIdToOldStructure($currentPrice2Id);
 
-                 $relPrice1 = $this->returnRelativePrice($oldPrice1Id, $timestamp);
+                $relPrice1 = $this->returnRelativePrice($oldPrice1Id, $timestamp);
 
-                 $worthItem1 = $attack["loot1ItemQty"] * $relPrice1;
+                $worthItem1 = $attack["loot1ItemQty"] * $relPrice1;
 
-                 if ($oldPrice2Id != -1) {
-                     $relPrice2 = $this->returnRelativePrice($oldPrice2Id, $timestamp);
-                     $worthItem2 = $attack["loot2ItemQty"] * $relPrice2;
-                 } else {
-                     $worthItem2 = $attack["loot2ItemQty"];
-                     $relPrice2 = 1;
-                 }
+                if ($oldPrice2Id != -1) {
+                  $relPrice2 = $this->returnRelativePrice($oldPrice2Id, $timestamp);
+                  $worthItem2 = $attack["loot2ItemQty"] * $relPrice2;
+                } else {
+                  $worthItem2 = $attack["loot2ItemQty"];
+                  $relPrice2 = 1;
+                }
 
-                 $worth = $worthItem1 + $worthItem2;
+                $worth = $worthItem1 + $worthItem2;
 
-                 if (is_numeric($attack["lootfactor"])) {
-                     $lootfactor = $attack["lootfactor"];
-                 } else {
-                     $lootfactor = 0;
-                 }
+                if (is_numeric($attack["lootfactor"])) {
+                  $lootfactor = $attack["lootfactor"];
+                } else {
+                  $lootfactor = 0;
+                }
 
-                 $attackungUnitPrices = [
-                         $this->returnRelativePrice(24, $timestamp),
-                         $this->returnRelativePrice(17, $timestamp),
-                         $this->returnRelativePrice(37, $timestamp)
-                    ];
+                $attackungUnitPrices = [
+                  $this->returnRelativePrice(24, $timestamp),
+                  $this->returnRelativePrice(17, $timestamp),
+                  $this->returnRelativePrice(37, $timestamp)
+                ];
 
-                 $defendingUnitPrices = [
-                         $this->returnRelativePrice(54, $timestamp),
-                         $this->returnRelativePrice(55, $timestamp),
-                         $this->returnRelativePrice(14, $timestamp)
-                    ];
+                $defendingUnitPrices = [
+                  $this->returnRelativePrice(54, $timestamp),
+                  $this->returnRelativePrice(55, $timestamp),
+                  $this->returnRelativePrice(14, $timestamp)
+                ];
 
-                 $profit = 0;
+                $profit = 0;
 
-                 if ($outcome == 1) {
-                     $profit = $worth;
+                if ($outcome == 1) {
+                  $profit = $worth;
 
-                     for ($i = 1; $i <= 3; $i += 1) {
-                         $profit -= $attackungUnitPrices[($i-1)] * $attack["AQtyUnit" .$i. ""];
-                     }
-                 } else {
-                     for ($i = 1; $i <= 3; $i += 1) {
-                         $profit -= $attackungUnitPrices[($i-1)] * $attack["AQtyUnit" .$i. ""];
-                     }
-                 }
+                  for ($i = 1; $i <= 3; $i += 1) {
+                    $profit -= $attackungUnitPrices[($i-1)] * $attack["AQtyUnit" .$i. ""];
+                  }
+                } else {
+                  for ($i = 1; $i <= 3; $i += 1) {
+                    $profit -= $attackungUnitPrices[($i-1)] * $attack["AQtyUnit" .$i. ""];
+                  }
+                }
 
-                 $query .= "('" .$attack["targetUserName"]. "',
-                         " .$attack["targetUserLevel"]. ",
-                         " .$timestamp. ",
-                         " .$attack["AQtyUnit1"]. ",
-                         " .$attack["AQtyUnit2"]. ",
-                         " .$attack["AQtyUnit3"]. ",
-                         " .$attack["DQtyUnit1"]. ",
-                         " .$attack["DQtyUnit2"]. ",
-                         " .$attack["DQtyUnit3"]. ",
-                         " .$attackungUnitPrices[0]. ",
-                         " .$attackungUnitPrices[1]. ",
-                         " .$attackungUnitPrices[2]. ",
-                         " .$defendingUnitPrices[0]. ",
-                         " .$defendingUnitPrices[1]. ",
-                         " .$defendingUnitPrices[2]. ",
-                         " .$attack["lat"]. ",
-                         " .$attack["lon"]. ",
-                         '" .$attack["act"]. "',
-                         " .$outcome. ",
-                         " .$lootfactor. ",
-                         " .$currentPrice1Id. ",
-                         " .$attack["loot1ItemQty"]. ",
-                         " .$relPrice1. ",
-                         " .$currentPrice2Id. ",
-                         " .$attack["loot2ItemQty"]. ",
-                         " .$relPrice2. ",
-                         " .$worth. ",
-                         " .$profit. ");";
+                $query .= "('" .$attack["targetUserName"]. "',
+                  " .$attack["targetUserLevel"]. ",
+                  " .$timestamp. ",
+                  " .$attack["AQtyUnit1"]. ",
+                  " .$attack["AQtyUnit2"]. ",
+                  " .$attack["AQtyUnit3"]. ",
+                  " .$attack["DQtyUnit1"]. ",
+                  " .$attack["DQtyUnit2"]. ",
+                  " .$attack["DQtyUnit3"]. ",
+                  " .$attackungUnitPrices[0]. ",
+                  " .$attackungUnitPrices[1]. ",
+                  " .$attackungUnitPrices[2]. ",
+                  " .$defendingUnitPrices[0]. ",
+                  " .$defendingUnitPrices[1]. ",
+                  " .$defendingUnitPrices[2]. ",
+                  " .$attack["lat"]. ",
+                  " .$attack["lon"]. ",
+                  '" .$attack["act"]. "',
+                  " .$outcome. ",
+                  " .$lootfactor. ",
+                  " .$currentPrice1Id. ",
+                  " .$attack["loot1ItemQty"]. ",
+                  " .$relPrice1. ",
+                  " .$currentPrice2Id. ",
+                  " .$attack["loot2ItemQty"]. ",
+                  " .$relPrice2. ",
+                  " .$worth. ",
+                  " .$profit. ");";
 
-                 $insertion = $this->conn->query($query);
+                $insertion = $this->conn->query($query);
+                $insertIntoIndex = $this->insertUserToIndex($timestamp, $attack["targetUserName"], $attack["targetUserLevel"], $userId, 0, 0, 0);
+              }
+            }
+          }
 
-                 $insertIntoIndex = $this->insertUserToIndex($timestamp, $attack["targetUserName"], $attack["targetUserLevel"], $userId, 0, 0, 0);
-             }
-        }
+          $answer["callback"] = "rHelper.methods.API_getAttackLog()";
 
-        $answer["callback"] = "rHelper.methods.API_getAttackLog()";
-
-        return json_encode($answer);
+          return json_encode($answer);
      }
 
      /**
@@ -2331,11 +2353,14 @@
       */
      private function insertAPIMineMap($url, $userId)
      {
+
          $tableBuilder = $this->createTable("mineMap", $userId);
          $buildTable = $this->conn->query($tableBuilder);
 
-         $killFormerContentQuery = "DELETE FROM `userMineMap_" .$userId. "`";
-         $killFormerContent = $this->conn->query($killFormerContentQuery);
+         if($userId != 0) {
+           $killFormerContentQuery = "DELETE FROM `userMineMap_" .$userId. "`";
+           $killFormerContent = $this->conn->query($killFormerContentQuery);
+         }
 
          include 'JsonStreamingParser/Listener.php';
          include 'JsonStreamingParser/Parser.php';
@@ -2353,67 +2378,81 @@
              throw $e;
          }
 
+         /*
+         rearrange table by builddate
+         */
          $orderTableQuery = "ALTER TABLE `userMineMap_" .$userId. "` ORDER BY  `builddate`";
          $sortTable = $this->conn->query($orderTableQuery);
 
-         $countHQMinesQuery = "SELECT COUNT(  `rawRate` ) AS  `minesInHQ`, `HQBoost` FROM  `userMineMap_" .$userId. "` WHERE  `HQBoost` > 1";
-         $countHQMines = $this->conn->query($countHQMinesQuery);
-         if ($countHQMines->num_rows == 1) {
+         if($userId != 0) {
+
+           /*
+           count mines within HQ by counting HQBoosted mines
+           */
+
+           $countHQMinesQuery = "SELECT COUNT(  `rawRate` ) AS  `minesInHQ`, `HQBoost` FROM  `userMineMap_" .$userId. "` WHERE  `HQBoost` > 1";
+           $countHQMines = $this->conn->query($countHQMinesQuery);
+
+           if ($countHQMines->num_rows == 1) {
              while ($data = $countHQMines->fetch_assoc()) {
-                 $hqMines = $data["minesInHQ"];
-                 $hqBoost = $data["HQBoost"];
+               $hqMines = $data["minesInHQ"];
+               $hqBoost = $data["HQBoost"];
              }
-         }
+           }
 
-         $updateUserHeadquarterQuery = "SELECT `id` FROM `userHeadquarter` WHERE `id` = " .$userId. "";
-         $updateUserHeadquarter = $this->conn->query($updateUserHeadquarterQuery);
+           /*
+           update userHQ information based on recent result
+           */
+           $updateUserHeadquarterQuery = "SELECT `id` FROM `userHeadquarter` WHERE `id` = " .$userId. "";
+           $updateUserHeadquarter = $this->conn->query($updateUserHeadquarterQuery);
 
-         if ($updateUserHeadquarter->num_rows == 0) {
-             switch ($hqBoost) {
-                   case 1.9:
-                   $hqLevel = 1;
-                   break;
-                   case 2.8:
-                   $hqLevel = 2;
-                   break;
-                   case 3.7:
-                   $hqLevel = 3;
-                   break;
-                   case 4.6:
-                   $hqLevel = 4;
-                   break;
-                   case 5.5:
-                   $hqLevel = 5;
-                   break;
-                   case 6.4:
-                   $hqLevel = 6;
-                   break;
-                   case 7.3:
-                   $hqLevel = 7;
-                   break;
-                   case 8.2:
-                   $hqLevel = 8;
-                   break;
-                   case 9.1:
-                   $hqLevel = 9;
-                   break;
-                   case 10:
-                   $hqLevel = 10;
-                   break;
-                   default:
-                   $hqLevel = 1;
-                   break;
+           if ($updateUserHeadquarter->num_rows == 0) {
+              switch ($hqBoost) {
+                case 1.9:
+                $hqLevel = 1;
+                break;
+                case 2.8:
+                $hqLevel = 2;
+                break;
+                case 3.7:
+                $hqLevel = 3;
+                break;
+                case 4.6:
+                $hqLevel = 4;
+                break;
+                case 5.5:
+                $hqLevel = 5;
+                break;
+                case 6.4:
+                $hqLevel = 6;
+                break;
+                case 7.3:
+                $hqLevel = 7;
+                break;
+                case 8.2:
+                $hqLevel = 8;
+                break;
+                case 9.1:
+                $hqLevel = 9;
+                break;
+                case 10:
+                $hqLevel = 10;
+                break;
+                default:
+                $hqLevel = 1;
+                break;
               }
-             $insertionQuery = "INSERT INTO `userHeadquarter` (`id`, `level`, `mineCount`) VALUES(" .$userId. ", " .$hqLevel. ", " .$hqMines. ");";
-         } else {
-             $insertionQuery = "UPDATE `userHeadquarter` SET `mineCount` = " .$hqMines. " WHERE `id` = " .$userId. "";
-         }
+              $insertionQuery = "INSERT INTO `userHeadquarter` (`id`, `level`, `mineCount`) VALUES(" .$userId. ", " .$hqLevel. ", " .$hqMines. ");";
+            } else {
+              $insertionQuery = "UPDATE `userHeadquarter` SET `mineCount` = " .$hqMines. " WHERE `id` = " .$userId. "";
+            }
 
-         $insertion = $this->conn->query($insertionQuery);
+            $insertion = $this->conn->query($insertionQuery);
+          }
 
-         $answer["callback"] = "rHelper.methods.API_getMineMap()";
+          $answer["callback"] = "rHelper.methods.API_getMineMap()";
 
-         return json_encode($answer);
+          return json_encode($answer);
      }
 
      /**
@@ -2446,9 +2485,11 @@
 
          switch ($query) {
          case 0: // credits - STABLE
-             $query = "UPDATE `userOverview` SET `lastUpdate` = " .$time. ", `remainingCredits` = " .$decoded_data[0]["creditsleft"]. " WHERE `id` = " .$userId. "";
-             $updateUserOverview = $this->conn->query($query);
-             return $data;
+         if($userId != 0) {
+           $query = "UPDATE `userOverview` SET `lastUpdate` = " .$time. ", `remainingCredits` = " .$decoded_data[0]["creditsleft"]. " WHERE `id` = " .$userId. "";
+           $updateUserOverview = $this->conn->query($query);
+         }
+        return $data;
          break;
          case 1: // factory - STABLE
              $convertAPIData = $this->insertAPIFactoryData($decoded_data, $userId);

@@ -233,14 +233,30 @@ var rHelper = {
 					rHelper.methods.INSRT_factoryTurnover(factoryId);
 					rHelper.methods.INSRT_factoryTurnoverPerUpgrade(factoryId);
 					rHelper.methods.INSRT_factoryROI(factoryId);
+
+					rHelper.methods.INSRT_diamondFactoryOutput(factoryId);
+					rHelper.methods.INSRT_diamondFactoryOutputWarehouse(factoryId);
+					rHelper.methods.INSRT_diamondDependencies(factoryId);
+					rHelper.methods.INSRT_diamondEfficiency(factoryId);
+					rHelper.methods.INSRT_diamondProfit(factoryId);
+
+					rHelper.methods.INSRT_flowRate(factoryId, "product");
 				});
 
 				rHelper.methods.INSRT_totalFactoryUpgrades();
 				rHelper.methods.INSRT_factoryHighlightColumns();
 
+				rHelper.methods.INSRT_diamondTop10Profit();
+				rHelper.methods.INSRT_diamondTotalProfit();
+
+				rHelper.methods.INSRT_flowDistributionGlobal();
+
 				rHelper.methods.API_toggleLoader("factories");
 				rHelper.methods.API_toggleSuccessor("factories");
 				rHelper.methods.API_toggleSuccessorHelper("factories");
+
+				sorttable.innerSortFunction.apply($("#module-diamond th")[4], []);
+				sorttable.innerSortFunction.apply($("#module-diamond th")[5], []);
 			});
 		},
 		API_getWarehouse(key) {
@@ -261,16 +277,58 @@ var rHelper = {
 						var targetObj = "units";
 					}
 
-					rHelper.data[targetObj][iterator].warehouse.level = warehouseInfo.level;
-					rHelper.data[targetObj][iterator].warehouse.fillAmount = warehouseInfo.fillAmount;
-					rHelper.data[targetObj][iterator].warehouse.contingent = Math.pow(warehouseInfo.level, 2) * 5000;
+					var contingent = Math.pow(warehouseInfo.level, 2) * 5000;
 
-					var fillStatus = rHelper.data[targetObj][iterator].warehouse.fillAmount / rHelper.data[targetObj][iterator].warehouse.contingent;
+					rHelper.data[targetObj][iterator].warehouse.level = warehouseInfo.level;
+					rHelper.data[targetObj][iterator].warehouse.fillAmount = warehouseInfo.amount;
+					rHelper.data[targetObj][iterator].warehouse.contingent = contingent
+
+					var fillStatus = warehouseInfo.amount / contingent;
 					if (isNaN(fillStatus)) {
 						fillStatus = 0;
 					}
 					rHelper.data[targetObj][iterator].warehouse.fillStatus = fillStatus;
 				});
+
+				$.each(rHelper.data.material, function (materialId) {
+					rHelper.methods.INSRT_warehouseFillAmount(materialId, "material");
+					rHelper.methods.INSRT_warehouseLevel(materialId, "material");
+					rHelper.methods.INSRT_warehouseFillStatus(materialId, "material");
+					rHelper.methods.INSRT_warehouseCapacity(materialId, "material");
+					rHelper.methods.INSRT_warehouseWorth(materialId, "material");
+					rHelper.methods.INSRT_warehouseRemainingTimeToFull(materialId, "material");
+				});
+
+				var calculationOrder = rHelper.methods.GET_calculationOrder();
+
+				$.each(calculationOrder, function (index, factoryId) {
+					rHelper.methods.INSRT_warehouseFillAmount(index, "products");
+					rHelper.methods.INSRT_warehouseLevel(index, "products");
+					rHelper.methods.INSRT_warehouseFillStatus(index, "products");
+					rHelper.methods.INSRT_warehouseCapacity(index, "products");
+					rHelper.methods.INSRT_warehouseWorth(index, "products");
+					rHelper.methods.INSRT_warehouseRemainingTimeToFull(factoryId, "products");
+				});
+
+				$.each(rHelper.data.loot, function (index) {
+					rHelper.methods.INSRT_warehouseFillAmount(index, "loot");
+					rHelper.methods.INSRT_warehouseLevel(index, "loot");
+					rHelper.methods.INSRT_warehouseFillStatus(index, "loot");
+					rHelper.methods.INSRT_warehouseCapacity(index, "loot");
+					rHelper.methods.INSRT_warehouseWorth(index, "loot");
+				});
+
+				$.each(rHelper.data.units, function (index, unit) {
+					rHelper.methods.INSRT_warehouseFillAmount(index, "units");
+					rHelper.methods.INSRT_warehouseLevel(index, "units");
+					rHelper.methods.INSRT_warehouseFillStatus(index, "units");
+					rHelper.methods.INSRT_warehouseCapacity(index, "units");
+					rHelper.methods.INSRT_warehouseWorth(index, "units");
+				});
+
+				rHelper.methods.INSRT_warehouseTotalLevel();
+				rHelper.methods.INSRT_warehouseTotalWorth();
+
 				rHelper.methods.API_toggleLoader("warehouse");
 				rHelper.methods.API_toggleSuccessor("warehouse");
 				rHelper.methods.API_toggleSuccessorHelper("warehouse");
@@ -294,12 +352,18 @@ var rHelper = {
 					rHelper.methods.INSRT_materialRateWorth(materialId);
 					rHelper.methods.INSRT_materialNewMinePerfectIncome(materialId);
 					rHelper.methods.CALC_dependantFactories(materialId, "material");
+
+					rHelper.methods.INSRT_flowRate(materialId, "material");
 				});
 
 				rHelper.methods.INSRT_totalMineWorth(rHelper.methods.CALC_totalMineWorth());
 				rHelper.methods.INSRT_totalMineCount(rHelper.methods.CALC_totalMineCount());
 				rHelper.methods.INSRT_materialMineAmortisation();
 				rHelper.methods.INSRT_materialHighlightMinePerfectIncome();
+
+				rHelper.methods.EVNT_buildGraph("material");
+
+				rHelper.methods.INSRT_flowDistributionGlobal();
 
 				rHelper.methods.API_toggleLoader("mines-summary");
 				rHelper.methods.API_toggleSuccessor("mines-summary");
@@ -424,7 +488,14 @@ var rHelper = {
 
 				$.each(data, function (i, buildingLevel) {
 					rHelper.data.buildings[i].level = buildingLevel;
+
+					rHelper.methods.INSRT_buildingName(i);
+					rHelper.methods.SET_buildingBackgroundColor(i);
+					rHelper.methods.INSRT_buildingData(i);
+					rHelper.methods.INSRT_buildingToLevel10(i);
 				});
+
+				rHelper.methods.INSRT_gaugeGraph("buildings");
 
 				rHelper.methods.API_toggleLoader("buildings");
 				rHelper.methods.API_toggleSuccessor("buildings");
@@ -437,6 +508,15 @@ var rHelper = {
 
 			$.getJSON("api/core.php?query=4&key=" + key, function (data) {
 
+				rHelper.data.headquarter.user = rHelper.data.headquarter.user || {
+					"hqPosition": {
+						"lon": 0,
+						"lat": 0
+					},
+					"level": 0,
+          "paid": [0, 0, 0, 0]
+				};
+
 				rHelper.data.headquarter.user.hqPosition.lat = data.lat;
 				rHelper.data.headquarter.user.hqPosition.lon = data.lon;
 				rHelper.data.headquarter.user.level = data.level;
@@ -444,6 +524,10 @@ var rHelper = {
 				$.each(data.paid, function (i, paid) {
 					rHelper.data.headquarter.user.paid[i] = paid;
 				});
+
+				rHelper.methods.INSRT_gaugeGraph("headquarter");
+				
+				rHelper.methods.SET_hqLevel();
 
 				rHelper.methods.API_toggleLoader("headquarter");
 				rHelper.methods.API_toggleSuccessor("headquarter");
@@ -703,13 +787,33 @@ var rHelper = {
 				lng: hqObj.lon
 			};
 
-			var hqCircle = rHelper.methods.INSRT_mapHqCircle(map, center, radius, hqObj.relation);
+			var hqCircle = rHelper.methods.SET_mapHqCircle(map, center, radius, hqObj.relation);
 			var hqSize = hqLevel * 12.5;
 
 			var hqIcon = new google.maps.Marker({
 				map: map,
 				position: center,
 				icon: rHelper.methods.SET_mapImg("hq", hqLevel, hqSize)
+			});
+		},
+		SET_mapHqCircle(map, hqCenter, radius, relation) {
+
+			var color = "#FF0000";
+
+			if (relation == "friend") {
+				color = "#00FF00";
+			}
+
+			return new google.maps.Circle({
+				strokeColor: color,
+				strokeOpacity: 0.8,
+				strokeWeight: 2,
+				fillColor: color,
+				fillOpacity: 0.35,
+				map: map,
+				center: hqCenter,
+				radius: radius,
+				draggable: true
 			});
 		},
 		SET_mapMineHandler(now, subObj, map, mapType) {
@@ -855,6 +959,8 @@ var rHelper = {
 				$.each(rHelper.data.material, function (materialId) {
 					rHelper.methods.INSRT_materialNewMinePrice(materialId);
 				});
+
+				rHelper.methods.INSRT_warehouseRemainingTimeToFull(materialId, "material");
 
 				rHelper.methods.INSRT_materialMineAmortisation();
 				rHelper.methods.INSRT_totalMineCount(rHelper.methods.CALC_totalMineCount());
@@ -1166,26 +1272,7 @@ var rHelper = {
 			}
 		},
 
-		INSRT_mapHqCircle(map, hqCenter, radius, relation) {
 
-			var color = "#FF0000";
-
-			if (relation == "friend") {
-				color = "#00FF00";
-			}
-
-			return new google.maps.Circle({
-				strokeColor: color,
-				strokeOpacity: 0.8,
-				strokeWeight: 2,
-				fillColor: color,
-				fillOpacity: 0.35,
-				map: map,
-				center: hqCenter,
-				radius: radius,
-				draggable: true
-			});
-		},
 		INSRT_priceHistoryGraph(materialName, averageKI, averagePlayer, timestamps, player, ki) {
 
 			Highcharts.chart("graph-pricehistory", {
@@ -1853,9 +1940,13 @@ var rHelper = {
 		},
 		INSRT_flowSurplus(id, type, remainingAmount) {
 			var surplusTarget = $("#flow-" + type + "-surplus-" + id);
+			var color = "#dedede";
+
 			if (remainingAmount <= 0) {
-				surplusTarget.css("color", "coral");
+				color = "coral";
 			}
+
+			surplusTarget.css("color", color);
 			surplusTarget.html('<span class="resources-' + type + '-' + id + '"></span> ' + remainingAmount.toLocaleString("en-US"));
 		},
 		INSRT_flowDistributionSingle(id, type) {

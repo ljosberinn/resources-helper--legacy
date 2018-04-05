@@ -138,7 +138,7 @@ ob_end_flush();
     ?>
 	</main>
   <!-- footer -->
-  <footer class="row mt-2 mb-2 ml-1 mr-1 bg-light rounded">
+  <footer class="row mt-2 mb-2 ml-1 mr-1 bg-light rounded justify-content-center">
     <?php
 
     require "app/pages/footer.php";

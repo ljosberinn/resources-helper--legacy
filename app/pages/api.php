@@ -18,35 +18,35 @@
 			"description" => "Factories",
 			"cost" => "1 Credit",
 			"checked" => "checked",
-      "data-query" => 1
+      "data-query" => 1,
 		],
 		[
 			"inputId" => "warehouse",
 			"description" => "Warehouse & Warehouse levels",
 			"cost" => "1 Credit",
 			"checked" => "checked",
-      "data-query" => 2
+      "data-query" => 2,
 		],
 		[
 			"inputId" => "buildings",
 			"description" => "Special buildings",
 			"cost" => "1 Credit",
 			"checked" => "checked",
-      "data-query" => 3
+      "data-query" => 3,
 		],
 		[
 			"inputId" => "headquarter",
 			"description" => "Headquarter & Headquarter details (mines within range, upgrade progress)",
 			"cost" => "1 Credit",
 			"checked" => "checked",
-      "data-query" => 4
+      "data-query" => 4,
 		],
 		[
 			"inputId" => "mines-summary",
 			"description" => "Mines - summary (total rates, mine amounts)",
 			"cost" => "1 Credit",
 			"checked" => "checked",
-      "data-query" => 51
+      "data-query" => 51,
 		],
 		[
 			"inputId" => "mines-detailed",
@@ -55,20 +55,22 @@
 			"warning" => "may take a while to load depending on your mine amount - only available for registered users",
 			"checked" => "checked",
       "data-query" => 5,
-      "login" => "required"
+      "login" => "required",
 		],
 		[
 			"inputId" => "player",
 			"description" => "Player information (name, level, points, worldrank, account age)",
 			"cost" => "1 Credit",
 			"checked" => "checked",
-      "data-query" => 7
+      "data-query" => 7,
+      "login" => "required",
 		],
 		[
 			"inputId" => "player-anonymity",
 			"description" => "Should your player name appear in world ranking?",
 			"cost" => "",
-			"checked" => "checked"
+			"checked" => "checked",
+      "login" => "required",
 		],
 		[
 			"inputId" => "attack-log",
@@ -77,7 +79,7 @@
 			"warning" => "may take a while to load depending on your attack habits - only available for registered users",
 			"checked" => "checked",
       "data-query" => 9,
-      "login" => "required"
+      "login" => "required",
 		],
 		[
 			"inputId" => "trade-log",
@@ -86,14 +88,15 @@
 			"warning" => "may take a while to load depending on your trade habits - only available for registered users",
 			"checked" => "checked",
       "data-query" => 6,
-      "login" => "required"
+      "login" => "required",
 		],
     [
       "inputId" => "missions",
       "description" => "Missions",
       "cost" => "1 Credit",
       "checked" => "checked",
-      "data-query" => 10
+      "data-query" => 10,
+      "login" => "required",
     ]
 	];
 

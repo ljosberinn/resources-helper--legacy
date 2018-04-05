@@ -18,7 +18,7 @@ if (isset($_SESSION["id"])) {
 $prices = "off";
 $resourcesGame = new resourcesGame($host, $user, $pw, $db, $prices);
 
-if (isset($_GET["key"]) && isset($_GET["query"]) && $userId != 0) {
+if (isset($_GET["key"]) && isset($_GET["query"])) {
 
     $output = $resourcesGame->getAPIData($_GET["query"], $_GET["key"], $userId, $_GET["anonymity"]);
 
