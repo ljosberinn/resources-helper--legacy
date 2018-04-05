@@ -32,8 +32,10 @@
       <strong>General</strong><br />
       – NEW: added API options for: Trade Log and Missions<br />
 			– NEW: official support for this page via Discord - please report any bugs you find, visual or mathematical!<br />
-			– NEW: World Map now also show Headquarters depending on user settings<br />
-			– NEW: User Index consists of users attacked by or traded with others<br />
+			– NEW: World Map now also shows Headquarters depending on user settings (depending on headquarter API import)<br />
+      – NEW: Personal Map now also show Headquarter (depending on headquarter API import)<br />
+			– NEW: maps now include mine information agian - click a mine to see details<br />
+      – NEW: map headquarter radius can be dragged around to compare radius on different spots!<br />
 			– NEW: missing Tech upgrade calculator: shows which upgrades you're missing for a messed up teching process<br />
 			<br />
       – HEAVILY MODIFIED: moved clunky settings to own menu with more options and less clutter<br />

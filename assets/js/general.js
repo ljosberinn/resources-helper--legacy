@@ -247,5 +247,6 @@ $("#personalmap-create").on("click", function () {
 });
 
 $("#worldmap-selector").on("change", function () {
-	rHelper.methods.API_getWorldMap(this.value);	
+	rHelper.methods.API_getWorldMap(this.value);
+  $("#worldmap").css("display", "block");
 });

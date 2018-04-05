@@ -1,6 +1,6 @@
 <!-- #module-worldmap -->
 
-<div class="bg-light mt-3 mb-3 p-4 col-12 rounded" id="module-worldmap">
+<div class="bg-light col-12 rounded" id="module-worldmap">
 
   <select class="custom-select" id="worldmap-selector">
     <option selected="" disabled="">select resource</option>
@@ -18,9 +18,10 @@
       <option value="11">Silber ore</option>
       <option value="12">Gold ore</option>
       <option value="13">Rough diamonds</option>
+      <option value="">everything - WARNING: might crash your browser!</option>
   </select>
 
-  <p class="lead text-center" id="worldmap-info">Click on a mine to receive additional info!</p>
+  <p class="lead text-center mt-3" id="worldmap-info">Click on a mine to receive additional info! You can drag a HQ radius around to see its radius on another spot.</p>
 
   <div class="rounded" id="worldmap">
     <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid" style="background:0 0" viewBox="0 0 100 100">

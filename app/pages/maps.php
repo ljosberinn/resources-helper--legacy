@@ -45,7 +45,7 @@
 			</div>
 
 
-			<div id="collapse-world-map" class="collapse" role="tabpanel" aria-labelledby="heading-map-2">
+			<div id="collapse-world-map" class="collapse show" role="tabpanel" aria-labelledby="heading-map-2">
 				<div class="card-block p-4 bg-light">
 
 					<?php

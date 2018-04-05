@@ -62,9 +62,9 @@ if (isset($_GET["key"]) && isset($_GET["query"]) && $userId != 0) {
         $baseData["settings"] = $resourcesGame->getUserSettings($baseData["settings"], $userId); // stable
         $baseData = $resourcesGame->getUserWarehouseContent($baseData, $userId); // stable
         $baseData["userInformation"] = $resourcesGame->getUserInfo($userId); // stable
+        $baseData["missions"] = $resourcesGame->getMissions($userId); // stable
         #$baseData["attackLog"] = $resourcesGame->getAttackLog($userId); // stable
         #$baseData["mineMap"] = $resourcesGame->getPersonalMineMap($userId); // stable
-        $baseData["missions"] = $resourcesGame->getMissions($userId); // stable
         #$baseData["tradeLog"] = $resourcesGame->getTradeLog($userId); // stable
     }
 

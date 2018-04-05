@@ -2,7 +2,7 @@
 
 <div class="bg-light col-12 rounded" id="module-personalmap">
 
-  <p class="lead text-center" id="personalmap-info">Click on a mine to receive additional info! The jumping mine is your currently oldest.</p>
+  <p class="lead text-center" id="personalmap-info">Click on a mine to receive additional info! The jumping mine is your currently oldest. You can drag a HQ radius around to see its radius on another spot.</p>
 
   <div class="rounded" id="personalmap">
     <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid" style="background:0 0" viewBox="0 0 100 100">

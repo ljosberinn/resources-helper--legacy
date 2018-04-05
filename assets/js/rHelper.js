@@ -314,7 +314,7 @@ var rHelper = {
 				rHelper.methods.API_toggleSuccessor("mines-detailed");
 				rHelper.methods.API_toggleSuccessorHelper("mines-detailed");
 
-				rHelper.methods.EVNT_personalMapCreation();
+				rHelper.methods.EVNT_mapCreation("personal");
 			});
 		},
 		API_getMineMapInitiator(key) {
@@ -508,9 +508,8 @@ var rHelper = {
 			$.getJSON("api/core.php?worldMap=" + type, function (data) {
 				rHelper.data.worldMap = rHelper.data.worldMap || {};
 				rHelper.data.worldMap = data;
-				console.log(data);
 
-				rHelper.methods.EVNT_worldMapCreation(type);
+				rHelper.methods.EVNT_mapCreation("world");
 			});
 		},
 
@@ -661,6 +660,92 @@ var rHelper = {
 					$(".hq-thumb-" + i).removeClass("disabled-hq");
 				}
 			}
+		},
+		SET_newMap(container, zoom, type) {
+			return new google.maps.Map(container[0], {
+				zoom: zoom,
+				mapTypeId: type
+			});
+		},
+		SET_mapOptions(map, maxZoom, primaryMine) {
+			map.setOptions({
+				maxZoom: maxZoom,
+				center: new google.maps.LatLng(primaryMine.lat, primaryMine.lon)
+			});
+
+			return map;
+		},
+		SET_mapImg(folder, icon, size) {
+			return {
+				url: "assets/img/maps/" + folder + "/" + icon + ".png",
+				scaledSize: new google.maps.Size(size, size)
+			}
+		},
+		SET_mapInfoWindow(contentString) {
+			return new google.maps.InfoWindow({
+				content: contentString
+			});
+		},
+		SET_mapFolderRelation(relation) {
+			var folder = "foe";
+
+			if (relation == "friend") {
+				folder = "friend";
+			}
+
+			return folder;
+		},
+		SET_mapHQHandler(map, hqObj) {
+			var hqLevel = hqObj.level;
+			var radius = rHelper.data.headquarter[(hqLevel - 1)].radius;
+			var center = {
+				lat: hqObj.lat,
+				lng: hqObj.lon
+			};
+
+			var hqCircle = rHelper.methods.INSRT_mapHqCircle(map, center, radius, hqObj.relation);
+			var hqSize = hqLevel * 12.5;
+
+			var hqIcon = new google.maps.Marker({
+				map: map,
+				position: center,
+				icon: rHelper.methods.SET_mapImg("hq", hqLevel, hqSize)
+			});
+		},
+		SET_mapMineHandler(now, subObj, map, mapType) {
+			var type = subObj.type;
+			var relObj = rHelper.data.material[type];
+
+			var buildDate = new Date(subObj.builddate * 1000);
+			var age = (now - buildDate) / 1000 / 86400;
+			var estRevenue = rHelper.methods.CALC_mineEstRevenue(subObj, type, age);
+
+			var contentString = rHelper.methods.CALC_createMapContentString(relObj, buildDate, age, estRevenue, subObj);
+			var infoWindow = rHelper.methods.SET_mapInfoWindow(contentString);
+
+			var marker = new google.maps.Marker({
+				map: map,
+				position: {
+					lat: subObj.lat,
+					lng: subObj.lon
+				},
+				icon: rHelper.methods.SET_mapImg(rHelper.methods.SET_mapFolderRelation(subObj.relation), type, 20)
+			});
+
+			if (mapType == "personal") {
+				if (subObj.builddate == rHelper.data.mineMap.mines[0].builddate) {
+					marker.setAnimation(google.maps.Animation.BOUNCE);
+				}
+			}
+
+			google.maps.event.addListener(marker, "click", function () {
+				if (openedWindow) {
+					openedWindow.close();
+				}
+				openedWindow = infoWindow;
+
+				infoWindow.open(map, marker);
+			});
 		},
 
 		EVNT_enableTippy() {
@@ -1034,150 +1119,73 @@ var rHelper = {
 				break;
 			}
 		},
-		EVNT_personalMapCreation() {
+		EVNT_mapCreation(mapType, type) {
 
-			var mineMapData = rHelper.data.mineMap;
+			var container;
+			var data;
+			var infoNode;
+			var errorText;
 
-			if (mineMapData.length != 0) {
+			switch (mapType) {
+			case "personal":
+				container = $("#personalmap");
+				data = rHelper.data.mineMap;
+				infoNode = $("#personalmap-info");
+				errorText = 'Your mine map is empty! Please import "Mines - detailed" via API first.';
+				break;
+			case "world":
+				container = $("#worldmap");
+				data = rHelper.data.worldMap;
+				infoNode = $("#worldmap-info");
+				errorText = 'An error occured. If this problem persists, please report this issue via Discord or mail.';
+				break;
+			}
 
-				var mapContainer = $("#personalmap");
-				mapContainer.empty();
-
-				var map = new google.maps.Map(mapContainer[0], {
-					zoom: 12,
-					center: new google.maps.LatLng(rHelper.data.mineMap[0].lat, rHelper.data.mineMap[0].lon),
-					mapTypeId: "terrain"
-				});
-
-				map.setOptions({
-					maxZoom: 16
-				});
+			if (data.length != 0) {
+				var map = rHelper.methods.SET_newMap(container, 12, "terrain");
+				map = rHelper.methods.SET_mapOptions(map, 16, data.mines[0]);
 
 				var now = new Date();
 
-				$.each(mineMapData, function (i, subObj) {
-
-					var type = subObj.type;
-					var relObj = rHelper.data.material[type];
-
-					var buildDate = new Date(subObj.builddate * 1000);
-					var age = (now - buildDate) / 1000 / 86400;
-					var estRevenue = rHelper.methods.CALC_mineEstRevenue(subObj, type, age);
-
-					var infowindow = new google.maps.InfoWindow({
-						content: rHelper.methods.CALC_createMapContentString(relObj, buildDate, age, estRevenue, subObj)
+				switch (mapType) {
+				case "personal":
+					rHelper.methods.SET_mapHQHandler(map, data.hq[0]);
+					break;
+				case "world":
+					$.each(data.hqs, function (i, hqObj) {
+						rHelper.methods.SET_mapHQHandler(map, hqObj);
 					});
+					break;
+				}
 
-					var img = {
-						url: "assets/img/personalmap/" + subObj.type + ".png",
-						scaledSize: new google.maps.Size(20, 20)
-					}
-
-					var marker = new google.maps.Marker({
-						map: map,
-						position: {
-							lat: subObj.lat,
-							lng: subObj.lon
-						},
-						icon: img
-					});
-
-					if (subObj.builddate == rHelper.data.mineMap[0].builddate) {
-						marker.setAnimation(google.maps.Animation.BOUNCE);
-					}
-
-					google.maps.event.addListener(marker, "click", function () {
-						infowindow.open(map, marker);
-					});
+				$.each(data.mines, function (i, subObj) {
+					rHelper.methods.SET_mapMineHandler(now, subObj, map, mapType);
 				});
 			} else {
-				$("#personalmap-info").text('Your mine map is empty! Please import "Mines - detailed" via API first.');
-			}
-		},
-		EVNT_worldMapCreation(type) {
-			var worldMapData = rHelper.data.worldMap;
-
-			if (worldMapData.length != 0) {
-
-				var mapContainer = $("#worldmap");
-				mapContainer.empty();
-
-				var map = new google.maps.Map(mapContainer[0], {
-					zoom: 12,
-					center: new google.maps.LatLng(worldMapData.mines[0].lat, worldMapData.mines[0].lon),
-					mapTypeId: "terrain"
-				});
-
-				map.setOptions({
-					maxZoom: 16
-				});
-
-				var now = new Date();
-
-
-				$.each(worldMapData.hqs, function (i, hqObj) {
-
-					var radius = rHelper.data.headquarter[(hqObj.level - 1)].radius;
-					var center = {
-						lat: hqObj.lat,
-						lng: hqObj.lon
-					};
-
-					var hqCircle = new google.maps.Circle({
-						strokeColor: '#FF0000',
-						strokeOpacity: 0.8,
-						strokeWeight: 2,
-						fillColor: '#FF0000',
-						fillOpacity: 0.35,
-						map: map,
-						center: center,
-						radius: radius,
-						draggable: true
-					});
-				});
-
-				$.each(worldMapData.mines, function (i, subObj) {
-
-					var type = subObj.type;
-					var relObj = rHelper.data.material[type];
-
-					var buildDate = new Date(subObj.builddate * 1000);
-					var age = (now - buildDate) / 1000 / 86400;
-					var estRevenue = rHelper.methods.CALC_mineEstRevenue(subObj, type, age);
-
-					var infowindow = new google.maps.InfoWindow({
-						content: rHelper.methods.CALC_createMapContentString(relObj, buildDate, age, estRevenue, subObj)
-					});
-
-					var folder = "worldmap";
-					if (subObj.relation == "friend") {
-						folder = "personalmap";
-					}
-
-					var img = {
-						url: "assets/img/" + folder + "/" + subObj.type + ".png",
-						scaledSize: new google.maps.Size(20, 20)
-					}
-
-					var marker = new google.maps.Marker({
-						map: map,
-						position: {
-							lat: subObj.lat,
-							lng: subObj.lon
-						},
-						icon: img
-					});
-
-					google.maps.event.addListener(marker, "click", function () {
-						infowindow.open(map, marker);
-					});
-				});
-
-			} else {
-				$("#worldmap-info").text('An error occured. If this problem persists, please report this issue via Discord or mail.');
+				infoNode.text(errorText);
 			}
 		},
 
+		INSRT_mapHqCircle(map, hqCenter, radius, relation) {
+
+			var color = "#FF0000";
+
+			if (relation == "friend") {
+				color = "#00FF00";
+			}
+
+			return new google.maps.Circle({
+				strokeColor: color,
+				strokeOpacity: 0.8,
+				strokeWeight: 2,
+				fillColor: color,
+				fillOpacity: 0.35,
+				map: map,
+				center: hqCenter,
+				radius: radius,
+				draggable: true
+			});
+		},
 		INSRT_priceHistoryGraph(materialName, averageKI, averagePlayer, timestamps, player, ki) {
 
 			Highcharts.chart("graph-pricehistory", {
@@ -5244,3 +5252,6 @@ var rHelper = {
 		});
 	}
 })();
+
+
+var openedWindow;

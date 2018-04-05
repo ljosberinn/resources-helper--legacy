@@ -913,7 +913,7 @@
 
          if ($query->num_rows === 1) {
              while ($data = $query->fetch_assoc()) {
-                 $baseData[0]["value"] = self::LANGUAGES[$data["lang"]];
+                 $baseData[0]["value"] = $data["lang"];
                  $baseData[1]["value"] = $this->convertArrayStringToArray($data["customTU"]);
                  $baseData[2]["value"] = $data["idealCondition"];
                  $baseData[3]["value"] = $data["transportCostInclusion"];
@@ -1289,6 +1289,89 @@
          return $result;
      }
 
+     private function extractHQInformation($userId, $relation) {
+
+       $result = [];
+
+       $getHQData = "SELECT `lat`, `lon`, `level` FROM `userHeadquarter` WHERE `id` = " .$userId. "";
+       $getUserHQ = $this->conn->query($getHQData);
+
+       $threshold = 0.000000;
+
+       if($getUserHQ->num_rows == 1) {
+         while($data = $getUserHQ->fetch_assoc()) {
+           // prevent default entries with visible hq to be shown
+           $bccomb = bccomp($data["lat"], $threshold, 6) + bccomp($data["lon"], $threshold, 6);
+
+            if($bccomb > 0) {
+              $data["relation"] = $relation;
+              array_push($result, $data);
+            }
+          }
+        }
+
+        return $result;
+     }
+
+     private function extractMineInformation($userId, $relation, $type) {
+       $result = [];
+
+       $query = "SELECT * FROM `userMineMap_" .$userId. "`";
+
+       if($type >= 0 && $type <= 13 && $type != "") {
+         $query = "SELECT * FROM `userMineMap_" .$userId. "` WHERE `type` = " .$type. "";
+       }
+
+       $getUserMineMap = $this->conn->query($query);
+
+       if ($getUserMineMap->num_rows > 0) {
+         while ($data = $getUserMineMap->fetch_assoc()) {
+           $data["relation"] = $relation;
+           array_push($result, $data);
+         }
+       }
+
+       return $result;
+     }
+
+     private function checkHQVisibility($userId) {
+       $querySetting = "SELECT `mapVisibleHQ` FROM `userSettings` WHERE `id` = " .$userId. "";
+       $getUserSetting = $this->conn->query($querySetting);
+
+       if($getUserSetting->num_rows == 1) {
+         while($data = $getUserSetting->fetch_assoc()) {
+           $hqVisibility = $data["mapVisibleHQ"];
+         }
+       }
+
+       return $hqVisibility;
+     }
+
+     private function extractUserIds() {
+       $userIds = [];
+
+       $queryUserIds = "SELECT `id` FROM `userOverview`";
+       $getUserIds = $this->conn->query($queryUserIds);
+
+       if($getUserIds->num_rows > 0) {
+         while($id = $getUserIds->fetch_assoc()) {
+           array_push($userIds, $id["id"]);
+         }
+       }
+
+       return $userIds;
+     }
+
+     private function setRelationship($userId) {
+       if($userId == $_SESSION["id"]) {
+         $relation = "friend";
+       } else {
+         $relation = "foe";
+       }
+
+       return $relation;
+     }
+
      /**
       * fetches personalMineMap depending on current $_SESSION["id"]
       *
@@ -1298,19 +1381,10 @@
       */
      public function getPersonalMineMap($userId)
      {
-         $result = [];
-
-         $query = "SELECT * FROM `userMineMap_" .$userId. "`";
-
-         $getUserMineMap = $this->conn->query($query);
-
-         if ($getUserMineMap->num_rows > 0) {
-             while ($data = $getUserMineMap->fetch_assoc()) {
-                 array_push($result, $data);
-             }
-         }
-
-         return $result;
+       return [
+         "hq" => $this->extractHQInformation($userId, "friend"),
+         "mines" => $this->extractMineInformation($userId, "friend")
+       ];
      }
 
      /**
@@ -1327,66 +1401,22 @@
            "mines" => [],
          ];
 
-         $userIds = [];
-
-         $queryUserIds = "SELECT `id` FROM `userOverview`";
-
-         $getUserIds = $this->conn->query($queryUserIds);
-
-         if($getUserIds->num_rows > 0) {
-           while($id = $getUserIds->fetch_assoc()) {
-             array_push($userIds, $id["id"]);
-           }
-         }
+         $userIds = $this->extractUserIds();
 
          foreach($userIds as $userId) {
 
-           // check whether this mine will be friendly or not
-            if($userId == $_SESSION["id"]) {
-              $relation = "friend";
-            } else {
-              $relation = "enemy";
-            }
+          // check whether this mine will be friendly or not
+          $relation = $this->setRelationship($userId);
 
           // check setting for hq visibility
-          $hqVisibility = 0; // define default
-          $querySetting = "SELECT `mapVisibleHQ` FROM `userSettings` WHERE `id` = " .$userId. "";
-          $getUserSetting = $this->conn->query($querySetting);
-
-          if($getUserSetting->num_rows == 1) {
-            while($data = $getUserSetting->fetch_assoc()) {
-              $hqVisibility = $data["mapVisibleHQ"];
-            }
+          if($this->checkHQVisibility($userId) == 1) {
+            $result["hqs"] = array_merge($result["hqs"], $this->extractHQInformation($userId, $relation));
           }
 
-          if($hqVisibility == 1) {
-            $getHQData = "SELECT `lat`, `lon`, `level` FROM `userHeadquarter` WHERE `id` = " .$userId. "";
-            $getUserHQ = $this->conn->query($getHQData);
-
-            if($getUserHQ->num_rows == 1) {
-              while($data = $getUserHQ->fetch_assoc()) {
-                // prevent default entries with visible hq to be shown
-                if($data["lat"] != 0.000000 && $data["lon"] != 0.000000) {
-                  array_push($result["hqs"], $data);
-                }
-              }
-            }
-          }
-
-          // get this users mines of $type
-          $mineMapQuery = "SELECT * FROM `userMineMap_" .$userId. "` WHERE `type` = " .$type. "";
-
-          $getUserMineMap = $this->conn->query($mineMapQuery);
-
-          if ($getUserMineMap->num_rows > 0) {
-            while ($data = $getUserMineMap->fetch_assoc()) {
-              $data["relation"] = $relation;
-              array_push($result["mines"], $data);
-            }
-          }
+          $result["mines"] = array_merge($result["mines"], $this->extractMineInformation($userId, $relation, $type));
         }
 
-         return $result;
+        return $result;
      }
 
      /**
@@ -1473,7 +1503,7 @@
          /*
          get name from previous set setting
          */
-         $language = $baseData["settings"][0]["value"];
+         $language = self::LANGUAGES[$baseData["settings"][0]["value"]];
 
          $names = [];
 
