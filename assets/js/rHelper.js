@@ -1186,7 +1186,7 @@ var rHelper = {
 			rHelper.methods.INSRT_materialRateWorth(materialId);
 			rHelper.methods.INSRT_materialNewMinePerfectIncome(materialId);
 
-			if(api) {
+			if (api) {
 				rHelper.methods.CALC_dependantFactories(materialId, "material");
 			}
 
@@ -2401,6 +2401,41 @@ var rHelper = {
 		},
 		INSRT_priceHistoryName(type, id) {
 			$("#pricehistory-" + type + "-" + id).text(rHelper.data[type][id].name);
+		},
+
+		INSRT_qualityComparator(type, quality) {
+			if (!type || type == null) {
+				type = 0;
+			}
+
+			if (!quality) {
+				quality = 1;
+			} else {
+				quality /= 100;
+			}
+
+			var price = rHelper.methods.CALC_returnPriceViaId(type);
+			var worth = price * rHelper.data.material[type].maxRate * quality;
+
+			$("#qualitycomparator-income").text(worth.toLocaleString("en-US"));
+
+			$.each(rHelper.data.material, function (i, material) {
+				var qualityTarget = $("#qualitycomparator-" + i);
+				var parentElement = $(qualityTarget[0].parentNode.parentNode);
+				var thisPrice = rHelper.methods.CALC_returnPriceViaId(i);
+				var thisMaxRate = material.maxRate;
+				var thisResourcesRequiredAmount = worth / thisPrice;
+				var currentVisibility = qualityTarget.css("opacity");
+
+				// hide row if identical to current scan or more required than possible
+				if (i == type || thisResourcesRequiredAmount > thisMaxRate) {
+					parentElement.css("opacity", 0.1);
+				} else {
+					parentElement.css("opacity", 1);
+					var result = (thisResourcesRequiredAmount / thisMaxRate * 100).toFixed(2) + "%";
+					qualityTarget.text(result);
+				}
+			});
 		},
 
 		CALC_mineEstRevenue(subObj, type, age) {

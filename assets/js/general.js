@@ -250,3 +250,15 @@ $("#worldmap-selector").on("change", function () {
 	rHelper.methods.API_getWorldMap(this.value);
   $("#worldmap").css("display", "block");
 });
+
+$("#qualitycomparator-selector").on("change", function() {
+	var type = parseInt(this.value);
+	var quality = $("#qualitycomparator-quality").val();
+	rHelper.methods.INSRT_qualityComparator(type, quality);
+});
+
+$("#qualitycomparator-quality").on("input", function() {
+  var type = $("#qualitycomparator-selector").val();
+  var quality = parseInt(this.value);
+  rHelper.methods.INSRT_qualityComparator(type, quality);
+});

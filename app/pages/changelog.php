@@ -48,8 +48,7 @@
       <br />
       <strong>Techncial</strong><br />
       – visual redesign with customized Bootstrap, thus finally responsive to screen sizes<br />
-      – rewrote and refactored most of the code (OOP PHP and VanillaJS -> jQuery)<br />
-      – switched from Highcharts.js to Chart.js<br />",
+      – rewrote and refactored most of the code (OOP PHP and VanillaJS -> jQuery)<br />",
 		],
 		1 => [
 			"class" => "",

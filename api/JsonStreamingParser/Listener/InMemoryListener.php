@@ -256,15 +256,7 @@ class InMemoryListener extends IdleListener
         if (empty($this->stack)) {
             $this->result = $obj['value'];
         } else {
-            //$this->insertValue($obj['value']);
-
-            $checkForAnonymousMineQuery = "SELECT * FROM `userMineMap_0` WHERE `lon` = " .$obj["value"]["lon"]. " AND `lat` = " .$obj["value"]["lon"]. "";
-            $checkForAnonymousMine = $conn->query($checkForAnonymousMineQuery);
-
-            if($checkForAnonymousMine->num_rows == 1) {
-              $deleteQuery = "DELETE FROM `userMineMap_0` WHERE `lon` = " .$obj["value"]["lon"]. " AND `lat` = " .$obj["value"]["lon"]. "";
-              $delete = $conn->query($deleteQuery);
-            }
+            //$this->insertValue($obj['value']);            
 
             $query = "INSERT INTO `userMineMap_" .$userId. "` (
               `lon`, `lat`,

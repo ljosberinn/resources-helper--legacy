@@ -8,7 +8,7 @@
 
 		<br />
 
-		<select class="custom-select" id="settings-language" name="settings-language" aria-describedby="settings-language-help">
+		<select class="custom-select" id="settings-language" name="settings-language" aria-describedby="settings-language-help" disabled>
 				<option selected disabled value="">select your preferred language</option>
 
 				<?php

@@ -10,7 +10,7 @@
 	<p class="text-muted">In game: Chevron</p>
 
 	<p>
-		Honorable mentions for ideas, inspiration and or bugfixes
+		Honorable mentions for ideas, inspiration and/or bugfixes
 	</p>
 
 	<?php
@@ -19,7 +19,7 @@
 		"Nics",
 		"gloomy @ ecorp",
 		"Mary Poppins @ ECorp",
-		"Mafia Kredit Hai/CTO Shark/Ripper @ Ecorp",
+		"J3lackJ3rain",
 		"Kapodaster",
 		"nouseforname",
 		"Endless Rain",
@@ -29,7 +29,8 @@
 		"Cherry [Hanse]",
 		"Huxxy",
 		"Coal Co",
-		"Elyzian"
+		"Elyzian",
+    "Modschegiebschen",
 	];
 
 	foreach($mentions as $name) {

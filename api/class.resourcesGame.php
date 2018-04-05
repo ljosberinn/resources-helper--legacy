@@ -1363,7 +1363,7 @@
      }
 
      private function setRelationship($userId) {
-       if($userId == $_SESSION["id"]) {
+       if($userId == $_SESSION["id"] && $userId != 0) {
          $relation = "friend";
        } else {
          $relation = "foe";
@@ -1402,6 +1402,8 @@
          ];
 
          $userIds = $this->extractUserIds();
+
+         array_push($userIds, 0);
 
          foreach($userIds as $userId) {
 

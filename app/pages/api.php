@@ -100,7 +100,6 @@
     ]
 	];
 
-	$infoIcon = file_get_contents("assets/img/icons/info.svg");
 	$successIcon = file_get_contents("assets/img/icons/success.svg");
 
 	foreach($apiArray as $api) {
@@ -119,7 +118,7 @@
 		}
 
 		if($api["warning"]) {
-			$warning = '<sup title="' .$api["warning"]. '">' .$infoIcon. '</sup>';
+			$warning = '<code>' .$api["warning"]. '</code>';
 		} else {
 			$warning = "";
 		}
