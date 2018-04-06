@@ -10,9 +10,14 @@
 	height        : 1.5625em;
 	overflow      : hidden;
 	text-align    : left;
-	text-indent   : -9999px;
 	vertical-align: -0.3em;
 	width         : 1.5625em;
+}
+
+[class*="resources-missions-"] {
+	background: url("../img/missionsprite.png") no-repeat;
+	height    : 28px;
+	width     : 57px;
 }
 
 .bg-success-25 {
@@ -791,6 +796,10 @@ kbd {
 	color: black;
 }
 
+#missions-accordion a span {
+	vertical-align: middle;
+}
+
 #worldmap,
 [id*="-finished"],
 [id*="-loading"],
@@ -1260,4 +1269,108 @@ kbd {
 
 .hq-thumb-8 {
 	background-position: 0 100%;
+}
+
+.resources-missions-10 {
+	background-position: -0px -0px;
+}
+
+.resources-missions-11 {
+	background-position: -57px -0px;
+}
+
+.resources-missions-12 {
+	background-position: -114px -0px;
+}
+
+.resources-missions-14 {
+	background-position: -171px -0px;
+}
+
+.resources-missions-17 {
+	background-position: -228px -0px;
+}
+
+.resources-missions-21 {
+	background-position: -0px -28px;
+}
+
+.resources-missions-22 {
+	background-position: -57px -28px;
+}
+
+.resources-missions-25 {
+	background-position: -114px -28px;
+}
+
+.resources-missions-26 {
+	background-position: -171px -28px;
+}
+
+.resources-missions-28 {
+	background-position: -228px -28px;
+}
+
+.resources-missions-30 {
+	background-position: -0px -56px;
+}
+
+.resources-missions-31 {
+	background-position: -57px -56px;
+}
+
+.resources-missions-32 {
+	background-position: -114px -56px;
+}
+
+.resources-missions-33 {
+	background-position: -171px -56px;
+}
+
+.resources-missions-35 {
+	background-position: -228px -56px;
+}
+
+.resources-missions-37 {
+	background-position: -0px -84px;
+}
+
+.resources-missions-38 {
+	background-position: -57px -84px;
+}
+
+.resources-missions-39 {
+	background-position: -114px -84px;
+}
+
+.resources-missions-41 {
+	background-position: -171px -84px;
+}
+
+.resources-missions-42 {
+	background-position: -228px -84px;
+}
+
+.resources-missions-43 {
+	background-position: -0px -112px;
+}
+
+.resources-missions-44 {
+	background-position: -57px -112px;
+}
+
+.resources-missions-45 {
+	background-position: -114px -112px;
+}
+
+.resources-missions-50 {
+	background-position: -171px -112px;
+}
+
+.resources-missions-55 {
+	background-position: -228px -112px;
+}
+
+.resources-missions-9 {
+	background-position: -0px -140px;
 }

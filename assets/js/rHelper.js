@@ -117,6 +117,9 @@ var rHelper = {
 			// techupgrades
 			rHelper.methods.INSRT_techUpgradeRows();
 
+      // missions
+      rHelper.methods.INSRT_missions();
+
 			// initiate graphs
 			rHelper.methods.EVNT_priceHistoryOnChange();
 
@@ -241,13 +244,13 @@ var rHelper = {
 				});
 
 				$.each(rHelper.data.material, function (materialId) {
-					rHelper.methods.INSRT_warehouseData(index, "material");
+					rHelper.methods.INSRT_warehouseData(materialId, "material");
 				});
 
 				var calculationOrder = rHelper.methods.GET_calculationOrder();
 
 				$.each(calculationOrder, function (index, factoryId) {
-					rHelper.methods.INSRT_warehouseData(factoryId, "products");
+					rHelper.methods.INSRT_warehouseData(index, "products");
 				});
 
 				$.each(rHelper.data.loot, function (index) {
@@ -2402,7 +2405,6 @@ var rHelper = {
 		INSRT_priceHistoryName(type, id) {
 			$("#pricehistory-" + type + "-" + id).text(rHelper.data[type][id].name);
 		},
-
 		INSRT_qualityComparator(type, quality) {
 			if (!type || type == null) {
 				type = 0;
@@ -2437,6 +2439,41 @@ var rHelper = {
 				}
 			});
 		},
+
+    INSRT_missions() {
+      var missionContainer = rHelper.data.missions
+      if(missionContainer.length != 0) {
+        $.each(missionContainer, function(i, mission) {
+          var missionData = rHelper.methods.CALC_missionData(i, mission);
+        });
+      }
+    },
+
+    CALC_missionData(i, mission) {
+      $("#mission-cooldown-" + i).text(mission.cooldown);
+			$("#mission-duration-" + i).text(mission.duration);
+			$("#mission-goal-" + i).text(mission.goal);
+			$("#mission-interval-" + i).text(mission.intervalDays);
+			$("#mission-penalty-" + i).text(mission.penalty);
+			$("#mission-progress-" + i).text(mission.progress);
+
+
+			if(mission.rewardId != -1) {
+				$("#mission-reward-" + i).addClass(rHelper.methods.CALC_convertId(mission.rewardId).icon);
+			} else {
+				$("#mission-reward-" + i).text("Cash");
+			}
+			$("#mission-reward-amount-" + i).text(mission.rewardAmount);
+
+			if(mission.status == 1) {
+				$("#collapse-missions-" + i).addClass("show");
+
+				$("#mission-status-" + i).text("active");
+
+				$("#mission-start-" + i).text(mission.startTimestamp);
+				$("#mission-end-" + i).text(mission.endTimestamp);
+			}
+    },
 
 		CALC_mineEstRevenue(subObj, type, age) {
 			return Math.round(subObj.fullRate * rHelper.methods.CALC_returnPriceViaId(type, 8) * age * 24 * subObj.HQBoost);

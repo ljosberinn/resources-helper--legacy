@@ -8,7 +8,7 @@
   <div class="row justify-content-center">
     <div class="col-xs-6 col-md-6">
 
-      <table class="table table-responsive table-break-medium table-striped mb-3">
+      <table class="table table-responsive table-break-medium table-striped">
         <thead>
           <tr class="small">
 
@@ -21,7 +21,7 @@
         <tbody>
 
           <tr>
-            <td colspan="3">
+            <td data-th="Type / Quality / Income/hour" colspan="3">
               <div class="input-group">
                 <select class="custom-select input-group-addon" id="qualitycomparator-selector">
                   <option selected="" disabled="">select resource</option>
@@ -54,9 +54,9 @@
 
             echo '
             <tr>
-              <td colspan="3" class="text-center">
+              <td data-th="Minimum required quality" colspan="3" class="text-center">
                 <span class="resources-material-' .$i. '"></span>
-                <span id="qualitycomparator-' .$i. '"></span>
+                <span id="qualitycomparator-' .$i. '">0%</span>
               </td>
             </tr>';
 

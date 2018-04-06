@@ -223,41 +223,39 @@
       */
      private function getBaseQuery($type)
      {
-         $stmt = "SELECT ";
+       $stmt = "SELECT ";
 
-         switch ($type) {
+       switch ($type) {
          case "resources":
-             $stmt.= "`basePrice`, `dependantFactories`, `maxRate`";
-             break;
+         $stmt.= "`basePrice`, `dependantFactories`, `maxRate`";
+         break;
 
          case "factories":
-             $stmt.= "`cashPerHour`, `dependantFactories`, `dependencies`, `scaling`, `requiredAmount`, `upgradeMaterial`, `upgradeMaterialAmount`";
-             break;
+         $stmt.= "`cashPerHour`, `dependantFactories`, `dependencies`, `scaling`, `requiredAmount`, `upgradeMaterial`, `upgradeMaterialAmount`";
+         break;
 
          case "loot":
-             $stmt.= "`recyclingDivisor`, `recyclingProduct`, `recyclingAmount`";
-             break;
+         $stmt.= "`recyclingDivisor`, `recyclingProduct`, `recyclingAmount`";
+         break;
 
          case "units":
-             $stmt.= "`requirements`, `requiredAmount`";
-             break;
+         $stmt.= "`requirements`, `requiredAmount`";
+         break;
 
          case "headquarter":
-             $stmt.= "`amount`, `material`, `boost`, `radius`";
-             break;
+         $stmt.= "`amount`, `material`, `boost`, `radius`";
+         break;
 
          case "buildings":
-             $stmt.= "`level`, `material`, `materialAmount0`, `materialAmount1`, `materialAmount2`, `materialAmount3`";
-             break;
+         $stmt.= "`level`, `material`, `materialAmount0`, `materialAmount1`, `materialAmount2`, `materialAmount3`";
+         break;
+         $stmt.= "`setting`, `value`, `description`";
+         break;
+      }
 
-         case "settings":
-             $stmt.= "`setting`, `value`, `description`";
-             break;
-         }
+      $stmt.= " FROM `" . $type . "` ORDER BY `id` ASC";
 
-         $stmt.= " FROM `" . $type . "` ORDER BY `id` ASC";
-
-         return $stmt;
+      return $stmt;
      }
 
      /**
@@ -1254,7 +1252,7 @@
                `progress` bigint(15) NOT NULL,
                `goal` bigint(15) NOT NULL,
                `cooldown` int(10) NOT NULL,
-               `rewardAmount` int(15) NOT NULL,
+               `rewardAmount` bigint(15) NOT NULL,
                `penalty` bigint(15) NOT NULL,
                `status` tinyint(1) NOT NULL,
                UNIQUE KEY `id` (`id`)
@@ -1430,20 +1428,55 @@
       */
      public function getMissions($userId)
      {
-         $result = [];
+       $result = [];
 
-         $query = "SELECT * FROM `userMissions_" .$userId. "`";
+       $getMissionsBaseDataQuery = "SELECT `id`, `title`, `duration`, `intervalDays`, `rewardId` FROM `missions`";
+       $missionBaseData = $this->conn->query($getMissionsBaseDataQuery);
 
-         $getMissions = $this->conn->query($query);
+       if($missionBaseData->num_rows > 0) {
+         while($data = $missionBaseData->fetch_assoc()) {
 
-         if ($getMissions->num_rows > 0) {
-             while ($data = $getMissions->fetch_assoc()) {
-                 $data["img"] = "missions/" .$data["id"]. ".png";
-                 array_push($result, $data);
+           foreach([
+             "title",
+             "duration",
+             "intervalDays",
+             "rewardId"
+           ] as $column) {
+
+             if($column == "rewardId") {
+               $data[$column] = $this->convertOfficialIdToInternalId($data[$column]);
              }
-         }
 
-         return $result;
+             $result[$data["id"]][$column] = $data[$column];
+           }
+         }
+       }
+
+       $query = "SELECT * FROM `userMissions_" .$userId. "`";
+       $getMissions = $this->conn->query($query);
+
+       if ($getMissions->num_rows > 0) {
+         while ($data = $getMissions->fetch_assoc()) {
+
+           $result[$data["id"]]["img"] = "resources-missions-" .$data["id"];
+
+           foreach([
+             "startTimestamp",
+             "endTimestamp",
+             "progress",
+             "goal",
+             "cooldown",
+             "rewardAmount",
+             "penalty",
+             "status"
+             ] as $column) {
+             $result[$data["id"]][$column] = $data[$column];
+           }
+
+         }
+       }
+
+       return $result;
      }
 
      /**
