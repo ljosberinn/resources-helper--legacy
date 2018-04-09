@@ -1374,3 +1374,24 @@ kbd {
 .resources-missions-9 {
 	background-position: -0px -140px;
 }
+
+.progress-wrap {
+	background    : transparent;
+	overflow      : hidden;
+	position      : relative;
+	border        : 1px solid grey;
+	margin-left   : 1rem;
+	vertical-align: middle;
+	display       : inline-block;
+}
+
+.progress {
+	width : 50%;
+	height: 28px;
+}
+
+.progress-wrap .progress-bar {
+	left    : 0;
+	position: absolute;
+	top     : 0;
+}

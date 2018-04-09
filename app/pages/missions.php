@@ -48,6 +48,10 @@
       					<a class="collapsed" data-toggle="collapse" data-parent="#missions-accordion" href="#collapse-missions-' .$missionId. '" aria-expanded="false" aria-controls="collapse-missions-' .$missionId. '" id="heading-mission-' .$missionId. '">
                   <span class="rounded img-fluid resources-missions-' .$missionId. '"></span>
                   <span class="ml-1">' .$name. '</span>
+
+                  <div id="mission-progress-wrap-' .$missionId. '" class="progress-wrap progress float-right">
+                    <div id="mission-progress-bar-' .$missionId. '" class="progress-bar progress"></div>
+                  </div>
       					</a>
       				</h5>
       			</div>

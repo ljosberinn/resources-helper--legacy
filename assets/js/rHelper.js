@@ -84,6 +84,7 @@ var rHelper = {
 				rHelper.methods.INSRT_unitsCraftingPrice(index);
 				rHelper.methods.INSRT_unitsMarketPrice(index);
 				rHelper.methods.INSRT_unitsProfit(index);
+				rHelper.methods.INSRT_unitsPricePerStrength(index);
 
 				// price history
 				rHelper.methods.INSRT_priceHistoryName("units", index);
@@ -943,6 +944,12 @@ var rHelper = {
 
 				if (buildingId == 5) {
 					rHelper.methods.SET_recyclingPlantLevel();
+				}
+
+				if(buildingId == 3 || buildingId == 4 || buildingId == 9) {
+					$.each(rHelper.data.units, function(unitId) {
+						rHelper.methods.INSRT_unitsPricePerStrength(unitId);
+					});
 				}
 
 				rHelper.methods.INSRT_buildingData(buildingId);
@@ -2269,6 +2276,9 @@ var rHelper = {
 		INSRT_unitsCraftingPrice(unitId) {
 			$("#units-crafting-" + unitId).text(rHelper.methods.CALC_unitsCraftingPrice(unitId).toLocaleString("en-US"));
 		},
+		INSRT_unitsPricePerStrength(unitId) {
+			$("#units-pps-" + unitId).text(rHelper.methods.CALC_unitsPricePerStrength(unitId).toLocaleString("en-US"));
+		},
 		INSRT_unitsMarketPrice(unitId) {
 			var convertedId = unitId + 52;
 
@@ -2450,6 +2460,7 @@ var rHelper = {
     },
 
     CALC_missionData(i, mission) {
+
       $("#mission-cooldown-" + i).text(mission.cooldown);
 			$("#mission-duration-" + i).text(mission.duration);
 			$("#mission-goal-" + i).text(mission.goal);
@@ -2466,12 +2477,29 @@ var rHelper = {
 			$("#mission-reward-amount-" + i).text(mission.rewardAmount);
 
 			if(mission.status == 1) {
+
+        var progressPercent = mission.progress/mission.goal * 100;
+				var color = "coral";
+
+				if(progressPercent > 33 && progressPercent < 66) {
+					color = "orange";
+				} else {
+					color = "yellowgreen";
+				}
+
+        $("#mission-progress-bar-" + i).css({
+					"width": progressPercent + "%",
+					"background-color": color
+				});
+
 				$("#collapse-missions-" + i).addClass("show");
 
 				$("#mission-status-" + i).text("active");
 
 				$("#mission-start-" + i).text(mission.startTimestamp);
 				$("#mission-end-" + i).text(mission.endTimestamp);
+			} else {
+				$("#mission-progress-wrap-" + i).css("display", "none");
 			}
     },
 
@@ -2728,15 +2756,50 @@ var rHelper = {
 				worth *= rHelper.data.buildings[9].transportCost;
 			}
 
+			worth = Math.round(worth);
+
 			unit.profit.craftingPrice = worth;
 
 			return worth;
+		},
+		CALC_unitsPricePerStrength(unitId) {
+
+			var buildingLevel = 0;
+			var strength = 0;
+			var pricePerStrength = 0;
+			var referencePrice = 0;
+			var profitObj = rHelper.data.units[unitId].profit;
+
+			switch(unitId) {
+				case 0: case 2: case 3:
+					buildingLevel = rHelper.data.buildings[3].level;
+				break;
+				case 1: case 4: case 5:
+					buildingLevel = rHelper.data.buildings[4].level;
+				break;
+			}
+
+			strength = rHelper.data.units[unitId].baseStrength * buildingLevel;
+
+			var marketPriceIncludingTransportation = profitObj.marketPrice * rHelper.data.buildings[9].transportCost;
+
+			if(marketPriceIncludingTransportation >= profitObj.craftingPrice) {
+				referencePrice = profitObj.craftingPrice;
+			} else {
+				referencePrice = marketPriceIncludingTransportation ;
+			}
+
+      pricePerStrength = Math.round(referencePrice / strength);
+
+			return pricePerStrength;
 		},
 		CALC_unitsProfit(unitId) {
 			var profitObj = rHelper.data.units[unitId].profit;
 			var profit = (1 - profitObj.marketPrice / profitObj.craftingPrice) * 100;
 
 			profit *= -1;
+
+      profitObj.profit = profit;
 
 			return profit;
 		},
@@ -2762,6 +2825,8 @@ var rHelper = {
 				worth *= rHelper.data.buildings[9].transportCost;
 			}
 
+			worth = Math.round(worth);
+
 			loot.profit.inputWorth = worth;
 			return worth;
 		},
@@ -2778,6 +2843,8 @@ var rHelper = {
 			} else {
 				worth += rHelper.methods.CALC_recyclingOutputWorthHelper(recyclingPlantLevel, resultingProducts, resultingAmount);
 			}
+
+			worth = Math.round(worth);
 
 			rHelper.data.loot[lootId].profit.outputWorth = worth;
 

@@ -239,7 +239,7 @@
          break;
 
          case "units":
-         $stmt.= "`requirements`, `requiredAmount`";
+         $stmt.= "`requirements`, `requiredAmount`, `baseStrength`";
          break;
 
          case "headquarter":
