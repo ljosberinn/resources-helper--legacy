@@ -97,6 +97,7 @@
       "checked" => "checked",
       "data-query" => 10,
       "login" => "required",
+      "warning" => " - only available for registered users",
     ]
 	];
 
