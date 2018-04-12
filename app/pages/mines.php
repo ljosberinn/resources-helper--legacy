@@ -84,6 +84,8 @@ $arrayKeys = array_keys($columns);
 				</tfoot>
 			</table>
 		</div>
-    <div class="col-xs-12 col-md-12" id="graph-material"></div>
+    <div class="col-md-12" id="graph-material"></div>
+    <div class="col-md-12" id="graph-buildinghabits"></div>
+    <div class="col-md-12" id="graph-overtime"></div>
 	</div>
 </div>

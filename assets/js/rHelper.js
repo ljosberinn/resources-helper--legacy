@@ -234,7 +234,7 @@ const rHelper = {
 
       $.getJSON("api/core.php?query=2&key=" + key, (data) => {
 
-        $.each(data, function(i, warehouseInfo) {
+        $.each(data, function (i, warehouseInfo) {
           let iterator = i;
           let targetObj = "material";
 
@@ -313,6 +313,7 @@ const rHelper = {
         rHelper.data.mineMap = data;
         rHelper.methods.API_toggleLoadSuccessorHelper("mines-detailed");
         rHelper.methods.EVNT_mapCreation("personal");
+        rHelper.methods.SET_overTimeGraph();
       });
     },
     API_getMineMapInitiator(key) {
@@ -401,6 +402,7 @@ const rHelper = {
       $.getJSON("api/core.php?missions", (data) => {
         rHelper.data.missions = data;
         rHelper.methods.API_toggleLoadSuccessorHelper("missions");
+        rHelper.methods.INSRT_missions();
       });
     },
     API_getMissionsInitiator(key) {
@@ -491,39 +493,39 @@ const rHelper = {
       if ($.isArray(queries)) {
         $.each(queries, (i, query) => {
           switch (query) {
-            case 1:
-              rHelper.methods.API_getFactories(key); // STABLE
-              break;
-            case 2:
-              rHelper.methods.API_getWarehouse(key); // STABLE
-              break;
-            case 3:
-              rHelper.methods.API_getBuildings(key); // STABLE
-              break;
-            case 4:
-              rHelper.methods.API_getHeadquarter(key); // STABLE
-              break;
-            case 5:
-              rHelper.methods.API_getMineMapInitiator(key); // STABLE
-              break;
-            case 51:
-              rHelper.methods.API_getMineSummary(key); // STABLE
-              break;
-            case 6:
-              rHelper.methods.API_getTradeLogInitiator(key); // STABLE
-              break;
-            case 7:
-              rHelper.methods.API_getPlayerInfo(key, anonymity); // STABLE
-              break;
-            case 9:
-              rHelper.methods.API_getAttackLogInitiator(key); // STABLE
-              break;
-            case 10:
-              rHelper.methods.API_getMissionsInitiator(key); // STABLE
-              break;
-            default:
-              rHelper.methods.API_getCreditInformation(key);
-              break;
+          case 1:
+            rHelper.methods.API_getFactories(key); // STABLE
+            break;
+          case 2:
+            rHelper.methods.API_getWarehouse(key); // STABLE
+            break;
+          case 3:
+            rHelper.methods.API_getBuildings(key); // STABLE
+            break;
+          case 4:
+            rHelper.methods.API_getHeadquarter(key); // STABLE
+            break;
+          case 5:
+            rHelper.methods.API_getMineMapInitiator(key); // STABLE
+            break;
+          case 51:
+            rHelper.methods.API_getMineSummary(key); // STABLE
+            break;
+          case 6:
+            rHelper.methods.API_getTradeLogInitiator(key); // STABLE
+            break;
+          case 7:
+            rHelper.methods.API_getPlayerInfo(key, anonymity); // STABLE
+            break;
+          case 9:
+            rHelper.methods.API_getAttackLogInitiator(key); // STABLE
+            break;
+          case 10:
+            rHelper.methods.API_getMissionsInitiator(key); // STABLE
+            break;
+          default:
+            rHelper.methods.API_getCreditInformation(key);
+            break;
           }
         });
       };
@@ -537,6 +539,7 @@ const rHelper = {
         rHelper.methods.EVNT_mapCreation("world");
       });
     },
+
     SET_globalObject(selector, index, key, value) {
       "use strict";
 
@@ -623,9 +626,9 @@ const rHelper = {
 
       let r = 255 - buildingLevel * 10;
       let g = 127 + buildingLevel * 7;
-      let b = 80 - buildingLevel * 3;    
+      let b = 80 - buildingLevel * 3;
 
-      $("#building-" + buildingId).css("background-color", "rgba(" + r +", " + g + ", " + b + ", 0.25)");
+      $("#building-" + buildingId).css("background-color", "rgba(" + r + ", " + g + ", " + b + ", 0.25)");
     },
     SET_buildingTableVisibility(buildingId, state) {
       "use strict";
@@ -635,16 +638,16 @@ const rHelper = {
 
       $.each([tbody, tfoot], (i, el) => {
         switch (state) {
-          case "show":
-            if (el.css("display") == "none") {
-              el.css("display", "table-row-group");
-            }
-            break;
-          case "hide":
-            if (el.css("display") != "none") {
-              el.css("display", "none");
-            }
-            break;
+        case "show":
+          if (el.css("display") == "none") {
+            el.css("display", "table-row-group");
+          }
+          break;
+        case "hide":
+          if (el.css("display") != "none") {
+            el.css("display", "none");
+          }
+          break;
         }
       });
     },
@@ -827,6 +830,205 @@ const rHelper = {
         infoWindow.open(map, marker);
       });
     },
+    SET_overTimeGraph() {
+      "use strict";
+
+      let data = rHelper.data.mineMap.mines;
+
+      let timestamps = [];
+      let mineCount = [];
+      let avgMinePrice = [];
+      let income = [];
+      let hours = [];
+
+      for (let hour = 0; hour <= 23; hour += 1) {
+        hours.push(
+          [hour + " to " + (hour + 1), 0]
+        );
+      }
+
+      $.each(data, (index, subObj) => {
+        let buildHour = new Date(subObj.builddate * 1000).getHours();
+        hours[buildHour][1] += 1;
+      });
+
+      Highcharts.chart("graph-buildinghabits", {
+        chart: {
+          type: "column",
+          backgroundColor: "transparent"
+        },
+        title: {
+          text: "Building habits per hour",
+          style: {
+            color: "#dedede"
+          }
+        },
+        xAxis: {
+          type: "category",
+          labels: {
+            rotation: -45,
+            style: {
+              fontSize: '13px',
+              fontFamily: 'Verdana, sans-serif',
+              color: "#dedede"
+            }
+          }
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: "Amount of mines",
+            style: {
+              color: "#dedede"
+            }
+          },
+          labels: {
+            style: {
+              color: "#dedede"
+            }
+          }
+        },
+        legend: {
+          enabled: false
+        },
+        tooltip: {
+          pointFormat: "Mines built at this hour: <b>{point.y}</b>"
+        },
+        series: [{
+          name: "Mines",
+          data: hours,
+          dataLabels: {
+            enabled: true,
+            rotation: -90,
+            color: "#dedede",
+            align: "right",
+            y: 10,
+            style: {
+              fontSize: "13px",
+              fontFamily: "Verdana, sans-serif",
+              color: "#dedede"
+            }
+          }
+        }]
+      });
+
+      let firstMine = data[0].builddate;
+      let lastMine = data[data.length - 1].builddate;
+      let daysSinceFirstMine = (lastMine - firstMine) / 86400;
+
+      timestamps.push(firstMine * 1000);
+
+      for (let i = 0; i <= daysSinceFirstMine; i += 1) {
+        let date = (firstMine + 86400 * i) * 1000;
+        timestamps.push(date);
+      }
+
+      $.each(timestamps, (i, ts) => {
+        let mineCountAtGivenTS = 0;
+        let sum = 0;
+        let totalIncomeAtGivenTS = 0;
+
+        $.each(data, (index, subObj) => {
+
+          let builddate = subObj.builddate * 1000;
+
+          if (builddate <= ts) {
+            mineCountAtGivenTS += 1;
+            totalIncomeAtGivenTS += rHelper.methods.CALC_returnPriceViaId(subObj.type) * subObj.fullRate;
+          }
+
+        });
+
+        $.each(rHelper.data.material, (k, material) => {
+          sum += rHelper.methods.CALC_materialNewMinePrice(mineCountAtGivenTS, k);
+        });
+
+        income.push(Math.round(totalIncomeAtGivenTS));
+        mineCount.push(mineCountAtGivenTS);
+        avgMinePrice.push(Math.round(sum / 14));
+
+        timestamps[i] = new Date(ts);
+      });
+
+      Highcharts.chart("graph-overtime", {
+        chart: {
+          type: "spline",
+          zoomType: "x",
+          backgroundColor: "transparent"
+        },
+        title: {
+          useHTML: true,
+          text: "Progress graph",
+          style: {
+            color: "#dedede"
+          }
+        },
+        xAxis: {
+          categories: timestamps,
+          labels: {
+            style: {
+              color: "#dedede"
+            }
+          }
+        },
+        yAxis: {
+          title: {
+            text: "Price or mine count over time",
+            style: {
+              color: "#dedede"
+            }
+          },
+          labels: {
+            formatter: function () {
+              return this.value.toLocaleString("en-US");
+            },
+            style: {
+              color: "#dedede"
+            }
+          }
+        },
+        legend: {
+          enabled: true,
+          backgroundColor: "#dedede"
+        },
+        tooltip: {
+          crosshairs: true,
+          shared: true
+        },
+        plotOptions: {
+          spline: {
+            marker: {
+              radius: 4,
+              lineColor: "#666666",
+              lineWidth: 1
+            }
+          }
+        },
+        series: [{
+          name: "Mine count",
+          marker: {
+            symbol: "square"
+          },
+          data: mineCount,
+          color: "orange"
+        }, {
+          name: "Average cost of a new mine",
+          marker: {
+            symbol: "diamond"
+          },
+          data: avgMinePrice,
+          color: "coral"
+        }, {
+          name: "Average income at given time",
+          marker: {
+            symbol: "triangle"
+          },
+          data: income,
+          color: "yellowgreen"
+        }]
+      });
+    },
+
     EVNT_enableTippy() {
       "use strict";
 
@@ -838,7 +1040,6 @@ const rHelper = {
         }
       });
     },
-
     EVNT_assignTitleToIconsHelper(min, max, subSelector, incrementor) {
       "use strict";
 
@@ -851,7 +1052,6 @@ const rHelper = {
         });
       }
     },
-
     EVNT_assignTitleToIcons() {
       "use strict";
 
@@ -887,7 +1087,7 @@ const rHelper = {
     EVNT_factoryInput(factoryId) {
       "use strict";
 
-      $("#factories-level-" + factoryId).on("input", function() {
+      $("#factories-level-" + factoryId).on("input", function () {
         let factoryId = parseInt(this.id.replace("factories-level-", ""));
         let factoryLevel = parseInt(this.value);
         rHelper.methods.SET_globalObject("products", factoryId, "factoryLevel", factoryLevel);
@@ -925,7 +1125,7 @@ const rHelper = {
     EVNT_materialInput(materialId) {
       "use strict";
 
-      $("#material-rate-" + materialId).on("input", function() {
+      $("#material-rate-" + materialId).on("input", function () {
         let materialId = this.id.replace("material-rate-", "");
         let materialAmount = parseInt(this.value);
 
@@ -938,7 +1138,7 @@ const rHelper = {
         rHelper.methods.EVNT_buildGraph("material");
       });
 
-      $("#material-amount-of-mines-" + materialId).on("input", function() {
+      $("#material-amount-of-mines-" + materialId).on("input", function () {
         let materialId = this.id.replace("material-amount-of-mines-", "");
         let materialAmountOfMines = parseInt(this.value);
 
@@ -958,7 +1158,7 @@ const rHelper = {
       "use strict";
 
       // on upgrade calculator input
-      $("#warehouse-" + type + "-calc-2-" + id).on("input", function() {
+      $("#warehouse-" + type + "-calc-2-" + id).on("input", function () {
         let value = parseInt(this.value);
         if (isNaN(value)) {
           value = 0;
@@ -973,7 +1173,7 @@ const rHelper = {
       });
 
       // on increase of current stock
-      $("#warehouse-" + type + "-stock-current-" + id).on("input", function() {
+      $("#warehouse-" + type + "-stock-current-" + id).on("input", function () {
         let value = parseInt(this.value);
         if (isNaN(value)) {
           value = 0;
@@ -996,7 +1196,7 @@ const rHelper = {
         rHelper.methods.INSRT_warehouseTotalWorth();
       });
       // on increase of warehouse level
-      $("#warehouse-" + type + "-level-" + id).on("input", function() {
+      $("#warehouse-" + type + "-level-" + id).on("input", function () {
         let value = parseInt(this.value);
         if (isNaN(value)) {
           value = 0;
@@ -1023,7 +1223,7 @@ const rHelper = {
     EVNT_buildingChange(buildingId) {
       "use strict";
 
-      $("#buildings-level-" + buildingId).on("change", function() {
+      $("#buildings-level-" + buildingId).on("change", function () {
         let value = parseInt(this.value);
 
         rHelper.methods.SET_globalObject("buildings", buildingId, "level", value);
@@ -1058,82 +1258,82 @@ const rHelper = {
 
       rHelper.graphs = rHelper.graphs || {};
       switch (type) {
-        case "material":
-          let parentGraphObj = rHelper.graphs.material;
-          rHelper.graphs.material.reference.mineCount = rHelper.methods.CALC_totalMineCount();
-          rHelper.graphs.material.reference.mineIncome = rHelper.methods.CALC_totalMineWorth();
+      case "material":
+        let parentGraphObj = rHelper.graphs.material;
+        rHelper.graphs.material.reference.mineCount = rHelper.methods.CALC_totalMineCount();
+        rHelper.graphs.material.reference.mineIncome = rHelper.methods.CALC_totalMineWorth();
 
-          $.each(rHelper.data.material, (i, material) => {
-            let iteration = {
-              y: 0,
-              color: "",
-              drilldown: {
-                categories: [],
-                data: [],
-                color: ""
-              }
+        $.each(rHelper.data.material, (i, material) => {
+          let iteration = {
+            y: 0,
+            color: "",
+            drilldown: {
+              categories: [],
+              data: [],
+              color: ""
+            }
+          };
+
+          let price = rHelper.methods.CALC_returnPriceViaId(i);
+          let mineAmountPercent = parseFloat(((material.amountOfMines / rHelper.graphs.material.reference.mineCount) * 100).toFixed(2));
+          let mineIncomePercent = parseFloat(((rHelper.methods.CALC_materialRateWorth(i) / rHelper.graphs.material.reference.mineIncome) * 100).toFixed(2));
+          let materialName = material.name;
+
+          if (!isNaN(mineAmountPercent)) {
+            iteration.y = mineAmountPercent;
+          } else {
+            iteration.y = 0;
+          }
+
+          let mineDataObj = {
+            name: materialName,
+            y: iteration.y,
+            color: iteration.color
+          };
+
+          iteration.color = rHelper.graphs.material.colors[i];
+          iteration.drilldown.color = rHelper.graphs.material.colors[i];
+          iteration.drilldown.categories[i] = materialName;
+          iteration.drilldown.name = materialName;
+
+          if (!isNaN(mineIncomePercent)) {
+            iteration.drilldown.data[i] = mineIncomePercent;
+          } else {
+            iteration.drilldown.data[i] = 0;
+          }
+
+          if (JSON.stringify(rHelper.graphs.material.mineData[i]) !== JSON.stringify(mineDataObj)) {
+            rHelper.graphs.material.mineData[i] = mineDataObj;
+          }
+
+          let drillDataLen = iteration.drilldown.data.length;
+
+          for (let j = 0; j < drillDataLen; j += 1) {
+            brightness = 0.2 - (j / drillDataLen) / 5;
+            rHelper.graphs.material.incomeData[i] = {
+              name: iteration.drilldown.categories[j],
+              y: iteration.drilldown.data[j],
+              color: Highcharts.Color(iteration.color).brighten(brightness).get()
             };
+          }
+          if (JSON.stringify(rHelper.graphs.material.data[i]) !== JSON.stringify(iteration)) {
+            rHelper.graphs.material.data[i] = iteration;
+          }
+        });
 
-            let price = rHelper.methods.CALC_returnPriceViaId(i);
-            let mineAmountPercent = parseFloat(((material.amountOfMines / rHelper.graphs.material.reference.mineCount) * 100).toFixed(2));
-            let mineIncomePercent = parseFloat(((rHelper.methods.CALC_materialRateWorth(i) / rHelper.graphs.material.reference.mineIncome) * 100).toFixed(2));
-            let materialName = material.name;
+        rHelper.methods.INSRT_polygonGraph(parentGraphObj.target, parentGraphObj.titleText, parentGraphObj.seriesNames, parentGraphObj.responsiveId, type);
+        break;
+      case "products":
+        let titleText = "mine distribution vs mine income";
 
-            if (!isNaN(mineAmountPercent)) {
-              iteration.y = mineAmountPercent;
-            } else {
-              iteration.y = 0;
-            }
+        let seriesNames = [
+          "Mines",
+          "Mine income",
+        ];
 
-            let mineDataObj = {
-              name: materialName,
-              y: iteration.y,
-              color: iteration.color
-            };
-
-            iteration.color = rHelper.graphs.material.colors[i];
-            iteration.drilldown.color = rHelper.graphs.material.colors[i];
-            iteration.drilldown.categories[i] = materialName;
-            iteration.drilldown.name = materialName;
-
-            if (!isNaN(mineIncomePercent)) {
-              iteration.drilldown.data[i] = mineIncomePercent;
-            } else {
-              iteration.drilldown.data[i] = 0;
-            }
-
-            if (JSON.stringify(rHelper.graphs.material.mineData[i]) !== JSON.stringify(mineDataObj)) {
-              rHelper.graphs.material.mineData[i] = mineDataObj;
-            }
-
-            let drillDataLen = iteration.drilldown.data.length;
-
-            for (let j = 0; j < drillDataLen; j += 1) {
-              brightness = 0.2 - (j / drillDataLen) / 5;
-              rHelper.graphs.material.incomeData[i] = {
-                name: iteration.drilldown.categories[j],
-                y: iteration.drilldown.data[j],
-                color: Highcharts.Color(iteration.color).brighten(brightness).get()
-              };
-            }
-            if (JSON.stringify(rHelper.graphs.material.data[i]) !== JSON.stringify(iteration)) {
-              rHelper.graphs.material.data[i] = iteration;
-            }
-          });
-
-          rHelper.methods.INSRT_polygonGraph(parentGraphObj.target, parentGraphObj.titleText, parentGraphObj.seriesNames, parentGraphObj.responsiveId, type);
-          break;
-        case "products":
-          let titleText = "mine distribution vs mine income";
-
-          let seriesNames = [
-            "Mines",
-            "Mine income",
-          ];
-
-          let responsiveId = "income";
-          let target = "graph-material";
-          break;
+        let responsiveId = "income";
+        let target = "graph-material";
+        break;
       }
     },
     EVNT_switchHeadquarter(clickedHq) {
@@ -1164,7 +1364,7 @@ const rHelper = {
       "use strict";
 
       $.each($("[id*='hq-content-input-']"), (i, el) => {
-        $(el).on("input", function() {
+        $(el).on("input", function () {
           let thisId = parseInt(this.id.replace(/hq-content-input-/, ""));
           let thisValue = parseInt(this.value);
 
@@ -1185,7 +1385,7 @@ const rHelper = {
     EVNT_priceHistoryOnChange() {
       "use strict";
 
-      $("#pricehistory-selector").on("change", function(i, el) {
+      $("#pricehistory-selector").on("change", function (i, el) {
         let thisVal = parseInt(this.value);
         let url = "api/getPriceHistory.php?id=" + thisVal;
         let resource = rHelper.methods.CALC_convertId(thisVal);
@@ -1222,15 +1422,15 @@ const rHelper = {
       let container = $("#graph-pricehistory");
       let selector = $("#pricehistory-selector");
       switch (state) {
-        case "loading":
-          let svg = '<svg id="pricehistory-svg" xmlns="http://www.w3.org/2000/svg" style="background:0 0" preserveAspectRatio="xMidYMid" viewBox="0 0 100 100"><g transform="translate(50 50)"><g transform="matrix(.6 0 0 .6 -19 -19)"><g transform="rotate(242)"><animateTransform attributeName="transform" begin="0s" dur="3s" keyTimes="0;1" repeatCount="indefinite" type="rotate" values="0;360"/><path fill="#9acd32" d="M37.3496988-7h10V7h-10a38 38 0 0 1-1.50391082 5.61267157l8.66025404 5-7 12.12435565-8.66025404-5a38 38 0 0 1-4.10876076 4.10876076l5 8.66025404-12.12435565 7-5-8.66025404A38 38 0 0 1 7 37.34969879v10H-7v-10a38 38 0 0 1-5.61267157-1.50391081l-5 8.66025404-12.12435565-7 5-8.66025404a38 38 0 0 1-4.10876076-4.10876076l-8.66025404 5-7-12.12435565 8.66025404-5A38 38 0 0 1-37.34969879 7h-10V-7h10a38 38 0 0 1 1.50391081-5.61267157l-8.66025404-5 7-12.12435565 8.66025404 5a38 38 0 0 1 4.10876076-4.10876076l-5-8.66025404 12.12435565-7 5 8.66025404A38 38 0 0 1-7-37.34969879v-10H7v10a38 38 0 0 1 5.61267157 1.50391081l5-8.66025404 12.12435565 7-5 8.66025404a38 38 0 0 1 4.10876076 4.10876076l8.66025404-5 7 12.12435565-8.66025404 5A38 38 0 0 1 37.34969879-7M0-30a30 30 0 1 0 0 60 30 30 0 1 0 0-60"/></g></g><g transform="matrix(.6 0 0 .6 19 19)"><g transform="rotate(103)"><animateTransform attributeName="transform" begin="-0.125s" dur="3s" keyTimes="0;1" repeatCount="indefinite" type="rotate" values="360;0"/><path fill="coral" d="M37.3496988-7h10V7h-10a38 38 0 0 1-1.50391082 5.61267157l8.66025404 5-7 12.12435565-8.66025404-5a38 38 0 0 1-4.10876076 4.10876076l5 8.66025404-12.12435565 7-5-8.66025404A38 38 0 0 1 7 37.34969879v10H-7v-10a38 38 0 0 1-5.61267157-1.50391081l-5 8.66025404-12.12435565-7 5-8.66025404a38 38 0 0 1-4.10876076-4.10876076l-8.66025404 5-7-12.12435565 8.66025404-5A38 38 0 0 1-37.34969879 7h-10V-7h10a38 38 0 0 1 1.50391081-5.61267157l-8.66025404-5 7-12.12435565 8.66025404 5a38 38 0 0 1 4.10876076-4.10876076l-5-8.66025404 12.12435565-7 5 8.66025404A38 38 0 0 1-7-37.34969879v-10H7v10a38 38 0 0 1 5.61267157 1.50391081l5-8.66025404 12.12435565 7-5 8.66025404a38 38 0 0 1 4.10876076 4.10876076l8.66025404-5 7 12.12435565-8.66025404 5A38 38 0 0 1 37.34969879-7M0-30a30 30 0 1 0 0 60 30 30 0 1 0 0-60"/></g></g></g></svg>';
-          container.html(svg);
-          selector.attr("disabled", true);
-          break;
-        case "finished":
-          container.empty();
-          selector.attr("disabled", false);
-          break;
+      case "loading":
+        let svg = '<svg id="pricehistory-svg" xmlns="http://www.w3.org/2000/svg" style="background:0 0" preserveAspectRatio="xMidYMid" viewBox="0 0 100 100"><g transform="translate(50 50)"><g transform="matrix(.6 0 0 .6 -19 -19)"><g transform="rotate(242)"><animateTransform attributeName="transform" begin="0s" dur="3s" keyTimes="0;1" repeatCount="indefinite" type="rotate" values="0;360"/><path fill="#9acd32" d="M37.3496988-7h10V7h-10a38 38 0 0 1-1.50391082 5.61267157l8.66025404 5-7 12.12435565-8.66025404-5a38 38 0 0 1-4.10876076 4.10876076l5 8.66025404-12.12435565 7-5-8.66025404A38 38 0 0 1 7 37.34969879v10H-7v-10a38 38 0 0 1-5.61267157-1.50391081l-5 8.66025404-12.12435565-7 5-8.66025404a38 38 0 0 1-4.10876076-4.10876076l-8.66025404 5-7-12.12435565 8.66025404-5A38 38 0 0 1-37.34969879 7h-10V-7h10a38 38 0 0 1 1.50391081-5.61267157l-8.66025404-5 7-12.12435565 8.66025404 5a38 38 0 0 1 4.10876076-4.10876076l-5-8.66025404 12.12435565-7 5 8.66025404A38 38 0 0 1-7-37.34969879v-10H7v10a38 38 0 0 1 5.61267157 1.50391081l5-8.66025404 12.12435565 7-5 8.66025404a38 38 0 0 1 4.10876076 4.10876076l8.66025404-5 7 12.12435565-8.66025404 5A38 38 0 0 1 37.34969879-7M0-30a30 30 0 1 0 0 60 30 30 0 1 0 0-60"/></g></g><g transform="matrix(.6 0 0 .6 19 19)"><g transform="rotate(103)"><animateTransform attributeName="transform" begin="-0.125s" dur="3s" keyTimes="0;1" repeatCount="indefinite" type="rotate" values="360;0"/><path fill="coral" d="M37.3496988-7h10V7h-10a38 38 0 0 1-1.50391082 5.61267157l8.66025404 5-7 12.12435565-8.66025404-5a38 38 0 0 1-4.10876076 4.10876076l5 8.66025404-12.12435565 7-5-8.66025404A38 38 0 0 1 7 37.34969879v10H-7v-10a38 38 0 0 1-5.61267157-1.50391081l-5 8.66025404-12.12435565-7 5-8.66025404a38 38 0 0 1-4.10876076-4.10876076l-8.66025404 5-7-12.12435565 8.66025404-5A38 38 0 0 1-37.34969879 7h-10V-7h10a38 38 0 0 1 1.50391081-5.61267157l-8.66025404-5 7-12.12435565 8.66025404 5a38 38 0 0 1 4.10876076-4.10876076l-5-8.66025404 12.12435565-7 5 8.66025404A38 38 0 0 1-7-37.34969879v-10H7v10a38 38 0 0 1 5.61267157 1.50391081l5-8.66025404 12.12435565 7-5 8.66025404a38 38 0 0 1 4.10876076 4.10876076l8.66025404-5 7 12.12435565-8.66025404 5A38 38 0 0 1 37.34969879-7M0-30a30 30 0 1 0 0 60 30 30 0 1 0 0-60"/></g></g></g></svg>';
+        container.html(svg);
+        selector.attr("disabled", true);
+        break;
+      case "finished":
+        container.empty();
+        selector.attr("disabled", false);
+        break;
       }
     },
     EVNT_mapCreation(mapType, type) {
@@ -1242,18 +1442,18 @@ const rHelper = {
       let errorText;
 
       switch (mapType) {
-        case "personal":
-          container = $("#personalmap");
-          data = rHelper.data.mineMap;
-          infoNode = $("#personalmap-info");
-          errorText = 'Your mine map is empty! Please import "Mines - detailed" via API first.';
-          break;
-        case "world":
-          container = $("#worldmap");
-          data = rHelper.data.worldMap;
-          infoNode = $("#worldmap-info");
-          errorText = 'An error occured. If this problem persists, please report this issue via Discord or mail.';
-          break;
+      case "personal":
+        container = $("#personalmap");
+        data = rHelper.data.mineMap;
+        infoNode = $("#personalmap-info");
+        errorText = 'Your mine map is empty! Please import "Mines - detailed" via API first.';
+        break;
+      case "world":
+        container = $("#worldmap");
+        data = rHelper.data.worldMap;
+        infoNode = $("#worldmap-info");
+        errorText = 'An error occured. If this problem persists, please report this issue via Discord or mail.';
+        break;
       }
 
       if (data.length != 0) {
@@ -1263,14 +1463,14 @@ const rHelper = {
         map = rHelper.methods.SET_mapOptions(map, 16, data.mines[0]);
 
         switch (mapType) {
-          case "personal":
-            rHelper.methods.SET_mapHQHandler(map, data.hq[0]);
-            break;
-          case "world":
-            $.each(data.hqs, (i, hqObj) => {
-              rHelper.methods.SET_mapHQHandler(map, hqObj);
-            });
-            break;
+        case "personal":
+          rHelper.methods.SET_mapHQHandler(map, data.hq[0]);
+          break;
+        case "world":
+          $.each(data.hqs, (i, hqObj) => {
+            rHelper.methods.SET_mapHQHandler(map, hqObj);
+          });
+          break;
         }
 
         $.each(data.mines, (i, subObj) => {
@@ -1281,6 +1481,7 @@ const rHelper = {
         infoNode.text(errorText);
       }
     },
+
     INSRT_materialData(materialId, api) {
       "use strict";
 
@@ -1388,7 +1589,7 @@ const rHelper = {
             text: "Price"
           },
           labels: {
-            formatter: function() {
+            formatter: function () {
               return this.value.toLocaleString("en-US");
             }
           },
@@ -1455,6 +1656,7 @@ const rHelper = {
       "use strict";
 
       let dataObj = rHelper.graphs[targetObj];
+
       Highcharts.chart(target, {
         chart: {
           type: "pie",
@@ -1463,7 +1665,7 @@ const rHelper = {
         title: {
           text: titleText,
           style: {
-            color: "#ffffff"
+            color: "#dedede"
           }
         },
         plotOptions: {
@@ -1481,21 +1683,23 @@ const rHelper = {
         series: [{
           name: seriesNames[0],
           data: dataObj.mineData,
+          colors: dataObj.colors,
           size: "60%",
           dataLabels: {
-            formatter: function() {
+            formatter: function () {
               return this.y > 5 ? this.point.name : null;
             },
-            color: "#ffffff",
+            color: "#dedede",
             distance: -30
           }
         }, {
           name: seriesNames[1],
           data: dataObj.incomeData,
+          colors: dataObj.colors,
           size: "80%",
           innerSize: "60%",
           dataLabels: {
-            formatter: function() {
+            formatter: function () {
               return this.y > 1 ? "<b>" + this.point.name + ":</b> " +
                 this.y + "%" : null;
             },
@@ -1582,7 +1786,7 @@ const rHelper = {
       let userInfo = rHelper.data.userInformation;
       $("#security-token").text(userInfo.securityToken);
 
-      if (userInfo.realKey != "" && typeof(userInfo.realKey) != "undefined") {
+      if (userInfo.realKey != "" && typeof (userInfo.realKey) != "undefined") {
         $("#api-key").val(userInfo.realKey);
         rHelper.methods.INSRT_API_remainingCredits(userInfo.remainingCredits);
       }
@@ -1594,52 +1798,52 @@ const rHelper = {
       $.each(rHelper.data.settings, (index, setting) => {
         let value = 0;
         switch (setting.setting) {
-          case "lang":
-            switch (setting.value) {
-              case "de":
-                value = 0;
-                break;
-              case "en":
-                value = 1;
-                break;
-              case "fr":
-                value = 2;
-                break;
-              case "in":
-                value = 3;
-                break;
-              case "jp":
-                value = 4;
-                break;
-              case "ru":
-                value = 5;
-                break;
-            }
-            $("#settings-language").val(value);
+        case "lang":
+          switch (setting.value) {
+          case "de":
+            value = 0;
             break;
-          case "customTU":
-            for (let i = 0; i <= 3; i += 1) {
-              $("#settings-custom-tu-" + (i + 1)).val(setting.value[i]);
-            }
+          case "en":
+            value = 1;
             break;
-          case "idealCondition":
-            if (setting.value === 1) {
-              $("#settings-ideal-conditions").prop("checked", true);
-            }
+          case "fr":
+            value = 2;
             break;
-          case "transportCostInclusion":
-            if (setting.value === 1) {
-              $("#settings-toggle-transport-cost-inclusion").prop("checked", true);
-            }
+          case "in":
+            value = 3;
             break;
-          case "mapVisibleHQ":
-            if (setting.value === 1) {
-              $("#settings-hq-visibility").val(1);
-            }
+          case "jp":
+            value = 4;
             break;
-          case "priceAge":
-            $("#settings-price-age").val(setting.value);
+          case "ru":
+            value = 5;
             break;
+          }
+          $("#settings-language").val(value);
+          break;
+        case "customTU":
+          for (let i = 0; i <= 3; i += 1) {
+            $("#settings-custom-tu-" + (i + 1)).val(setting.value[i]);
+          }
+          break;
+        case "idealCondition":
+          if (setting.value === 1) {
+            $("#settings-ideal-conditions").prop("checked", true);
+          }
+          break;
+        case "transportCostInclusion":
+          if (setting.value === 1) {
+            $("#settings-toggle-transport-cost-inclusion").prop("checked", true);
+          }
+          break;
+        case "mapVisibleHQ":
+          if (setting.value === 1) {
+            $("#settings-hq-visibility").val(1);
+          }
+          break;
+        case "priceAge":
+          $("#settings-price-age").val(setting.value);
+          break;
         }
       });
     },
@@ -1700,16 +1904,16 @@ const rHelper = {
 
       $.each(selectors, (i, selector) => {
         switch (selector) {
-          case "min":
-            value = array.min();
-            addClass = minClass;
-            rmvClass = maxClass;
-            break;
-          case "max":
-            value = array.max();
-            addClass = maxClass;
-            rmvClass = minClass;
-            break;
+        case "min":
+          value = array.min();
+          addClass = minClass;
+          rmvClass = maxClass;
+          break;
+        case "max":
+          value = array.max();
+          addClass = maxClass;
+          rmvClass = minClass;
+          break;
         }
 
         let el = $(target + array.indexOf(value));
@@ -1861,18 +2065,18 @@ const rHelper = {
 
       $.each(columns, (i, column) => {
         switch (i) {
-          case 0:
-            subArray = "upgradeCost";
-            break;
-          case 1:
-            subArray = "turnoverIncrease";
-            break;
-          case 2:
-            subArray = "roi";
-            break;
-          case 3:
-            subArray = [];
-            break;
+        case 0:
+          subArray = "upgradeCost";
+          break;
+        case 1:
+          subArray = "turnoverIncrease";
+          break;
+        case 2:
+          subArray = "roi";
+          break;
+        case 3:
+          subArray = [];
+          break;
         }
 
         let valueArray = [];
@@ -1881,7 +2085,7 @@ const rHelper = {
         $.each(rHelper.data.products, (k, factory) => {
           $(column + k).removeClass("text-success text-danger");
           let value = 0;
-          if (typeof(subArray) == "object") {
+          if (typeof (subArray) == "object") {
             value = factory.diamond.profit;
           } else {
             value = factory[subArray];
@@ -1898,20 +2102,20 @@ const rHelper = {
         let arrayMin = idArray[valueArray.indexOf(valueArray.min())];
         let arrayMax = idArray[valueArray.indexOf(valueArray.max())];
         switch (i) {
-          case 0:
-          case 2:
-            $(column + arrayMin).addClass("text-success");
-            if (arrayMin != arrayMax) {
-              $(column + arrayMax).addClass("text-danger");
-            }
-            break;
-          case 1:
-          case 3:
-            $(column + arrayMax).addClass("text-success");
-            if (arrayMin != arrayMax) {
-              $(column + arrayMin).addClass("text-danger");
-            }
-            break;
+        case 0:
+        case 2:
+          $(column + arrayMin).addClass("text-success");
+          if (arrayMin != arrayMax) {
+            $(column + arrayMax).addClass("text-danger");
+          }
+          break;
+        case 1:
+        case 3:
+          $(column + arrayMax).addClass("text-success");
+          if (arrayMin != arrayMax) {
+            $(column + arrayMin).addClass("text-danger");
+          }
+          break;
         }
       });
     },
@@ -2092,12 +2296,12 @@ const rHelper = {
       let productionCost = 0;
 
       switch (type) {
-        case "material":
-          price = rHelper.methods.CALC_returnPriceViaId(id);
-          break;
-        case "product":
-          price = rHelper.methods.CALC_returnPriceViaId((id + 14));
-          break;
+      case "material":
+        price = rHelper.methods.CALC_returnPriceViaId(id);
+        break;
+      case "product":
+        price = rHelper.methods.CALC_returnPriceViaId((id + 14));
+        break;
       }
 
       if (type == "product") {
@@ -2119,12 +2323,12 @@ const rHelper = {
 
       worth = Math.round(worth - productionCost);
       switch (type) {
-        case "material":
-          rHelper.data.material[id].effectiveTurnover = worth;
-          break;
-        case "product":
-          rHelper.data.products[id].effectiveTurnover = worth;
-          break;
+      case "material":
+        rHelper.data.material[id].effectiveTurnover = worth;
+        break;
+      case "product":
+        rHelper.data.products[id].effectiveTurnover = worth;
+        break;
       }
 
       worthTarget.css("color", color).text(worth.toLocaleString("en-US"));
@@ -2224,7 +2428,7 @@ const rHelper = {
           if (i === 0) {
             let cashTarget = $("#buildings-cash-" + buildingId);
             let cash = building.materialAmount0[buildingLevel];
-            if (typeof(cash) == "undefined") {
+            if (typeof (cash) == "undefined") {
               cash = 0;
             }
             materialWorthSum += cash;
@@ -2236,7 +2440,7 @@ const rHelper = {
             $("#buildings-mat-" + i + "-" + buildingId).addClass(material.icon);
             let materialAmount = building[selector][buildingLevel];
 
-            if (typeof(materialAmount) == "number") {
+            if (typeof (materialAmount) == "number") {
               $("#buildings-amount-" + i + "-" + buildingId).text(materialAmount.toLocaleString("en-US"));
               let materialPrice = rHelper.methods.CALC_returnPriceViaId(building.material[i]);
               let materialWorth = materialPrice * materialAmount;
@@ -2278,7 +2482,7 @@ const rHelper = {
       }
 
       $.each(rHelper.tu, (index, combination) => {
-        if (typeof(tu4Trigger) == "undefined" && combination.tu4 != 0) {
+        if (typeof (tu4Trigger) == "undefined" && combination.tu4 != 0) {
           return;
         }
         let tr = $(crEl("tr"));
@@ -2292,26 +2496,26 @@ const rHelper = {
             combination.tu4
           ];
           switch (i) {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-              td.text(tus[i]).attr("data-th", "Tech-Upgrade " + i);
-              break;
-            case 4:
-              td.text(combination.factor).attr("data-th", "Boost");
-              break;
-            case 5:
-              let price = 0;
-              for (let k = 0; k < tus.length; k += 1) {
-                price += tus[k] * prices[k];
-              }
-              td.text(price.toLocaleString("en-US")).attr("data-th", "Price");
-              break;
-            case 6:
-              let count = tus[0] * 1 + tus[1] * 2 + tus[2] * 3 + tus[3] * 5;
-              td.text(count).attr("data-th", "Pimp my mine count");
-              break;
+          case 0:
+          case 1:
+          case 2:
+          case 3:
+            td.text(tus[i]).attr("data-th", "Tech-Upgrade " + i);
+            break;
+          case 4:
+            td.text(combination.factor).attr("data-th", "Boost");
+            break;
+          case 5:
+            let price = 0;
+            for (let k = 0; k < tus.length; k += 1) {
+              price += tus[k] * prices[k];
+            }
+            td.text(price.toLocaleString("en-US")).attr("data-th", "Price");
+            break;
+          case 6:
+            let count = tus[0] * 1 + tus[1] * 2 + tus[2] * 3 + tus[3] * 5;
+            td.text(count).attr("data-th", "Pimp my mine count");
+            break;
           }
           tr.append(td[0]);
         }
@@ -2334,7 +2538,7 @@ const rHelper = {
       }
 
       let url = "api/getTechCombination.php?factor=" + value;
-      if (typeof(tu4Inclusion) == "string") {
+      if (typeof (tu4Inclusion) == "string") {
         url += "&tu4=allowed";
       }
 
@@ -2360,26 +2564,26 @@ const rHelper = {
               ];
 
               switch (k) {
-                case 0:
-                case 1:
-                case 2:
-                case 3:
-                  td.text(tus[k]);
-                  break;
-                case 4:
-                  td.text(combination.factor).attr("data-th", "resulting Boost");
-                  break;
-                case 5:
-                  let price = 0;
-                  for (let l = 0; l < tus.length; l += 1) {
-                    price += tus[l] * prices[l];
-                  }
-                  td.text(price.toLocaleString("en-US")).attr("data-th", "Price");
-                  break;
-                case 6:
-                  let count = tus[0] * 1 + tus[1] * 2 + tus[2] * 3 + tus[3] * 5;
-                  td.text(count).attr("data-th", "remaining Pimp my mine count");
-                  break;
+              case 0:
+              case 1:
+              case 2:
+              case 3:
+                td.text(tus[k]);
+                break;
+              case 4:
+                td.text(combination.factor).attr("data-th", "resulting Boost");
+                break;
+              case 5:
+                let price = 0;
+                for (let l = 0; l < tus.length; l += 1) {
+                  price += tus[l] * prices[l];
+                }
+                td.text(price.toLocaleString("en-US")).attr("data-th", "Price");
+                break;
+              case 6:
+                let count = tus[0] * 1 + tus[1] * 2 + tus[2] * 3 + tus[3] * 5;
+                td.text(count).attr("data-th", "remaining Pimp my mine count");
+                break;
               }
               tr.append(td[0]);
             }
@@ -2431,9 +2635,9 @@ const rHelper = {
       let result;
       let color;
 
-      if(type == "recycling") {
+      if (type == "recycling") {
         profit = rHelper.methods.CALC_recyclingProfit(id);
-      } else if(type == "units") {
+      } else if (type == "units") {
         profit = rHelper.methods.CALC_unitsProfit(id);
       }
 
@@ -2467,7 +2671,6 @@ const rHelper = {
 
       $("#units-market-" + unitId).text(marketPrice.toLocaleString("en-US"));
     },
-
     INSRT_companyWorth() {
       "use strict";
 
@@ -2639,9 +2842,10 @@ const rHelper = {
 
         let colorProgress = (progressPercent) => {
           let color = "coral";
+
           if (progressPercent > 33 && progressPercent < 66) {
             color = "orange";
-          } else {
+          } else if(progressPercent >= 66) {
             color = "yellowgreen";
           }
           return color;
@@ -2693,6 +2897,7 @@ const rHelper = {
         });
       }
     },
+
     CALC_mineEstRevenue(subObj, type, age) {
       "use strict";
 
@@ -2972,16 +3177,16 @@ const rHelper = {
       let profitObj = rHelper.data.units[unitId].profit;
 
       switch (unitId) {
-        case 0:
-        case 2:
-        case 3:
-          buildingLevel = rHelper.data.buildings[3].level;
-          break;
-        case 1:
-        case 4:
-        case 5:
-          buildingLevel = rHelper.data.buildings[4].level;
-          break;
+      case 0:
+      case 2:
+      case 3:
+        buildingLevel = rHelper.data.buildings[3].level;
+        break;
+      case 1:
+      case 4:
+      case 5:
+        buildingLevel = rHelper.data.buildings[4].level;
+        break;
       }
 
       strength = rHelper.data.units[unitId].baseStrength * buildingLevel;
@@ -3118,7 +3323,7 @@ const rHelper = {
             let material = rHelper.methods.CALC_convertId(building.material[i]);
             let materialAmount = building[selector][level];
 
-            if (typeof(materialAmount) == "number") {
+            if (typeof (materialAmount) == "number") {
               let materialPrice = rHelper.methods.CALC_returnPriceViaId(building.material[i]);
               let materialWorth = materialPrice * materialAmount;
               let transportation = (rHelper.data.buildings[9].transportCost - 1) * materialWorth;
@@ -3169,12 +3374,12 @@ const rHelper = {
       let upgradeCost = 0;
 
       switch (mode) {
-        case "level":
-          upgradeCost = rHelper.methods.CALC_warehouseCostFromTo(currentWarehouseLevel, value);
-          break;
-        case "contingent":
-          upgradeCost = rHelper.methods.CALC_warehouseUpgradeCostContigentBased(currentWarehouseLevel, value);
-          break;
+      case "level":
+        upgradeCost = rHelper.methods.CALC_warehouseCostFromTo(currentWarehouseLevel, value);
+        break;
+      case "contingent":
+        upgradeCost = rHelper.methods.CALC_warehouseUpgradeCostContigentBased(currentWarehouseLevel, value);
+        break;
       }
 
       return upgradeCost;
@@ -3186,18 +3391,18 @@ const rHelper = {
       let priceId = 0;
 
       switch (type) {
-        case "material":
-          priceId = id;
-          break;
-        case "products":
-          priceId = id + 14;
-          break;
-        case "loot":
-          priceId = id + 36;
-          break;
-        case "units":
-          priceId = id + 51;
-          break;
+      case "material":
+        priceId = id;
+        break;
+      case "products":
+        priceId = id + 14;
+        break;
+      case "loot":
+        priceId = id + 36;
+        break;
+      case "units":
+        priceId = id + 51;
+        break;
       }
 
       price = rHelper.methods.CALC_returnPriceViaId(priceId);
@@ -3317,12 +3522,12 @@ const rHelper = {
       let name2 = dependantObj.name;
 
       switch (type) {
-        case "material":
-          name1 = rHelper.data.material[id].name;
-          break;
-        case "product":
-          name1 = rHelper.data.products[id].name;
-          break;
+      case "material":
+        name1 = rHelper.data.material[id].name;
+        break;
+      case "product":
+        name1 = rHelper.data.products[id].name;
+        break;
       }
 
       $("#flow-" + type + "-distribution-" + id + "-" + i).html(string).attr("data-th", name1 + " to " + name2);
@@ -3337,17 +3542,17 @@ const rHelper = {
       let requiredAmount = 0;
 
       switch (type) {
-        case "material":
-          obj = rHelper.data.material[id];
-          perHour = obj.perHour;
-          break;
-        case "product":
-          obj = rHelper.data.products[id];
-          let factoryLevel = obj.factoryLevel;
-          let scaling = obj.scaling;
-          let workload = rHelper.methods.CALC_factoryMinWorkload(id);
-          perHour = factoryLevel * scaling * workload;
-          break;
+      case "material":
+        obj = rHelper.data.material[id];
+        perHour = obj.perHour;
+        break;
+      case "product":
+        obj = rHelper.data.products[id];
+        let factoryLevel = obj.factoryLevel;
+        let scaling = obj.scaling;
+        let workload = rHelper.methods.CALC_factoryMinWorkload(id);
+        perHour = factoryLevel * scaling * workload;
+        break;
       }
 
       let dependantFactories = obj.dependantFactories;
@@ -3367,14 +3572,14 @@ const rHelper = {
 
       let rate = 0;
       switch (type) {
-        case "material":
-          rate = rHelper.data.material[id].perHour;
-          break;
-        case "product":
-          let factory = rHelper.data.products[id];
-          let workload = rHelper.methods.CALC_factoryMinWorkload(id);
-          rate = factory.factoryLevel * factory.scaling * workload;
-          break;
+      case "material":
+        rate = rHelper.data.material[id].perHour;
+        break;
+      case "product":
+        let factory = rHelper.data.products[id];
+        let workload = rHelper.methods.CALC_factoryMinWorkload(id);
+        rate = factory.factoryLevel * factory.scaling * workload;
+        break;
       }
       return rate;
     },
@@ -3497,12 +3702,12 @@ const rHelper = {
 
       let dependantFactories = "";
       switch (type) {
-        case "material":
-          dependantFactories = rHelper.data.material[id].dependantFactories;
-          break;
-        case "product":
-          dependantFactories = rHelper.data.products[id].dependantFactories;
-          break;
+      case "material":
+        dependantFactories = rHelper.data.material[id].dependantFactories;
+        break;
+      case "product":
+        dependantFactories = rHelper.data.products[id].dependantFactories;
+        break;
       }
 
       if ($.isArray(dependantFactories)) {
@@ -3708,7 +3913,7 @@ const rHelper = {
       "use strict";
 
       let factoryLevel = rHelper.data.products[factoryId].factoryLevel;
-      if (typeof(factoryLevel) == "undefined" || !factoryLevel) {
+      if (typeof (factoryLevel) == "undefined" || !factoryLevel) {
         factoryLevel = 0;
       }
       let nextLevel = factoryLevel + 1;
@@ -3727,17 +3932,17 @@ const rHelper = {
           for (k = 0; k <= 2; k += 1) {
             td = $(crEl("td"));
             switch (k) {
-              case 0:
-                let img = $(crEl("img")).attr("src", "assets/img/cash.png").attr("alt", "Cash");
-                td.append(img[0]);
-                break;
-              case 1:
-                td.addClass("text-right").attr("colspan", 3).text(sum.toLocaleString("en-US"));
-                break;
-              case 2:
-                small = $(crEl("small")).text("Transportation");
-                td.addClass("text-right text-warning").append(small[0]);
-                break;
+            case 0:
+              let img = $(crEl("img")).attr("src", "assets/img/cash.png").attr("alt", "Cash");
+              td.append(img[0]);
+              break;
+            case 1:
+              td.addClass("text-right").attr("colspan", 3).text(sum.toLocaleString("en-US"));
+              break;
+            case 2:
+              small = $(crEl("small")).text("Transportation");
+              td.addClass("text-right text-warning").append(small[0]);
+              break;
             }
             tr.append(td[0]);
           }
@@ -3769,22 +3974,22 @@ const rHelper = {
           for (k = 0; k <= 4; k += 1) {
             td = $(crEl("td"));
             switch (k) {
-              case 0:
-                td.addClass("resources-" + className + "-" + (upgradeMaterial - 1));
-                break;
-              case 1:
-                td.addClass("text-right").text(upgradeMaterialAmount.toLocaleString("en-US"));
-                break;
-              case 2:
-                td.text("≙");
-                break;
-              case 3:
-                td.addClass("text-right").text(materialWorth.toLocaleString("en-US"));
-                break;
-              case 4:
-                small = $(crEl("small")).addClass("text-warning").text(transportation.toLocaleString("en-US"));
-                td.addClass("text-right").append(small[0]);
-                break;
+            case 0:
+              td.addClass("resources-" + className + "-" + (upgradeMaterial - 1));
+              break;
+            case 1:
+              td.addClass("text-right").text(upgradeMaterialAmount.toLocaleString("en-US"));
+              break;
+            case 2:
+              td.text("≙");
+              break;
+            case 3:
+              td.addClass("text-right").text(materialWorth.toLocaleString("en-US"));
+              break;
+            case 4:
+              small = $(crEl("small")).addClass("text-warning").text(transportation.toLocaleString("en-US"));
+              td.addClass("text-right").append(small[0]);
+              break;
             }
             tr.append(td[0]);
           }
@@ -3856,9 +4061,9 @@ const rHelper = {
       ];
 
       let index = 0;
-      if (typeof(period) == "undefined") {
+      if (typeof (period) == "undefined") {
         index = possiblePrices[rHelper.data.settings[5].value];
-      } else if (typeof(period) == "number") {
+      } else if (typeof (period) == "number") {
         index = possiblePrices[period];
       }
 
@@ -3913,20 +4118,20 @@ const rHelper = {
         let customTUPrice = rHelper.methods.CALC_customTUPrice();
 
         switch (type) {
-          case "100":
-            array.push(newMinePrice / perfectIncome / 24);
-            break;
-          case "505":
-            array.push((newMinePrice + customTUPrice) / perfectIncome / 24 / 5.05);
-            break;
-          case "505hq":
-            let userHQLevel = 1;
-            if (rHelper.data.headquarter.user) {
-              userHQLevel = rHelper.data.headquarter.user.level;
-            }
-            let hqBoost = rHelper.data.headquarter[(userHQLevel - 1)].boost - 0.9;
-            array.push((newMinePrice + customTUPrice) / perfectIncome / 24 / 5.05 / hqBoost);
-            break;
+        case "100":
+          array.push(newMinePrice / perfectIncome / 24);
+          break;
+        case "505":
+          array.push((newMinePrice + customTUPrice) / perfectIncome / 24 / 5.05);
+          break;
+        case "505hq":
+          let userHQLevel = 1;
+          if (rHelper.data.headquarter.user) {
+            userHQLevel = rHelper.data.headquarter.user.level;
+          }
+          let hqBoost = rHelper.data.headquarter[(userHQLevel - 1)].boost - 0.9;
+          array.push((newMinePrice + customTUPrice) / perfectIncome / 24 / 5.05 / hqBoost);
+          break;
         }
       }
 
@@ -3988,7 +4193,7 @@ const rHelper = {
             y: 5,
             borderWidth: 0,
             style: {
-              color: "#ffffff"
+              color: "#dedede"
             },
             useHTML: true
           }
@@ -5655,7 +5860,7 @@ const rHelper = {
 
 (() => {
   $("#loading-text").text("fetching data");
-  if (typeof(localStorage.rGame) != "undefined" && getCookie("loggedIn") != 1) {
+  if (typeof (localStorage.rGame) != "undefined" && getCookie("loggedIn") != 1) {
     rHelper.data = JSON.parse(localStorage.getItem("rGame"));
     loadingAnimToggler("hide");
     console.log("Found existing data!");
@@ -5668,12 +5873,12 @@ const rHelper = {
         localStorage.setItem("rGame", JSON.stringify(response));
         loadingAnimToggler("hide");
         switch (parseInt(getCookie("loggedIn"))) {
-          case 1:
-            console.log("Returning user - fetched existing data!");
-            break;
-          default:
-            console.log("New user - fetched basic data!");
-            break;
+        case 1:
+          console.log("Returning user - fetched existing data!");
+          break;
+        default:
+          console.log("New user - fetched basic data!");
+          break;
         }
         rHelper.init.user();
       },

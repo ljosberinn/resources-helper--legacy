@@ -906,17 +906,29 @@
      public function getUserSettings($baseData, $userId)
      {
          $stmt = "SELECT * FROM `userSettings` WHERE `id` = " .$userId. "";
-
          $query = $this->conn->query($stmt);
 
          if ($query->num_rows === 1) {
              while ($data = $query->fetch_assoc()) {
-                 $baseData[0]["value"] = $data["lang"];
-                 $baseData[1]["value"] = $this->convertArrayStringToArray($data["customTU"]);
-                 $baseData[2]["value"] = $data["idealCondition"];
-                 $baseData[3]["value"] = $data["transportCostInclusion"];
-                 $baseData[4]["value"] = $data["mapVisibleHQ"];
-                 $baseData[5]["value"] = $data["priceAge"];
+
+               $baseData[0]["setting"] = "lang";
+               $baseData[0]["value"] = $data["lang"];
+
+               $baseData[1]["setting"] = "customTU";
+               $baseData[1]["value"] = $this->convertArrayStringToArray($data["customTU"]);
+
+               $baseData[2]["setting"] = "idealCondition";
+               $baseData[2]["value"] = $data["idealCondition"];
+
+               $baseData[3]["setting"] = "transportCostInclusion";
+               $baseData[3]["value"] = $data["transportCostInclusion"];
+
+               $baseData[4]["setting"] = "mapVisibleHQ";
+               $baseData[4]["value"] = $data["mapVisibleHQ"];
+
+               $baseData[5]["setting"] = "priceAge";
+               $baseData[5]["value"] = $data["priceAge"];
+
              }
          }
 
