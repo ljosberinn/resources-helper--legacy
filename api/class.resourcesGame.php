@@ -1482,7 +1482,8 @@
              "penalty",
              "status"
              ] as $column) {
-             $result[$data["id"]][$column] = $data[$column];
+
+               $result[$data["id"]][$column] = $data[$column];
            }
 
          }
@@ -2182,7 +2183,7 @@
             $endTimestamp = $mission["endtime"];
             $progress = $mission["progress"];
             $goal = $mission["missiongoal"];
-            $cooldown = $mission["cooldown"];
+            $cooldown = time("now") +  $mission["cooldown"];
             $rewardAmount = $mission["rewardamount"];
             $penalty = $mission["penalty"];
             $status = $mission["status"];

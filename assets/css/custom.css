@@ -804,6 +804,15 @@ kbd {
 	vertical-align: middle;
 }
 
+.yellowgreen-10 {
+	background-color: rgba(154, 205, 50, 0.1);
+}
+
+.faded-mission {
+	opacity         : 0.5;
+	background-color: rgba(255, 165, 0, 0.1);
+}
+
 #worldmap,
 [id*="-finished"],
 [id*="-loading"],

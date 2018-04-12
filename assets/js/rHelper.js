@@ -347,7 +347,7 @@ const rHelper = {
         /*
         src https://stackoverflow.com/questions/10535782/how-can-i-convert-a-date-in-epoch-to-y-m-d-his-in-javascript
         */
-        let iso = new Date(data.registerdate * 1000).toISOString().match(/(\d{4}\-\d{2}\-\d{2})T(\d{2}:\d{2}:\d{2})/);
+        let iso = new Date(rHelper.methods.CALC_toMilliseconds(data.registerdate)).toISOString().match(/(\d{4}\-\d{2}\-\d{2})T(\d{2}:\d{2}:\d{2})/);
         rHelper.data.userInformation.registeredGame = iso[1] + ' ' + iso[2];
         rHelper.methods.API_toggleLoadSuccessorHelper("player");
       });
@@ -803,7 +803,7 @@ const rHelper = {
     SET_mapMineHandler(now, subObj, map, mapType) {
       let type = subObj.type;
       let relObj = rHelper.data.material[type];
-      let buildDate = new Date(subObj.builddate * 1000);
+      let buildDate = new Date(rHelper.methods.CALC_toMilliseconds(subObj.builddate));
       let age = (now - buildDate) / 1000 / 86400;
       let estRevenue = rHelper.methods.CALC_mineEstRevenue(subObj, type, age);
       let contentString = rHelper.methods.CALC_createMapContentString(relObj, buildDate, age, estRevenue, subObj);
@@ -848,7 +848,7 @@ const rHelper = {
       }
 
       $.each(data, (index, subObj) => {
-        let buildHour = new Date(subObj.builddate * 1000).getHours();
+        let buildHour = new Date(rHelper.methods.CALC_toMilliseconds(subObj.builddate)).getHours();
         hours[buildHour][1] += 1;
       });
 
@@ -916,10 +916,10 @@ const rHelper = {
       let lastMine = data[data.length - 1].builddate;
       let daysSinceFirstMine = (lastMine - firstMine) / 86400;
 
-      timestamps.push(firstMine * 1000);
+      timestamps.push(rHelper.methods.CALC_toMilliseconds(firstMine));
 
       for (let i = 0; i <= daysSinceFirstMine; i += 1) {
-        let date = (firstMine + 86400 * i) * 1000;
+        let date = rHelper.methods.CALC_toMilliseconds(firstMine + 86400 * i);
         timestamps.push(date);
       }
 
@@ -930,7 +930,7 @@ const rHelper = {
 
         $.each(data, (index, subObj) => {
 
-          let builddate = subObj.builddate * 1000;
+          let builddate = rHelper.methods.CALC_toMilliseconds(subObj.builddate);
 
           if (builddate <= ts) {
             mineCountAtGivenTS += 1;
@@ -1401,7 +1401,7 @@ const rHelper = {
           let ki = [];
 
           $.each(response.data, (i, dataset) => {
-            let date = new Date(dataset.ts * 1000);
+            let date = new Date(rHelper.methods.CALC_toMilliseconds(dataset.ts));
             timestamps.push(date);
 
             if (dataset.player == 0) {
@@ -2832,34 +2832,107 @@ const rHelper = {
 
       let missionContainer = rHelper.data.missions
       if (missionContainer.length != 0) {
-        let insertMissionReward = (i, id) => {
-          if (id != -1) {
-            $("#mission-reward-" + i).addClass(rHelper.methods.CALC_convertId(id).icon);
+
+        let now = Math.round(Date.now() / 1000);
+
+        let insertMissionReward = (i, mission) => {
+          let rewardId = mission.rewardId;
+          let rewardWorth = 0;
+          let missionCost = 0;
+          let parsedI = parseInt(i);
+
+          if (rewardId != -1) {
+            $("#mission-reward-" + i).addClass(rHelper.methods.CALC_convertId(rewardId).icon);
+            let price = rHelper.methods.CALC_returnPriceViaId(rewardId);
+            rewardWorth += mission.rewardAmount * price;
           } else {
             $("#mission-reward-" + i).text("Cash");
+            rewardWorth += mission.rewardAmount;
+          }
+
+          let uncalculatableMissions = [9, 12, 17, 21, 22, 25, 30, 31, 32, 35, 37, 38, 41, 42, 43, 44, 50, 55];
+          let requirementId = 0;
+          let materialCost = 0;
+
+          if (uncalculatableMissions.indexOf(parsedI) == -1) {
+            switch (parsedI) {
+            case 10:
+              missionCost += rHelper.data.units[5].profit.craftingPrice * mission.goal;
+              break;
+            case 11:
+            case 26:
+            case 28:
+            case 31:
+            case 39:
+              if (parsedI == 26) {
+                requirementId = 29;
+              } else if (parsedI == 28) {
+                requirementId = 21;
+              } else if (parsedI == 31) {
+                requirementId = 20;
+              } else if (parsedI == 39) {
+                requirementId = 25;
+              }
+
+              materialCost = rHelper.methods.CALC_returnPriceViaId(requirementId) * mission.goal;
+              missionCost += materialCost * rHelper.data.buildings[9].transportCost - materialCost;
+              break;
+            case 14:
+              missionCost += rHelper.methods.CALC_currentScanCost() * mission.goal;
+              break;
+            case 33:
+              let calcSmallestUnitPrice = () => {
+                let min = Infinity;
+
+                $.each(rHelper.data.units, (i, unit) => {
+                  if (i == 1 ||  i == 4 || i == 5) {
+                    let craftingPrice = unit.profit.craftingPrice;
+                    let marketPrice = unit.profit.marketPrice * rHelper.data.buildings[9].transportCost;
+                    let result = 0;
+
+                    if (marketPrice > craftingPrice) {
+                      result = craftingPrice;
+                    } else {
+                      result = marketPrice;
+                    }
+
+                    if (result < min) {
+                      min = result;
+                    }
+                  }
+                });
+
+                return min;
+              }
+
+              missionCost += calcSmallestUnitPrice() * mission.goal;
+
+              break;
+            case 45:
+              missionCost += mission.goal / 5 * 100;
+              break;
+            }
+          }
+
+          let missionWorth = rewardWorth - missionCost;
+
+          if (parsedI != 50 && parsedI != 55 && parsedI != 31) {
+            $("#mission-profit-" + i).text(missionWorth.toLocaleString("en-US"));
           }
         }
-
         let colorProgress = (progressPercent) => {
           let color = "coral";
 
           if (progressPercent > 33 && progressPercent < 66) {
             color = "orange";
-          } else if(progressPercent >= 66) {
+          } else if (progressPercent >= 66) {
             color = "yellowgreen";
           }
           return color;
         }
-
         let returnMissionProgress = (progress, goal) => {
           return progress / goal * 100;
         }
-
-        let toMilliseconds = (unix) => {
-          return unix * 1000;
-        }
-
-        let now = Math.round(Date.now() / 1000);
         let calculateRemainingDuration = (now, finish) => {
           let remainingDuration = finish - now;
           if (remainingDuration < 60) {
@@ -2872,32 +2945,73 @@ const rHelper = {
             return (remainingDuration / 86400).toFixed(2) + "d";
           }
         }
+        let fadeOutMission = (i, mission) => {
 
-        $.each(missionContainer, (i, mission) => {
-          insertMissionReward(i, mission.rewardId);
-          $("#mission-cooldown-" + i).text(mission.cooldown);
+          let cooldown = calculateRemainingDuration(now, mission.cooldown);
+
+          $("#mission-progress-" + i).attr("colspan", 3).html("Mission on cooldown for <span style=\"color: orange;\">" + cooldown + "</span>").css("text-align", "center");
+          $("#mission-start-" + i).remove();
+          $("#mission-end-" + i).remove();
+          $("#mission-" + i).addClass("faded-mission");
+        }
+        let highlightAvailableMission = (i) => {
+          $("#mission-" + i).addClass("yellowgreen-10");
+        }
+        let insertMissionConstants = (i, mission) => {
           $("#mission-duration-" + i).text(mission.duration / 24);
           $("#mission-goal-" + i).text(mission.goal.toLocaleString("en-US"));
           $("#mission-interval-" + i).text(mission.intervalDays);
           $("#mission-penalty-" + i).text(mission.penalty.toLocaleString("en-US"));
-          $("#mission-progress-" + i).text(mission.progress);
           $("#mission-reward-amount-" + i).text(mission.rewardAmount.toLocaleString("en-US"));
+        }
+        let onActiveMission = (i, mission) => {
+          let progressPercent = returnMissionProgress(mission.progress, mission.goal);
+          $("#mission-progress-bar-" + i).css({
+            "width": progressPercent + "%",
+            "background-color": colorProgress(progressPercent)
+          });
 
+          $("#mission-start-" + i).text(new Date(rHelper.methods.CALC_toMilliseconds(mission.startTimestamp)));
+          $("#mission-end-" + i).text(calculateRemainingDuration(now, mission.endTimestamp));
+        }
+        let onPassiveMission = (i, mission) => {
+          $("#mission-progress-wrap-" + i).css("display", "none");
+        }
+
+        let checkForMissionStatus = (i, mission) => {
           if (mission.status == 1) {
-            let progressPercent = returnMissionProgress(mission.progress, mission.goal);
-            $("#mission-progress-bar-" + i).css({
-              "width": progressPercent + "%",
-              "background-color": colorProgress(progressPercent)
-            });
-            $("#mission-start-" + i).text(new Date(toMilliseconds(mission.startTimestamp)));
-            $("#mission-end-" + i).text(calculateRemainingDuration(now, mission.endTimestamp));
+            onActiveMission(i, mission);
           } else {
-            $("#mission-progress-wrap-" + i).css("display", "none");
+            onPassiveMission(i, mission);
           }
+        }
+
+        $.each(missionContainer, (i, mission) => {
+
+          insertMissionReward(i, mission);
+          insertMissionConstants(i, mission);
+
+          if (mission.cooldown > now) {
+            fadeOutMission(i, mission);
+          } else {
+            highlightAvailableMission(i);
+          }
+
+          checkForMissionStatus(i, mission);
+
         });
       }
     },
 
+    CALC_currentScanCost() {
+      let techCenterLevel = rHelper.data.buildings[0].level;
+      let mineCount = rHelper.methods.CALC_totalMineCount();
+
+      return Math.round(10000 * Math.pow(2.4, techCenterLevel) * (1 + mineCount / 1000) / 5000) * 5000;
+    },
+    CALC_toMilliseconds(unix) {
+      return unix * 1000;
+    },
     CALC_mineEstRevenue(subObj, type, age) {
       "use strict";
 

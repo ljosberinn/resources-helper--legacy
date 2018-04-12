@@ -31,7 +31,7 @@ $arrayKeys = array_keys($columns);
   <div class="row justify-content-center">
 
     <div class="bg-light mt-3 mb-3 p-4 col-12 rounded">
-      <table class="table table-responsive table-break-medium table-striped mb-3">
+      <table class="table table-responsive table-break-medium mb-3">
         <thead>
           <tr class="small">
 
@@ -67,7 +67,7 @@ $arrayKeys = array_keys($columns);
         foreach($missions as $missionId => $subObj) {
 
           echo '
-          <tr>
+          <tr id="mission-' .$missionId. '">
             <td data-th="' .$arrayKeys[0]. '">
               <span class="rounded img-fluid resources-missions-' .$missionId. '"></span>
               <span class="ml-1">' .$subObj["name"]. '</span>
@@ -83,8 +83,8 @@ $arrayKeys = array_keys($columns);
               <span id="mission-reward-amount-' .$missionId. '"></span>x
               <span id="mission-reward-' .$missionId. '"></span>
             </td>
-            <td data-th="' .$arrayKeys[5]. '" id="mission-profit"></td>
-            <td data-th="' .$arrayKeys[6]. '">
+            <td data-th="' .$arrayKeys[5]. '" class="' .$textOrientation. '" id="mission-profit-' .$missionId. '"></td>
+            <td data-th="' .$arrayKeys[6]. '" id="mission-progress-' .$missionId. '">
               <div id="mission-progress-wrap-' .$missionId. '" class="progress-wrap progress float-right">
                 <div id="mission-progress-bar-' .$missionId. '" class="progress-bar progress"></div>
               </div>
