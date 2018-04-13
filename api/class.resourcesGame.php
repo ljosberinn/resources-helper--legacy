@@ -1276,22 +1276,22 @@
      }
 
      /**
-      * fetches attackLog depending on current $_SESSION["id"]
+      * fetches detailed attackLog depending on current $_SESSION["id"]
       *
-      * @method public getAttackLog($userId)
+      * @method public getDetailedAttackLog($userId)
       * @param  int $userId [current user id]
       * @return array [returns attackLog]
       */
-     public function getAttackLog($userId)
+     public function getDetailedAttackLog($userId)
      {
          $result = [];
 
          $query = "SELECT `target`, `targetLevel`, `timestamp`, `aUnit1`, `aUnit2`, `aUnit3`, `dUnit1`, `dUnit2`, `dUnit3`, `aUnit1Price`, `aUnit2Price`, `aUnit3Price`, `dUnit1Price`, `dUnit2Price`, `dUnit3Price`, `lat`, `lon`, `action`, `result`, `factor`, `lootId1`, `lootId2`, `lootQty1`, `lootQty2`, `lootPrice1`, `lootPrice2`, `worth`, `profit` FROM `userAttackLog_" .$userId. "`";
 
-         $getAttackLog = $this->conn->query($query);
+         $getDetailedAttackLog = $this->conn->query($query);
 
-         if ($getAttackLog->num_rows > 0) {
-             while ($data = $getAttackLog->fetch_assoc()) {
+         if ($getDetailedAttackLog->num_rows > 0) {
+             while ($data = $getDetailedAttackLog->fetch_assoc()) {
                  array_push($result, $data);
              }
          }
@@ -1299,6 +1299,93 @@
          return $result;
      }
 
+     /**
+      * fetches simple attackLog depending on current $_SESSION["id"]
+      *
+      * @method public getSimpleAttackLog($userId)
+      * @param  int $userId [current user id]
+      * @return array [returns attackLog]
+      */
+     public function getSimpleAttackLog($userId)
+     {
+         $result = [];
+
+         $query = "SELECT
+         `target` AS `targetName`,
+         ( SELECT MAX(`timestamp` * 1000) FROM `userAttackLog_" .$userId. "` WHERE `action` = 'A' AND `target` = targetName) `lastAttacked`,
+         MAX(`targetLevel`) AS `targetLevel`,
+         AVG(`factor`) AS `factor`,
+         COUNT(*) AS `sumAttacks`,
+         SUM(`result`) as `sumWin`,
+         (SELECT ROUND(AVG(`aUnit1`)) FROM `userAttackLog_" .$userId. "` WHERE `action` = 'A' AND `result` = 1 AND `dUnit1` <= 200 AND `dUnit2` <= 5 AND `dUnit3` <= 2 AND `target` = targetName) `unit0`,
+         (SELECT ROUND(AVG(`aUnit2`)) FROM `userAttackLog_" .$userId. "` WHERE `action` = 'A' AND `result` = 1 AND `dUnit1` <= 200 AND `dUnit2` <= 5 AND `dUnit3` <= 2 AND `target` = targetName) `unit1`,
+         (SELECT ROUND(AVG(`aUnit3`)) FROM `userAttackLog_" .$userId. "` WHERE `action` = 'A' AND `result` = 1 AND `dUnit1` <= 200 AND `dUnit2` <= 5 AND `dUnit3` <= 2 AND `target` = targetName) `unit2`,
+         SUM(`profit`) as `profit`
+         FROM `userAttackLog_" .$userId. "`
+         WHERE `action` = 'A'
+         GROUP BY(`target`)
+         ORDER BY `profit` DESC";
+
+         $getSimpleAttackLog = $this->conn->query($query);
+
+         if ($getSimpleAttackLog->num_rows > 0) {
+             while ($data = $getSimpleAttackLog->fetch_assoc()) {
+                 array_push($result, $data);
+             }
+         }
+
+         return $result;
+     }
+
+     /**
+      * fetches simple defenseLog depending on current $_SESSION["id"]
+      *
+      * @method public getDefenseLog($userId)
+      * @param  int $userId [current user id]
+      * @return array [returns defenseLog]
+      */
+     public function getDefenseLog($userId)
+     {
+         $result = [];
+
+         $query = "SELECT
+         `target` AS `targetName`,
+         ( SELECT MAX(`timestamp` * 1000) FROM `userAttackLog_" .$userId. "` WHERE `action` = 'D' AND `target` = targetName) `lastAttacked`,
+         MAX(`targetLevel`) AS `targetLevel`,
+         AVG(`factor`) AS `factor`,
+         COUNT(*) AS `sumAttacks`,
+         SUM(`result`) as `sumWin`,
+         (SELECT ROUND(AVG(`aUnit1`)) FROM `userAttackLog_" .$userId. "` WHERE `action` = 'D' AND `result` = 0 AND `dUnit1` <= 200 AND `dUnit2` <= 5 AND `dUnit3` <= 2 AND `target` = targetName) `unit0`,
+         (SELECT ROUND(AVG(`aUnit2`)) FROM `userAttackLog_" .$userId. "` WHERE `action` = 'D' AND `result` = 0 AND `dUnit1` <= 200 AND `dUnit2` <= 5 AND `dUnit3` <= 2 AND `target` = targetName) `unit1`,
+         (SELECT ROUND(AVG(`aUnit3`)) FROM `userAttackLog_" .$userId. "` WHERE `action` = 'D' AND `result` = 0 AND `dUnit1` <= 200 AND `dUnit2` <= 5 AND `dUnit3` <= 2 AND `target` = targetName) `unit2`,
+
+         (SELECT SUM(`aUnit1` * `aUnit1Price` + `aUnit2` * `aUnit2Price` + `aUnit3` * `aUnit3Price`) AS `unitLossValue` FROM `userAttackLog_" .$userId. "` WHERE `action` = 'D' AND `target` = targetName) `unitLossValue`,
+         (SELECT (SUM(`worth`) - `unitLossValue`) AS `profit` FROM `userAttackLog_" .$userId. "` WHERE `action` = 'D' AND `result` = 0 AND `target` = targetName) `profit`
+
+         FROM `userAttackLog_" .$userId. "`
+         WHERE `action` = 'D'
+         GROUP BY(`target`)
+         ORDER BY `profit` DESC";
+
+         $getDefenseLog = $this->conn->query($query);
+
+         if ($getDefenseLog->num_rows > 0) {
+             while ($data = $getDefenseLog->fetch_assoc()) {
+                 array_push($result, $data);
+             }
+         }
+
+         return $result;
+     }
+
+     /**
+      * fetches hq information for a specific user
+      *
+      * @method private extractHQInformation($userId)
+      * @param  int $userId [current user id]
+      * @param string $relation ["friend" or "foe"]
+      * @return array [returns array with hq information]
+      */
      private function extractHQInformation($userId, $relation) {
 
        $result = [];
@@ -1323,6 +1410,15 @@
         return $result;
      }
 
+     /**
+      * fetches mine information for a specific user
+      *
+      * @method private extractMineInformation($userId)
+      * @param  int $userId [current user id]
+      * @param string $relation ["friend" or "foe"]
+      * @param int $type [material type]
+      * @return array [returns array with mine information]
+      */
      private function extractMineInformation($userId, $relation, $type) {
        $result = [];
 
@@ -1344,6 +1440,13 @@
        return $result;
      }
 
+     /**
+      * fetches hq visibility for a specific user
+      *
+      * @method private checkHQVisibility($userId)
+      * @param  int $userId [current user id]
+      * @return int [returns 0 or 1]
+      */
      private function checkHQVisibility($userId) {
        $querySetting = "SELECT `mapVisibleHQ` FROM `userSettings` WHERE `id` = " .$userId. "";
        $getUserSetting = $this->conn->query($querySetting);
@@ -1357,6 +1460,12 @@
        return $hqVisibility;
      }
 
+     /**
+      * fetches all user ids
+      *
+      * @method private extractUserIds($userId)
+      * @return array [returns all user ids]
+      */
      private function extractUserIds() {
        $userIds = [];
 
@@ -1372,6 +1481,13 @@
        return $userIds;
      }
 
+     /**
+      * returns relationship depending on current user
+      *
+      * @method private setRelationship($userId)
+      * @param int $userId [current user id]
+      * @return string ["friend" or "foe"]
+      */
      private function setRelationship($userId) {
        if($userId == $_SESSION["id"] && $userId != 0) {
          $relation = "friend";
@@ -2386,7 +2502,7 @@
             }
           }
 
-          $answer["callback"] = "rHelper.methods.API_getAttackLog()";
+          $answer["callback"] = "rHelper.methods.API_getAttackLog(\"attackSimple\")";
 
           return json_encode($answer);
      }

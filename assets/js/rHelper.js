@@ -25,8 +25,6 @@ const rHelper = {
 
       rHelper.methods.INSRT_totalMineWorth(rHelper.methods.CALC_totalMineWorth());
       rHelper.methods.INSRT_totalMineCount(rHelper.methods.CALC_totalMineCount());
-      rHelper.methods.INSRT_materialMineAmortisation();
-      rHelper.methods.INSRT_materialHighlightMinePerfectIncome();
 
       let calculationOrder = rHelper.methods.GET_calculationOrder();
 
@@ -40,12 +38,6 @@ const rHelper = {
         // price history
         rHelper.methods.INSRT_priceHistoryName("products", factoryId);
       });
-
-      rHelper.methods.INSRT_totalFactoryUpgrades();
-      rHelper.methods.INSRT_factoryHighlightColumns();
-      rHelper.methods.INSRT_diamondTop10Profit();
-      rHelper.methods.INSRT_diamondTotalProfit();
-      rHelper.methods.INSRT_flowDistributionGlobal();
 
       // loot
       $.each(rHelper.data.loot, (index) => {
@@ -81,9 +73,6 @@ const rHelper = {
         rHelper.methods.INSRT_priceHistoryName("units", index);
       });
 
-      rHelper.methods.INSRT_warehouseTotalLevel();
-      rHelper.methods.INSRT_warehouseTotalWorth();
-
       // buildings
       let buildingFns = [
         "INSRT_buildingName",
@@ -114,17 +103,7 @@ const rHelper = {
         });
       });
 
-      rHelper.methods.SET_hqLevel();
-      rHelper.methods.EVNT_headquarterInput();
-
-      // techupgrades
-      rHelper.methods.INSRT_techUpgradeRows();
-
-      // missions
-      rHelper.methods.INSRT_missions();
-
       // initiate graphs
-      rHelper.methods.EVNT_priceHistoryOnChange();
       let pieGraphs = [
         "material",
       ];
@@ -141,10 +120,39 @@ const rHelper = {
         rHelper.methods.INSRT_gaugeGraph(val);
       });
 
-      rHelper.methods.INSRT_companyWorth();
-      rHelper.methods.EVNT_sortableTables();
-      rHelper.methods.EVNT_assignTitleToIcons();
-      rHelper.methods.EVNT_enableTippy();
+      let nonParamBoundMethods = [
+        // mines
+        "INSRT_materialMineAmortisation",
+        "INSRT_materialHighlightMinePerfectIncome",
+        // factories
+        "INSRT_totalFactoryUpgrades",
+        "INSRT_factoryHighlightColumns",
+        "INSRT_diamondTop10Profit",
+        "INSRT_diamondTotalProfit",
+        "INSRT_flowDistributionGlobal",
+        // warehouse
+        "INSRT_warehouseTotalLevel",
+        "INSRT_warehouseTotalWorth",
+        // graphs
+        "EVNT_priceHistoryOnChange",
+        // headquarter
+        "SET_hqLevel",
+        "EVNT_headquarterInput",
+        // missions
+        "INSRT_missions",
+        // techupgrades
+        "INSRT_techUpgradeRows",
+        "EVNT_attackLogTrigger",
+        "INSRT_companyWorth",
+        "EVNT_sortableTables",
+        "EVNT_assignTitleToIcons",
+        "EVNT_enableTippy",
+
+      ];
+
+      $.each(nonParamBoundMethods, (i, fn) => {
+        rHelper.methods[fn]();
+      });
     }
   },
   "methods": {
@@ -344,20 +352,22 @@ const rHelper = {
           rHelper.data.userInformation.name = data.name;
         }
 
-        /*
-        src https://stackoverflow.com/questions/10535782/how-can-i-convert-a-date-in-epoch-to-y-m-d-his-in-javascript
-        */
-        let iso = new Date(rHelper.methods.CALC_toMilliseconds(data.registerdate)).toISOString().match(/(\d{4}\-\d{2}\-\d{2})T(\d{2}:\d{2}:\d{2})/);
-        rHelper.data.userInformation.registeredGame = iso[1] + ' ' + iso[2];
+        rHelper.data.userInformation.registeredGame = rHelper.methods.CALC_convertDateToIso(data.registerdate);
         rHelper.methods.API_toggleLoadSuccessorHelper("player");
       });
     },
-    API_getAttackLog() {
+    API_getAttackLog(type) {
       "use strict";
 
-      $.getJSON("api/core.php?attackLog", (data) => {
+      if (typeof (type) == "undefined") {
+        type = "attackSimple";
+      }
+
+      $.getJSON("api/core.php?attackLog&type=" + type, (data) => {
         rHelper.data.attackLog = data;
         rHelper.methods.API_toggleLoadSuccessorHelper("attack-log");
+
+        rHelper.methods.INSRT_attackLog(type);
       });
     },
     API_getAttackLogInitiator(key) {
@@ -368,8 +378,8 @@ const rHelper = {
       $.getJSON("api/core.php?query=9&key=" + key, (data) => {
         console.log(data);
 
-        if (data.callback == "rHelper.methods.API_getAttackLog()") {
-          rHelper.methods.API_getAttackLog();
+        if (data.callback == "rHelper.methods.API_getAttackLog(\"simple\")") {
+          rHelper.methods.API_getAttackLog("attackSimple");
         } else {
           swal("Error", "Couldn't fetch attack log - API potentially unavailable!", "error");
         }
@@ -803,8 +813,9 @@ const rHelper = {
     SET_mapMineHandler(now, subObj, map, mapType) {
       let type = subObj.type;
       let relObj = rHelper.data.material[type];
-      let buildDate = new Date(rHelper.methods.CALC_toMilliseconds(subObj.builddate));
-      let age = (now - buildDate) / 1000 / 86400;
+      let buildMilliseconds = rHelper.methods.CALC_toMilliseconds(subObj.builddate);
+      let buildDate = rHelper.methods.CALC_convertDateToIso(buildMilliseconds);
+      let age = (now - buildMilliseconds) / 1000 / 86400;
       let estRevenue = rHelper.methods.CALC_mineEstRevenue(subObj, type, age);
       let contentString = rHelper.methods.CALC_createMapContentString(relObj, buildDate, age, estRevenue, subObj);
       let infoWindow = rHelper.methods.SET_mapInfoWindow(contentString);
@@ -947,7 +958,7 @@ const rHelper = {
         mineCount.push(mineCountAtGivenTS);
         avgMinePrice.push(Math.round(sum / 14));
 
-        timestamps[i] = new Date(ts);
+        timestamps[i] = rHelper.methods.CALC_convertDateToIso(ts);
       });
 
       Highcharts.chart("graph-overtime", {
@@ -1401,7 +1412,7 @@ const rHelper = {
           let ki = [];
 
           $.each(response.data, (i, dataset) => {
-            let date = new Date(rHelper.methods.CALC_toMilliseconds(dataset.ts));
+            let date = rHelper.methods.CALC_convertDateToIso(rHelper.methods.CALC_toMilliseconds(dataset.ts));
             timestamps.push(date);
 
             if (dataset.player == 0) {
@@ -1481,7 +1492,155 @@ const rHelper = {
         infoNode.text(errorText);
       }
     },
+    EVNT_attackLogTrigger() {
+      $("#heading-defenselog a").on("click", (e) => {
+        e.preventDefault();
+        rHelper.methods.API_getAttackLog("defenseSimple");
+      });
 
+      $("#heading-attacklog-1 a").on("click", (e) => {
+        e.preventDefault();
+        rHelper.methods.API_getAttackLog("attackSimple");
+      });
+
+      $("#heading-attacklog-2 a").on("click", (e) => {
+        e.preventDefault();
+        rHelper.methods.API_getAttackLog("attackDetailed");
+      });
+    },
+
+    INSRT_attackLogDetailed(data) {
+      let target = $("#attacklog-tbody-detailed");
+    },
+    INSRT_ADLogSimple(type, data) {
+      let target = $("#attacklog-tbody-simple");
+      target.empty();
+
+      let setTRColor = (profit) => {
+        let colorClass = "bg-success-25";
+
+        if (profit <= 0 || profit == null) {
+          colorClass = "bg-warning-25";
+        }
+
+        return colorClass;
+      }
+
+      let dataTHs = [
+        "Attacked player (last known level)",
+        "Last attacked",
+        "Total attacks",
+        "Win",
+        "Loss",
+        "Average loot factor",
+        "Average amount of units used",
+        "Profit",
+      ];
+
+      let unitIndices = [0, 2, 3];
+      let textOrientation = "text-md-right text-sm-left";
+      let sortableTable = $("#collapse-attacklog-simple table")[0];
+
+      if (type == "defenseSimple") {
+        dataTHs[0] = "Attacking player (last known level)";
+        sortableTable = $("#collapse-defenselog-simple table")[0];
+        target = $("#defenselog-tbody-simple");
+      }
+
+      $.each(data, (i, dataset) => {
+        let tr = $(crEl("tr"));
+
+        for (let index = 0; index <= 7; index += 1) {
+          let td = $(crEl("td")).attr("data-th", dataTHs[index]);
+          let loss = 0;
+          let winPercent = 0;
+          let factor = 0;
+          let unitsContent = "";
+
+          switch (index) {
+          case 0:
+            td.text(dataset.targetName + " (" + dataset.targetLevel + ")");
+            break;
+          case 1:
+            td.text(rHelper.methods.CALC_convertDateToIso(dataset.lastAttacked));
+            break;
+          case 2:
+            winPercent = (dataset.sumWin / dataset.sumAttacks * 100).toFixed(2);
+            td.text(dataset.sumAttacks.toLocaleString("en-US") + " (" + winPercent + "%)").addClass(textOrientation);
+            break;
+          case 3:
+            if (type == "defenseSimple") {
+              loss = dataset.sumAttacks - dataset.sumWin;
+              td.text(loss.toLocaleString("en-US")).addClass(textOrientation);
+            } else if (type == "attackSimple") {
+              td.text(dataset.sumWin.toLocaleString("en-US")).addClass(textOrientation);
+            }
+            break;
+          case 4:
+            if (type == "defenseSimple") {
+              td.text(dataset.sumWin.toLocaleString("en-US")).addClass(textOrientation);
+            } else if (type == "attackSimple") {
+              loss = dataset.sumAttacks - dataset.sumWin;
+              td.text(loss.toLocaleString("en-US")).addClass(textOrientation);
+            }
+            break;
+          case 5:
+            factor = (dataset.factor * 100).toFixed(2);
+            td.text(factor + "%").addClass(textOrientation);
+            break;
+          case 6:
+
+            for (let k = 0; k <= 2; k += 1) {
+              let span = $(crEl("span"));
+              span.addClass("resources-unit-" + unitIndices[k]);
+              let unitAmount = dataset["unit" + k];
+              if (unitAmount == null) {
+                unitAmount = 0;
+              }
+              unitsContent += span[0].outerHTML + " " + unitAmount.toLocaleString("en-US") + " ";
+            }
+
+            td.html(unitsContent);
+            break;
+          case 7:
+            let profit = dataset.profit;
+            if (profit == null) {
+              profit = 0;
+            }
+
+            let unitLossValue = dataset.unitLossValue;
+            if (unitLossValue != null) {
+              profit -= unitLossValue;
+            }
+
+            td.text(profit.toLocaleString("en-US")).addClass(textOrientation);
+            break;
+          }
+
+          tr.addClass(setTRColor(dataset.profit)).append(td);
+        }
+
+        target.append(tr);
+      });
+
+      sorttable.makeSortable(sortableTable);
+    },
+    INSRT_attackLog(type) {
+      let data = rHelper.data.attackLog;
+      let fn;
+
+      switch (type) {
+      case "attackSimple":
+      case "defenseSimple":
+        fn = "INSRT_ADLogSimple";
+        break;
+      case "attackDetailed":
+        fn = "INSRT_attackLogDetailed";
+        break;
+      }
+
+      rHelper.methods[fn](type, data);
+    },
     INSRT_materialData(materialId, api) {
       "use strict";
 
@@ -2533,9 +2692,7 @@ const rHelper = {
       }
 
       let target = $("#techupgrades-calc-tbl tbody");
-      if (target[0].childNodes.length > 0) {
-        target.empty();
-      }
+      target.empty();
 
       let url = "api/getTechCombination.php?factor=" + value;
       if (typeof (tu4Inclusion) == "string") {
@@ -2585,9 +2742,9 @@ const rHelper = {
                 td.text(count).attr("data-th", "remaining Pimp my mine count");
                 break;
               }
-              tr.append(td[0]);
+              tr.append(td);
             }
-            target.append(tr[0].outerHTML);
+            target.append(tr);
           });
 
           sorttable.makeSortable(table[0]);
@@ -2599,8 +2756,8 @@ const rHelper = {
           let tr = $(crEl("tr"));
           let td = $(crEl("td"));
           td.addClass("text-warning text-center").attr("data-th", "Attention").attr("colspan", 7).text("No entries found or invalid value. Try to lower the value a bit – up to 5 decimals are allowed (e.g. 3.00005).");
-          tr.append(td[0]);
-          target.append(tr[0]);
+          tr.append(td);
+          target.append(tr);
           toggleTechUpgradeInfo("end");
         });
     },
@@ -2835,27 +2992,14 @@ const rHelper = {
 
         let now = Math.round(Date.now() / 1000);
 
-        let insertMissionReward = (i, mission) => {
-          let rewardId = mission.rewardId;
-          let rewardWorth = 0;
-          let missionCost = 0;
-          let parsedI = parseInt(i);
-
-          if (rewardId != -1) {
-            $("#mission-reward-" + i).addClass(rHelper.methods.CALC_convertId(rewardId).icon);
-            let price = rHelper.methods.CALC_returnPriceViaId(rewardId);
-            rewardWorth += mission.rewardAmount * price;
-          } else {
-            $("#mission-reward-" + i).text("Cash");
-            rewardWorth += mission.rewardAmount;
-          }
-
+        let calculateMissionCost = (i, mission) => {
           let uncalculatableMissions = [9, 12, 17, 21, 22, 25, 30, 31, 32, 35, 37, 38, 41, 42, 43, 44, 50, 55];
           let requirementId = 0;
           let materialCost = 0;
+          let missionCost = 0;
 
-          if (uncalculatableMissions.indexOf(parsedI) == -1) {
-            switch (parsedI) {
+          if (uncalculatableMissions.indexOf(i) == -1) {
+            switch (i) {
             case 10:
               missionCost += rHelper.data.units[5].profit.craftingPrice * mission.goal;
               break;
@@ -2864,13 +3008,13 @@ const rHelper = {
             case 28:
             case 31:
             case 39:
-              if (parsedI == 26) {
+              if (i == 26) {
                 requirementId = 29;
-              } else if (parsedI == 28) {
+              } else if (i == 28) {
                 requirementId = 21;
-              } else if (parsedI == 31) {
+              } else if (i == 31) {
                 requirementId = 20;
-              } else if (parsedI == 39) {
+              } else if (i == 39) {
                 requirementId = 25;
               }
 
@@ -2914,12 +3058,48 @@ const rHelper = {
             }
           }
 
-          let missionWorth = rewardWorth - missionCost;
+          return missionCost;
+        }
 
-          if (parsedI != 50 && parsedI != 55 && parsedI != 31) {
-            $("#mission-profit-" + i).text(missionWorth.toLocaleString("en-US"));
+        let calculateMissionReward = (i, mission) => {
+
+          let rewardId = mission.rewardId;
+          let rewardWorth = 0;
+
+          if (rewardId != -1) {
+            $("#mission-reward-" + i).addClass(rHelper.methods.CALC_convertId(rewardId).icon);
+            let price = rHelper.methods.CALC_returnPriceViaId(rewardId);
+            rewardWorth += mission.rewardAmount * price;
+          } else {
+            $("#mission-reward-" + i).text("Cash");
+            rewardWorth += mission.rewardAmount;
+          }
+
+          return rewardWorth;
+        }
+
+        let returnWorthColor = (missionWorth) => {
+          let color = "coral";
+
+          if (missionWorth > 0) {
+            color = "yellowgreen";
           }
         }
+
+        let insertMissionReward = (i, mission) => {
+          let parsedI = parseInt(i);
+
+          let rewardWorth = calculateMissionReward(i, mission);
+          let missionCost = calculateMissionCost(parsedI, mission);
+
+          let missionWorth = rewardWorth - missionCost;
+          let color = returnWorthColor(missionWorth);
+
+          if (parsedI != 50 && parsedI != 55 && parsedI != 31) {
+            $("#mission-profit-" + i).text(missionWorth.toLocaleString("en-US")).css("color", color);
+          }
+        }
+
         let colorProgress = (progressPercent) => {
           let color = "coral";
 
@@ -2930,11 +3110,15 @@ const rHelper = {
           }
           return color;
         }
+
         let returnMissionProgress = (progress, goal) => {
           return progress / goal * 100;
         }
+
         let calculateRemainingDuration = (now, finish) => {
+
           let remainingDuration = finish - now;
+
           if (remainingDuration < 60) {
             return remainingDuration + "s";
           } else if (remainingDuration >= 60 && remainingDuration < 3600) {
@@ -2945,6 +3129,7 @@ const rHelper = {
             return (remainingDuration / 86400).toFixed(2) + "d";
           }
         }
+
         let fadeOutMission = (i, mission) => {
 
           let cooldown = calculateRemainingDuration(now, mission.cooldown);
@@ -2954,9 +3139,11 @@ const rHelper = {
           $("#mission-end-" + i).remove();
           $("#mission-" + i).addClass("faded-mission");
         }
+
         let highlightAvailableMission = (i) => {
           $("#mission-" + i).addClass("yellowgreen-10");
         }
+
         let insertMissionConstants = (i, mission) => {
           $("#mission-duration-" + i).text(mission.duration / 24);
           $("#mission-goal-" + i).text(mission.goal.toLocaleString("en-US"));
@@ -2964,6 +3151,7 @@ const rHelper = {
           $("#mission-penalty-" + i).text(mission.penalty.toLocaleString("en-US"));
           $("#mission-reward-amount-" + i).text(mission.rewardAmount.toLocaleString("en-US"));
         }
+
         let onActiveMission = (i, mission) => {
           let progressPercent = returnMissionProgress(mission.progress, mission.goal);
           $("#mission-progress-bar-" + i).css({
@@ -2971,9 +3159,10 @@ const rHelper = {
             "background-color": colorProgress(progressPercent)
           });
 
-          $("#mission-start-" + i).text(new Date(rHelper.methods.CALC_toMilliseconds(mission.startTimestamp)));
+          $("#mission-start-" + i).text(rHelper.methods.CALC_convertDateToIso(rHelper.methods.CALC_toMilliseconds(mission.startTimestamp)));
           $("#mission-end-" + i).text(calculateRemainingDuration(now, mission.endTimestamp));
         }
+
         let onPassiveMission = (i, mission) => {
           $("#mission-progress-wrap-" + i).css("display", "none");
         }
@@ -3003,6 +3192,15 @@ const rHelper = {
       }
     },
 
+    CALC_convertDateToIso(milliseconds) {
+      /*
+      src https://stackoverflow.com/questions/10830357/javascript-toisostring-ignores-timezone-offset?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+       */
+
+      let tzoffset = (new Date(milliseconds)).getTimezoneOffset() * 60000;
+      let date = (new Date(milliseconds - tzoffset)).toISOString().slice(0, -1).match(/(\d{4}\-\d{2}\-\d{2})T(\d{2}:\d{2}:\d{2})/);
+      return date[1] + ' ' + date[2];
+    },
     CALC_currentScanCost() {
       let techCenterLevel = rHelper.data.buildings[0].level;
       let mineCount = rHelper.methods.CALC_totalMineCount();
@@ -3273,7 +3471,14 @@ const rHelper = {
         worth += price * requiredAmount[index];
       });
 
-      if (rHelper.data.settings[3].value == 1) {
+      let settings = rHelper.data.settings[3];
+      let transportCostInclusion = 1;
+
+      if (typeof (settings) != "undefined") {
+        transportCostInclusion = rHelper.data.settings[3].value;
+      }
+
+      if (transportCostInclusion == 1) {
         worth *= rHelper.data.buildings[9].transportCost;
       }
 
@@ -3343,7 +3548,14 @@ const rHelper = {
       let price = rHelper.methods.CALC_returnPriceViaId(convertedId, 0);
       let worth = price * amount;
 
-      if (rHelper.data.settings[3].value == 1) {
+      let settings = rHelper.data.settings[3];
+      let transportCostInclusion = 1;
+
+      if (typeof (settings) != "undefined") {
+        transportCostInclusion = rHelper.data.settings[3].value;
+      }
+
+      if (transportCostInclusion == 1) {
         worth *= rHelper.data.buildings[9].transportCost;
       }
 
@@ -4176,7 +4388,14 @@ const rHelper = {
 
       let index = 0;
       if (typeof (period) == "undefined") {
-        index = possiblePrices[rHelper.data.settings[5].value];
+        let settings = rHelper.data.settings[5];
+        let priceAgeSetting = 2;
+
+        if (typeof (settings) != "undefined") {
+          priceAgeSetting = rHelper.data.settings[5].value;
+        }
+
+        index = possiblePrices[priceAgeSetting];
       } else if (typeof (period) == "number") {
         index = possiblePrices[period];
       }
@@ -4257,8 +4476,15 @@ const rHelper = {
       let customTUPrice = 0;
       let tuIndex = 46;
 
+      let settings = rHelper.data.settings[1];
+      let customTUCombination = [111, 26, 0, 0];
+
+      if (typeof (settings) != "undefined") {
+        customTUCombination = settings.value;
+      }
+
       for (let i = 0; i <= 3; i += 1) {
-        customTUPrice += rHelper.data.settings[1].value[i] * rHelper.methods.CALC_returnPriceViaId((tuIndex + i));
+        customTUPrice += customTUCombination[i] * rHelper.methods.CALC_returnPriceViaId((tuIndex + i));
       }
 
       return customTUPrice;

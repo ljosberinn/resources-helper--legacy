@@ -30,9 +30,19 @@ if (isset($_GET["key"]) && isset($_GET["query"])) {
 
     $output = json_encode($resourcesGame->getTradeLog($userId), JSON_NUMERIC_CHECK);
 
-} elseif(isset($_GET["attackLog"])) {
+} elseif(isset($_GET["attackLog"]) && isset($_GET["type"])) {
 
-    $output = json_encode($resourcesGame->getAttackLog($userId), JSON_NUMERIC_CHECK);
+  switch($_GET["type"]) {
+    case "attackDetailed":
+      $output = json_encode($resourcesGame->getDetailedAttackLog($userId), JSON_NUMERIC_CHECK);
+    break;
+    case "defenseSimple":
+      $output = json_encode($resourcesGame->getDefenseLog($userId), JSON_NUMERIC_CHECK);
+    break;
+    default:
+      $output = json_encode($resourcesGame->getSimpleAttackLog($userId), JSON_NUMERIC_CHECK);
+    break;
+  }
 
 } elseif(isset($_GET["missions"])) {
 

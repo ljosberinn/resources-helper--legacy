@@ -3,8 +3,7 @@
 <nav class="col-12 p-4 bg-light rounded">
 
   <p class="text-success text-center">
-    working: API, Mines, Factories, Calc, Flow, Warehouses, Special Buildings, Headquarter, Recycling/Units, Tech-Upgrades, Headquarter, Price History, Maps, Discord, Changelog, Quality Comparator<br />
-    not working/placeholder: everything else within Navigation & Terms of Service/Contact/Donate (on bottom)<br />
+    working: everything except Trade Log, Attack Log and the Leaderboard & bottom links<br />
     known issues: - no possibility of saving the API key if not during registration - only English available (might stay this way) - data wont save locally when not registered; only API is permanent right now
   </p>
 

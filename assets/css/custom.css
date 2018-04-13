@@ -721,6 +721,7 @@ kbd {
 	padding         : 1px !important;
 }
 
+#collapse-attacklog-simple table th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after,
 #module-factories table th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after,
 #module-mines table th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after,
 #modules-diamond table th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after,
@@ -767,6 +768,11 @@ kbd {
 	height         : 75px;
 	width          : 75px;
 }
+@media(max-width: 767px) {
+	#module-attacklog tr {
+		border-bottom: 1px solid orange;
+	}
+}
 
 #hq-sprite {
 	display: flex;
@@ -806,6 +812,10 @@ kbd {
 
 .yellowgreen-10 {
 	background-color: rgba(154, 205, 50, 0.1);
+}
+
+.coral-10 {
+	background-color: rgba(255, 165, 0, 0.1);
 }
 
 .faded-mission {
