@@ -721,6 +721,7 @@ kbd {
 	padding         : 1px !important;
 }
 
+#collapse-attacklog-detailed table:last-of-type th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after,
 #collapse-attacklog-simple table th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after,
 #module-factories table th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after,
 #module-mines table th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after,
@@ -1417,4 +1418,9 @@ kbd {
 	left    : 0;
 	position: absolute;
 	top     : 0;
+}
+
+#attacklog-detailed-last,
+#attacklog-detailed-next {
+	cursor: pointer;
 }

@@ -356,14 +356,24 @@ const rHelper = {
         rHelper.methods.API_toggleLoadSuccessorHelper("player");
       });
     },
-    API_getAttackLog(type) {
+    API_getAttackLog(type, target, skipCount) {
       "use strict";
 
       if (typeof (type) == "undefined") {
         type = "attackSimple";
       }
 
-      $.getJSON("api/core.php?attackLog&type=" + type, (data) => {
+      let url = "api/core.php?attackLog&type=" + type;
+
+      if (target) {
+        url += "&target=" + target;
+      }
+
+      if (skipCount) {
+        url += "&skip=" + skipCount;
+      }
+
+      $.getJSON(url, (data) => {
         rHelper.data.attackLog = data;
         rHelper.methods.API_toggleLoadSuccessorHelper("attack-log");
 
@@ -376,11 +386,7 @@ const rHelper = {
       rHelper.methods.API_toggleLoader("attack-log");
 
       $.getJSON("api/core.php?query=9&key=" + key, (data) => {
-        console.log(data);
-
-        if (data.callback == "rHelper.methods.API_getAttackLog(\"simple\")") {
-          rHelper.methods.API_getAttackLog("attackSimple");
-        } else {
+        if (data.callback != "rHelper.methods.API_getAttackLog(\"attackSimple\")") {
           swal("Error", "Couldn't fetch attack log - API potentially unavailable!", "error");
         }
       });
@@ -1509,22 +1515,55 @@ const rHelper = {
       });
     },
 
-    INSRT_attackLogDetailed(data) {
+    INSRT_attackLogDetailedGeneralInformation(dataContainer) {
+      $("#attacklog-detailed-units-lost-avg").html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion("offense", dataContainer.avg.unitsLost));
+      $("#attacklog-detailed-units-lost-total").html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion("offense", dataContainer.total.unitsLost));
+
+      $("#attacklog-detailed-factor-avg").text(dataContainer.avg.factor + "%");
+
+      $("#attacklog-detailed-profit-avg").text(dataContainer.avg.profit.toLocaleString("en-US"));
+      $("#attacklog-detailed-profit-total").text(dataContainer.total.profit.toLocaleString("en-US"));
+    },
+    INSRT_attackLogDetailed(type, dataContainer) {
       let target = $("#attacklog-tbody-detailed");
+      target.empty();
+
+      let select = $("#attacklog-detailed-selector");
+      if (select[0].children.length == 2) {
+        $.each(dataContainer.validTargets, (i, target) => {
+          select.append('<option value="' + target + '">' + target + '</option>');
+        });
+      }
+
+
+      let sortableTable = $("#collapse-attacklog-detailed table")[1];
+
+      let dataTHs = [
+        "Attacked player (level)",
+        "Timestamp & position",
+        "Units lost",
+        "Units destroyed",
+        "Lootfactor",
+        "Loot",
+        "Profit",
+      ];
+
+      $.each(dataContainer.data, (i, dataset) => {
+        target.append(rHelper.methods.CALC_attackLogDetailedDatasetIteration(i, dataset, dataTHs));
+      });
+
+      rHelper.methods.INSRT_attackLogDetailedGeneralInformation(dataContainer);
+
+      ["last", "next"].forEach((type) => {
+        rHelper.methods.CALC_attackLogDetailedPageButtonToggler(type, dataContainer);
+      });
+
+      sorttable.makeSortable(sortableTable);
+
     },
     INSRT_ADLogSimple(type, data) {
       let target = $("#attacklog-tbody-simple");
       target.empty();
-
-      let setTRColor = (profit) => {
-        let colorClass = "bg-success-25";
-
-        if (profit <= 0 || profit == null) {
-          colorClass = "bg-warning-25";
-        }
-
-        return colorClass;
-      }
 
       let dataTHs = [
         "Attacked player (last known level)",
@@ -1617,7 +1656,7 @@ const rHelper = {
             break;
           }
 
-          tr.addClass(setTRColor(dataset.profit)).append(td);
+          tr.addClass(rHelper.methods.CALC_attackLogSetTRColor(dataset.profit)).append(td);
         }
 
         target.append(tr);
@@ -3084,6 +3123,8 @@ const rHelper = {
           if (missionWorth > 0) {
             color = "yellowgreen";
           }
+
+          return color;
         }
 
         let insertMissionReward = (i, mission) => {
@@ -3192,6 +3233,131 @@ const rHelper = {
       }
     },
 
+    CALC_attackLogDetailedUnitStringInsertion(type, container) {
+      let content = "";
+      let unitArray;
+
+      if (type == "offense") {
+        unitArray = [
+          0, 2, 3
+        ];
+      } else if (type == "defense") {
+        unitArray = [
+          5, 4, 1
+        ];
+      }
+
+      $.each(container, (i, unitAmount) => {
+        if (unitAmount != 0) {
+          content += ' <span class="resources-unit-' + unitArray[i] + '"></span> ' + unitAmount.toLocaleString("en-US");
+        }
+      });
+
+      return content;
+    },
+    CALC_attackLogDetailedDatasetIteration(i, dataset, dataTHs) {
+      let tr = $(crEl("tr")).addClass(rHelper.methods.CALC_attackLogSetTRColor(dataset.result));
+      let textOrientation = "text-md-right text-sm-left";
+      let factorBgColorClass = "bg-success-25";
+
+      for (let index = 0; index <= 7; index += 1) {
+        let td = $(crEl("td")).attr("data-th", dataTHs[index]);
+
+        switch (index) {
+        case 0:
+          td.text(dataset.target + " (" + dataset.targetLevel + ")");
+          break;
+        case 1:
+          td.html(rHelper.methods.CALC_attackLogDetailedCoordsTimestampString(dataset));
+          break;
+        case 2:
+          td.html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion("offense", dataset.offense.units)).addClass("text-sm-left text-md-center");
+          break
+        case 3:
+          td.html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion("defense", dataset.defense.units)).addClass("text-sm-left text-md-center");
+          break;
+        case 4:
+          if (dataset.factor < 100) {
+            factorBgColorClass = "bg-warning-25";
+          }
+
+          td.text(dataset.factor.toLocaleString("en-US") + "%").addClass(textOrientation + " " + factorBgColorClass);
+          break;
+        case 5:
+          td.html(rHelper.methods.CALC_attackLogDetailedLootString(dataset.loot));
+          break;
+        case 6:
+          let profit = dataset.profit;
+          let result = dataset.result;
+          let profitColor = "#dedede";
+
+          if ((profit < 0 && result) || !result) {
+            profitColor = "coral";
+          }
+
+          td.text(profit.toLocaleString("en-US")).addClass(textOrientation).css("color", profitColor);
+          break;
+        }
+
+        tr.append(td);
+      }
+
+      return tr;
+    },
+    CALC_attackLogSetTRColor(result) {
+      let colorClass = "bg-success-25";
+
+      if (!result) {
+        colorClass = "bg-warning-25";
+      }
+
+      return colorClass;
+    },
+    CALC_attackLogDetailedCoordsTimestampString(dataset) {
+      let string = "";
+      let coords = dataset.coordinates.lat + ", " + dataset.coordinates.lon;
+      let timestamp = rHelper.methods.CALC_convertDateToIso(dataset.attackedAt);
+      let a = '<a href="https://www.google.com/maps/search/' + coords + '" target="_blank" rel="noopener nofollow noreferrer">' + coords + '</a>';
+
+      return timestamp + ' | ' + a;
+    },
+    CALC_attackLogDetailedPageButtonToggler(type, dataContainer) {
+      let button = $("#attacklog-detailed-" + type);
+      let success = "btn-success";
+
+      if (type == "last") {
+        if (dataContainer.skipCount == 0) {
+          button.attr("disabled", true).removeClass(success);
+        } else {
+          button.attr("disabled", false).addClass(success);
+        }
+      } else if (type == "next") {
+        if (dataContainer.maxLength > (dataContainer.skipCount + 100)) {
+          button.addClass(success).attr("disabled", false);
+        } else {
+          button.removeClass(success).attr("disabled", true);
+        }
+      }
+    },
+    CALC_attackLogDetailedLootString(lootContainer) {
+      let lootString = "";
+
+      $.each(lootContainer, (index, iteration) => {
+        let type = iteration.type;
+        let amount = iteration.amount;
+        let icon = "";
+
+        if (type == -1) {
+          icon = '<img src="assets/img/cash.png" alt="Cash" />';
+        } else {
+          icon = '<span class="' + rHelper.methods.CALC_convertId(type).icon + '"></span>';
+        }
+
+        lootString += icon + " " + iteration.amount.toLocaleString("en-US") + " ";
+      });
+
+      return lootString;
+    },
     CALC_convertDateToIso(milliseconds) {
       /*
       src https://stackoverflow.com/questions/10830357/javascript-toisostring-ignores-timezone-offset?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa

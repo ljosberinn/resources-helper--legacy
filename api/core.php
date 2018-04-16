@@ -34,7 +34,7 @@ if (isset($_GET["key"]) && isset($_GET["query"])) {
 
   switch($_GET["type"]) {
     case "attackDetailed":
-      $output = json_encode($resourcesGame->getDetailedAttackLog($userId), JSON_NUMERIC_CHECK);
+      $output = json_encode($resourcesGame->getDetailedAttackLog($userId, $_GET["target"], $_GET["skip"]), JSON_NUMERIC_CHECK);
     break;
     case "defenseSimple":
       $output = json_encode($resourcesGame->getDefenseLog($userId), JSON_NUMERIC_CHECK);

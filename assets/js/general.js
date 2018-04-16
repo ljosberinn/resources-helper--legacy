@@ -13,11 +13,11 @@ $("#registration-reset-fields").click(() => {
 });
 
 $("#registration-form").submit((event) => {
-  var passwordRegex = new RegExp("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{4,}$");
-  var pw1El = $("#registration-pw-1");
-  var pw2El = $("#registration-pw-2");
-  var pw1Val = pw1El.val();
-  var pw2Val = pw2El.val();
+  let passwordRegex = new RegExp("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{4,}$");
+  let pw1El = $("#registration-pw-1");
+  let pw2El = $("#registration-pw-2");
+  let pw1Val = pw1El.val();
+  let pw2Val = pw2El.val();
 
   $.each([pw1Val, pw2Val], (i, value) => {
     if (value === "") {
@@ -45,13 +45,13 @@ $("#registration-form").submit((event) => {
 });
 
 $("#password-change-form").submit((event) => {
-  var passwordRegex = new RegExp("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{4,}$");
-  var pwOldEl = $("#settings-current-password");
-  var pw1El = $("#settings-new-password-1");
-  var pw2El = $("#settings-new-password-2");
-  var pwOldElVal = pwOldEl.val();
-  var pw1Val = pw1El.val();
-  var pw2Val = pw2El.val();
+  let passwordRegex = new RegExp("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{4,}$");
+  let pwOldEl = $("#settings-current-password");
+  let pw1El = $("#settings-new-password-1");
+  let pw2El = $("#settings-new-password-2");
+  let pwOldElVal = pwOldEl.val();
+  let pw1Val = pw1El.val();
+  let pw2Val = pw2El.val();
 
   $.each([pwOldEl, pw1Val, pw2Val], (i, value) => {
     if (value === "") {
@@ -134,7 +134,7 @@ $("#login-forgot-password").click((e) => {
 });
 
 window.setInterval(() => {
-  var wait = document.getElementById("loading-dots");
+  let wait = document.getElementById("loading-dots");
 
   if (wait) {
     if (wait.innerHTML.length > 3) {
@@ -148,7 +148,7 @@ window.setInterval(() => {
 $("#settings-toggler").on("click", (e) => {
   e.preventDefault();
 
-  var settings = $("#module-settings");
+  let settings = $("#module-settings");
 
   if (settings.css("display") == "block") {
     settings.css("display", "none");
@@ -166,15 +166,15 @@ $("#settings-close").on("click", (e) => {
 $("#api-submit").on("click", function (e) {
   e.preventDefault();
   this.disabled = true;
-  var key = $("#api-key").val().replace(/ /g, "");
-  var anonymity = false;
+  let key = $("#api-key").val().replace(/ /g, "");
+  let anonymity = false;
 
   if (!key || key.length != 45) {
     swal("API Error", "Key missing or too short/long (" + key.length + " instead of 45 characters)", "error");
     return;
   }
 
-  var API_possibilities = [
+  let API_possibilities = [
     "factories",
     "warehouse",
     "buildings",
@@ -187,11 +187,11 @@ $("#api-submit").on("click", function (e) {
     "missions",
   ];
 
-  var queries = [];
+  let queries = [];
 
   $.each(API_possibilities, (i, possibility) => {
 
-    var el = $("#api-" + possibility);
+    let el = $("#api-" + possibility);
 
     if (el.prop("checked") === true) {
       queries.push(parseInt(el.attr("data-query")));
@@ -215,7 +215,7 @@ $(".nav-link").each((i, navLink) => {
 });
 
 $("#techupgrades-toggle").on("click", function () {
-  var el = $(this);
+  let el = $(this);
 
   if (el.prop("checked") === true) {
     rHelper.methods.INSRT_techUpgradeRows("tu4");
@@ -229,8 +229,8 @@ $("#techupgrades-toggle").on("click", function () {
 
 $("#techupgrades-input").on("input", function () {
 
-  var tu4Allowance = $("#techupgrades-calc-tu4-allowance");
-  var value = parseFloat(this.value);
+  let tu4Allowance = $("#techupgrades-calc-tu4-allowance");
+  let value = parseFloat(this.value);
 
   if (value >= 1.01 && value <= 5) {
     if (tu4Allowance.prop("checked") === true) {
@@ -253,13 +253,47 @@ $("#worldmap-selector").on("change", function () {
 });
 
 $("#qualitycomparator-selector").on("change", function () {
-  var type = parseInt(this.value);
-  var quality = $("#qualitycomparator-quality").val();
+  let type = parseInt(this.value);
+  let quality = $("#qualitycomparator-quality").val();
   rHelper.methods.INSRT_qualityComparator(type, quality);
 });
 
 $("#qualitycomparator-quality").on("input", function () {
-  var type = $("#qualitycomparator-selector").val();
-  var quality = parseInt(this.value);
+  let type = $("#qualitycomparator-selector").val();
+  let quality = parseInt(this.value);
   rHelper.methods.INSRT_qualityComparator(type, quality);
+});
+
+$("#attacklog-detailed-selector").on("change", function () {
+  let target = this.value;
+  let type = "attackDetailed";
+  let skipCount = rHelper.data.attackLog.skipCount;
+
+  let currentTarget = rHelper.data.attackLog.data[0].target;
+  if (target != currentTarget) {
+    skipCount = 0;
+  }
+
+  if(parseInt(target) == -1) {
+    target = 0;
+    skipCount = 0;
+  }
+
+  rHelper.methods.API_getAttackLog(type, target, skipCount);
+});
+
+$("#attacklog-detailed-next").on("click", () => {
+  let target = $("#attacklog-detailed-selector").val();
+  let type = "attackDetailed";
+  let skipCount = rHelper.data.attackLog.skipCount + 100;
+
+  rHelper.methods.API_getAttackLog(type, target, skipCount);
+});
+
+$("#attacklog-detailed-last").on("click", () => {
+  let target = $("#attacklog-detailed-selector").val();
+  let type = "attackDetailed";
+  let skipCount = rHelper.data.attackLog.skipCount - 100;
+
+  rHelper.methods.API_getAttackLog(type, target, skipCount);
 });

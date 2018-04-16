@@ -1282,18 +1282,161 @@
       * @param  int $userId [current user id]
       * @return array [returns attackLog]
       */
-     public function getDetailedAttackLog($userId)
+     public function getDetailedAttackLog($userId, $target, $skipCount)
      {
-         $result = [];
 
-         $query = "SELECT `target`, `targetLevel`, `timestamp`, `aUnit1`, `aUnit2`, `aUnit3`, `dUnit1`, `dUnit2`, `dUnit3`, `aUnit1Price`, `aUnit2Price`, `aUnit3Price`, `dUnit1Price`, `dUnit2Price`, `dUnit3Price`, `lat`, `lon`, `action`, `result`, `factor`, `lootId1`, `lootId2`, `lootQty1`, `lootQty2`, `lootPrice1`, `lootPrice2`, `worth`, `profit` FROM `userAttackLog_" .$userId. "`";
+         $validTargets = [];
+
+         $validTargetsQuery = "SELECT DISTINCT(`target`) FROM `userAttackLog_" .$userId. "` WHERE `action` = 'A' ORDER BY `target` ASC";
+         $getValidTargets = $this->conn->query($validTargetsQuery);
+
+         if($getValidTargets->num_rows > 0) {
+             while($data = $getValidTargets->fetch_assoc()) {
+                 array_push($validTargets, $data["target"]);
+             }
+         }
+
+         if(!$skipCount) {
+             $skipCount = 0;
+         }
+
+         $result = [
+             "validTargets" => $validTargets,
+             "skipCount" => $skipCount,
+             "avg" => [
+                 "profit" => 0,
+                 "factor" => 0,
+                 "unitsLost" => [],
+             ],
+             "total" => [
+                 "profit" => 0,
+                 "factor" => 0,
+                 "unitsLost" => [],
+             ],
+             "days" => [
+
+             ],
+         ];
+
+         $query = "SELECT
+         `target`,
+         `targetLevel`,
+         `timestamp`,
+         `aUnit1`, `aUnit2`, `aUnit3`,
+         `dUnit1`, `dUnit2`, `dUnit3`,
+         `lat`, `lon`,
+         `result`,
+         `factor`,
+         `lootId1`, `lootId2`,
+         `lootQty1`, `lootQty2`,
+         `lootPrice1`, `lootPrice2`,
+         `worth`, `profit`
+         FROM `userAttackLog_" .$userId. "` WHERE `action` = 'A' ";
+
+         /*
+         get amount of entries for this query for page-wise iteration on frontend
+          */
+
+         $getMaxLengthQuery = "SELECT COUNT(*) AS `maxLength` FROM `userAttackLog_" .$userId. "` WHERE `action` = 'A'";
+
+         /*
+          group all results per day
+         */
+
+        $getAttackingDaysQuery = "SELECT FROM_UNIXTIME(`timestamp`) as `validDay` FROM `userAttackLog_" .$userId. "` WHERE `action` = 'A' GROUP BY DATE(FROM_UNIXTIME(timestamp)) ORDER BY `timestamp` DESC";
+
+         if(!empty($target)) {
+
+             if(in_array($target, $validTargets)) {
+                 $addendum = " AND `target` = '" .$target. "'";
+                 $query .= $addendum;
+                 $getMaxLengthQuery .= $addendum;
+                 $getAttackingDaysQuery = "SELECT FROM_UNIXTIME(`timestamp`) as `validDay` FROM `userAttackLog_" .$userId. "` WHERE `action` = 'A' AND `target` = '" .$target. "' GROUP BY DATE(FROM_UNIXTIME(timestamp)) ORDER BY `timestamp` DESC";
+             }
+         }
+
+         $validDays = [];
+         $getAttackingDays = $this->conn->query($getAttackingDaysQuery);
+         if($getAttackingDays->num_rows > 0) {
+           while($data = $getAttackingDays->fetch_assoc()) {
+             array_push($validDays, substr($data["validDay"], 0, -9));
+           }
+         }
+         $result["validDays"] = $validDays;
+
+         $getMaxLength = $this->conn->query($getMaxLengthQuery);
+
+         $maxLength = 0;
+         if($getMaxLength->num_rows == 1) {
+           while($data = $getMaxLength->fetch_assoc()) {
+             $maxLength = $data["maxLength"];
+           }
+         }
+
+         $result["maxLength"] = $maxLength;
+
+         $query .= " ORDER BY `timestamp` DESC LIMIT 100 OFFSET " .$skipCount;
+
+
+
 
          $getDetailedAttackLog = $this->conn->query($query);
 
+
+         $i = 0;
+
          if ($getDetailedAttackLog->num_rows > 0) {
              while ($data = $getDetailedAttackLog->fetch_assoc()) {
-                 array_push($result, $data);
+
+                $result["data"][$i]["coordinates"]["lat"] = $data["lat"];
+                $result["data"][$i]["coordinates"]["lon"] = $data["lon"];
+
+                $result["data"][$i]["target"] = $data["target"];
+                $result["data"][$i]["targetLevel"] = $data["targetLevel"];
+
+                $result["data"][$i]["loot"]["primary"]["type"] = $data["lootId1"];
+                $result["data"][$i]["loot"]["primary"]["amount"] = $data["lootQty1"];
+                $result["data"][$i]["loot"]["primary"]["price"] = $data["lootPrice1"];
+
+                $result["data"][$i]["loot"]["secondary"]["type"] = $data["lootId2"];
+                $result["data"][$i]["loot"]["secondary"]["amount"] = $data["lootQty2"];
+                $result["data"][$i]["loot"]["secondary"]["price"] = $data["lootPrice2"];
+
+                for($k = 0; $k <= 2; $k += 1) {
+                    $result["data"][$i]["offense"]["units"][$k] = $data["aUnit" .($k + 1). ""];
+                    $result["total"]["unitsLost"][$k] += $data["aUnit" .($k + 1). ""];
+
+                    $result["data"][$i]["defense"]["units"][$k] =  $data["dUnit" .($k + 1). ""];
+                }
+
+                switch($data["result"]) {
+                    case 0:
+                    $attackResult = false;
+                    break;
+                    case 1: default:
+                    $attackResult = true;
+                    break;
+                }
+
+                $result["data"][$i]["result"] = $attackResult;
+                $result["data"][$i]["attackedAt"] = $data["timestamp"] * 1000;
+
+                $result["data"][$i]["profit"] = $data["profit"];
+                $result["total"]["profit"] += $data["profit"];
+
+                $result["data"][$i]["factor"] = $data["factor"] * 100;
+                $result["total"]["factor"] += $data["factor"];
+
+                $i++;
              }
+         }
+
+         $result["avg"]["loot"] = round($result["total"]["loot"] / $i);
+         $result["avg"]["profit"] = round($result["total"]["profit"] / $i);
+         $result["avg"]["factor"] = round($result["total"]["factor"] / $i) * 100;
+
+         for($k = 0; $k <= 2; $k += 1) {
+            $result["avg"]["unitsLost"][$k] = round($result["total"]["unitsLost"][$k] / $i);
          }
 
          return $result;

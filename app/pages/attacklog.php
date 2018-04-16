@@ -29,7 +29,7 @@ $arrayKeys = array_keys($columns);
 		<div class="card">
 			<div class="card-header bg-dark" role="tab" id="heading-defenselog">
 				<h5 class="mb-0">
-					<a class="collapsed" data-toggle="collapse" data-parent="#defenselog-accordion" href="#collapse-defenselog-simple" aria-expanded="false" aria-controls="collapse-defenselog-simple">
+					<a class="collapsed" data-toggle="collapse" data-parent="#attacklog-accordion" href="#collapse-defenselog-simple" aria-expanded="false" aria-controls="collapse-defenselog-simple">
 						Simple Defense Log
 					</a>
 				</h5>
