@@ -8,15 +8,15 @@ $textOrientation = "text-md-right text-sm-left";
 
 <div class="bg-light mt-3 mb-3 p-4 col-12 rounded" id="module-buildings">
 
-	<h6><span class="nav-icon-buildings"></span> Special Buildings</h6>
-	<hr class="mb-3">
+  <h6><span class="nav-icon-buildings"></span> Special Buildings</h6>
+  <hr class="mb-3">
 
   <div class="row justify-content-center">
 
-  <?php
+    <?php
 
-  for($i = 0; $i <= 11; $i += 1) {
-    echo '
+    for($i = 0; $i <= 11; $i += 1) {
+        echo '
     <div class="col-sm-12 col-md-8 col-xl-4 rounded m-2 p-2" id="building-' .$i. '">
       <table class="table table-responsive table-break-medium table-striped mb-3">
         <thead>
@@ -27,11 +27,11 @@ $textOrientation = "text-md-right text-sm-left";
             </th>
             <th class="text-right">
               <select class="custom-select" id="buildings-level-' .$i. '">';
-                for($k = 0; $k <= 10; $k += 1) {
-                  echo '
-                  <option value="' .$k. '">Level ' .$k. '</option>';
-                }
-                echo '</select>
+        for($k = 0; $k <= 10; $k += 1) {
+            echo '
+            <option value="' .$k. '">Level ' .$k. '</option>';
+        }
+        echo '</select>
             </th>
           </tr>
         </thead>
@@ -97,9 +97,9 @@ $textOrientation = "text-md-right text-sm-left";
         </tfoot>
       </table>
     </div>';
-  }
+    }
 
-  ?>
+    ?>
 
   </div>
   <div class="col-xs-12 col-md-12" id="graph-buildings"></div>

@@ -3,37 +3,39 @@
 /**
  * resourcesGame contains all methods for this page
  *
- * @method mixed resourcesGame
+ * @author  Gerrit Alex <admin@gerritalex.de>
+ * @license MIT (https://github.com/ljosberinn/resources-helper/blob/master/LICENSE)
+ * @link    https://github.com/ljosberinn/resources-helper
  **/
 
- class resourcesGame
- {
+class resourcesGame
+{
      /**
       * @var object $host host adress
       */
-     private $host;
+    private $host;
      /**
       * @var object $user user
       */
-     private $user;
+    private $user;
      /**
       * @var object $pw password
       */
-     private $pw;
+    private $pw;
      /**
       * @var object $db database
       */
-     private $db;
+    private $db;
 
      /**
       * @var object $conn is the global mysqli object
       */
-     private $conn;
+    private $conn;
 
      /**
       * @var array $prices contains all prices returned by @method private getAllPrices()
       */
-     private $prices;
+    private $prices;
 
      /**
      * queries also function as table names
@@ -1377,9 +1379,6 @@
 
          $query .= " ORDER BY `timestamp` DESC LIMIT 100 OFFSET " .$skipCount;
 
-
-
-
          $getDetailedAttackLog = $this->conn->query($query);
 
 
@@ -1460,9 +1459,9 @@
          AVG(`factor`) AS `factor`,
          COUNT(*) AS `sumAttacks`,
          SUM(`result`) as `sumWin`,
-         (SELECT ROUND(AVG(`aUnit1`)) FROM `userAttackLog_" .$userId. "` WHERE `action` = 'A' AND `result` = 1 AND `dUnit1` <= 200 AND `dUnit2` <= 5 AND `dUnit3` <= 2 AND `target` = targetName) `unit0`,
-         (SELECT ROUND(AVG(`aUnit2`)) FROM `userAttackLog_" .$userId. "` WHERE `action` = 'A' AND `result` = 1 AND `dUnit1` <= 200 AND `dUnit2` <= 5 AND `dUnit3` <= 2 AND `target` = targetName) `unit1`,
-         (SELECT ROUND(AVG(`aUnit3`)) FROM `userAttackLog_" .$userId. "` WHERE `action` = 'A' AND `result` = 1 AND `dUnit1` <= 200 AND `dUnit2` <= 5 AND `dUnit3` <= 2 AND `target` = targetName) `unit2`,
+         (SELECT ROUND(AVG(`aUnit1`)) FROM `userAttackLog_" .$userId. "` WHERE `action` = 'A' AND `result` = 1 AND `dUnit1` <= 200 AND `dUnit2` <= 5 AND `dUnit3` <= 2 AND `target` = targetName AND `targetLevel` = targetLevel) `unit0`,
+         (SELECT ROUND(AVG(`aUnit2`)) FROM `userAttackLog_" .$userId. "` WHERE `action` = 'A' AND `result` = 1 AND `dUnit1` <= 200 AND `dUnit2` <= 5 AND `dUnit3` <= 2 AND `target` = targetName AND `targetLevel` = targetLevel) `unit1`,
+         (SELECT ROUND(AVG(`aUnit3`)) FROM `userAttackLog_" .$userId. "` WHERE `action` = 'A' AND `result` = 1 AND `dUnit1` <= 200 AND `dUnit2` <= 5 AND `dUnit3` <= 2 AND `target` = targetName AND `targetLevel` = targetLevel) `unit2`,
          SUM(`profit`) as `profit`
          FROM `userAttackLog_" .$userId. "`
          WHERE `action` = 'A'

@@ -12,8 +12,8 @@ if (isset($_SESSION["id"])) {
 
 <div class="<?php echo $headerClasses; ?> col-md-12 col-sm-12 p-4">
 
-	<h1><img src="assets/img/icon.png" alt="" /> <img src="assets/img/logo.png" alt="Resources" /> Helper <?php require "loadingDiv.php"; ?></h1>
-	<hr class="mb-3">
-	<p class="text-muted small">your go-to calculator for Resources mobile GPS real-time economy simulation</p>
+    <h1><img src="assets/img/icon.png" alt="" /> <img src="assets/img/logo.png" alt="Resources" /> Helper <?php require "loadingDiv.php"; ?></h1>
+    <hr class="mb-3">
+    <p class="text-muted small">your go-to calculator for Resources mobile GPS real-time economy simulation</p>
 
 </div>

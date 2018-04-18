@@ -1,2 +1,7 @@
 
 api/db.php
+.ftpconfig
+app/presets
+test.js
+test.min.js
+index.html

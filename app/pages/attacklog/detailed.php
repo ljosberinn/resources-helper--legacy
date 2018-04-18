@@ -3,15 +3,13 @@
 $textOrientation = "text-md-right text-sm-left";
 
 $columns = [
-
-  "Attacked player (level)" => "sorttable_nosort",
-  "Timestamp & position" => "sorttable_nosort",
-  "Units lost" => "text-sm-left text-md-center sorttable_nosort",
-  "Units destroyed" => "text-sm-left text-md-center sorttable_nosort",
-  "Lootfactor" => $textOrientation,
-  "Loot" => "sorttable_nosort",
-  "Profit" => $textOrientation,
-
+    "Attacked player (level)" => "sorttable_nosort",
+    "Timestamp & position" => "sorttable_nosort",
+    "Units lost" => "text-sm-left text-md-center sorttable_nosort",
+    "Units destroyed" => "text-sm-left text-md-center sorttable_nosort",
+    "Lootfactor" => $textOrientation,
+    "Loot" => "sorttable_nosort",
+    "Profit" => $textOrientation,
 ];
 
 ?>

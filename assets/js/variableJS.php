@@ -1,5 +1,4 @@
 <?php
-
 ob_start();
 
 header("Content-type: application/x-javascript");
@@ -7,8 +6,6 @@ header("Content-type: application/x-javascript");
 session_start();
 
 ob_end_flush();
-
-
 
 $toggleRegistrationLoginForms = '$("#collapse-registration").removeClass("show");$("#collapse-login").addClass("show");';
 

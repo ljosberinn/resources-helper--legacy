@@ -23,7 +23,6 @@
 <!-- external stylesheets
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans"> -->
 
-
 <!-- internal stylesheets -->
 <link rel="stylesheet" href="assets/css/GoogleFonts_OpenSans.min.css" />
 <link rel="stylesheet" href="assets/css/sweetalert2.min.css" />
@@ -31,16 +30,16 @@
 <?php
 
 $cssFiles = [
-  "assets/css/bootstrap.custom.min.css" => [
-    "mode" => "",
-    "params" => "",
-    "type" => "css",
-  ],
-  "assets/css/custom.min.css" => [
-    "mode" => "",
-    "params" => "",
-    "type" => "css",
-  ],
+    "assets/css/bootstrap.custom.min.css" => [
+        "mode" => "",
+        "params" => "",
+        "type" => "css",
+    ],
+    "assets/css/custom.min.css" => [
+        "mode" => "",
+        "params" => "",
+        "type" => "css",
+    ],
 ];
 
 appendFiles($cssFiles);
@@ -52,30 +51,26 @@ appendFiles($cssFiles);
 
 if (isset($_SESSION["id"])) {
     echo '
-  <style>
-
-  @media (max-width: 639px) {
-  	#loading-container {
-  		display: block;
-  		text-align: center;
-  		margin-top: 5px;
-  	}
-  }
-
-  </style>';
+    <style>
+    @media (max-width: 639px) {
+        #loading-container {
+            display: block;
+            text-align: center;
+            margin-top: 5px;
+        }
+    }
+    </style>';
 } else {
     echo '
-  <style>
-
-  @media (max-width: 1240px) {
-  	#loading-container {
-  		display: block;
-  		text-align: center;
-  		margin-top: 5px;
-  	}
-  }
-
-  </style>';
+    <style>
+    @media (max-width: 1240px) {
+        #loading-container {
+            display: block;
+            text-align: center;
+            margin-top: 5px;
+        }
+    }
+    </style>';
 }
 
 ?>
@@ -97,16 +92,11 @@ if (isset($_SESSION["id"])) {
 <?php
 
 $jsFiles = [
-  "assets/js/functions.min.js" => [
-    "mode" => "",
-    "params" => "",
-    "type" => "js",
-  ],
-  "assets/js/sorttable.min.js" => [
-    "mode" => "",
-    "params" => "",
-    "type" => "js",
-  ],
+    "assets/js/sorttable.min.js" => [
+        "mode" => "",
+        "params" => "",
+        "type" => "js",
+    ],
 ];
 
 appendFiles($jsFiles);

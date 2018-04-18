@@ -2,8 +2,8 @@
 
 <div class="bg-light mt-3 mb-3 p-4 col-12 rounded" id="module-qualitycomparator">
 
-	<h6><span class="nav-icon-qualitycomparator"></span> Quality Comparator</h6>
-	<hr class="mb-3">
+  <h6><span class="nav-icon-qualitycomparator"></span> Quality Comparator</h6>
+  <hr class="mb-3">
 
   <div class="row justify-content-center">
     <div class="col-xs-6 col-md-6">

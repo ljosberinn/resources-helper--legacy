@@ -7,8 +7,8 @@
     known issues: - no possibility of saving the API key if not during registration - only English available (might stay this way) - data wont save locally when not registered; only API is permanent right now
   </p>
 
-	<ul class="nav nav-tabs">
-		<?php
+    <ul class="nav nav-tabs">
+        <?php
 
     $icons = [
         "map",
@@ -26,7 +26,7 @@
     if (!isset($_SESSION["id"])) {
         echo '
         <li class="nav-item">
-		      <a class="nav-link" href="#registrationlogin" data-target="module-registrationlogin"><span>' .$pencil. '</span> Registration & Login</a>
+              <a class="nav-link" href="#registrationlogin" data-target="module-registrationlogin"><span>' .$pencil. '</span> Registration & Login</a>
         </li>';
     }
 
@@ -141,6 +141,6 @@
     }
 
     ?>
-	</ul>
+    </ul>
 
 </nav>

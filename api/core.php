@@ -9,7 +9,7 @@ require "class.resourcesGame.php";
 
 if (isset($_SESSION["id"])) {
     $userId = $_SESSION["id"];
-} else if(isset($_GET["id"])) {
+} elseif(isset($_GET["id"])) {
     $userId = $_GET["id"];
 } else {
     $userId = 0;
@@ -18,7 +18,9 @@ if (isset($_SESSION["id"])) {
 $prices = "off";
 $resourcesGame = new resourcesGame($host, $user, $pw, $db, $prices);
 
-if (isset($_GET["key"]) && isset($_GET["query"])) {
+if (isset($_GET["key"])
+    && isset($_GET["query"])
+) {
 
     $output = $resourcesGame->getAPIData($_GET["query"], $_GET["key"], $userId, $_GET["anonymity"]);
 
@@ -30,19 +32,21 @@ if (isset($_GET["key"]) && isset($_GET["query"])) {
 
     $output = json_encode($resourcesGame->getTradeLog($userId), JSON_NUMERIC_CHECK);
 
-} elseif(isset($_GET["attackLog"]) && isset($_GET["type"])) {
+} elseif(isset($_GET["attackLog"])
+    && isset($_GET["type"])
+) {
 
-  switch($_GET["type"]) {
+    switch($_GET["type"]) {
     case "attackDetailed":
-      $output = json_encode($resourcesGame->getDetailedAttackLog($userId, $_GET["target"], $_GET["skip"]), JSON_NUMERIC_CHECK);
-    break;
+        $output = json_encode($resourcesGame->getDetailedAttackLog($userId, $_GET["target"], $_GET["skip"]), JSON_NUMERIC_CHECK);
+        break;
     case "defenseSimple":
-      $output = json_encode($resourcesGame->getDefenseLog($userId), JSON_NUMERIC_CHECK);
-    break;
+        $output = json_encode($resourcesGame->getDefenseLog($userId), JSON_NUMERIC_CHECK);
+        break;
     default:
-      $output = json_encode($resourcesGame->getSimpleAttackLog($userId), JSON_NUMERIC_CHECK);
-    break;
-  }
+        $output = json_encode($resourcesGame->getSimpleAttackLog($userId), JSON_NUMERIC_CHECK);
+        break;
+    }
 
 } elseif(isset($_GET["missions"])) {
 
@@ -52,7 +56,10 @@ if (isset($_GET["key"]) && isset($_GET["query"])) {
 
     $output = json_encode($resourcesGame->getUserIndex(), JSON_NUMERIC_CHECK);
 
-} elseif(isset($_GET["worldMap"]) && $_GET["worldMap"] >= 0 && $_GET["worldmap"] <= 13) {
+} elseif(isset($_GET["worldMap"])
+    && $_GET["worldMap"] >= 0
+    && $_GET["worldmap"] <= 13
+) {
 
     $output = json_encode($resourcesGame->getWorldMap($_GET["worldMap"]), JSON_NUMERIC_CHECK);
 
@@ -85,9 +92,9 @@ if (isset($_GET["key"]) && isset($_GET["query"])) {
         $baseData = $resourcesGame->getUserWarehouseContent($baseData, $userId); // stable
         $baseData["userInformation"] = $resourcesGame->getUserInfo($userId); // stable
         $baseData["missions"] = $resourcesGame->getMissions($userId); // stable
-        #$baseData["attackLog"] = $resourcesGame->getAttackLog($userId); // stable
-        #$baseData["mineMap"] = $resourcesGame->getPersonalMineMap($userId); // stable
-        #$baseData["tradeLog"] = $resourcesGame->getTradeLog($userId); // stable
+        //$baseData["attackLog"] = $resourcesGame->getAttackLog($userId); // stable
+        //$baseData["mineMap"] = $resourcesGame->getPersonalMineMap($userId); // stable
+        //$baseData["tradeLog"] = $resourcesGame->getTradeLog($userId); // stable
     }
 
     $baseData = $resourcesGame->getLanguageVariables($baseData); // stable

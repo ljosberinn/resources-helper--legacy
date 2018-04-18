@@ -3,16 +3,14 @@
 $textOrientation = "text-md-right text-sm-left";
 
 $columns = [
-
-  "Attacking player (last known level)" => "sorttable_nosort",
-  "Last attack" => "sorttable_nosort",
-  "Total attacks (Win %)" => $textOrientation. " sorttable_nosort",
-  "Win" => $textOrientation,
-  "Loss" => $textOrientation,
-  "Average loot factor" => $textOrientation,
-  "Average amount of units required to win against 200/5/2" => "sorttable_nosort",
-  "Profit" => $textOrientation,
-
+    "Attacking player (last known level)" => "sorttable_nosort",
+    "Last attack" => "sorttable_nosort",
+    "Total attacks (Win %)" => $textOrientation. " sorttable_nosort",
+    "Win" => $textOrientation,
+    "Loss" => $textOrientation,
+    "Average loot factor" => $textOrientation,
+    "Average amount of units required to win against 200/5/2" => "sorttable_nosort",
+    "Profit" => $textOrientation,
 ];
 
 ?>
