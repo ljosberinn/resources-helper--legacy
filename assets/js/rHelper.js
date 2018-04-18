@@ -3917,7 +3917,7 @@ const rHelper = {
                 requiredAmount = dependantObj.factoryLevel * requiredAmountPerLevel;
             }
 
-            string += `<span class="resources-${type}-${id}"></span> ${requiredAmount.toLocaleString("en-US")} ${arrow} <span class="resources-product-${dependantIconIndex}></span>`;
+            string += `<span class="resources-${type}-${id}"></span> ${requiredAmount.toLocaleString("en-US")} ${arrow} <span class="resources-product-${dependantIconIndex}"></span>`;
             let name1 = "";
             let name2 = dependantObj.name;
 
