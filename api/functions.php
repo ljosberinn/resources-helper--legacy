@@ -1,11 +1,10 @@
 <?php
 
-/*
-* @method public explodeGET($get)
-* @params $get [$_GET]
-* @returns string [$_GET as key => value string (ex. "abc=def&ghi&...")]
-*/
-
+/**
+ * @method public explodeGET($get)
+ * @param array $get [$_GET]
+ * @return string [$_GET as key => value string (ex. "abc=def&ghi&...")]
+ */
 function explodeGET($get)
 {
     $string = "?";
@@ -22,13 +21,13 @@ function explodeGET($get)
 }
 
 
-/*
-* @method public connect()
-* @returns object [mysqli object]
-*/
+/**
+ * @method public connect()
+ * @return object [mysqli object]
+ */
 function connect()
 {
-    require "db.php";
+    include_once "db.php";
     $conn = new mysqli($host, $user, $pw, $db);
     $conn->set_charset("UTF-8");
 
@@ -36,12 +35,11 @@ function connect()
 }
 
 
-/*
-* @method public appendJSFiles
-* @param array $ownJSFiles [relative links to file]
-* @returns string [script link]
-*/
-
+/**
+ * @method public appendJSFiles
+ * @param array $files [$ownJSFiles, relative links to file]
+ * @return string [script link]
+ */
 function appendFiles($files)
 {
     foreach ($files as $link => $subInfo) {
@@ -57,23 +55,22 @@ function appendFiles($files)
         }
 
         if($subInfo["type"] == "js") {
-
-        echo '
-  		    <script ' .$mode. ' src="' .$link. '' .$lastModified. '"></script>';
+            echo '
+            <script ' .$mode. ' src="' .$link. '' .$lastModified. '"></script>';
         } else if($subInfo["type"] == "css") {
-          echo '
-          <link rel="stylesheet" href="' .$link. '' .$lastModified. '" />';
+            echo '
+            <link rel="stylesheet" href="' .$link. '' .$lastModified. '" />';
         }
     }
 }
 
 
 
-/*
-* @method public showInvalidityWarning
-* @param string $message [message to be shown]
-* @returns string [html]
-*/
+/**
+ * @method public showInvalidityWarning
+ * @param string $message [message to be shown]
+ * @return string [html]
+ */
 function showInvalidityWarning($message)
 {
     return '
@@ -82,6 +79,11 @@ function showInvalidityWarning($message)
 	</div>';
 }
 
+/**
+ * @method public pregMail
+ * @param string $mail [mial adress to be validated]
+ * @return bool [true/false]
+ */
 function pregMail($mail)
 {
     if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
@@ -91,20 +93,23 @@ function pregMail($mail)
     }
 }
 
-/*
-* @method public validateRegistration
-* @param array $post [all the $_POST-variables]
-* @returns bool [basically true false by not redirecting if true]
-*/
+/**
+ * @method public validateRegistration
+ * @param array $post [all the $_POST-variables]
+ * @return bool [basically true false by not redirecting if true]
+ */
 function validateRegistration($post)
 {
-    if (
-    isset($_POST["registration-mail"]) && !empty($_POST["registration-mail"]) &&
-    isset($_POST["registration-pw-1"]) && !empty($_POST["registration-pw-1"]) &&
-    isset($_POST["registration-pw-2"]) && !empty($_POST["registration-pw-2"]) &&
-    isset($_POST["registration-language"]) && !empty($_POST["registration-language"]) &&
-  isset($_POST["registration-api-key"])
-) {
+    if (isset($_POST["registration-mail"])
+        && !empty($_POST["registration-mail"])
+        && isset($_POST["registration-pw-1"])
+        && !empty($_POST["registration-pw-1"])
+        && isset($_POST["registration-pw-2"])
+        && !empty($_POST["registration-pw-2"])
+        && isset($_POST["registration-language"])
+        && !empty($_POST["registration-language"])
+        && isset($_POST["registration-api-key"])
+    ) {
         $post["registration-mail"] = test_input($post["registration-mail"]);
 
         if (!filter_var($post["registration-mail"], FILTER_VALIDATE_EMAIL)) {
@@ -124,11 +129,11 @@ function validateRegistration($post)
     }
 }
 
-/*
-* @method public test_input
-* @param string $data []
-* @returns string [stripped data]
-*/
+/**
+ * @method public test_input
+ * @param string $data []
+ * @return string [stripped data]
+ */
 function test_input($data)
 {
     $data = trim($data);
@@ -136,3 +141,55 @@ function test_input($data)
     $data = htmlspecialchars($data);
     return $data;
 }
+
+/**
+ * @method public generateLeaderboardData
+ * @return array [leaderboard data]
+ */
+function generateLeaderboardData()
+{
+    $result = [];
+
+    $template = [
+        "material" => [],
+        "products" => [],
+        "buildings" => [],
+        "headquarter" => [],
+        "general" => [],
+    ];
+
+    if(!$conn) {
+        $conn = connect();
+    }
+
+    $userIds = [];
+    $getUsersQuery = "SELECT `id` FROM `userOverview` WHERE `hashedKey` != ''";
+    $getUsers = $conn->query($getUsersQuery);
+
+    if($getUsers->num_rows > 0) {
+        while($userId = $getUsers->fetch_assoc()) {
+            array_push($userIds, $userId["id"]);
+        }
+    }
+
+    foreach($userIds as $userId) {
+        $result[$userId] = $template;
+
+        $generalDataQuery = "SELECT `name`, `points`, `rank`, `level`, `registeredGame` FROM `userOverview` WHERE `id` = " .$userId. "";
+        $generalData = $conn->query($generalDataQuery);
+        while($data = $generalData->fetch_assoc()) {
+            $result[$userId]["general"] = $data;
+        }
+
+    }
+
+
+    return $result;
+}
+
+
+/*
+$result = generateLeaderboardData();
+
+print_r($result);
+*/

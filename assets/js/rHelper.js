@@ -3031,7 +3031,7 @@ const rHelper = {
                         let price = rHelper.methods.CALC_returnPriceViaId(rewardId);
                         rewardWorth += mission.rewardAmount * price;
                     } else {
-                        $(`#mission-reward-${i}`).text("Cash");
+                        $(`#mission-reward-${i}`).html('<img src="assets/img/cash.png" alt="Cash" />');
                         rewardWorth += mission.rewardAmount;
                     }
 
