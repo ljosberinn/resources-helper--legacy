@@ -10,514 +10,517 @@
 
 class resourcesGame
 {
-     /**
-      * @var object $host host adress
-      */
-    private $host;
-     /**
-      * @var object $user user
-      */
-    private $user;
-     /**
-      * @var object $pw password
-      */
-    private $pw;
-     /**
-      * @var object $db database
-      */
-    private $db;
-
-     /**
-      * @var object $conn is the global mysqli object
-      */
-    private $conn;
-
-     /**
-      * @var array $prices contains all prices returned by @method private getAllPrices()
-      */
-    private $prices;
-
-     /**
-     * queries also function as table names
-     * also defines min max indices for each subgroup of exported JSON as well as their access points for JavaScript and their localizationTab
-      *
-      * @var     array TABLE_NAMES [defines possible time intervals for display; these names are case-sensitive for JavaScript access]
-      * @example resourcse => min = 0, max = 13, length = 14, outputName = material, localizationTable = materialNames
-      */
-     const TABLE_NAMES = [
-       "resources" => [
-           "min" => 0,
-           "max" => 13,
-           "length" => 14,
-           "outputName" => "material",
-           "localizationTable" => "materialNames"
-       ],
-       "factories" => [
-           "min" => 14,
-           "max" => 35,
-           "length" => 22,
-           "outputName" => "products",
-           "localizationTable" => "productNames"
-       ],
-       "loot" => [
-           "min" => 36,
-           "max" => 51,
-           "length" => 16,
-           "outputName" => "loot",
-           "localizationTable" => "lootNames"
-       ],
-       "units" => [
-           "min" => 52,
-           "max" => 57,
-           "length" => 6,
-           "outputName" => "units",
-           "localizationTable" => "unitNames"
-       ]
-     ];
-
-     /**
-      * @var array PRICE_INTERVALS [defines possible time intervals for display; these names are case-sensitive for JavaScript access]
-      * @example current, 1day, 3days, 7days, 4weeks, 3months, 6months, 1year, max
-      */
-     const PRICE_INTERVALS = [
-       "current" => 60*60,
-       "1day" => 60*60*24,
-       "3days" => 60*60*24*3,
-       "7days" => 60*60*24*7,
-       "4weeks" => 60*60*24*7*4,
-       "3months" => 60*60*24*7*4*3,
-       "6months" => 60*60*24*7*4*6,
-       "1year" => 60*60*24*365,
-       "max" => 0
-     ];
-
-     /**
-      * @var array PRODUCT_ARRAY [defines warehouse access points for JavaScript]
-      * @example contingent, fillAmount, filLStatus, level
-      */
-     const WAREHOUSE_ARRAY = [
-       "contingent",
-       "fillAmount",
-       "fillStatus",
-       "level"
-     ];
-
-     /**
-      * @var array RESOURCE_ARRAY [defines resource access points for JavaScript]
-      * @example amountOfMines, perHour
-      */
-     const RESOURCE_ARRAY = [
-       "amountOfMines",
-       "perHour"
-     ];
-
-     /**
-      * @var array PRODUCT_ARRAY [defines product access points for JavaScript]
-      * @example factoryLevel
-      */
-     const PRODUCT_ARRAY = [
-       "factoryLevel"
-     ];
-
-     /**
-      * @var int BUILDING_AMOUNT [defines amount of buildings]
-      * @example 12
-      */
-     const BUILDING_AMOUNT = 12;
-
-
-     /**
-      * @var array LANGUAGES [defines available languages]
-      * @example de, en, fr, ru, jp, in
-      */
-     const LANGUAGES = [
-       "de",
-       "en",
-       "fr",
-       "ru",
-       "jp",
-       "in"
-     ];
-
-     /**
-      * @var array SETTINGS [defines settings and their base value]
-      */
-     const SETTINGS = [
-       "language" => self::LANGUAGES[0],
-       "customTU" => 0,
-       "idealCondition" => 0,
-       "factoryNames" => 0,
-       "transportCostInclusion" => 0,
-       "numbers" => 0,
-       "mapVisibleHQ" => 0
-     ];
-
-
-     /**
-      * builds an array out of a array string
-      *
-      * @method  private convertArrayStringToArray($string)
-      * @param   int|mixed $string [some array concatenated as string with ","]
-      * @example $string = "1,2,3"; => $result = [1, 2, 3];
-      * @return  array [returns converted array]
-      */
-     private function convertArrayStringToArray($string)
-     {
-         $array = [];
-         $explode = explode(",", $string);
-         foreach ($explode as $dataset) {
-             array_push($array, $dataset);
-         }
-         return $array;
-     }
-
-     /**
-      * establishes database connection and points it to $this->conn
-      *
-      * @method private DBConnection()
-      * @return mixed [returns $this->conn as new mysqli()]
-      */
-     private function DBConnection()
-     {
-         try {
-             $conn = new mysqli($this->host, $this->user, $this->pw, $this->db);
-             $conn->set_charset("utf8mb4");
-             $this->conn = $conn;
-         } catch (Exception $e) {
-             echo "DB Connection failed: ", $e->getMessage() , "\n";
-         }
-
-         return $conn;
-     }
-
-     /**
-      * - construct obj with $this as database connection
-      * - fetch all prices as they are always required upon calling this class
-      *
-      * @method public __construct($host, $user, $pw, $db)
-      * @param  mixed $host [server to connect to]
-      * @param  mixed $user [user to connect as]
-      * @param  mixed $pw   [password to connect with]
-      * @param  mixed $db   [database to select]
-      * @return mixed [returns $this->conn as new mysqli() and $this->prices as global price array]
-      */
-     public function __construct($host, $user, $pw, $db, $prices)
-     {
-         $this->host = $host;
-         $this->user = $user;
-         $this->pw = $pw;
-         $this->db = $db;
-
-         $this->conn = $this->DBConnection();
-
-         if($prices == "on") {
-           $this->prices = $this->getAllPrices();
-         }
-     }
-
-     /**
-      * builds base queries for general game data
-      *
-      * @method  private getBaseQuery($type)
-      * @param   mixed $type [type of query to be fetched]
-      * @example resources, factories, loot, units, headquarter, settings
-      * @return  array [returns modified array]
-      */
-     private function getBaseQuery($type)
-     {
-       $stmt = "SELECT ";
-
-       switch ($type) {
-         case "resources":
-         $stmt.= "`basePrice`, `dependantFactories`, `maxRate`";
-         break;
-
-         case "factories":
-         $stmt.= "`cashPerHour`, `dependantFactories`, `dependencies`, `scaling`, `requiredAmount`, `upgradeMaterial`, `upgradeMaterialAmount`";
-         break;
-
-         case "loot":
-         $stmt.= "`recyclingDivisor`, `recyclingProduct`, `recyclingAmount`";
-         break;
-
-         case "units":
-         $stmt.= "`requirements`, `requiredAmount`, `baseStrength`";
-         break;
-
-         case "headquarter":
-         $stmt.= "`amount`, `material`, `boost`, `radius`";
-         break;
-
-         case "buildings":
-         $stmt.= "`level`, `material`, `materialAmount0`, `materialAmount1`, `materialAmount2`, `materialAmount3`";
-         break;
-         $stmt.= "`setting`, `value`, `description`";
-         break;
-      }
-
-      $stmt.= " FROM `" . $type . "` ORDER BY `id` ASC";
-
-      return $stmt;
-     }
-
-     /**
-      * swaps internal IDs to old structure (prices table columns index are all tradeables ordered alphabetically in German)
-      *
-      * @method  private convertInternalIdToOldStructure($id)
-      * @param   int $id [type of query to be fetched]
-      * @example 42 => 1
-      * @return  int [returns modified id]
-      */
-     private function convertInternalIdToOldStructure($id)
-     {
-         switch ($id) {
-         case 42: //Old tires
-             $convertedId = 1;
-             break;
-
-         case 51: //Waste glass
-             $convertedId = 2;
-             break;
-
-         case 45: //Scrap metal
-             $convertedId = 3;
-             break;
-
-         case 50: //Used oil
-             $convertedId = 4;
-             break;
-
-         case 22: //Aluminium
-             $convertedId = 5;
-             break;
-
-         case 25: //Batteries
-             $convertedId = 6;
-             break;
-
-         case 8: //Bauxite
-             $convertedId = 7;
-             break;
-
-         case 15: //Concrete
-             $convertedId = 8;
-             break;
-
-         case 37: //Drone wreckage
-             $convertedId = 9;
-             break;
-
-         case 16: //Fertilizer
-             $convertedId = 10;
-             break;
-
-         case 4: //Iron ore
-             $convertedId = 11;
-             break;
-
-         case 28: //Electronics
-             $convertedId = 12;
-             break;
-
-         case 38: //Electronic scrap
-             $convertedId = 13;
-             break;
-
-         case 53: //Elite force
-             $convertedId = 14;
-             break;
-
-         case 18: //Fossil fuel
-             $convertedId = 15;
-             break;
-
-         case 39: //Fossils
-             $convertedId = 16;
-             break;
-
-         case 54: //Gangster
-             $convertedId = 17;
-             break;
-
-         case 19: //Glass
-             $convertedId = 18;
-             break;
-
-         case 32: //Gold
-             $convertedId = 19;
-             break;
-
-         case 12: //Gold ore
-             $convertedId = 20;
-             break;
-
-         case 10: //Ilmenite
-             $convertedId = 21;
-             break;
-
-         case 20: //Insecticides
-             $convertedId = 22;
-             break;
-
-         case 1: //Limestone
-             $convertedId = 23;
-             break;
-
-         case 52: //Attack dogs
-             $convertedId = 24;
-             break;
-
-         case 2: //Gravel
-             $convertedId = 25;
-             break;
-
-         case 3: //Coal
-             $convertedId = 26;
-             break;
-
-         case 23: //Plastics
-             $convertedId = 27;
-             break;
-
-         case 43: //Plastic scrap
-             $convertedId = 28;
-             break;
-
-         case 21: //Copper
-             $convertedId = 29;
-             break;
-
-         case 7: //Chalcopyrite
-             $convertedId = 30;
-             break;
-
-         case 36: //Copper coins
-             $convertedId = 31;
-             break;
-
-         case 34: //Trucks
-             $convertedId = 32;
-             break;
-
-         case 0: //Clay
-             $convertedId = 33;
-             break;
-
-         case 24: //Lithium
-             $convertedId = 34;
-             break;
-
-         case 9: //Lithium ore
-             $convertedId = 35;
-             break;
-
-         case 30: //Medical technology
-             $convertedId = 36;
-             break;
-
-         case 55: //Private army
-             $convertedId = 37;
-             break;
-
-         case 6: //Quartz sand
-             $convertedId = 38;
-             break;
-
-         case 40: //Giant diamond
-             $convertedId = 39;
-             break;
-
-         case 13: //Rough diamonds
-             $convertedId = 40;
-             break;
-
-         case 5: //Crude oil
-             $convertedId = 41;
-             break;
-
-         case 44: //Roman coins
-             $convertedId = 42;
-             break;
-
-         case 35: //Scan drones
-             $convertedId = 43;
-             break;
-
-         case 33: //Jewellery
-             $convertedId = 44;
-             break;
-
-         case 31: //Silver
-             $convertedId = 45;
-             break;
-
-         case 11: //Silver ore
-             $convertedId = 46;
-             break;
-
-         case 27: //Silicon
-             $convertedId = 47;
-             break;
-
-         case 17: //Steel
-             $convertedId = 48;
-             break;
-
-         case 46: //Tech upgrade 1
-             $convertedId = 49;
-             break;
-
-         case 47: //Tech upgrade 2
-             $convertedId = 50;
-             break;
-
-         case 48: //Tech upgrade 3
-             $convertedId = 51;
-             break;
-
-         case 49: //Tech upgrade 4
-             $convertedId = 52;
-             break;
-
-         case 29: //Titanium
-             $convertedId = 53;
-             break;
-
-         case 57: //Watch dogs
-             $convertedId = 54;
-             break;
-
-         case 56: //Security staff
-             $convertedId = 55;
-             break;
-
-         case 26: //Weapons
-             $convertedId = 56;
-             break;
-
-         case 41: //Maintenance kit
-             $convertedId = 57;
-             break;
-
-         case 14: //Bricks
-             $convertedId = 58;
-             break;
-         case -1: //Cash
-             $convertedId = -1;
-             break;
-         }
-
-         return $convertedId;
-     }
+        /**
+         * @var object $host host adress
+         */
+        private $host;
+        /**
+         * @var object $user user
+         */
+        private $user;
+        /**
+         * @var object $pw password
+         */
+        private $pw;
+        /**
+         * @var object $db database
+         */
+        private $db;
+
+        /**
+         * @var object $conn is the global mysqli object
+         */
+        private $conn;
+
+        /**
+         * @var array $prices contains all prices returned by @method private getAllPrices()
+         */
+        private $prices;
+
+        /**
+        * queries also function as table names
+        * also defines min max indices for each subgroup of exported JSON as well as their access points for JavaScript and their localizationTab
+        *
+         * @var     array TABLE_NAMES [defines possible time intervals for display; these names are case-sensitive for JavaScript access]
+        * @example resourcse => min = 0, max = 13, length = 14, outputName = material, localizationTable = materialNames
+        */
+        const TABLE_NAMES = [
+            "resources" => [
+                "min" => 0,
+                "max" => 13,
+                "length" => 14,
+                "outputName" => "material",
+                "localizationTable" => "materialNames"
+            ],
+            "factories" => [
+                "min" => 14,
+                "max" => 35,
+                "length" => 22,
+                "outputName" => "products",
+                "localizationTable" => "productNames"
+            ],
+            "loot" => [
+                "min" => 36,
+                "max" => 51,
+                "length" => 16,
+                "  outputName" => "loot",
+                "localizationTable" => "lootNames"
+            ],
+            "units" => [
+                "min" => 52,
+                "max" => 57,
+                "length" => 6,
+                "outputName" => "units",
+                "localizationTable" => "unitNames"
+            ]
+        ];
+
+        /**
+         * @var array PRICE_INTERVALS [defines possible time intervals for display; these names are case-sensitive for JavaScript access]
+         * @example current, 1day, 3days, 7days, 4weeks, 3months, 6months, 1year, max
+        */
+        const PRICE_INTERVALS = [
+            "current" => 60*60,
+            "1day" => 60*60*24,
+            "3days" => 60*60*24*3,
+            "7days" => 60*60*24*7,
+            "4weeks" => 60*60*24*7*4,
+            "3months" => 60*60*24*7*4*3,
+            "6months" => 60*60*24*7*4*6,
+            "1year" => 60*60*24*365,
+            "max" => 0
+        ];
+
+        /**
+        * @var array PRODUCT_ARRAY [defines warehouse access points for JavaScript]
+        * @example contingent, fillAmount, filLStatus, level
+        */
+        const WAREHOUSE_ARRAY = [
+            "contingent",
+            "fillAmount",
+            "fillStatus",
+            "level"
+        ];
+
+        /**
+        * @var array RESOURCE_ARRAY [defines resource access points for JavaScript]
+        * @example amountOfMines, perHour
+        */
+        const RESOURCE_ARRAY = [
+            "amountOfMines",
+            "perHour"
+        ];
+
+        /**
+        * @var array PRODUCT_ARRAY [defines product access points for JavaScript]
+        * @example factoryLevel
+        */
+        const PRODUCT_ARRAY = [
+            "factoryLevel"
+        ];
+
+        /**
+        * @var int BUILDING_AMOUNT [defines amount of buildings]
+        * @example 12
+        */
+        const BUILDING_AMOUNT = 12;
+
+
+        /**
+        * @var array LANGUAGES [defines available languages]
+        * @example de, en, fr, ru, jp, in
+        */
+        const LANGUAGES = [
+            "de",
+            "en",
+            "fr",
+            "ru",
+            "jp",
+            "in"
+        ];
+
+        /**
+        * @var array SETTINGS [defines settings and their base value]
+        */
+        const SETTINGS = [
+            "language" => self::LANGUAGES[0],
+            "customTU" => 0,
+            "idealCondition" => 0,
+            "factoryNames" => 0,
+            "transportCostInclusion" => 0,
+            "numbers" => 0,
+            "mapVisibleHQ" => 0
+        ];
+
+
+        /**
+        * builds an array out of a array string
+        *
+        * @method  private convertArrayStringToArray($string)
+        * @param   int|mixed $string [some array concatenated as string with ","]
+        * @example $string = "1,2,3"; => $result = [1, 2, 3];
+        * @return  array [returns converted array]
+        */
+        private function convertArrayStringToArray($string)
+        {
+            $array = [];
+            $explode = explode(",", $string);
+            foreach ($explode as $dataset) {
+                array_push($array, $dataset);
+            }
+            return $array;
+        }
+
+        /**
+        * establishes database connection and points it to $this->conn
+        *
+        * @method private DBConnection()
+        * @return mixed [returns $this->conn as new mysqli()]
+        */
+        private function DBConnection()
+        {
+            try {
+                $conn = new mysqli($this->host, $this->user, $this->pw, $this->db);
+                $conn->set_charset("utf8mb4");
+                $this->conn = $conn;
+            } catch (Exception $e) {
+                echo "DB Connection failed: ", $e->getMessage() , "\n";
+            }
+
+            return $conn;
+        }
+
+        /**
+        * - construct obj with $this as database connection
+        * - fetch all prices as they are always required upon calling this class
+        *
+        * @method public __construct($host, $user, $pw, $db)
+        * @param  mixed $host [server to connect to]
+        * @param  mixed $user [user to connect as]
+        * @param  mixed $pw   [password to connect with]
+        * @param  mixed $db   [database to select]
+        * @return mixed [returns $this->conn as new mysqli() and $this->prices as global price array]
+        */
+        public function __construct($host, $user, $pw, $db, $prices)
+        {
+            $this->host = $host;
+            $this->user = $user;
+            $this->pw = $pw;
+            $this->db = $db;
+
+            $this->conn = $this->DBConnection();
+
+            if($prices == "on") {
+                $this->prices = $this->getAllPrices();
+            }
+        }
+
+         /**
+        * builds base queries for general game data
+        *
+        * @method  private getBaseQuery($type)
+        * @param  mixed $type [type of query to be fetched]
+        * @example resources, factories, loot, units, headquarter, settings
+        * @return  array [returns modified array]
+         */
+        private function getBaseQuery($type)
+        {
+            $stmt = "SELECT ";
+
+            switch ($type) {
+                case "resources":
+                $stmt.= "`basePrice`, `dependantFactories`, `maxRate`";
+                break;
+
+                case "factories":
+                $stmt.= "`cashPerHour`, `dependantFactories`, `dependencies`, `scaling`, `requiredAmount`, `upgradeMaterial`, `upgradeMaterialAmount`";
+                break;
+
+                case "loot":
+                $stmt.= "`recyclingDivisor`, `recyclingProduct`, `recyclingAmount`";
+                break;
+
+                case "units":
+                $stmt.= "`requirements`, `requiredAmount`, `baseStrength`";
+                break;
+
+                case "headquarter":
+                $stmt.= "`amount`, `material`, `boost`, `radius`";
+                break;
+
+                case "buildings":
+                $stmt.= "`level`, `material`, `materialAmount0`, `materialAmount1`, `materialAmount2`, `materialAmount3`";
+                break;
+
+                case "settings":
+                $stmt.= "`setting`, `value`, `description`";
+                break;
+            }
+
+            $stmt.= " FROM `" . $type . "` ORDER BY `id` ASC";
+
+            return $stmt;
+        }
+
+        /**
+        * swaps internal IDs to old structure (prices table columns index are all tradeables ordered alphabetically in German)
+        *
+        * @method  private convertInternalIdToOldStructure($id)
+        * @param   int $id [type of query to be fetched]
+        * @example 42 => 1
+        * @return  int [returns modified id]
+        */
+        private function convertInternalIdToOldStructure($id)
+        {
+            switch ($id) {
+                case 42: //Old tires
+                    $convertedId = 1;
+                break;
+
+                case 51: //Waste glass
+                    $convertedId = 2;
+                break;
+
+                case 45: //Scrap metal
+                    $convertedId = 3;
+                break;
+
+                case 50: //Used oil
+                    $convertedId = 4;
+                break;
+
+                case 22: //Aluminium
+                    $convertedId = 5;
+                break;
+
+                case 25: //Batteries
+                    $convertedId = 6;
+                break;
+
+                case 8: //Bauxite
+                    $convertedId = 7;
+                break;
+
+                case 15: //Concrete
+                    $convertedId = 8;
+                break;
+
+                case 37: //Drone wreckage
+                    $convertedId = 9;
+                break;
+
+                case 16: //Fertilizer
+                    $convertedId = 10;
+                break;
+
+                case 4: //Iron ore
+                    $convertedId = 11;
+                break;
+
+                case 28: //Electronics
+                    $convertedId = 12;
+                break;
+
+                case 38: //Electronic scrap
+                    $convertedId = 13;
+                break;
+
+                case 53: //Elite force
+                    $convertedId = 14;
+                break;
+
+                case 18: //Fossil fuel
+                    $convertedId = 15;
+                break;
+
+                case 39: //Fossils
+                    $convertedId = 16;
+                break;
+
+                case 54: //Gangster
+                    $convertedId = 17;
+                break;
+
+                case 19: //Glass
+                    $convertedId = 18;
+                break;
+
+                case 32: //Gold
+                    $convertedId = 19;
+                break;
+
+                case 12: //Gold ore
+                    $convertedId = 20;
+                break;
+
+                case 10: //Ilmenite
+                    $convertedId = 21;
+                break;
+
+                case 20: //Insecticides
+                    $convertedId = 22;
+                break;
+
+                case 1: //Limestone
+                    $convertedId = 23;
+                break;
+
+                case 52: //Attack dogs
+                    $convertedId = 24;
+                break;
+
+                case 2: //Gravel
+                    $convertedId = 25;
+                break;
+
+                case 3: //Coal
+                    $convertedId = 26;
+                break;
+
+                case 23: //Plastics
+                    $convertedId = 27;
+                break;
+
+                case 43: //Plastic scrap
+                    $convertedId = 28;
+                break;
+
+                case 21: //Copper
+                    $convertedId = 29;
+                break;
+
+                case 7: //Chalcopyrite
+                    $convertedId = 30;
+                break;
+
+                case 36: //Copper coins
+                    $convertedId = 31;
+                break;
+
+                case 34: //Trucks
+                    $convertedId = 32;
+                break;
+
+                case 0: //Clay
+                    $convertedId = 33;
+                break;
+
+                case 24: //Lithium
+                    $convertedId = 34;
+                break;
+
+                case 9: //Lithium ore
+                    $convertedId = 35;
+                break;
+
+                case 30: //Medical technology
+                    $convertedId = 36;
+                break;
+
+                case 55: //Private army
+                    $convertedId = 37;
+                break;
+
+                case 6: //Quartz sand
+                    $convertedId = 38;
+                break;
+
+                case 40: //Giant diamond
+                    $convertedId = 39;
+                break;
+
+                case 13: //Rough diamonds
+                    $convertedId = 40;
+                break;
+
+                case 5: //Crude oil
+                    $convertedId = 41;
+                break;
+
+                case 44: //Roman coins
+                    $convertedId = 42;
+                break;
+
+                case 35: //Scan drones
+                    $convertedId = 43;
+                break;
+
+                case 33: //Jewellery
+                    $convertedId = 44;
+                break;
+
+                case 31: //Silver
+                    $convertedId = 45;
+                break;
+
+                case 11: //Silver ore
+                    $convertedId = 46;
+                break;
+
+                case 27: //Silicon
+                    $convertedId = 47;
+                break;
+
+                case 17: //Steel
+                    $convertedId = 48;
+                break;
+
+                case 46: //Tech upgrade 1
+                    $convertedId = 49;
+                break;
+
+                case 47: //Tech upgrade 2
+                    $convertedId = 50;
+                break;
+
+                case 48: //Tech upgrade 3
+                    $convertedId = 51;
+                break;
+
+                case 49: //Tech upgrade 4
+                    $convertedId = 52;
+                break;
+
+                case 29: //Titanium
+                    $convertedId = 53;
+                break;
+
+                case 57: //Watch dogs
+                    $convertedId = 54;
+                break;
+
+                case 56: //Security staff
+                $convertedId = 55;
+                break;
+
+                case 26: //Weapons
+                    $convertedId = 56;
+                break;
+
+                case 41: //Maintenance kit
+                    $convertedId = 57;
+                break;
+
+                case 14: //Bricks
+                    $convertedId = 58;
+                break;
+
+                case -1: //Cash
+                    $convertedId = -1;
+                break;
+            }
+
+            return $convertedId;
+        }
 
      /**
       * extracts prices from table `price` grouped by type
       *
-      * @method  private getAllPrices()
+      * @method  public getAllPrices()
       * @example type examples: resources, factories, loot, units
       * @return  array [global price array $this->prices]
       */
-     private function getAllPrices()
+     public function getAllPrices()
      {
          $prices = [
              "resources" => [],
