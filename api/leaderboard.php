@@ -90,6 +90,9 @@ function shoveDataToArray($result, $query, $target, $userId)
         $result[$userId][$target] = $data;
 
         if ($target == "general") {
+            $daysPlaying = round((time("now") - $data["registeredGame"])/86400) + 1;
+            $result[$userId][$target]["pointsPerDay"] = round($data["points"] / $daysPlaying);
+            $result[$userId][$target]["daysPlaying"] = $daysPlaying;
             $result[$userId][$target]["registeredGame"] = date("Y-m-j h:i (a)", $data["registeredGame"]);
         }
     }
@@ -540,20 +543,87 @@ function generateLeaderboardData($conn, $prices)
             $result = shoveDataToArray($result, ${$query}, $target, $userId);
         }
 
-        $result[$userId]["headquarterSum"] = returnHeadquarterWorth($headquarterBaseData, $result[$userId]["headquarter"], $conn, $prices);
-        $result[$userId]["mineErectionSum"] = returnMineErectionSum($mineBasePrices, $result[$userId]["material"], $conn, $prices);
-        $result[$userId]["factoryErectionSum"] = returnFactoryErectionSum($factoryBaseData, $result[$userId]["products"], $conn, $prices);
-        $result[$userId]["buildingsErectionSum"] = returnBuildingsErectionSum($buildingsBaseData, $result[$userId]["buildings"], $conn, $prices);
+        $result[$userId]["headquarter"]["headquarterSum"] = returnHeadquarterWorth($headquarterBaseData, $result[$userId]["headquarter"], $conn, $prices);
 
-        $result[$userId]["companyWorth"] = returnCompanyWorth($result[$userId]);
+        $result[$userId]["material"]["mineErectionSum"] = returnMineErectionSum($mineBasePrices, $result[$userId]["material"], $conn, $prices);
+        $result[$userId]["material"]["mineIncome"] = returnMineIncome($result[$userId]["material"], $conn, $prices);
 
+        $result[$userId]["products"]["factoryTotalUpgrades"] = array_sum($result[$userId]["products"]);
+        $result[$userId]["products"]["factoryErectionSum"] = returnFactoryErectionSum($factoryBaseData, $result[$userId]["products"], $conn, $prices);
 
-        // calculate mine income
-        // calculate effective income
+        $result[$userId]["buildings"]["buildingsErectionSum"] = returnBuildingsErectionSum($buildingsBaseData, $result[$userId]["buildings"], $conn, $prices);
+
+        $result[$userId]["general"]["companyWorth"] = returnCompanyWorth($result[$userId]);
+        $result[$userId]["general"]["tradeData"] = returnTradeLogData($userId, $conn);
 
     }
 
     return $result;
+}
+
+/**
+ * Returns specific trade log data
+ *
+ * @param number $userId [user id]
+ * @param object $conn   [database connection]
+ *
+ * @return array $result [trade log data array]
+ */
+function returnTradeLogData($userId, $conn)
+{
+
+    $log = "userTradeLog_" .$userId;
+
+    $result = [];
+
+    $queries = [
+        "SELECT MIN(timestamp) AS `firstKnownAction`, MAX(timestamp)  AS `lastKnownAction` FROM `" .$log. "`",
+        "SELECT SUM(`amount` * `price`) AS `totalSell` FROM `" .$log. "` WHERE `event` = 1",
+        "SELECT SUM(`amount` * `price`) AS `totalBuy` FROM `" .$log. "` WHERE `event` = 0",
+        "SELECT SUM(`amount` * `price`) AS `sumKISell` FROM `" .$log. "` WHERE `actor` = 'KI'",
+    ];
+
+    foreach ($queries as $query) {
+        $getData = $conn->query($query);
+        if ($getData->num_rows > 0) {
+            while ($data = $getData->fetch_assoc()) {
+                array_push($result, $data);
+            }
+        }
+    }
+
+    $result = array_merge($result[0], $result[1], $result[2], $result[3]);
+
+    $result["tradeIncome"] = $result["totalSell"] - $result["totalBuy"];
+
+    $tradeDays = ($result["lastKnownAction"] - $result["firstKnownAction"]) / 86400;
+
+    $result["tradeIncomePerDay"] = round($result["tradeIncome"] / $tradeDays);
+
+    unset($result["lastKnownAction"]);
+    unset($result["firstKnownAction"]);
+
+    return $result;
+}
+
+/**
+ * Returns mine hourly income
+ *
+ * @param array  $userData [previously calculated user data]
+ * @param object $conn     [database connection]
+ * @param array  $prices   [prices array]
+ *
+ * @return number $sum [hourly mine income]
+ */
+function returnMineIncome($userData, $conn, $prices)
+{
+    $sum = 0;
+
+    for ($i = 0; $i <= 13; $i += 1) {
+        $sum += returnPriceViaId($i, $prices) * $userData["perHour" .$i];
+    }
+
+    return $sum;
 }
 
 /**
