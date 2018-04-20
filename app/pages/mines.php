@@ -3,15 +3,15 @@
 <?php
 
 $columns = [
-    "Mine type" => "sorttable_nosort",
-    "Your rate per hour" => "sorttable_nosort",
-    "Your amount of mines" => "sorttable_nosort",
-    "Worth @ 100% condition" => "",
-    "Mine price" => "",
-    "100% quality income" => "",
+    "Mine type"                  => "sorttable_nosort",
+    "Your rate per hour"         => "sorttable_nosort",
+    "Your amount of mines"       => "sorttable_nosort",
+    "Worth @ 100% condition"     => "",
+    "Mine price"                 => "",
+    "100% quality income"        => "",
     "Return on Investment: 100%" => "",
-    "505%" => "",
-    "505% + your HQ level" => "",
+    "505%"                       => "",
+    "505% + your HQ level"       => "",
 ];
 
 $textOrientation = "text-md-right text-sm-left";
@@ -22,7 +22,7 @@ $arrayKeys = array_keys($columns);
 
 <div class="bg-light mt-3 mb-3 p-4 col-12 rounded" id="module-mines">
 
-  <h6><span class="nav-icon-mines"></span> Mines</h6>
+    <h6><span class="nav-icon-mines"></span> Mines</h6>
     <hr class="mb-3">
 
     <div class="row">
@@ -33,7 +33,7 @@ $arrayKeys = array_keys($columns);
                     <tr class="small">
                         <?php
 
-                        foreach($columns as $row => $specialClasses) {
+                        foreach ($columns as $row => $specialClasses) {
                             echo '
                             <th class="' .$textOrientation. ' ' .$specialClasses. '">
                                 ' .$row. '
@@ -47,28 +47,28 @@ $arrayKeys = array_keys($columns);
 
             <?php
 
-      for ($i = 0; $i <= 13; $i += 1) {
-        echo '
-          <tr>
-              <td class="' .$textOrientation. '" data-th="' .$arrayKeys[0]. '">
-                  <span class="resources-material-' .$i. '"></span>
-                  </td>
-              <td data-th="' .$arrayKeys[1]. '">
-                  <input class="form-control form-control-sm ' .$textOrientation. '" id="material-rate-' .$i. '" type="number" min="0" max="999999999" placeholder="rate/h" />
-              </td>
-              <td data-th="' .$arrayKeys[2]. '">
-                  <input class="form-control form-control-sm ' .$textOrientation. '" id="material-amount-of-mines-' .$i. '" type="number" min="0" max="35000" placeholder="# mines" />
-              </td>
-              <td class="' .$textOrientation. '" id="material-worth-' .$i. '" data-th="' .$arrayKeys[3]. '"></td>
-              <td class="' .$textOrientation. '" id="material-new-price-' .$i. '" data-th="' .$arrayKeys[4]. '"></td>
-              <td class="' .$textOrientation. '" id="material-perfect-income-' .$i. '" data-th="1' .$arrayKeys[5]. '"></td>
-              <td class="' .$textOrientation. '" id="material-roi-100-' .$i. '" data-th="' .$arrayKeys[6]. '"></td>
-              <td class="' .$textOrientation. '" id="material-roi-500-' .$i. '" data-th="' .$arrayKeys[7]. '"></td>
-              <td class="' .$textOrientation. '" id="material-roi-x-' .$i. '" data-th="' .$arrayKeys[8]. '"></td>
-          </tr>';
-      }
+            for ($i = 0; $i <= 13; $i += 1) {
+                echo '
+                <tr>
+                    <td class="' .$textOrientation. '" data-th="' .$arrayKeys[0]. '">
+                        <span class="resources-material-' .$i. '"></span>
+                    </td>
+                    <td data-th="' .$arrayKeys[1]. '">
+                        <input class="form-control form-control-sm ' .$textOrientation. '" id="material-rate-' .$i. '" type="number" min="0" max="999999999" placeholder="rate/h" />
+                    </td>
+                    <td data-th="' .$arrayKeys[2]. '">
+                        <input class="form-control form-control-sm ' .$textOrientation. '" id="material-amount-of-mines-' .$i. '" type="number" min="0" max="35000" placeholder="# mines" />
+                    </td>
+                    <td class="' .$textOrientation. '" id="material-worth-' .$i. '" data-th="' .$arrayKeys[3]. '"></td>
+                    <td class="' .$textOrientation. '" id="material-new-price-' .$i. '" data-th="' .$arrayKeys[4]. '"></td>
+                    <td class="' .$textOrientation. '" id="material-perfect-income-' .$i. '" data-th="1' .$arrayKeys[5]. '"></td>
+                    <td class="' .$textOrientation. '" id="material-roi-100-' .$i. '" data-th="' .$arrayKeys[6]. '"></td>
+                    <td class="' .$textOrientation. '" id="material-roi-500-' .$i. '" data-th="' .$arrayKeys[7]. '"></td>
+                    <td class="' .$textOrientation. '" id="material-roi-x-' .$i. '" data-th="' .$arrayKeys[8]. '"></td>
+                </tr>';
+            }
 
-      ?>
+            ?>
                 </tbody>
                 <tfoot>
                     <tr>

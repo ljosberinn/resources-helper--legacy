@@ -30,10 +30,10 @@
         "Huxxy",
         "Coal Co",
         "Elyzian",
-    "Modschegiebschen",
+        "Modschegiebschen",
     ];
 
-    foreach($mentions as $name) {
+    foreach ($mentions as $name) {
         echo $name. '<br />';
     }
 

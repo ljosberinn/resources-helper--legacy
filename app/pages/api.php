@@ -14,117 +14,117 @@
 
     $apiArray = [
         [
-            "inputId" => "factories",
+            "inputId"     => "factories",
             "description" => "Factories",
-            "cost" => "1 Credit",
-            "checked" => "checked",
-            "data-query" => 1,
+            "cost"        => "1 Credit",
+            "checked"     => "checked",
+            "data-query"  => 1,
         ],
         [
-            "inputId" => "warehouse",
+            "inputId"     => "warehouse",
             "description" => "Warehouse & Warehouse levels",
-            "cost" => "1 Credit",
-            "checked" => "checked",
-            "data-query" => 2,
+            "cost"        => "1 Credit",
+            "checked"     => "checked",
+            "data-query"  => 2,
         ],
         [
-            "inputId" => "buildings",
+            "inputId"     => "buildings",
             "description" => "Special buildings",
-            "cost" => "1 Credit",
-            "checked" => "checked",
-            "data-query" => 3,
+            "cost"        => "1 Credit",
+            "checked"     => "checked",
+            "data-query"  => 3,
         ],
         [
-            "inputId" => "headquarter",
+            "inputId"     => "headquarter",
             "description" => "Headquarter & Headquarter details (mines within range, upgrade progress)",
-            "cost" => "1 Credit",
-            "checked" => "checked",
-            "data-query" => 4,
+            "cost"        => "1 Credit",
+            "checked"     => "checked",
+            "data-query"  => 4,
         ],
         [
-            "inputId" => "mines-summary",
+            "inputId"     => "mines-summary",
             "description" => "Mines - summary (total rates, mine amounts)",
-            "cost" => "1 Credit",
-            "checked" => "checked",
-            "data-query" => 51,
+            "cost"        => "1 Credit",
+            "checked"     => "checked",
+            "data-query"  => 51,
         ],
         [
-            "inputId" => "mines-detailed",
+            "inputId"     => "mines-detailed",
             "description" => "Mines - detailed (for your personal Mine Map and Worldmap)",
-            "cost" => "1 Credit",
-            "warning" => "may take a while to load depending on your mine amount - only available for registered users",
-            "checked" => "checked",
-            "data-query" => 5,
-            "login" => "required",
+            "cost"        => "1 Credit",
+            "warning"     => "may take a while to load depending on your mine amount - only available for registered users",
+            "checked"     => "checked",
+            "data-query"  => 5,
+            "login"       => "required",
         ],
         [
-            "inputId" => "player",
+            "inputId"     => "player",
             "description" => "Player information (name, level, points, worldrank, account age)",
-            "cost" => "1 Credit",
-            "checked" => "checked",
-            "data-query" => 7,
-            "login" => "required",
+            "cost"        => "1 Credit",
+            "checked"     => "checked",
+            "data-query"  => 7,
+            "login"       => "required",
         ],
         [
-            "inputId" => "player-anonymity",
+            "inputId"     => "player-anonymity",
             "description" => "Should your player name appear in world ranking?",
-            "cost" => "",
-            "checked" => "checked",
-            "login" => "required",
+            "cost"        => "",
+            "checked"     => "checked",
+            "login"       => "required",
         ],
         [
-            "inputId" => "attack-log",
+            "inputId"     => "attack-log",
             "description" => "Attack log (last 30 days)",
-            "cost" => "1 Credit",
-            "warning" => "may take a while to load depending on your attack habits - only available for registered users",
-            "checked" => "checked",
-            "data-query" => 9,
-            "login" => "required",
+            "cost"        => "1 Credit",
+            "warning"     => "may take a while to load depending on your attack habits - only available for registered users",
+            "checked"     => "checked",
+            "data-query"  => 9,
+            "login"       => "required",
         ],
         [
-            "inputId" => "trade-log",
+            "inputId"     => "trade-log",
             "description" => "Trade log (last 30 days)",
-            "cost" => "1 Credit",
-            "warning" => "may take a while to load depending on your trade habits - only available for registered users",
-            "checked" => "checked",
-            "data-query" => 6,
-            "login" => "required",
+            "cost"        => "1 Credit",
+            "warning"     => "may take a while to load depending on your trade habits - only available for registered users",
+            "checked"     => "checked",
+            "data-query"  => 6,
+            "login"       => "required",
         ],
         [
-            "inputId" => "missions",
+            "inputId"     => "missions",
             "description" => "Missions",
-            "cost" => "1 Credit",
-            "checked" => "checked",
-            "data-query" => 10,
-            "login" => "required",
-            "warning" => " - only available for registered users",
+            "cost"        => "1 Credit",
+            "checked"     => "checked",
+            "data-query"  => 10,
+            "login"       => "required",
+            "warning"     => " - only available for registered users",
         ]
     ];
 
     $successIcon = file_get_contents("assets/img/icons/success.svg");
 
-    foreach($apiArray as $api) {
+    foreach ($apiArray as $api) {
 
-        if($api["login"] && !$_SESSION["id"]) {
+        if ($api["login"] && !$_SESSION["id"]) {
             $disabled = "disabled";
             $api["checked"] = "";
         } else {
             $disabled = "";
         }
 
-        if($api["cost"]) {
+        if ($api["cost"]) {
             $cost = "<mark>" .$api["cost"]. "</mark>";
         } else {
             $cost = "";
         }
 
-        if($api["warning"]) {
+        if ($api["warning"]) {
             $warning = '<code>' .$api["warning"]. '</code>';
         } else {
             $warning = "";
         }
 
-        if($api["data-query"]) {
+        if ($api["data-query"]) {
             $dataQuery = 'data-query="' .$api["data-query"]. '"';
         } else {
             $dataQuery = "";

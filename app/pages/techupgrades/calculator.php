@@ -28,9 +28,9 @@ $textOrientation = "text-md-right text-sm-left";
 
             <span class="input-group-addon">
                 <span id="techupgrades-loading" class="circles-to-rhombuses-spinner">
-              <span class="rhombuses-circle"></span>
-              <span class="rhombuses-circle"></span>
-              <span class="rhombuses-circle"></span>
+                <span class="rhombuses-circle"></span>
+                <span class="rhombuses-circle"></span>
+                <span class="rhombuses-circle"></span>
             </span>
             <span id="techupgrades-finished"><?php echo file_get_contents("assets/img/icons/success.svg"); ?></span>
             </span>
@@ -39,7 +39,7 @@ $textOrientation = "text-md-right text-sm-left";
     <table class="table table-responsive table-break-medium table-striped mb-3" id="techupgrades-calc-tbl">
             <thead>
                 <tr class="small">
-          <th class="<?php echo $textOrientation; ?>">missing Tech-Upgrade 1</th>
+                    <th class="<?php echo $textOrientation; ?>">missing Tech-Upgrade 1</th>
                     <th class="<?php echo $textOrientation; ?>">missing Tech-Upgrade 2</th>
                     <th class="<?php echo $textOrientation; ?>">missing Tech-Upgrade 3</th>
                     <th class="<?php echo $textOrientation; ?>">missing Tech-Upgrade 4</th>

@@ -572,6 +572,10 @@ const rHelper = {
                 }
             }
 
+            if(anchor == "#leaderboard") {
+                rHelper.methods.INSRT_leaderboard();
+            }
+
             $(".nav-link").each((i, navLink) => {
                 let navEl = $(navLink);
                 let target = $(`#${navLink.dataset.target}`);
@@ -1462,6 +1466,76 @@ const rHelper = {
             });
         },
 
+        INSRT_leaderboardTable() {
+            let container = rHelper.data.leaderboard;
+            let tbody = $("#module-leaderboard tbody");
+            let textOrientation = "text-md-right text-sm-left";
+            let textClass = "class='text-right'";
+
+            let string = "";
+
+            let returnPlayerTitle = dataset => {
+                return `<table>
+                <tbody>
+                    <tr><td>Rank</td><td ${textClass}>${dataset.general.rank.toLocaleString("en-US")}</td></tr>
+                    <tr><td>Registered since</td><td ${textClass}>${dataset.general.registeredGame}</td></tr>
+                    <tr><td>Days playing</td><td ${textClass}>${dataset.general.daysPlaying.toLocaleString("en-US")}</td></tr>
+                </tbody>
+                </table>`;
+            }
+
+            let returnCompanyWorthTitle = dataset => {
+                return `<table>
+                <thead>
+                    <tr><th colspan='2'>Money spent on...</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Mines</td><td ${textClass}>${dataset.mineErectionSum.toLocaleString("en-US")}</td></tr>
+                    <tr><td>Factories</td><td ${textClass}>${dataset.factoryErectionSum.toLocaleString("en-US")}</td></tr>
+                    <tr><td>Headquarter</td><td ${textClass}>${dataset.headquarterSum.toLocaleString("en-US")}</td></tr>
+                    <tr><td>Buildings</td><td ${textClass}>${dataset.buildingsErectionSum.toLocaleString("en-US")}</td></tr>
+                </tbody>
+                </table>`;
+            }
+
+            let returnString = dataset => {
+                return `
+                <tr>
+                    <td data-th="Player (hover for details)" title="${returnPlayerTitle(dataset)}">${dataset.general.name} (${dataset.general.level.toLocaleString("en-US")})</td>
+                    <td sorttable_customkey="${dataset.general.points}" data-th="Points per day (total points)" class="${textOrientation}">${dataset.general.pointsPerDay.toLocaleString("en-US")} (${dataset.general.points.toLocaleString("en-US")})</td>
+                    <td data-th="Factory upgrades" class="${textOrientation}">${dataset.factoryTotalUpgrades.toLocaleString("en-US")}</td>
+                    <td data-th="Amount of mines" class="${textOrientation}">${dataset.totalMineCount.toLocaleString("en-US")}</td>
+                    <td data-th="Mines within HQ radius" class="${textOrientation}">${dataset.headquarter.mineCount.toLocaleString("en-US")}</td>
+                    <td data-th="Mine income" class="${textOrientation}">${dataset.mineIncome.toLocaleString("en-US")}</td>
+                    <td data-th="Company worth" class="${textOrientation}" title="${returnCompanyWorthTitle(dataset)}">${dataset.companyWorth.toLocaleString("en-US")}</td>
+                </tr>
+                `;
+            }
+
+            $.each(container, (i, dataset) => {
+                string += returnString(dataset);
+            });
+
+            tbody.empty().html(string);
+
+            sorttable.makeSortable($("#module-leaderboard table")[0]);
+            sorttable.innerSortFunction.apply($("#module-leaderboard th")[6], []);
+
+            $.each($("#module-leaderboard td[title]"), function(i, el) {
+                applyTippyOnNewElement($(el));
+            });
+        },
+        INSRT_leaderboard() {
+            rHelper.data.leaderboard = rHelper.data.leaderboard || {};
+
+            if($.isEmptyObject(rHelper.data.leaderboard) ) {
+
+                $.getJSON("api/leaderboard.php", result => {
+                    rHelper.data.leaderboard = result;
+                    rHelper.methods.INSRT_leaderboardTable();
+                });
+            }
+        },
         INSRT_attackLogDetailedGeneralInformation(dataContainer) {
             $("#attacklog-detailed-units-lost-avg").html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion("offense", dataContainer.avg.unitsLost));
             $("#attacklog-detailed-units-lost-total").html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion("offense", dataContainer.total.unitsLost));

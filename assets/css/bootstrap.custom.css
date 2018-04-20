@@ -1431,7 +1431,10 @@ pre code {
         -webkit-box-shadow ease-in-out 0.2s;
     transition: border-color ease-in-out 0.2s,
         -webkit-box-shadow ease-in-out 0.2s;
+    -webkit-transition: border-color ease-in-out 0.2s, -webkit-box-shadow ease-in-out 0.2s;
+    transition: border-color ease-in-out 0.2s, -webkit-box-shadow ease-in-out 0.2s;
     transition: border-color ease-in-out 0.2s, box-shadow ease-in-out 0.2s;
+    transition: border-color ease-in-out 0.2s, box-shadow ease-in-out 0.2s, -webkit-box-shadow ease-in-out 0.2s;
     transition: border-color ease-in-out 0.2s, box-shadow ease-in-out 0.2s,
         -webkit-box-shadow ease-in-out 0.2s;
 }
@@ -1463,6 +1466,16 @@ pre code {
 }
 
 .form-control::-ms-input-placeholder {
+    color: #d1a242;
+    opacity: 1;
+}
+
+.form-control::-webkit-input-placeholder {
+    color: #d1a242;
+    opacity: 1;
+}
+
+.form-control:-ms-input-placeholder {
     color: #d1a242;
     opacity: 1;
 }

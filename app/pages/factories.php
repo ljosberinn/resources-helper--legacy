@@ -3,15 +3,15 @@
 <?php
 
 $columns = [
-    "Factory" => "sorttable_nosort",
-    "Factory Level" => "sorttable_nosort",
-    "Product" => "sorttable_nosort",
-    "Dependencies" => "sorttable_nosort",
-    "Workload" => "sorttable_numeric",
-    "Turnover" => "",
+    "Factory"                       => "sorttable_nosort",
+    "Factory Level"                 => "sorttable_nosort",
+    "Product"                       => "sorttable_nosort",
+    "Dependencies"                  => "sorttable_nosort",
+    "Workload"                      => "sorttable_numeric",
+    "Turnover"                      => "",
     "Turnover Increase per Upgrade" => "",
-    "Upgrade Cost" => "",
-    "Return on Investment" => ""
+    "Upgrade Cost"                  => "",
+    "Return on Investment"          => ""
 ];
 
 $textOrientation = "text-md-right text-sm-left";
@@ -34,7 +34,7 @@ $arrayKeys = array_keys($columns);
 
             <?php
 
-            foreach($columns as $column => $specialClasses) {
+            foreach ($columns as $column => $specialClasses) {
                 echo '
                 <th class="' .$textOrientation. ' ' .$specialClasses. '">
                 ' .$column. '

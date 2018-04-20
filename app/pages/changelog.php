@@ -70,7 +70,7 @@
         <div class="col-lg-4 col-md-12">
             <div class="list-group" id="list-tab" role="tablist">
                 <?php
-                foreach($changelogIndex as $index => $array) {
+                foreach ($changelogIndex as $index => $array) {
                     echo '
                     <a class="list-group-item list-group-item-action ' .$array["class"]. '" id="changelog-list-' .$index. '" data-toggle="list" href="#changelog-' .$index. '" role="tab" aria-controls="changelog-' .$index. '">' .$array["title"]. '</a>';
                 }
@@ -80,7 +80,7 @@
         <div class="col-lg-8 col-md-12 mt-3">
                 <div class="tab-content" id="nav-tabContent">
                     <?php
-                    foreach($changelogContent as $index => $array) {
+                    foreach ($changelogContent as $index => $array) {
                         echo '
                         <div class="tab-pane fade ' .$array["class"]. '" id="changelog-' .$index. '" role="tabpanel" aria-labelledby="changelog-list-' .$index. '">
                             <h6>' .$array["date"]. '</h6>

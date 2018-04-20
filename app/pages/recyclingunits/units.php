@@ -1,11 +1,11 @@
 <?php
 
 $columns = [
-    "Unit" => "sorttable_nosort",
-    "Crafting price" => "",
-    "Market price" => "",
-    "Price per strength" => "",
-    "Profit" => ""
+    "Unit"               => $textOrientation. "sorttable_nosort",
+    "Crafting price"     => $textOrientation,
+    "Market price"       => $textOrientation,
+    "Price per strength" => $textOrientation,
+    "Profit"             => $textOrientation
 ];
 
 $arrayKeys = array_keys($columns);
@@ -22,9 +22,9 @@ $textOrientation = "text-md-right text-sm-left";
 
             <?php
 
-            foreach($columns as $column => $specialClasses) {
+            foreach ($columns as $column => $classes) {
                 echo '
-                <th class="' .$textOrientation. ' ' .$specialClasses. '">' .$column. '</th>';
+                <th class="' .$classes. '">' .$column. '</th>';
             }
 
             ?>
@@ -39,7 +39,7 @@ $textOrientation = "text-md-right text-sm-left";
             0, 2, 3, 5, 4, 1
         ];
 
-        foreach($order as $i) {
+        foreach ($order as $i) {
 
             echo '
             <tr>

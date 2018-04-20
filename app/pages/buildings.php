@@ -15,7 +15,7 @@ $textOrientation = "text-md-right text-sm-left";
 
     <?php
 
-    for($i = 0; $i <= 11; $i += 1) {
+    for ($i = 0; $i <= 11; $i += 1) {
         echo '
     <div class="col-sm-12 col-md-8 col-xl-4 rounded m-2 p-2" id="building-' .$i. '">
       <table class="table table-responsive table-break-medium table-striped mb-3">
@@ -27,7 +27,7 @@ $textOrientation = "text-md-right text-sm-left";
             </th>
             <th class="text-right">
               <select class="custom-select" id="buildings-level-' .$i. '">';
-        for($k = 0; $k <= 10; $k += 1) {
+        for ($k = 0; $k <= 10; $k += 1) {
             echo '
             <option value="' .$k. '">Level ' .$k. '</option>';
         }

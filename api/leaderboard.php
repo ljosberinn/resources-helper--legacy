@@ -90,9 +90,9 @@ function shoveDataToArray($result, $query, $target, $userId)
         $result[$userId][$target] = $data;
 
         if ($target == "general") {
-            $daysPlaying = round((time("now") - $data["registeredGame"])/86400) + 1;
-            $result[$userId][$target]["pointsPerDay"] = round($data["points"] / $daysPlaying);
-            $result[$userId][$target]["daysPlaying"] = $daysPlaying;
+            $daysPlaying                                = round((time("now") - $data["registeredGame"])/86400) + 1;
+            $result[$userId][$target]["pointsPerDay"]   = round($data["points"] / $daysPlaying);
+            $result[$userId][$target]["daysPlaying"]    = $daysPlaying;
             $result[$userId][$target]["registeredGame"] = date("Y-m-j h:i (a)", $data["registeredGame"]);
         }
     }
@@ -472,7 +472,7 @@ function returnBuildingsErectionSum($buildingsBaseData, $buildingsArray, $conn, 
         for ($level = 0; $level < $buildingLevel; $level += 1) {
 
             for ($materialIndex = 0; $materialIndex <= 3; $materialIndex += 1) {
-                $material = $buildingsBaseData[$buildingsIndex]["material"][$materialIndex];
+                $material       = $buildingsBaseData[$buildingsIndex]["material"][$materialIndex];
                 $materialAmount = $buildingsBaseData[$buildingsIndex]["materialAmount" .$materialIndex][$level];
 
                 if ($material == -1) {
@@ -502,11 +502,11 @@ function generateLeaderboardData($conn, $prices)
     $result = [];
 
     $template = [
-        "material" => [],
-        "products" => [],
-        "buildings" => [],
+        "material"    => [],
+        "products"    => [],
+        "buildings"   => [],
         "headquarter" => [],
-        "general" => [],
+        "general"     => [],
     ];
 
     $userIds = getValidUserIds($conn);
@@ -532,30 +532,30 @@ function generateLeaderboardData($conn, $prices)
         $result[$userId] = $template;
 
         $preparableQueries = [
-            "generalDataQuery" => "general",
+            "generalDataQuery"     => "general",
             "headquarterDataQuery" => "headquarter",
-            "materialDataQuery" => "material",
-            "productsDataQuery" => "products",
-            "buildingsDataQuery" => "buildings",
+            "materialDataQuery"    => "material",
+            "productsDataQuery"    => "products",
+            "buildingsDataQuery"   => "buildings",
         ];
 
         foreach ($preparableQueries as $query => $target) {
             $result = shoveDataToArray($result, ${$query}, $target, $userId);
         }
 
-        $result[$userId]["headquarter"]["headquarterSum"] = returnHeadquarterWorth($headquarterBaseData, $result[$userId]["headquarter"], $conn, $prices);
+        $result[$userId]["headquarterSum"]       = returnHeadquarterWorth($headquarterBaseData, $result[$userId]["headquarter"], $conn, $prices);
+        $result[$userId]["mineErectionSum"]      = returnMineErectionSum($mineBasePrices, $result[$userId]["material"], $conn, $prices);
+        $result[$userId]["mineIncome"]           = returnMineIncome($result[$userId]["material"], $conn, $prices);
+        $result[$userId]["totalMineCount"]       = countMines($result[$userId]["material"]);
+        $result[$userId]["factoryTotalUpgrades"] = array_sum($result[$userId]["products"]);
+        $result[$userId]["factoryErectionSum"]   = returnFactoryErectionSum($factoryBaseData, $result[$userId]["products"], $conn, $prices);
+        $result[$userId]["buildingsErectionSum"] = returnBuildingsErectionSum($buildingsBaseData, $result[$userId]["buildings"], $conn, $prices);
+        $result[$userId]["companyWorth"]         = returnCompanyWorth($result[$userId]);
+        $result[$userId]["tradeData"]            = returnTradeLogData($userId, $conn);
 
-        $result[$userId]["material"]["mineErectionSum"] = returnMineErectionSum($mineBasePrices, $result[$userId]["material"], $conn, $prices);
-        $result[$userId]["material"]["mineIncome"] = returnMineIncome($result[$userId]["material"], $conn, $prices);
-
-        $result[$userId]["products"]["factoryTotalUpgrades"] = array_sum($result[$userId]["products"]);
-        $result[$userId]["products"]["factoryErectionSum"] = returnFactoryErectionSum($factoryBaseData, $result[$userId]["products"], $conn, $prices);
-
-        $result[$userId]["buildings"]["buildingsErectionSum"] = returnBuildingsErectionSum($buildingsBaseData, $result[$userId]["buildings"], $conn, $prices);
-
-        $result[$userId]["general"]["companyWorth"] = returnCompanyWorth($result[$userId]);
-        $result[$userId]["general"]["tradeData"] = returnTradeLogData($userId, $conn);
-
+        unset($result[$userId]["products"]);
+        unset($result[$userId]["material"]);
+        unset($result[$userId]["buildings"]);
     }
 
     return $result;
@@ -649,16 +649,12 @@ function getFactoryData($conn)
     return $result;
 }
 
-header("Content-type: application/json");
 
 $conn = connect($host, $user, $pw, $db);
-
 $prices = getPrices($host, $user, $pw, $db);
-
 $result = generateLeaderboardData($conn, $prices);
 
+header("Content-type: application/json");
 echo json_encode($result, JSON_NUMERIC_CHECK);
-
-
 
 ?>

@@ -3,13 +3,13 @@
 <?php
 
 $columns = [
-    "Type & Stock" => "",
+    "Type & Stock"         => "",
     "Min. time until full" => "",
-    "Worth" => "",
-    "Warehouse level" => "",
-    "Upgrade calculator" => "",
-    "Upgrade target" => "",
-    "Upgrade cost" => ""
+    "Worth"                => "",
+    "Warehouse level"      => "",
+    "Upgrade calculator"   => "",
+    "Upgrade target"       => "",
+    "Upgrade cost"         => ""
 ];
 
 $textOrientation = "text-md-right text-sm-left";
@@ -32,7 +32,7 @@ $arrayKeys = array_keys($columns);
 
             <?php
 
-            foreach($columns as $column => $specialClasses) {
+            foreach ($columns as $column => $specialClasses) {
                 echo '<th class="' .$textOrientation. ' ' .$specialClasses. '">' .$column. '</th>';
             }
 
@@ -48,15 +48,15 @@ $arrayKeys = array_keys($columns);
 
                 for ($i = 0; $i < 58; $i += 1) {
 
-                    if($i >= 0 && $i <= 13) {
+                    if ($i >= 0 && $i <= 13) {
                         $imgClass = "material";
                         $idClass = $imgClass;
                         $k = $i ;
-                    } else if($i >= 14 && $i <= 35) {
+                    } else if ($i >= 14 && $i <= 35) {
                         $imgClass = "product";
                         $idClass = "products";
                         $k = $i - 14;
-                    } else if($i > 35 && $i < 52) {
+                    } else if ($i > 35 && $i < 52) {
                         $imgClass = "loot";
                         $idClass = $imgClass;
                         $k = $i - 36;
@@ -66,7 +66,7 @@ $arrayKeys = array_keys($columns);
                         $k = $i - 52;
                     }
 
-                    if($i == 14 || $i == 36 || $i == 52) {
+                    if ($i == 14 || $i == 36 || $i == 52) {
                         echo $trBreak;
                     }
 

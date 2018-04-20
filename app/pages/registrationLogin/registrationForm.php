@@ -1,9 +1,9 @@
 <form class="mb-3" method="POST" action="index.php" id="registration-form">
 
-  <p>
+    <p>
         <small id="registration-star" class="form-text text-muted">
-        Fields with <span class="text-danger">*</span> are required.
-      </small>
+            Fields with <span class="text-danger">*</span> are required.
+        </small>
     </p>
 
     <div class="form-group">
@@ -85,22 +85,22 @@
 
                 <?php
 
-        $languageQuery = "SELECT * FROM `languages` WHERE `active` = 1 ORDER BY `short` ASC";
-        $getLanguages = $conn->query($languageQuery);
+                $languageQuery = "SELECT * FROM `languages` WHERE `active` = 1 ORDER BY `short` ASC";
+                $getLanguages = $conn->query($languageQuery);
 
-        if ($getLanguages->num_rows > 0) {
-            while ($language = $getLanguages->fetch_assoc()) {
-                echo '
-             <option value="' .$language["id"]. '">' .$language["short"]. ' | ' .$language["name"]. '</option>';
-            }
-        } else {
-            echo '
-             <option value="" disabled>
-                    Sorry, server seems to be unavailable. Please try again later! If this issue persists, please write a mail to admin@gerritalex.de
-                </option>';
-        }
+                if ($getLanguages->num_rows > 0) {
+                    while ($language = $getLanguages->fetch_assoc()) {
+                        echo '
+                        <option value="' .$language["id"]. '">' .$language["short"]. ' | ' .$language["name"]. '</option>';
+                    }
+                } else {
+                    echo '
+                    <option value="" disabled>
+                        Sorry, server seems to be unavailable. Please try again later! If this issue persists, please write a mail to admin@gerritalex.de
+                    </option>';
+                }
 
-        ?>
+                ?>
             </select> <span class="text-danger">*</span>
     </div>
 

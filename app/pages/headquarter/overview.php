@@ -1,12 +1,12 @@
 <?php
 
 $columns = [
-    "Level",
-    "Required material & amount",
-    "Total cost",
-    "Transportation",
-    "Radius",
-    "Boost"
+    "Level"                      => $textOrientation,
+    "Required material & amount" => $textOrientation,
+    "Total cost"                 => $textOrientation,
+    "Transportation"             => $textOrientation,
+    "Radius"                     => $textOrientation,
+    "Boost"                      => $textOrientation,
 ];
 
 $textOrientation = "text-md-right text-sm-left";
@@ -23,9 +23,9 @@ $textOrientation = "text-md-right text-sm-left";
 
                 <?php
 
-                foreach($columns as $column) {
+                foreach ($columns as $column => $classes) {
                     echo '
-                    <th class="' .$textOrientation. '">' .$column. '</th>';
+                    <th class="' .$classes. '">' .$column. '</th>';
                 }
 
                 ?>

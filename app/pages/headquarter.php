@@ -1,6 +1,6 @@
 <?php
 
-if($_SESSION["id"]) {
+if ($_SESSION["id"]) {
     $show1 = "show";
     $show2 = "";
 } else {

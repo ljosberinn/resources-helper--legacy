@@ -14,28 +14,28 @@
 
         $cards = [
             [
-                "id" => "mines",
+                "id"      => "mines",
                 "heading" => '<span class="nav-icon-mines"></span> Mines',
             ],
             [
-                "id" => "qualitycomparator",
+                "id"      => "qualitycomparator",
                 "heading" => '<span class="nav-icon-qualitycomparator"></span> Quality Comparator',
             ],
             [
-                "id" => "factories",
+                "id"      => "factories",
                 "heading" => '<span class="nav-icon-factories"></span> Factories',
             ],
             [
-                "id" => "diamond",
+                "id"      => "diamond",
                 "heading" => '<span><img src="assets/img/icons/gd.png" alt="Giant diamond"></span> Calc',
             ],
             [
-                "id" => "flow",
+                "id"      => "flow",
                 "heading" => '<span>' .file_get_contents("assets/img/icons/flow.svg"). '</span> Material Flow',
             ],
         ];
 
-        foreach($cards as $details) {
+        foreach ($cards as $details) {
 
             buildCard($accordion, $folder, $details["id"], $details["heading"]);
 

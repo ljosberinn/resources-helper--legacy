@@ -5,16 +5,16 @@
 $textOrientation = "text-md-right text-sm-left";
 
 $columns = [
-    "Mission" => "sorttable_nosort",
-    "Goal" => "sorttable_nosort " .$textOrientation,
+    "Mission"                     => "sorttable_nosort",
+    "Goal"                        => "sorttable_nosort " .$textOrientation,
     "Availability (every X days)" => $textOrientation,
-    "Time to complete (days)" => $textOrientation,
-    "Reward" => "sorttable_nosort",
-    "Profit" => $textOrientation,
-    "Progress" => "sorttable_nosort",
-    "Started at..." => $textOrientation,
-    "Ends in..." => $textOrientation,
-    "Penalty" => $textOrientation,
+    "Time to complete (days)"     => $textOrientation,
+    "Reward"                      => "sorttable_nosort",
+    "Profit"                      => $textOrientation,
+    "Progress"                    => "sorttable_nosort",
+    "Started at..."               => $textOrientation,
+    "Ends in..."                  => $textOrientation,
+    "Penalty"                     => $textOrientation,
 ];
 
 $arrayKeys = array_keys($columns);
@@ -35,10 +35,10 @@ $arrayKeys = array_keys($columns);
 
             <?php
 
-            foreach($columns as $column => $specialClasses) {
-                    echo '
-                    <th class="' .$specialClasses. '">
-                ' .$column. '
+            foreach ($columns as $column => $specialClasses) {
+                echo '
+                <th class="' .$specialClasses. '">
+                    ' .$column. '
                 </th>';
             }
 
@@ -55,41 +55,41 @@ $arrayKeys = array_keys($columns);
         $getExistingMissionsQuery = "SELECT `id`, `title`, `objective1`, `objective2` FROM `missions`";
         $getExistingMissions = $conn->query($getExistingMissionsQuery);
 
-        if($getExistingMissions->num_rows > 0) {
-            while($mission = $getExistingMissions->fetch_assoc()) {
+        if ($getExistingMissions->num_rows > 0) {
+            while ($mission = $getExistingMissions->fetch_assoc()) {
                 $missions[$mission["id"]]["name"] = $mission["title"];
                 $missions[$mission["id"]]["objectives"] = [$mission["objective1"], $mission["objective2"]];
             }
         }
 
-        foreach($missions as $missionId => $subObj) {
+        foreach ($missions as $missionId => $subObj) {
 
             echo '
             <tr id="mission-' .$missionId. '">
                 <td data-th="' .$arrayKeys[0]. '">
                 <span class="rounded img-fluid resources-missions-' .$missionId. '"></span>
                 <span class="ml-1">' .$subObj["name"]. '</span>
-            </td>
-            <td data-th="' .$arrayKeys[1]. '" class="' .$textOrientation. '">
-                ' .$subObj["objectives"][0]. '
-                <span id="mission-goal-' .$missionId. '"></span>
-                ' .$subObj["objectives"][1]. '
-            </td>
-            <td data-th="' .$arrayKeys[2]. '" class="' .$textOrientation. '" id="mission-interval-' .$missionId. '"></td>
-            <td data-th="' .$arrayKeys[3]. '" class="' .$textOrientation. '" id="mission-duration-' .$missionId. '"></td>
-            <td data-th="' .$arrayKeys[4]. '">
-                <span id="mission-reward-amount-' .$missionId. '"></span>x
-                <span id="mission-reward-' .$missionId. '"></span>
-            </td>
-            <td data-th="' .$arrayKeys[5]. '" class="' .$textOrientation. '" id="mission-profit-' .$missionId. '"></td>
-            <td data-th="' .$arrayKeys[6]. '" id="mission-progress-' .$missionId. '">
-                <div id="mission-progress-wrap-' .$missionId. '" class="progress-wrap progress float-right">
-                <div id="mission-progress-bar-' .$missionId. '" class="progress-bar progress"></div>
-                </div>
-            </td>
-            <td data-th="' .$arrayKeys[7]. '" class="' .$textOrientation. '" id="mission-start-' .$missionId. '"></td>
-            <td data-th="' .$arrayKeys[8]. '" class="' .$textOrientation. '" id="mission-end-' .$missionId. '"></td>
-            <td data-th="' .$arrayKeys[9]. '" class="' .$textOrientation. '" id="mission-penalty-' .$missionId. '"></td>
+                </td>
+                <td data-th="' .$arrayKeys[1]. '" class="' .$textOrientation. '">
+                    ' .$subObj["objectives"][0]. '
+                    <span id="mission-goal-' .$missionId. '"></span>
+                    ' .$subObj["objectives"][1]. '
+                </td>
+                <td data-th="' .$arrayKeys[2]. '" class="' .$textOrientation. '" id="mission-interval-' .$missionId. '"></td>
+                <td data-th="' .$arrayKeys[3]. '" class="' .$textOrientation. '" id="mission-duration-' .$missionId. '"></td>
+                <td data-th="' .$arrayKeys[4]. '">
+                    <span id="mission-reward-amount-' .$missionId. '"></span>x
+                    <span id="mission-reward-' .$missionId. '"></span>
+                </td>
+                <td data-th="' .$arrayKeys[5]. '" class="' .$textOrientation. '" id="mission-profit-' .$missionId. '"></td>
+                <td data-th="' .$arrayKeys[6]. '" id="mission-progress-' .$missionId. '">
+                    <div id="mission-progress-wrap-' .$missionId. '" class="progress-wrap progress float-right">
+                        <div id="mission-progress-bar-' .$missionId. '" class="progress-bar progress"></div>
+                    </div>
+                </td>
+                <td data-th="' .$arrayKeys[7]. '" class="' .$textOrientation. '" id="mission-start-' .$missionId. '"></td>
+                <td data-th="' .$arrayKeys[8]. '" class="' .$textOrientation. '" id="mission-end-' .$missionId. '"></td>
+                <td data-th="' .$arrayKeys[9]. '" class="' .$textOrientation. '" id="mission-penalty-' .$missionId. '"></td>
             </tr>';
 
         }
