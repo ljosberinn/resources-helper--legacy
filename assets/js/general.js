@@ -399,7 +399,7 @@ $("#techupgrades-input").on("input", function() {
 $("#personalmap-create").on("click", () => {
     "use strict";
 
-    if (rHelper.data.mineMap.length == 0) {
+    if (rHelper.data.mineMap.length == 0 && getCookie("loggedIn") == 1) {
         rHelper.methods.API_getMineMap();
     }
 });

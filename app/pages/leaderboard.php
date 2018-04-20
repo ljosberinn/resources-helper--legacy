@@ -11,6 +11,10 @@ $columns = [
     "Amount of mines"                   => $textOrientation,
     "Mines within HQ radius"            => $textOrientation,
     "Mine income"                       => $textOrientation,
+    "Trade income per day"              => $textOrientation,
+    "Bought goods for..."               => $textOrientation,
+    "Sold goods for..."                 => $textOrientation,
+    "Sold goods to KI for..."           => $textOrientation,
     "Company worth (hover for details)" => $textOrientation,
 ];
 
@@ -42,7 +46,7 @@ $arrayKeys = array_keys($columns);
                 </thead>
                 <tbody>
 
-                <tr><td colspan="8">soon</td></tr>
+                <tr><td colspan="8" class="text-center">...loading...</td></tr>
 
                 </tbody>
             </table>

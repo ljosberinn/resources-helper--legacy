@@ -4,7 +4,7 @@
 
     <p class="text-success text-center">
         working: everything except Trade Log & bottom links<br />
-        known issues: - no possibility of saving the API key if not during registration - only English available (might stay this way) - data wont save locally when not registered; only API is permanent right now
+        known issues: - no possibility of saving the API key if not during registration
     </p>
 
     <ul class="nav nav-tabs">

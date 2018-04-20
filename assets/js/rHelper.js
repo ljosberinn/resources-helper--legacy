@@ -230,6 +230,7 @@ const rHelper = {
 
                 sorttable.innerSortFunction.apply($("#module-diamond th")[4], []);
                 sorttable.innerSortFunction.apply($("#module-diamond th")[5], []);
+                rHelper.methods.SET_save();
             });
         },
         API_getWarehouse(key) {
@@ -263,6 +264,8 @@ const rHelper = {
                     rHelper.data[targetObj][iterator].warehouse.fillAmount = warehouseInfo.amount;
                     rHelper.data[targetObj][iterator].warehouse.contingent = contingent;
                     rHelper.data[targetObj][iterator].warehouse.fillStatus = fillStatus;
+
+                    rHelper.methods.SET_save();
                 });
 
                 $.each(rHelper.data.material, materialId => {
@@ -307,6 +310,8 @@ const rHelper = {
                 rHelper.methods.EVNT_buildGraph("material");
                 rHelper.methods.INSRT_flowDistributionGlobal();
                 rHelper.methods.API_toggleLoadSuccessorHelper("mines-summary");
+
+                rHelper.methods.SET_save();
             });
         },
         API_getMineMap() {
@@ -444,6 +449,8 @@ const rHelper = {
 
                 rHelper.methods.INSRT_gaugeGraph("buildings");
                 rHelper.methods.API_toggleLoadSuccessorHelper("buildings");
+
+                rHelper.methods.SET_save();
             });
         },
         API_getHeadquarter(key) {
@@ -472,6 +479,8 @@ const rHelper = {
                 rHelper.methods.INSRT_gaugeGraph("headquarter");
                 rHelper.methods.SET_hqLevel();
                 rHelper.methods.API_toggleLoadSuccessorHelper("headquarter");
+
+                rHelper.methods.SET_save();
             });
         },
         API_getCreditInformation(key) {
@@ -549,16 +558,18 @@ const rHelper = {
 
             if ($.isArray(key)) {
                 rHelper.data[selector][index][key[0]][key[1]] = value;
-                console.log(selector, index, key[0], key[1], value);
             } else {
                 rHelper.data[selector][index][key] = value;
-                console.log(selector, index, key, value);
             }
+
+            rHelper.methods.SET_save();
         },
         SET_save() {
             "use strict";
 
-            localStorage.setItem("rGame", JSON.stringify(rHelper.data));
+            if(getCookie("loggedIn") != 1) {
+                localStorage.setItem("rGame", JSON.stringify(rHelper.data));
+            }
         },
         SET_tabSwitcherAnchorBased() {
             "use strict";
@@ -1507,6 +1518,10 @@ const rHelper = {
                     <td data-th="Amount of mines" class="${textOrientation}">${dataset.totalMineCount.toLocaleString("en-US")}</td>
                     <td data-th="Mines within HQ radius" class="${textOrientation}">${dataset.headquarter.mineCount.toLocaleString("en-US")}</td>
                     <td data-th="Mine income" class="${textOrientation}">${dataset.mineIncome.toLocaleString("en-US")}</td>
+                    <td data-th="Trade income per day" class="${textOrientation}">${dataset.tradeData.tradeIncomePerDay.toLocaleString("en-US")}</td>
+                    <td data-th="Bought goods for" class="${textOrientation}">${dataset.tradeData.totalBuy.toLocaleString("en-US")}</td>
+                    <td data-th="Sold goods for..." class="${textOrientation}">${dataset.tradeData.totalSell.toLocaleString("en-US")}</td>
+                    <td data-th="Sold goods to KI for..." class="${textOrientation}">${dataset.tradeData.sumKISell.toLocaleString("en-US")}</td>
                     <td data-th="Company worth" class="${textOrientation}" title="${returnCompanyWorthTitle(dataset)}">${dataset.companyWorth.toLocaleString("en-US")}</td>
                 </tr>
                 `;
@@ -1519,7 +1534,7 @@ const rHelper = {
             tbody.empty().html(string);
 
             sorttable.makeSortable($("#module-leaderboard table")[0]);
-            sorttable.innerSortFunction.apply($("#module-leaderboard th")[6], []);
+            sorttable.innerSortFunction.apply($("#module-leaderboard th")[10], []);
 
             $.each($("#module-leaderboard td[title]"), function(i, el) {
                 applyTippyOnNewElement($(el));
@@ -1890,7 +1905,7 @@ const rHelper = {
                         innerSize: "60%",
                         dataLabels: {
                             formatter: function() {
-                                return this.y > 1 ? `<b> ${this.point.name} :</b> + ${this.y} %` : null;
+                                return this.y > 1 ? `<b> ${this.point.name} :</b> ${this.y} %` : null;
                             },
                             style: {
                                 color: "white",
@@ -2345,7 +2360,9 @@ const rHelper = {
         INSRT_API_remainingCredits(value) {
             "use strict";
 
-            $("#api-credits").text(value.toLocaleString("en-US") + " Credits left");
+            if(value) {
+                $("#api-credits").text(value.toLocaleString("en-US") + " Credits left");
+            }
         },
         INSRT_diamondFactoryOutput(factoryId) {
             "use strict";
@@ -6591,12 +6608,14 @@ const rHelper = {
 
 (() => {
     $("#loading-text").text("fetching data");
-    if (typeof localStorage.rGame !== undefined && getCookie("loggedIn") != 1) {
+    if (typeof (localStorage.rGame) != "undefined" && getCookie("loggedIn") != 1) {
+        // if logged out and data in localStorage
         rHelper.data = JSON.parse(localStorage.getItem("rGame"));
         loadingAnimToggler("hide");
         console.log("Found existing data!");
         rHelper.init.core();
     } else {
+        // if logged in or no data in localStorage
         $.get({
             url: "api/core.php",
             success: response => {

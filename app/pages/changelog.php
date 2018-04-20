@@ -39,6 +39,7 @@
             – NEW: missing Tech upgrade calculator: shows which upgrades you're missing for a messed up teching process<br />
             <br />
             – HEAVILY MODIFIED: moved clunky settings to own menu with more options and less clutter<br />
+            – HEAVILY MODIFIED: leaderboard now only shows metrics that cannot be seen in-game<br />
             <br />
             - CHANGED: Missions, Personal Mine Map, Trade Log and Attack Log are only available for registered users, due to their size they need to be saved serverside<br />
             – CHANGED: Price History shows both KI and Player price now, including averages. Last 28 days/4 weeks are shown. Downloadable .csv has properly named columns now.<br />
