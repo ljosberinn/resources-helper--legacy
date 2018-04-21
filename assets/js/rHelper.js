@@ -388,6 +388,8 @@ const rHelper = {
             $.getJSON(`api/core.php?query=9&key=${key}`, data => {
                 if (data.callback != 'rHelper.methods.API_getAttackLog("attackSimple")') {
                     swal("Error", "Couldn't fetch attack log - API potentially unavailable!", "error");
+                } else {
+                    rHelper.methods.API_toggleLoadSuccessorHelper("attack-log");
                 }
             });
         },
@@ -830,6 +832,8 @@ const rHelper = {
                 openedWindow = infoWindow;
                 infoWindow.open(map, marker);
             });
+
+            return marker;
         },
         SET_overTimeGraph() {
             "use strict";
@@ -1439,8 +1443,10 @@ const rHelper = {
             if (data.length != 0) {
                 let now = new Date();
 
-                let map = rHelper.methods.SET_newMap(container, 12, "terrain");
-                map = rHelper.methods.SET_mapOptions(map, 16, data.mines[0]);
+                let map = rHelper.methods.SET_newMap(container, 3, "terrain");
+                map = rHelper.methods.SET_mapOptions(map, 20, data.mines[0]);
+
+                let markerArr = [];
 
                 switch (mapType) {
                     case "personal":
@@ -1454,8 +1460,11 @@ const rHelper = {
                 }
 
                 $.each(data.mines, (i, subObj) => {
-                    rHelper.methods.SET_mapMineHandler(now, subObj, map, mapType);
+                    markerArr.push(rHelper.methods.SET_mapMineHandler(now, subObj, map, mapType));
                 });
+
+                let markerCluster = new MarkerClusterer(map, markerArr,
+                    {imagePath: 'assets/img/maps/cluster/m'});
             } else {
                 infoNode.text(errorText);
             }

@@ -654,7 +654,15 @@ $conn = connect($host, $user, $pw, $db);
 $prices = getPrices($host, $user, $pw, $db);
 $result = generateLeaderboardData($conn, $prices);
 
-header("Content-type: application/json");
+$headers = [
+    "Content-type: application/json",
+    "Cache-Control: no-cache, no-store",
+];
+
+foreach ($headers as $header) {
+    header($header);
+}
+
 echo json_encode($result, JSON_NUMERIC_CHECK);
 
 ?>

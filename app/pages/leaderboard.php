@@ -46,7 +46,7 @@ $arrayKeys = array_keys($columns);
                 </thead>
                 <tbody>
 
-                <tr><td colspan="8" class="text-center">...loading...</td></tr>
+                <tr><td colspan="11" class="text-center">...loading...</td></tr>
 
                 </tbody>
             </table>
