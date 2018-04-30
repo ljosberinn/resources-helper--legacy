@@ -1785,19 +1785,67 @@ class resourcesGame
       */
      public function getTradeLog($userId)
      {
-         $result = [];
 
-         $query = "SELECT `timestamp`, `event`, `amount`, `price`, `transportCost`, `itemId`, `actor`, `actorLevel` FROM `userTradeLog_" .$userId. "` ORDER BY `timestamp` DESC";
+        $result = $selling = $buying = $last100Entries = [];
+        $result['log'] = $result['timestamps'] = [];
+        $result['selling']['total'] = $result['buying']['total'] = $result['selling']['valuesById'] = $result['buying']['valuesById'] = 0;
 
-         $getTradeLog = $this->conn->query($query);
+        for($i = 0; $i <= 23; $i += 1) {
+            $result['timestamps'][$i] = 0;
+        }
 
-         if ($getTradeLog->num_rows > 0) {
-             while ($data = $getTradeLog->fetch_assoc()) {
-                 array_push($result, $data);
-             }
-         }
+        for ($event = 0; $event <= 1; $event += 1) {
+            for ($i = 0; $i <= 57; $i += 1) {
+                $getSumQuery = "SELECT SUM(`amount` * `price`) as `sum` FROM `userTradeLog_" .$userId. "` WHERE `event` = " .$event. " AND `itemId` = " .$i. "";
+                $getSum = $this->conn->query($getSumQuery);
 
-         return $result;
+                if ($getSum->num_rows == 1) {
+                    while ($data = $getSum->fetch_assoc()) {
+
+                        if($event == 0) {
+                            $targetArr = 'buying';
+                        } else {
+                            $targetArr = 'selling';
+                        }
+                        ${$targetArr}[$i] = $data['sum'];
+                    }
+                }
+            }
+        }
+
+        $result['selling']['total'] = array_sum($selling);
+        $result['selling']['valuesById'] = $selling;
+
+        $result['buying']['total'] = array_sum($buying);
+        $result['buying']['valuesById'] = $buying;
+
+        $getTimestampsQuery = "SELECT `timestamp` FROM `userTradeLog_" .$userId. "` WHERE `event` = 1";
+        $getTimestamps = $this->conn->query($getTimestampsQuery);
+
+        if($getTimestamps->num_rows > 0) {
+            while($data = $getTimestamps->fetch_assoc()) {
+                $result['timestamps'][date('G', $data['timestamp'])] += 1;
+            }
+        }
+
+        $mostRecentEntryQuery = "SELECT `timestamp` FROM `userTradeLog_1` ORDER BY `timestamp` DESC LIMIT 1";
+        $mostRecentEntry = $this->conn->query($mostRecentEntryQuery);
+        if($mostRecentEntry->num_rows == 1) {
+            $mostRecentEntry = $mostRecentEntry->fetch_assoc();
+        }
+
+        $delimiter = $mostRecentEntry['timestamp'] - 86400;
+
+        $getMostRecentEntriesQuery = "SELECT `actor`, `actorLevel`, `transportCost`, `amount`, `price`, `itemId`, `timestamp`, `event` FROM `userTradeLog_" .$userId. "` WHERE `timestamp` > " .$delimiter. " ORDER BY `timestamp` DESC";
+        $getMostRecentEntries = $this->conn->query($getMostRecentEntriesQuery);
+
+        if($getMostRecentEntries->num_rows > 0) {
+            while($data = $getMostRecentEntries->fetch_assoc()) {
+                array_push($result['log'], $data);
+            }
+        }
+
+        return $result;
      }
 
      /**

@@ -388,6 +388,8 @@ const rHelper = {
             $.getJSON(`api/core.php?query=9&key=${key}`, data => {
                 if (data.callback != 'rHelper.methods.API_getAttackLog("attackSimple")') {
                     swal("Error", "Couldn't fetch attack log - API potentially unavailable!", "error");
+                }else {
+                    rHelper.methods.API_toggleLoadSuccessorHelper("attack-log");
                 }
             });
         },
@@ -397,6 +399,7 @@ const rHelper = {
             $.getJSON("api/core.php?tradeLog", data => {
                 rHelper.data.tradeLog = data;
                 rHelper.methods.API_toggleLoadSuccessorHelper("trade-log");
+                rHelper.methods.INSRT_tradeLog();
             });
         },
         API_getTradeLogInitiator(key) {
@@ -830,6 +833,8 @@ const rHelper = {
                 openedWindow = infoWindow;
                 infoWindow.open(map, marker);
             });
+
+            return marker;
         },
         SET_overTimeGraph() {
             "use strict";
@@ -1439,8 +1444,10 @@ const rHelper = {
             if (data.length != 0) {
                 let now = new Date();
 
-                let map = rHelper.methods.SET_newMap(container, 12, "terrain");
+                let map = rHelper.methods.SET_newMap(container, 3, "terrain");
                 map = rHelper.methods.SET_mapOptions(map, 16, data.mines[0]);
+
+                let markerArr = [];
 
                 switch (mapType) {
                     case "personal":
@@ -1455,7 +1462,10 @@ const rHelper = {
 
                 $.each(data.mines, (i, subObj) => {
                     rHelper.methods.SET_mapMineHandler(now, subObj, map, mapType);
+                    markerArr.push(rHelper.methods.SET_mapMineHandler(now, subObj, map, mapType));
                 });
+
+                let markerCluster = new MarkerClusterer(map, markerArr, {imagePath: 'assets/img/maps/cluster/m', maxZoom: 15});
             } else {
                 infoNode.text(errorText);
             }
@@ -1505,6 +1515,7 @@ const rHelper = {
                     <tr><td>Factories</td><td ${textClass}>${dataset.factoryErectionSum.toLocaleString("en-US")}</td></tr>
                     <tr><td>Headquarter</td><td ${textClass}>${dataset.headquarterSum.toLocaleString("en-US")}</td></tr>
                     <tr><td>Buildings</td><td ${textClass}>${dataset.buildingsErectionSum.toLocaleString("en-US")}</td></tr>
+                    <tr><td>Warehouse</td><td ${textClass}>${dataset.warehouseErectionSum.toLocaleString("en-US")}</td></tr>
                 </tbody>
                 </table>`;
             }
@@ -3319,7 +3330,7 @@ const rHelper = {
         CALC_attackLogSetTRColor(result) {
             let colorClass = "bg-success-25";
 
-            if (!result) {
+            if (!result || result < 0) {
                 colorClass = "bg-warning-25";
             }
 

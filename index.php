@@ -142,11 +142,6 @@ ob_end_flush();
     <?php
 
     $JSFiles = [
-        "assets/js/sorttable.min.js" => [
-            "mode" => "",
-            "params" => "",
-            "type" => "js",
-        ],
         "assets/js/bootstrap.bundle.min.js" => [
             "mode" => "",
             "params" => "",

@@ -19,6 +19,7 @@
 <link rel="dns-prefetch" href="//code.jquery.com" />
 <link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
 <link rel="dns-prefetch" href="//unpkg.com" />
+<link rel="dns-prefetch" href="//maps.googleapis.com" />
 
 <!-- external stylesheets
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans"> -->
@@ -94,6 +95,11 @@ if (isset($_SESSION["id"])) {
 $jsFiles = [
     "assets/js/sorttable.min.js" => [
         "mode" => "",
+        "params" => "",
+        "type" => "js",
+    ],
+    "assets/js/googleMarkerCluster.min.js" => [
+        "mode" => "async",
         "params" => "",
         "type" => "js",
     ],

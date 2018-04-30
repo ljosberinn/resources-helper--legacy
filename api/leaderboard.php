@@ -65,6 +65,9 @@ function returnQueries($type)
     case "buildings":
         return "SELECT `building0`, `building1`, `building2`, `building3`, `building4`, `building5`, `building6`, `building7`, `building8`, `building9`, `building10`, `building11` FROM `userBuildings` WHERE `id` = ?";
     break;
+    case "warehouse":
+        return "SELECT
+        `level0`, `level1`, `level2`, `level3`, `level4`, `level5`, `level6`, `level7`, `level8`, `level9`, `level10`, `level11`, `level12`, `level13`, `level14`, `level15`, `level16`, `level17`, `level18`, `level19`, `level20`, `level21`, `level22`, `level23`, `level24`, `level25`, `level26`, `level27`, `level28`, `level29`, `level30`, `level31`, `level32`, `level33`, `level34`, `level35`, `level36`, `level37`, `level38`, `level39`, `level40`, `level41`, `level42`, `level43`, `level44`, `level45`, `level46`, `level47`, `level48`, `level49`, `level50`, `level51`, `level52`, `level53`, `level54`, `level55`, `level56`,  `level57` FROM `userWarehouse` WHERE `id` = ?";
     }
 }
 
@@ -132,7 +135,7 @@ function getValidUserIds($conn)
  */
 function returnCompanyWorth($result)
 {
-    return ($result["headquarterSum"] + $result["mineErectionSum"] + $result["factoryErectionSum"] + $result["buildingsErectionSum"]);
+    return ($result["headquarterSum"] + $result["mineErectionSum"] + $result["factoryErectionSum"] + $result["buildingsErectionSum"] + $result["warehouseErectionSum"]);
 }
 
 /**
@@ -506,6 +509,7 @@ function generateLeaderboardData($conn, $prices)
         "products"    => [],
         "buildings"   => [],
         "headquarter" => [],
+        "warehouse" => [],
         "general"     => [],
     ];
 
@@ -517,6 +521,7 @@ function generateLeaderboardData($conn, $prices)
         "material",
         "products",
         "buildings",
+        "warehouse",
     ];
 
     foreach ($queries as $shortcut) {
@@ -537,6 +542,7 @@ function generateLeaderboardData($conn, $prices)
             "materialDataQuery"    => "material",
             "productsDataQuery"    => "products",
             "buildingsDataQuery"   => "buildings",
+            "warehouseDataQuery"   => "warehouse",
         ];
 
         foreach ($preparableQueries as $query => $target) {
@@ -550,15 +556,39 @@ function generateLeaderboardData($conn, $prices)
         $result[$userId]["factoryTotalUpgrades"] = array_sum($result[$userId]["products"]);
         $result[$userId]["factoryErectionSum"]   = returnFactoryErectionSum($factoryBaseData, $result[$userId]["products"], $conn, $prices);
         $result[$userId]["buildingsErectionSum"] = returnBuildingsErectionSum($buildingsBaseData, $result[$userId]["buildings"], $conn, $prices);
+        $result[$userId]["warehouseErectionSum"] = returnWarehouseErectionSum($result[$userId]["warehouse"]);
         $result[$userId]["companyWorth"]         = returnCompanyWorth($result[$userId]);
         $result[$userId]["tradeData"]            = returnTradeLogData($userId, $conn);
 
         unset($result[$userId]["products"]);
         unset($result[$userId]["material"]);
         unset($result[$userId]["buildings"]);
+        unset($result[$userId]["warehouse"]);
     }
 
     return $result;
+}
+
+/**
+ * Returns warehouse erection sum
+ *
+ * @param [array] $userData previously initiated user data array
+ *
+ * @return [int]  $sum
+ */
+function returnWarehouseErectionSum($userData)
+{
+    $sum = 0;
+
+    foreach ($userData as $warehouseMaxLevel) {
+
+        for ($level = 1; $level <= $warehouseMaxLevel; $level += 1) {
+            $sum += pow($level - 1, 2) * 1250000;
+        }
+    }
+
+    return $sum;
+
 }
 
 /**
@@ -654,7 +684,14 @@ $conn = connect($host, $user, $pw, $db);
 $prices = getPrices($host, $user, $pw, $db);
 $result = generateLeaderboardData($conn, $prices);
 
-header("Content-type: application/json");
+$headers = [
+    "Content-type: application/json",
+    "Cache-Control: no-cache, no-store",
+];
+
+foreach ($headers as $header) {
+    header($header);
+}
 echo json_encode($result, JSON_NUMERIC_CHECK);
 
 ?>

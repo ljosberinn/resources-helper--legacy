@@ -43,7 +43,7 @@ function connect()
 function appendFiles($files)
 {
     foreach ($files as $link => $subInfo) {
-        $lastModified = date("Y-m-d H:i:s", filemtime($link));
+        $lastModified = filemtime($link);
 
         $mode = $subInfo["mode"];
         $params = $subInfo["params"];
