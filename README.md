@@ -18,6 +18,8 @@ working - 95%
 
 - possibility of adding api key post registration
 
+- load tu.json on demand (currently unlinked)
+
 ## What's included
 
 ```
