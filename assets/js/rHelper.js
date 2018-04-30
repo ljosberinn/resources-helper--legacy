@@ -9,6 +9,8 @@ const rHelper = {
         core() {
             "use strict";
 
+            removeSaveButton();
+
             rHelper.methods.SET_tabSwitcherAnchorBased();
             rHelper.methods.SET_transportCost("init");
 
@@ -303,12 +305,19 @@ const rHelper = {
                     rHelper.methods.INSRT_materialData(materialId, "api");
                 });
 
+                const fns = [
+                    "INSRT_materialMineAmortisation",
+                    "INSRT_materialHighlightMinePerfectIncome",
+                    "INSRT_flowDistributionGlobal"
+                ];
+
+                $.each(fns, (i, fn) => {
+                    rHelper.methods[fn]();
+                })
+
                 rHelper.methods.INSRT_totalMineWorth(rHelper.methods.CALC_totalMineWorth());
                 rHelper.methods.INSRT_totalMineCount(rHelper.methods.CALC_totalMineCount());
-                rHelper.methods.INSRT_materialMineAmortisation();
-                rHelper.methods.INSRT_materialHighlightMinePerfectIncome();
                 rHelper.methods.EVNT_buildGraph("material");
-                rHelper.methods.INSRT_flowDistributionGlobal();
                 rHelper.methods.API_toggleLoadSuccessorHelper("mines-summary");
 
                 rHelper.methods.SET_save();
@@ -593,8 +602,19 @@ const rHelper = {
         SET_save() {
             "use strict";
 
-            if(getCookie("loggedIn") != 1) {
+            const loggedInCookie = parseInt(getCookie("loggedIn"));
+            const hasAPIKeyAttached = typeof(rHelper.data.userInformation.realKey);
+
+            if(loggedInCookie == 1 && hasAPIKeyAttached == "undefined") {
                 localStorage.setItem("rGame", JSON.stringify(rHelper.data));
+
+                swal(
+                    'Data has been saved remotely!',
+                    '<not implemented yet>',
+                    'error'
+                );
+            } else {
+
             }
         },
         SET_tabSwitcherAnchorBased() {
@@ -1634,7 +1654,7 @@ const rHelper = {
                     profitClass = "danger";
                 }
 
-                $("#tradelog-tfoot").empty().append(`<tr><td data-th="daily profit" colspan="5" class="${textOrientation} text-${profitClass}">${sum.toLocaleString("en-US")}</td></tr>`);
+                $("#tradelog-tfoot").empty().append(`<tr><td data-th="daily profit" colspan="5" class="${textOrientation} text-${profitClass}">${sum.toLocaleString("en-US")} <a href="#">back to top</a></td></tr>`);
             }
         },
         INSRT_attackLogDetailedGeneralInformation(dataContainer) {
@@ -6694,6 +6714,7 @@ const rHelper = {
 
 (() => {
     $("#loading-text").text("fetching data");
+
     if (typeof (localStorage.rGame) != "undefined" && getCookie("loggedIn") != 1) {
         // if logged out and data in localStorage
         rHelper.data = JSON.parse(localStorage.getItem("rGame"));

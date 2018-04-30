@@ -63,7 +63,7 @@ class resourcesGame
                 "min" => 36,
                 "max" => 51,
                 "length" => 16,
-                "  outputName" => "loot",
+                "outputName" => "loot",
                 "localizationTable" => "lootNames"
             ],
             "units" => [
@@ -1857,8 +1857,6 @@ class resourcesGame
 
         $getMostRecentEntriesQuery = "SELECT `actor`, `actorLevel`, `transportCost`, `amount`, `price`, `itemId`, `timestamp`, `event` FROM `userTradeLog_" .$userId. "` WHERE `timestamp` > " .$end. " AND `timestamp` <= " .$start. " " .$addFilter. " ORDER BY `timestamp` DESC";
         $getMostRecentEntries = $this->conn->query($getMostRecentEntriesQuery);
-
-        $result['q'] = $getMostRecentEntriesQuery;
 
         if($getMostRecentEntries->num_rows > 0) {
             while($data = $getMostRecentEntries->fetch_assoc()) {

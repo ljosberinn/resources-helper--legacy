@@ -504,3 +504,13 @@ $("#tradelog-filter").on("change", function() {
     rHelper.methods.API_getTradeLog(skipCount, filter);
   }
 });
+
+$("#save-button").on("click", () => {
+  rHelper.methods.SET_save();
+});
+
+removeSaveButton = () => {
+  if (typeof rHelper.data.userInformation.realKey != "undefined") {
+    $("#save-button").remove();
+  }
+};

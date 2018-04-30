@@ -33,6 +33,8 @@
     "applyTippyOnNewElement": true,
     "toggleTechUpgradeInfo": true,
     "loadingAnimToggler": true,
-    "rHelper": true
+    "rHelper": true,
+    "markerCluster": true,
+    "MarkerClusterer": true
   }
 }
