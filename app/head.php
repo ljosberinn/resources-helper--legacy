@@ -16,6 +16,7 @@
 
 <!-- DNS prefetch -->
 <link rel="dns-prefetch" href="//code.highcharts.com" />
+<link rel="dns-prefetch" href="//maps.googleapis.com" />
 <link rel="dns-prefetch" href="//code.jquery.com" />
 <link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
 <link rel="dns-prefetch" href="//unpkg.com" />

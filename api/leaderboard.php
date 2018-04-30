@@ -692,6 +692,7 @@ $headers = [
 foreach ($headers as $header) {
     header($header);
 }
+
 echo json_encode($result, JSON_NUMERIC_CHECK);
 
 ?>

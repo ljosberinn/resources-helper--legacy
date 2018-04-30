@@ -388,7 +388,7 @@ const rHelper = {
             $.getJSON(`api/core.php?query=9&key=${key}`, data => {
                 if (data.callback != 'rHelper.methods.API_getAttackLog("attackSimple")') {
                     swal("Error", "Couldn't fetch attack log - API potentially unavailable!", "error");
-                }else {
+                } else {
                     rHelper.methods.API_toggleLoadSuccessorHelper("attack-log");
                 }
             });
