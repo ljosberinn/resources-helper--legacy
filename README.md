@@ -4,11 +4,19 @@
 
 ## Status
 
-working - 90%
+working - 95%
 
 ### TODO
 
-local saves trade log implementation leaderboard
+- remote saves of non-api-users
+
+- remaining trade log implementation
+
+- gdpr compliance
+
+- footer links
+
+- possibility of adding api key post registration
 
 ## What's included
 
@@ -44,7 +52,7 @@ Headquarter
 Missions
 └── Goal, Availability, Duration, Reward, Profit, Progress, Penalty
 Trade Log
-└── TBD
+└── page-wise trade log, general graphical overview
 Attack Log
 ├── Simple Defense Log
 │       └── Attacks against you, Average loot factor against you, Profit
@@ -62,7 +70,7 @@ Price History
 Quality Comparator
 └── income comparator of scan value vs potential other resources
 Leaderboard
-└── TBD
+└── relevant metrics visible only through this page
 Discord
 Changelog
 ```
