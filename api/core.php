@@ -30,7 +30,23 @@ if (isset($_GET["key"])
 
 } elseif (isset($_GET["tradeLog"])) {
 
-    $output = json_encode($resourcesGame->getTradeLog($userId, $_GET["skipCount"]), JSON_NUMERIC_CHECK);
+    if (isset($_GET["skipCount"])
+        && is_numeric($_GET["skipCount"])
+        && $_GET["skipCount"] >= 0
+        )
+    {
+        $skipCount = $_GET["skipCount"];
+    }
+
+    if (isset($_GET["filter"])
+        && is_numeric($_GET["filter"])
+        && $_GET["filter"] >= -1
+        )
+    {
+        $filter = $_GET["filter"];
+    }
+
+    $output = json_encode($resourcesGame->getTradeLog($userId, $skipCount, $filter), JSON_NUMERIC_CHECK);
 
 } elseif (isset($_GET["attackLog"])
     && isset($_GET["type"])

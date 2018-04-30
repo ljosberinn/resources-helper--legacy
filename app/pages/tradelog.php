@@ -20,13 +20,9 @@ $columns = [
     <hr class="mb-3">
 
     <div class="row">
-        <div class="col-xs-6 col-md-12">
-            buying
-        </div>
+        <div class="col-xs-6 col-md-12" id="tradelog-buying"></div>
 
-        <div class="col-xs-6 col-md-12">
-            selling
-        </div>
+        <div class="col-xs-6 col-md-12" id="tradelog-selling"></div>
     </div>
 
     <div class="row">
@@ -36,13 +32,18 @@ $columns = [
                 <tbody>
                     <tr>
                         <td class="sorttable_nosort">
-                            <button class="btn btn-success" id="tradelog-previous" disabled>previous day</button>
+                        <button class="btn btn-success" id="tradelog-previous">previous day</button>
                         </td>
                         <td class="text-center">
-                            Personal trade log, going back 24 hours from last known entry
+                            <select class="custom-select" id="tradelog-filter">
+                                <option selected disabled>filter</option>
+                                <option value="-1">reset</option>
+                                <option value="0">show only BUY events</option>
+                                <option value="1">show only SELL events</option>
+                            </select>
                         </td>
                         <td class="sorttable_nosort <?php echo $textOrientation; ?>">
-                            <button class="btn btn-success" id="tradelog-next">next day</button>
+                        <button class="btn btn-success" id="tradelog-next" disabled>next day</button>
                         </td>
                     </tr>
                 </tbody>

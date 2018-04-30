@@ -393,13 +393,17 @@ const rHelper = {
                 }
             });
         },
-        API_getTradeLog(skipCount) {
+        API_getTradeLog(skipCount, filter) {
             "use strict";
 
             let url = "api/core.php?tradeLog";
 
             if(skipCount) {
                 url += `&skipCount=${skipCount}`;
+            }
+
+            if(filter) {
+                url += `&filter=${filter}`;
             }
 
             const buttons = [$("#tradelog-next"), $("#tradelog-previous")];
@@ -416,8 +420,8 @@ const rHelper = {
                     btn.attr('disabled', false);
                 });
 
-                if(rHelper.data.tradeLog.skipCount == 1) {
-                    buttons[1].attr('disabled', true);
+                if(rHelper.data.tradeLog.skipCount == 0) {
+                    buttons[0].attr('disabled', true);
                 }
             });
         },

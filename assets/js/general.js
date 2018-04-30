@@ -454,9 +454,9 @@ $("#attacklog-detailed-selector").on("change", function() {
 $("#attacklog-detailed-next").on("click", () => {
   "use strict";
 
-  let target = $("#attacklog-detailed-selector").val();
-  let type = "attackDetailed";
-  let skipCount = rHelper.data.attackLog.skipCount + 100;
+  const target = $("#attacklog-detailed-selector").val();
+  const type = "attackDetailed";
+  const skipCount = rHelper.data.attackLog.skipCount + 100;
 
   rHelper.methods.API_getAttackLog(type, target, skipCount);
 });
@@ -464,29 +464,43 @@ $("#attacklog-detailed-next").on("click", () => {
 $("#attacklog-detailed-last").on("click", () => {
   "use strict";
 
-  let target = $("#attacklog-detailed-selector").val();
-  let type = "attackDetailed";
-  let skipCount = rHelper.data.attackLog.skipCount - 100;
+  const target = $("#attacklog-detailed-selector").val();
+  const type = "attackDetailed";
+  const skipCount = rHelper.data.attackLog.skipCount - 100;
 
   rHelper.methods.API_getAttackLog(type, target, skipCount);
-});
-
-$("#tradelog-previous").on("click", () => {
-  "use strict";
-
-  let skipCount = rHelper.data.tradeLog.skipCount - 1;
-
-  if (skipCount >= 1) {
-    rHelper.methods.API_getTradeLog(skipCount);
-  }
 });
 
 $("#tradelog-next").on("click", () => {
   "use strict";
 
-  let skipCount = rHelper.data.tradeLog.skipCount + 1;
+  const skipCount = rHelper.data.tradeLog.skipCount - 1;
+  const filter = $("#tradelog-filter").val();
 
-  if (skipCount >= 1) {
-    rHelper.methods.API_getTradeLog(skipCount);
+  if (skipCount >= 0) {
+    rHelper.methods.API_getTradeLog(skipCount, filter);
+  }
+});
+
+$("#tradelog-previous").on("click", () => {
+  "use strict";
+
+  const skipCount = rHelper.data.tradeLog.skipCount + 1;
+  const filter = $("#tradelog-filter").val();
+
+  if (skipCount >= 0) {
+    rHelper.methods.API_getTradeLog(skipCount, filter);
+  }
+});
+
+$("#tradelog-filter").on("change", function() {
+  "use strict";
+
+  let filter = this.value;
+  let skipCount = rHelper.data.tradeLog.skipCount;
+
+  const currentFilter = rHelper.data.tradeLog.filter;
+  if (filter != currentFilter) {
+    rHelper.methods.API_getTradeLog(skipCount, filter);
   }
 });

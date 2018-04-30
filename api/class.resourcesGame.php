@@ -1783,7 +1783,7 @@ class resourcesGame
       * @param  int $userId [current user id]
       * @return array [returns tradeLog]
       */
-     public function getTradeLog($userId, $skipCount)
+     public function getTradeLog($userId, $skipCount, $filter)
      {
 
         $result = $selling = $buying = $last100Entries = [];
@@ -1835,17 +1835,27 @@ class resourcesGame
         }
 
         if(!$skipCount) {
-            $skipCount = 1;
-            $start = time('now');
-            $end = $mostRecentEntry['timestamp'] - 86400;
+            $skipCount = 0;
+            $start = $mostRecentEntry['timestamp'];
+            $end = strtotime('midnight', $mostRecentEntry['timestamp']);
         } else {
-            $start = $mostRecentEntry['timestamp'] - $skipCount * 86400;
-            $end = $mostRecentEntry['timestamp'] - 86400 * ($skipCount + 1);
+            $end = strtotime('midnight', $mostRecentEntry['timestamp']) - $skipCount * 86400;
+            $start = strtotime('tomorrow', $mostRecentEntry['timestamp']) - $skipCount * 86400;
         }
 
         $result['skipCount'] = $skipCount;
 
-        $getMostRecentEntriesQuery = "SELECT `actor`, `actorLevel`, `transportCost`, `amount`, `price`, `itemId`, `timestamp`, `event` FROM `userTradeLog_" .$userId. "` WHERE `timestamp` > " .$end. " AND `timestamp` <= " .$start. " ORDER BY `timestamp` DESC";
+
+        if(!isset($filter) || $filter == -1) {
+            $filter = -1;
+            $addFilter = "";
+        } else if($filter >= -1) {
+            $addFilter = " AND `event` = " .$filter;
+        }
+
+        $result['filter'] = $filter;
+
+        $getMostRecentEntriesQuery = "SELECT `actor`, `actorLevel`, `transportCost`, `amount`, `price`, `itemId`, `timestamp`, `event` FROM `userTradeLog_" .$userId. "` WHERE `timestamp` > " .$end. " AND `timestamp` <= " .$start. " " .$addFilter. " ORDER BY `timestamp` DESC";
         $getMostRecentEntries = $this->conn->query($getMostRecentEntriesQuery);
 
         $result['q'] = $getMostRecentEntriesQuery;
