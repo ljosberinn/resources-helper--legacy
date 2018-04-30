@@ -30,7 +30,7 @@ if (isset($_GET["key"])
 
 } elseif (isset($_GET["tradeLog"])) {
 
-    $output = json_encode($resourcesGame->getTradeLog($userId), JSON_NUMERIC_CHECK);
+    $output = json_encode($resourcesGame->getTradeLog($userId, $_GET["skipCount"]), JSON_NUMERIC_CHECK);
 
 } elseif (isset($_GET["attackLog"])
     && isset($_GET["type"])

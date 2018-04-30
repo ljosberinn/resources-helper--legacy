@@ -1783,7 +1783,7 @@ class resourcesGame
       * @param  int $userId [current user id]
       * @return array [returns tradeLog]
       */
-     public function getTradeLog($userId)
+     public function getTradeLog($userId, $skipCount)
      {
 
         $result = $selling = $buying = $last100Entries = [];
@@ -1834,10 +1834,21 @@ class resourcesGame
             $mostRecentEntry = $mostRecentEntry->fetch_assoc();
         }
 
-        $delimiter = $mostRecentEntry['timestamp'] - 86400;
+        if(!$skipCount) {
+            $skipCount = 1;
+            $start = time('now');
+            $end = $mostRecentEntry['timestamp'] - 86400;
+        } else {
+            $start = $mostRecentEntry['timestamp'] - $skipCount * 86400;
+            $end = $mostRecentEntry['timestamp'] - 86400 * ($skipCount + 1);
+        }
 
-        $getMostRecentEntriesQuery = "SELECT `actor`, `actorLevel`, `transportCost`, `amount`, `price`, `itemId`, `timestamp`, `event` FROM `userTradeLog_" .$userId. "` WHERE `timestamp` > " .$delimiter. " ORDER BY `timestamp` DESC";
+        $result['skipCount'] = $skipCount;
+
+        $getMostRecentEntriesQuery = "SELECT `actor`, `actorLevel`, `transportCost`, `amount`, `price`, `itemId`, `timestamp`, `event` FROM `userTradeLog_" .$userId. "` WHERE `timestamp` > " .$end. " AND `timestamp` <= " .$start. " ORDER BY `timestamp` DESC";
         $getMostRecentEntries = $this->conn->query($getMostRecentEntriesQuery);
+
+        $result['q'] = $getMostRecentEntriesQuery;
 
         if($getMostRecentEntries->num_rows > 0) {
             while($data = $getMostRecentEntries->fetch_assoc()) {

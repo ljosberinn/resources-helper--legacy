@@ -470,3 +470,23 @@ $("#attacklog-detailed-last").on("click", () => {
 
   rHelper.methods.API_getAttackLog(type, target, skipCount);
 });
+
+$("#tradelog-previous").on("click", () => {
+  "use strict";
+
+  let skipCount = rHelper.data.tradeLog.skipCount - 1;
+
+  if (skipCount >= 1) {
+    rHelper.methods.API_getTradeLog(skipCount);
+  }
+});
+
+$("#tradelog-next").on("click", () => {
+  "use strict";
+
+  let skipCount = rHelper.data.tradeLog.skipCount + 1;
+
+  if (skipCount >= 1) {
+    rHelper.methods.API_getTradeLog(skipCount);
+  }
+});

@@ -393,13 +393,32 @@ const rHelper = {
                 }
             });
         },
-        API_getTradeLog() {
+        API_getTradeLog(skipCount) {
             "use strict";
 
-            $.getJSON("api/core.php?tradeLog", data => {
+            let url = "api/core.php?tradeLog";
+
+            if(skipCount) {
+                url += `&skipCount=${skipCount}`;
+            }
+
+            const buttons = [$("#tradelog-next"), $("#tradelog-previous")];
+            $.each(buttons, (i, btn) => {
+                btn.attr('disabled', true);
+            });
+
+            $.getJSON(url, data => {
                 rHelper.data.tradeLog = data;
                 rHelper.methods.API_toggleLoadSuccessorHelper("trade-log");
                 rHelper.methods.INSRT_tradeLog();
+
+                $.each(buttons, (i, btn) => {
+                    btn.attr('disabled', false);
+                });
+
+                if(rHelper.data.tradeLog.skipCount == 1) {
+                    buttons[1].attr('disabled', true);
+                }
             });
         },
         API_getTradeLogInitiator(key) {
@@ -588,6 +607,10 @@ const rHelper = {
 
             if(anchor == "#leaderboard") {
                 rHelper.methods.INSRT_leaderboard();
+            }
+
+            if(anchor == "#tradelog") {
+                rHelper.methods.API_getTradeLog();
             }
 
             $(".nav-link").each((i, navLink) => {
@@ -1560,6 +1583,54 @@ const rHelper = {
                     rHelper.data.leaderboard = result;
                     rHelper.methods.INSRT_leaderboardTable();
                 });
+            }
+        },
+        INSRT_tradeLog() {
+            const container = rHelper.data.tradeLog;
+
+            if(container.length != 0) {
+                const tradeLogTbody = $("#tradelog-tbody");
+                tradeLogTbody.empty();
+
+                const textOrientation = "text-md-right text-sm-left";
+                let sum = 0;
+
+
+                $.each(container.log, (i, dataset) => {
+                    const obj = rHelper.methods.CALC_convertId(dataset.itemId);
+                    let datasetSum = dataset.price * dataset.amount;
+
+                    let action = "Selling to ";
+                    let profitClass = "success";
+
+                    if(dataset.event == 0) {
+                        datasetSum *= -1;
+                        action = "Buying from ";
+                        profitClass = "danger";
+                    }
+
+                    sum += datasetSum;
+
+                    const template = `
+                    <tr>
+                        <td data-th="Trade partner"><span class="text-${profitClass}">${action}</span><kbd>${dataset.actor}</kbd> (${dataset.actorLevel.toLocaleString("en-US")})</td>
+                        <td data-th="Timestamp" class="${textOrientation}">${rHelper.methods.CALC_convertDateToIso(dataset.timestamp * 1000)}</td>
+                        <td data-th="Amount" class="${textOrientation}">${dataset.amount.toLocaleString("en-US")}x <span class="${obj.icon}"></span></td>
+                        <td data-th="Price" class="${textOrientation}">${dataset.price.toLocaleString("en-US")}</td>
+                        <td data-th="Sum" class="${textOrientation} text-${profitClass}">${datasetSum.toLocaleString("en-US")}</td>
+                    </tr>
+                    `;
+
+                    tradeLogTbody.append(template);
+                });
+
+                let profitClass = "success";
+
+                if(sum < 0) {
+                    profitClass = "danger";
+                }
+
+                $("#tradelog-tfoot").empty().append(`<tr><td data-th="daily profit" colspan="5" class="${textOrientation} text-${profitClass}">${sum.toLocaleString("en-US")}</td></tr>`);
             }
         },
         INSRT_attackLogDetailedGeneralInformation(dataContainer) {

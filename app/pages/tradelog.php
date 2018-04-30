@@ -7,8 +7,6 @@ $textOrientation = "text-md-right text-sm-left";
 $columns = [
     "Trade partner" => "",
     "Timestamp"     => $textOrientation,
-    "Action"        => "",
-    "Good"          => "",
     "Amount"        => $textOrientation,
     "Price"         => $textOrientation,
     "Sum"           => $textOrientation,
@@ -34,6 +32,22 @@ $columns = [
     <div class="row">
         <div class="col-xs-12 col-md-12">
 
+            <table class="table table-responsive table-break-medium mb-3">
+                <tbody>
+                    <tr>
+                        <td class="sorttable_nosort">
+                            <button class="btn btn-success" id="tradelog-previous" disabled>previous day</button>
+                        </td>
+                        <td class="text-center">
+                            Personal trade log, going back 24 hours from last known entry
+                        </td>
+                        <td class="sorttable_nosort <?php echo $textOrientation; ?>">
+                            <button class="btn btn-success" id="tradelog-next">next day</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
             <table class="table table-responsive table-break-medium table-striped mb-3">
                 <thead>
                     <tr class="small">
@@ -55,10 +69,10 @@ $columns = [
                     ?>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id="tradelog-tbody">
 
                 </tbody>
-                <tfoot>
+                <tfoot id="tradelog-tfoot">
 
                 </tfoot>
             </table>
