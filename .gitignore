@@ -6,3 +6,5 @@ test.js
 test.min.js
 index.html
 .vscode/sftp.json
+*.min.js
+*.min.css
