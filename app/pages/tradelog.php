@@ -35,9 +35,12 @@ $columns = [
                         <button class="btn btn-success" id="tradelog-previous">previous day</button>
                         </td>
                         <td class="text-center">
-                            <select class="custom-select" id="tradelog-filter">
-                                <option selected disabled>filter</option>
-                                <option value="-1">reset</option>
+                            <select class="custom-select" id="tradelog-filter-day">
+                                <option selected disabled>jump to day X</option>
+                            </select>
+                            <select class="custom-select" id="tradelog-filter-event">
+                                <option selected disabled>filter event type</option>
+                                <option value="-1">show all</option>
                                 <option value="0">show only BUY events</option>
                                 <option value="1">show only SELL events</option>
                             </select>

@@ -402,7 +402,7 @@ const rHelper = {
                 }
             });
         },
-        API_getTradeLog(skipCount, filter) {
+        API_getTradeLog(skipCount, filter, dateFilter) {
             "use strict";
 
             let url = "api/core.php?tradeLog";
@@ -415,7 +415,12 @@ const rHelper = {
                 url += `&filter=${filter}`;
             }
 
+            if(dateFilter) {
+                url += `&day=${dateFilter}`;
+            }
+
             const buttons = [$("#tradelog-next"), $("#tradelog-previous")];
+
             $.each(buttons, (i, btn) => {
                 btn.attr('disabled', true);
             });
@@ -429,7 +434,7 @@ const rHelper = {
                     btn.attr('disabled', false);
                 });
 
-                if(rHelper.data.tradeLog.skipCount == 0) {
+                if(2 == 0) {
                     buttons[0].attr('disabled', true);
                 }
             });
@@ -681,19 +686,18 @@ const rHelper = {
         SET_buildingBackgroundColor(buildingId) {
             "use strict";
 
-            let buildingLevel = rHelper.data.buildings[buildingId].level;
+            const buildingLevel = rHelper.data.buildings[buildingId].level;
 
-            let r = 255 - buildingLevel * 10;
-            let g = 127 + buildingLevel * 7;
-            let b = 80 - buildingLevel * 3;
+            const r = 255 - buildingLevel * 10;
+            const g = 127 + buildingLevel * 7;
+            const b = 80 - buildingLevel * 3;
 
             $(`#building-${buildingId}`).css("background-color", `rgba(${r},${g},${b}, 0.25)`);
         },
         SET_buildingTableVisibility(buildingId, state) {
             "use strict";
 
-            let tbody = $(`#building-${buildingId} tbody`);
-            let tfoot = $(`#building-${buildingId} tfoot`);
+            const [tbody, tfoot] = [$(`#building-${buildingId} tbody`), $(`#building-${buildingId} tfoot`)];
 
             $.each([tbody, tfoot], (i, el) => {
                 switch (state) {
@@ -748,7 +752,7 @@ const rHelper = {
         SET_hqLevel() {
             "use strict";
 
-            let headquarter = rHelper.data.headquarter;
+            const headquarter = rHelper.data.headquarter;
 
             if (headquarter.user) {
                 let userHqLevel = headquarter.user.level;
@@ -818,14 +822,19 @@ const rHelper = {
         SET_mapHQHandler(map, hqObj) {
             "use strict";
 
-            let hqLevel = hqObj.level;
-            let radius = rHelper.data.headquarter[hqLevel - 1].radius;
-            let center = {
-                lat: hqObj.lat,
-                lng: hqObj.lon
-            };
+            const hqLevel = hqObj.level;
+
+            const [hqSize, radius, center] = [
+                hqLevel * 12.5,
+                rHelper.data.headquarter[hqLevel - 1].radius,
+                {
+                    lat: hqObj.lat,
+                    lng: hqObj.lon
+                }
+            ];
+
             rHelper.methods.SET_mapHqCircle(map, center, radius, hqObj.relation);
-            let hqSize = hqLevel * 12.5;
+
             new google.maps.Marker({
                 map: map,
                 position: center,
@@ -886,13 +895,9 @@ const rHelper = {
         SET_overTimeGraph() {
             "use strict";
 
-            let data = rHelper.data.mineMap.mines;
+            const data = rHelper.data.mineMap.mines;
 
-            let timestamps = [];
-            let mineCount = [];
-            let avgMinePrice = [];
-            let income = [];
-            let hours = [];
+            let [timestamps, mineCount, avgMinePrice, income, hours] = [[], [], [], [], []];
 
             for (let hour = 0; hour <= 23; hour += 1) {
                 hours.push([`${hour} to ${hour + 1}`, 0]);
@@ -1613,19 +1618,33 @@ const rHelper = {
             const container = rHelper.data.tradeLog;
 
             if(container.length != 0) {
-                const tradeLogTbody = $("#tradelog-tbody");
+
+                const [tradeLogTbody, textOrientation, daysFilterSelect] = [$("#tradelog-tbody"), "text-md-right text-sm-left", $("#tradelog-filter-day")];
+
                 tradeLogTbody.empty();
 
-                const textOrientation = "text-md-right text-sm-left";
                 let sum = 0;
 
+                const currentDaysFilter = daysFilterSelect.val();
+
+                if(currentDaysFilter != null) {
+                    $.each(daysFilterSelect.children("option"), (i, el)  => {
+                        if($(el).val() == currentDaysFilter) {
+                            rHelper.data.tradeLog.skipCount = i - 1;
+                        }
+                    });
+                }
+
+                daysFilterSelect.empty().prepend(`<option selected disabled>jump to day X</option>`);
+
+                $.each(container.days, (i, dataset) => {
+                    daysFilterSelect.append(`<option value="${dataset.date}">${dataset.date} (${dataset.entries.toLocaleString("en-US")} entries)</option>`);
+                });
 
                 $.each(container.log, (i, dataset) => {
                     const obj = rHelper.methods.CALC_convertId(dataset.itemId);
-                    let datasetSum = dataset.price * dataset.amount;
 
-                    let action = "Selling to ";
-                    let profitClass = "success";
+                    let [datasetSum, action, profitClass] = [dataset.price * dataset.amount, "Selling to ", "success"];
 
                     if(dataset.event == 0) {
                         datasetSum *= -1;

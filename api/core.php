@@ -46,7 +46,11 @@ if (isset($_GET["key"])
         $filter = $_GET["filter"];
     }
 
-    $output = json_encode($resourcesGame->getTradeLog($userId, $skipCount, $filter), JSON_NUMERIC_CHECK);
+    if (isset($_GET["day"]) && strlen(strtotime($_GET["day"])) == 10) {
+        $dateFilter = strtotime($_GET["day"]);
+    }
+
+    $output = json_encode($resourcesGame->getTradeLog($userId, $skipCount, $filter, $dateFilter), JSON_NUMERIC_CHECK);
 
 } elseif (isset($_GET["attackLog"])
     && isset($_GET["type"])

@@ -1,10 +1,10 @@
-loadingAnimToggler = (mode, text) => {
+const loadingAnimToggler = (mode, text) => {
   "use strict";
 
   $("#loading-text").text(text);
 
-  let possibleAnimationClasses = ["slide-out-bck-center", "puff-out-center", "roll-out-blurred-left", "slit-out-vertical", "rotate-out-center"];
-  let rndAnimation = possibleAnimationClasses[Math.floor(Math.random() * possibleAnimationClasses.length)];
+  const possibleAnimationClasses = ["slide-out-bck-center", "puff-out-center", "roll-out-blurred-left", "slit-out-vertical", "rotate-out-center"];
+  const rndAnimation = possibleAnimationClasses[Math.floor(Math.random() * possibleAnimationClasses.length)];
 
   switch (mode) {
     case "hide":
@@ -29,7 +29,7 @@ loadingAnimToggler = (mode, text) => {
 
 /* src https://www.w3schools.com/js/js_cookies.asp */
 
-getCookie = cname => {
+const getCookie = cname => {
   "use strict";
   let name = cname + "=";
   let decodedCookie = decodeURIComponent(document.cookie);
@@ -46,7 +46,7 @@ getCookie = cname => {
   return "";
 };
 
-crEl = tag => {
+const crEl = tag => {
   "use strict";
   return document.createElement(tag);
 };
@@ -59,7 +59,7 @@ Array.prototype.max = function() {
   return Math.max.apply(null, this);
 };
 
-let applyTippyOnNewElement = el => {
+const applyTippyOnNewElement = el => {
   "use strict";
 
   if (!el.hasClass("tippied")) {
@@ -69,7 +69,7 @@ let applyTippyOnNewElement = el => {
   }
 };
 
-let changeElementClasses = (el, rmvClass, addClass) => {
+const changeElementClasses = (el, rmvClass, addClass) => {
   "use strict";
   let $el = $(el);
 
@@ -90,7 +90,7 @@ let changeElementClasses = (el, rmvClass, addClass) => {
   }
 };
 
-let switchActiveNavigationLink = selectedNav => {
+const switchActiveNavigationLink = selectedNav => {
   "use strict";
   $(".nav-link").each((i, navLink) => {
     if (selectedNav == navLink.id) {
@@ -101,7 +101,7 @@ let switchActiveNavigationLink = selectedNav => {
   });
 };
 
-let switchActiveModule = targetId => {
+const switchActiveModule = targetId => {
   "use strict";
   $("main > div").each((i, moduleEl) => {
     if (targetId == moduleEl.id) {
@@ -120,14 +120,14 @@ let switchActiveModule = targetId => {
   }
 };
 
-let toggleTab = (selectedNav, targetId) => {
+const toggleTab = (selectedNav, targetId) => {
   "use strict";
 
   switchActiveNavigationLink(selectedNav);
   switchActiveModule(targetId);
 };
 
-let toggleTechUpgradeInfo = mode => {
+const toggleTechUpgradeInfo = mode => {
   "use strict";
 
   let loading = $("#techupgrades-loading");
@@ -292,6 +292,14 @@ $("#login-forgot-password").click(e => {
   });
 });
 
+const removeSaveButton = () => {
+  "use strict";
+
+  if (typeof rHelper.data.userInformation.realKey != "undefined") {
+    $("#save-button").remove();
+  }
+};
+
 window.setInterval(() => {
   "use strict";
 
@@ -343,9 +351,8 @@ $("#api-submit").on("click", function(e) {
     return;
   }
 
-  let API_possibilities = ["factories", "warehouse", "buildings", "headquarter", "mines-summary", "mines-detailed", "player", "attack-log", "trade-log", "missions"];
-
-  let queries = [];
+  const API_possibilities = ["factories", "warehouse", "buildings", "headquarter", "mines-summary", "mines-detailed", "player", "attack-log", "trade-log", "missions"];
+  const queries = [];
 
   $.each(API_possibilities, (i, possibility) => {
     let el = $(`#api-${possibility}`);
@@ -373,7 +380,7 @@ $(".nav-link").each((i, navLink) => {
 $("#techupgrades-toggle").on("click", function() {
   "use strict";
 
-  let el = $(this);
+  const el = $(this);
 
   if (el.prop("checked") === true) {
     rHelper.methods.INSRT_techUpgradeRows("tu4");
@@ -388,8 +395,7 @@ $("#techupgrades-toggle").on("click", function() {
 $("#techupgrades-input").on("input", function() {
   "use strict";
 
-  let tu4Allowance = $("#techupgrades-calc-tu4-allowance");
-  let value = parseFloat(this.value);
+  const [tu4Allowance, value] = [$("#techupgrades-calc-tu4-allowance"), parseFloat(this.value)];
 
   if (value >= 1.01 && value <= 5) {
     if (tu4Allowance.prop("checked") === true) {
@@ -418,27 +424,24 @@ $("#worldmap-selector").on("change", function() {
 $("#qualitycomparator-selector").on("change", function() {
   "use strict";
 
-  let type = parseInt(this.value);
-  let quality = $("#qualitycomparator-quality").val();
+  const [type, quality] = [parseInt(this.value), $("#qualitycomparator-quality").val()];
+
   rHelper.methods.INSRT_qualityComparator(type, quality);
 });
 
 $("#qualitycomparator-quality").on("input", function() {
   "use strict";
 
-  let type = $("#qualitycomparator-selector").val();
-  let quality = parseInt(this.value);
+  const [type, quality] = [$("#qualitycomparator-selector").val(), parseInt(this.value)];
+
   rHelper.methods.INSRT_qualityComparator(type, quality);
 });
 
 $("#attacklog-detailed-selector").on("change", function() {
   "use strict";
 
-  let target = this.value;
-  let type = "attackDetailed";
-  let skipCount = rHelper.data.attackLog.skipCount;
+  let [target, type, skipCount, currentTarget] = [this.value, "attackDetailed", rHelper.data.attackLog.skipCount, rHelper.data.attackLog.data[0].target];
 
-  let currentTarget = rHelper.data.attackLog.data[0].target;
   if (target != currentTarget) {
     skipCount = 0;
   }
@@ -454,9 +457,7 @@ $("#attacklog-detailed-selector").on("change", function() {
 $("#attacklog-detailed-next").on("click", () => {
   "use strict";
 
-  const target = $("#attacklog-detailed-selector").val();
-  const type = "attackDetailed";
-  const skipCount = rHelper.data.attackLog.skipCount + 100;
+  const [target, type, skipCount] = [$("#attacklog-detailed-selector").val(), "attackDetailed", rHelper.data.attackLog.skipCount + 100];
 
   rHelper.methods.API_getAttackLog(type, target, skipCount);
 });
@@ -464,9 +465,7 @@ $("#attacklog-detailed-next").on("click", () => {
 $("#attacklog-detailed-last").on("click", () => {
   "use strict";
 
-  const target = $("#attacklog-detailed-selector").val();
-  const type = "attackDetailed";
-  const skipCount = rHelper.data.attackLog.skipCount - 100;
+  const [target, type, skipCount] = [$("#attacklog-detailed-selector").val(), "attackDetailed", rHelper.data.attackLog.skipCount - 100];
 
   rHelper.methods.API_getAttackLog(type, target, skipCount);
 });
@@ -474,34 +473,30 @@ $("#attacklog-detailed-last").on("click", () => {
 $("#tradelog-next").on("click", () => {
   "use strict";
 
-  const skipCount = rHelper.data.tradeLog.skipCount - 1;
-  const filter = $("#tradelog-filter").val();
+  const [skipCount, filter, dateFilter] = [rHelper.data.tradeLog.skipCount + 1, $("#tradelog-filter-event").val(), $("#tradelog-filter-day").val()];
 
   if (skipCount >= 0) {
-    rHelper.methods.API_getTradeLog(skipCount, filter);
+    rHelper.methods.API_getTradeLog(skipCount, filter, dateFilter);
   }
 });
 
 $("#tradelog-previous").on("click", () => {
   "use strict";
 
-  const skipCount = rHelper.data.tradeLog.skipCount + 1;
-  const filter = $("#tradelog-filter").val();
+  const [skipCount, filter, dateFilter] = [rHelper.data.tradeLog.skipCount + 1, $("#tradelog-filter-event").val(), $("#tradelog-filter-day").val()];
 
   if (skipCount >= 0) {
-    rHelper.methods.API_getTradeLog(skipCount, filter);
+    rHelper.methods.API_getTradeLog(skipCount, filter, dateFilter);
   }
 });
 
-$("#tradelog-filter").on("change", function() {
+$("#tradelog-filter-event").on("change", function() {
   "use strict";
 
-  let filter = this.value;
-  let skipCount = rHelper.data.tradeLog.skipCount;
+  const [filter, skipCount, dateFilter, currentFilter] = [this.value, rHelper.data.tradeLog.skipCount, $("#tradelog-filter-day").val(), rHelper.data.tradeLog.filter];
 
-  const currentFilter = rHelper.data.tradeLog.filter;
   if (filter != currentFilter) {
-    rHelper.methods.API_getTradeLog(skipCount, filter);
+    rHelper.methods.API_getTradeLog(skipCount, filter, dateFilter);
   }
 });
 
@@ -509,8 +504,10 @@ $("#save-button").on("click", () => {
   rHelper.methods.SET_save();
 });
 
-removeSaveButton = () => {
-  if (typeof rHelper.data.userInformation.realKey != "undefined") {
-    $("#save-button").remove();
-  }
-};
+$("#tradelog-filter-day").on("change", function() {
+  "use strict";
+
+  const [dateFilter, skipCount, filter] = [this.value, 0, $("#tradelog-filter-event").val()];
+
+  rHelper.methods.API_getTradeLog(skipCount, filter, dateFilter);
+});

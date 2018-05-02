@@ -1783,11 +1783,11 @@ class resourcesGame
       * @param  int $userId [current user id]
       * @return array [returns tradeLog]
       */
-     public function getTradeLog($userId, $skipCount, $filter)
+     public function getTradeLog($userId, $skipCount, $filter, $dateFilter)
      {
 
         $result = $selling = $buying = $last100Entries = [];
-        $result['log'] = $result['timestamps'] = [];
+        $result['log'] = $result['timestamps'] = $result['days'] = [];
         $result['selling']['total'] = $result['buying']['total'] = $result['selling']['valuesById'] = $result['buying']['valuesById'] = 0;
 
         for($i = 0; $i <= 23; $i += 1) {
@@ -1819,6 +1819,7 @@ class resourcesGame
         $result['buying']['total'] = array_sum($buying);
         $result['buying']['valuesById'] = $buying;
 
+        // selling hours
         $getTimestampsQuery = "SELECT `timestamp` FROM `userTradeLog_" .$userId. "` WHERE `event` = 1";
         $getTimestamps = $this->conn->query($getTimestampsQuery);
 
@@ -1828,6 +1829,7 @@ class resourcesGame
             }
         }
 
+        // skipCount
         $mostRecentEntryQuery = "SELECT `timestamp` FROM `userTradeLog_1` ORDER BY `timestamp` DESC LIMIT 1";
         $mostRecentEntry = $this->conn->query($mostRecentEntryQuery);
         if($mostRecentEntry->num_rows == 1) {
@@ -1843,9 +1845,15 @@ class resourcesGame
             $start = strtotime('tomorrow', $mostRecentEntry['timestamp']) - $skipCount * 86400;
         }
 
+        if($dateFilter) {
+            $skipCount = 0;
+            $start = $dateFilter + 86400;
+            $end = $dateFilter;
+        }
+
         $result['skipCount'] = $skipCount;
 
-
+        // filter
         if(!isset($filter) || $filter == -1) {
             $filter = -1;
             $addFilter = "";
@@ -1854,6 +1862,21 @@ class resourcesGame
         }
 
         $result['filter'] = $filter;
+
+        // individual days filter
+        $getDaysAndEntriesCountQuery = "SELECT DATE(FROM_UNIXTIME(`timestamp`)) AS `date`, COUNT(1) AS `entries` FROM `userTradeLog_1` GROUP BY DATE(FROM_UNIXTIME(`timestamp`)) ORDER BY `date` DESC";
+        $getDaysAndEntriesCount = $this->conn->query($getDaysAndEntriesCountQuery);
+
+        if($getDaysAndEntriesCount->num_rows > 0) {
+            while($data = $getDaysAndEntriesCount->fetch_assoc()) {
+                array_push(
+                    $result['days'], [
+                        'date' => $data['date'],
+                        'entries' => $data['entries']
+                    ]
+                );
+            }
+        }
 
         $getMostRecentEntriesQuery = "SELECT `actor`, `actorLevel`, `transportCost`, `amount`, `price`, `itemId`, `timestamp`, `event` FROM `userTradeLog_" .$userId. "` WHERE `timestamp` > " .$end. " AND `timestamp` <= " .$start. " " .$addFilter. " ORDER BY `timestamp` DESC";
         $getMostRecentEntries = $this->conn->query($getMostRecentEntriesQuery);
