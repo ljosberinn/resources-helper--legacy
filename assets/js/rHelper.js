@@ -119,8 +119,6 @@ const rHelper = {
         "EVNT_headquarterInput",
         // missions
         "INSRT_missions",
-        // techupgrades
-        "INSRT_techUpgradeRows",
         "EVNT_attackLogTrigger",
         "INSRT_companyWorth",
         "EVNT_sortableTables",
@@ -624,6 +622,10 @@ const rHelper = {
 
       if (anchor == "#tradelog") {
         rHelper.methods.API_getTradeLog();
+      }
+
+      if (anchor == "#techupgrades") {
+        rHelper.methods.INSRT_techUpgradeRows();
       }
 
       $(".nav-link").each((i, navLink) => {
@@ -2991,6 +2993,44 @@ const rHelper = {
     INSRT_techUpgradeRows(tu4Trigger) {
       "use strict";
 
+      const iterateTUData = () => {
+        $.each(rHelper.tu, (index, combination) => {
+          if (typeof tu4Trigger == "undefined" && combination.tu4 != 0) {
+            return;
+          }
+          let tr = $(crEl("tr"));
+          for (let i = 0; i <= 6; i += 1) {
+            let td = $(crEl("td"));
+            td.addClass("text-md-right text-sm-left");
+            let tus = [combination.tu1, combination.tu2, combination.tu3, combination.tu4];
+            switch (i) {
+              case 0:
+              case 1:
+              case 2:
+              case 3:
+                td.text(tus[i]).attr("data-th", `Tech-Upgrade ${i}`);
+                break;
+              case 4:
+                td.text(combination.factor).attr("data-th", "Boost");
+                break;
+              case 5:
+                let price = 0;
+                for (let k = 0; k < tus.length; k += 1) {
+                  price += tus[k] * prices[k];
+                }
+                td.text(price.toLocaleString("en-US")).attr("data-th", "Price");
+                break;
+              case 6:
+                let count = tus[0] * 1 + tus[1] * 2 + tus[2] * 3 + tus[3] * 5;
+                td.text(count).attr("data-th", "Pimp my mine count");
+                break;
+            }
+            tr.append(td[0]);
+          }
+          techUpgradeTbody.append(tr[0]);
+        });
+      }
+
       let techUpgradeTbody = $("#techupgrades-combinations-tbl tbody");
       if (techUpgradeTbody[0].childNodes.length > 0) {
         techUpgradeTbody.empty();
@@ -3002,41 +3042,15 @@ const rHelper = {
         prices.push(rHelper.methods.CALC_returnPriceViaId(i, 0));
       }
 
-      $.each(rHelper.tu, (index, combination) => {
-        if (typeof tu4Trigger == "undefined" && combination.tu4 != 0) {
-          return;
-        }
-        let tr = $(crEl("tr"));
-        for (let i = 0; i <= 6; i += 1) {
-          let td = $(crEl("td"));
-          td.addClass("text-md-right text-sm-left");
-          let tus = [combination.tu1, combination.tu2, combination.tu3, combination.tu4];
-          switch (i) {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-              td.text(tus[i]).attr("data-th", `Tech-Upgrade ${i}`);
-              break;
-            case 4:
-              td.text(combination.factor).attr("data-th", "Boost");
-              break;
-            case 5:
-              let price = 0;
-              for (let k = 0; k < tus.length; k += 1) {
-                price += tus[k] * prices[k];
-              }
-              td.text(price.toLocaleString("en-US")).attr("data-th", "Price");
-              break;
-            case 6:
-              let count = tus[0] * 1 + tus[1] * 2 + tus[2] * 3 + tus[3] * 5;
-              td.text(count).attr("data-th", "Pimp my mine count");
-              break;
-          }
-          tr.append(td[0]);
-        }
-        techUpgradeTbody.append(tr[0]);
-      });
+      if(rHelper.tu.length == 0) {
+        $.getJSON('api/tu.json', (data) => {
+          rHelper.tu = data;
+          iterateTUData();
+        });
+      } else {
+        iterateTUData();
+      }
+
     },
     INSRT_techUpgradeCalculator(value, tu4Inclusion) {
       "use strict";

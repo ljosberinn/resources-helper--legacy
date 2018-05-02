@@ -118,6 +118,10 @@ const switchActiveModule = targetId => {
   if (targetId == "module-tradelog") {
     rHelper.methods.API_getTradeLog();
   }
+
+  if (targetId == "module-techupgrades") {
+    rHelper.methods.INSRT_techUpgradeRows();
+  }
 };
 
 const toggleTab = (selectedNav, targetId) => {

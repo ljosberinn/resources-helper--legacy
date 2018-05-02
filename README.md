@@ -4,19 +4,13 @@
 
 ## Status
 
-working - 96%
+working - 98%
 
 ### TODO
 
 * remote saves of non-api-users
 
-* gdpr compliance
-
-* footer links
-
 * possibility of adding api key post registration
-
-* load tu.json on demand (currently unlinked)
 
 ## What's included
 
