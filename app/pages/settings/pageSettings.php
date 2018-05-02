@@ -1,7 +1,7 @@
 <form class="mb-3" method="POST" action="api/changePageSettings.php">
 
     <!-- SETTING PAGE LANGUAGE -->
-    <div class="form-group">
+    <div class="form-group" style="display: none;">
         <label class="text-success" for="settings-language">
             <strong><?php echo file_get_contents("assets/img/icons/text.svg"); ?> Language</strong>
         </label>

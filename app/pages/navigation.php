@@ -3,7 +3,7 @@
 <nav class="col-12 p-4 bg-light rounded">
 
     <p class="text-success text-center">
-        working: everything except Trade Log & bottom links<br />
+        working: everything except bottom links<br />
         known issues: - no possibility of saving the API key if not during registration
     </p>
 

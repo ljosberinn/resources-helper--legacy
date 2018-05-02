@@ -511,3 +511,18 @@ $("#tradelog-filter-day").on("change", function() {
 
   rHelper.methods.API_getTradeLog(skipCount, filter, dateFilter);
 });
+
+$.each([$("#tos-trigger"), $("#contact-trigger"), $("#donate-trigger")], (i, el) => {
+  const targets = ["module-tos", "module-contact", "module-donate"];
+  const target = targets[i];
+
+  $(el).on("click", () => {
+    $.each($("main > div"), (i, el) => {
+      if (el.id != target) {
+        $(el).css("display", "none");
+      } else {
+        $(el).css("display", "block");
+      }
+    });
+  });
+});

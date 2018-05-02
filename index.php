@@ -110,16 +110,18 @@ ob_end_flush();
         "leaderboard",
         "discord",
         "contact",
+        "tos",
+        "donate",
     ];
 
-    if(isset($_SESSION["id"])) {
+    if (isset($_SESSION["id"])) {
         $additionalFeatures = [
             "tradelog",
             "attacklog",
             "missions",
         ];
 
-        foreach($additionalFeatures as $link) {
+        foreach ($additionalFeatures as $link) {
             array_push($subPages, $link);
         }
     }

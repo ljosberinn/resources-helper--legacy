@@ -4,21 +4,19 @@
 
 ## Status
 
-working - 95%
+working - 96%
 
 ### TODO
 
-- remote saves of non-api-users
+* remote saves of non-api-users
 
-- remaining trade log implementation
+* gdpr compliance
 
-- gdpr compliance
+* footer links
 
-- footer links
+* possibility of adding api key post registration
 
-- possibility of adding api key post registration
-
-- load tu.json on demand (currently unlinked)
+* load tu.json on demand (currently unlinked)
 
 ## What's included
 

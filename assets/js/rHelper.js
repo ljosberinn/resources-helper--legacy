@@ -951,7 +951,14 @@ const rHelper = {
               }
             }
           }
-        ]
+        ],
+        exporting: {
+          chartOptions: {
+            chart: {
+              backgroundColor: '#5f473e'
+            }
+          }
+        }
       });
 
       let firstMine = data[0].builddate;
@@ -1069,7 +1076,14 @@ const rHelper = {
             data: income,
             color: "yellowgreen"
           }
-        ]
+        ],
+        exporting: {
+          chartOptions: {
+            chart: {
+              backgroundColor: '#5f473e'
+            }
+          }
+        }
       });
     },
 
@@ -1600,7 +1614,8 @@ const rHelper = {
           Highcharts.chart("graph-tradelog-habits", {
             chart: {
               type: "column",
-              backgroundColor: "transparent"
+              backgroundColor: "transparent",
+              height: 200
             },
             title: {
               text: "Selling habits per hour",
@@ -1656,7 +1671,14 @@ const rHelper = {
                   }
                 }
               }
-            ]
+            ],
+            exporting: {
+              chartOptions: {
+                chart: {
+                  backgroundColor: '#5f473e'
+                }
+              }
+            }
           });
         };
 
@@ -1683,7 +1705,7 @@ const rHelper = {
         const appendTR = dataset => {
           const obj = rHelper.methods.CALC_convertId(dataset.itemId);
 
-          let [datasetSum, action, profitClass] = [dataset.price * dataset.amount, "Selling to ", "success"];
+          let [datasetSum, action, profitClass, trClass] = [dataset.price * dataset.amount, "Selling to ", "success", ""];
 
           if (dataset.event == 0) {
             datasetSum *= -1;
@@ -1693,15 +1715,19 @@ const rHelper = {
 
           sum += datasetSum;
 
+          if(dataset.actor == "KI") {
+            trClass ='class="ki-sell"';
+          }
+
           const template = `
-                    <tr>
-                        <td data-th="Trade partner"><span class="text-${profitClass}">${action}</span><kbd>${dataset.actor}</kbd> (${dataset.actorLevel.toLocaleString("en-US")})</td>
-                        <td data-th="Timestamp" class="${textOrientation}">${rHelper.methods.CALC_convertDateToIso(dataset.timestamp * 1000)}</td>
-                        <td data-th="Amount" class="${textOrientation}">${dataset.amount.toLocaleString("en-US")}x <span class="${obj.icon}"></span></td>
-                        <td data-th="Price" class="${textOrientation}">${dataset.price.toLocaleString("en-US")}</td>
-                        <td data-th="Sum" class="${textOrientation} text-${profitClass}">${datasetSum.toLocaleString("en-US")}</td>
-                    </tr>
-                    `;
+          <tr ${trClass}>
+            <td data-th="Trade partner"><span class="text-${profitClass}">${action}</span><kbd>${dataset.actor} (${dataset.actorLevel.toLocaleString("en-US")})</kbd></td>
+            <td data-th="Timestamp" class="${textOrientation}">${rHelper.methods.CALC_convertDateToIso(dataset.timestamp * 1000)}</td>
+            <td data-th="Amount" class="${textOrientation}">${dataset.amount.toLocaleString("en-US")}x <span class="${obj.icon}"></span></td>
+            <td data-th="Price" class="${textOrientation}">${dataset.price.toLocaleString("en-US")}</td>
+            <td data-th="Sum" class="${textOrientation} text-${profitClass}">${datasetSum.toLocaleString("en-US")}</td>
+          </tr>
+          `;
 
           tradeLogTbody.append(template);
         };
@@ -1753,27 +1779,38 @@ const rHelper = {
                 colorByPoint: true,
                 data: data
               }
-            ]
+            ],
+            exporting: {
+              chartOptions: {
+                chart: {
+                  backgroundColor: '#5f473e'
+                }
+              }
+            }
           });
         };
 
         const fillEventArray = (container) => {
 
-          const arr = [];
+          const [arr, containerMax] = [[], container.max()];
 
           $.each(container, (i, amount) => {
             const itemObj = rHelper.methods.CALC_convertId(i);
 
-            if(amount == null) {
-              amount = 0;
-            }
+            if(amount != null) {
 
-            const obj = {
-              name: itemObj.name,
-              y: amount
-            }
+              const obj = {
+                name: itemObj.name,
+                y: amount
+              }
 
-            arr.push(obj);
+              if(containerMax == amount) {
+                obj.sliced = true;
+                obj.selected = true;
+              }
+
+              arr.push(obj);
+            }
           });
 
           return arr;
@@ -2105,7 +2142,14 @@ const rHelper = {
             color: "orange",
             data: player
           }
-        ]
+        ],
+        exporting: {
+          chartOptions: {
+            chart: {
+              backgroundColor: '#5f473e'
+            }
+          }
+        }
       });
     },
     INSRT_polygonGraph(target, titleText, seriesNames, responsiveId, targetObj) {
@@ -2183,6 +2227,13 @@ const rHelper = {
               }
             }
           ]
+        },
+        exporting: {
+          chartOptions: {
+            chart: {
+              backgroundColor: '#5f473e'
+            }
+          }
         }
       });
     },
@@ -4941,6 +4992,13 @@ const rHelper = {
               color: "#dedede"
             },
             useHTML: true
+          }
+        }
+      },
+      exporting: {
+        chartOptions: {
+          chart: {
+            backgroundColor: '#5f473e'
           }
         }
       }

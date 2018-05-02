@@ -1,8 +1,8 @@
 <div class="p-4 mt-3 mb-3">
 
-    <a href="#tos">Terms of Service</a> |
-    <a href="#contact">Contact</a> |
-    <a href="#donate">Donate</a> |
+    <a href="#tos" id="tos-trigger">Terms of Service & Privacy Policy</a> |
+    <a href="#contact" id="contact-trigger">Contact</a> |
+    <a href="#donate" id="donate-trigger">Donate</a> |
     <a href="https://github.com/ljosberinn/resources-helper" target="_blank" rel="noopener noreferrer">
 
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26">
