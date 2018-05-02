@@ -1617,31 +1617,94 @@ const rHelper = {
         INSRT_tradeLog() {
             const container = rHelper.data.tradeLog;
 
+
             if(container.length != 0) {
 
-                const [tradeLogTbody, textOrientation, daysFilterSelect] = [$("#tradelog-tbody"), "text-md-right text-sm-left", $("#tradelog-filter-day")];
-
-                tradeLogTbody.empty();
-
-                let sum = 0;
-
-                const currentDaysFilter = daysFilterSelect.val();
-
-                if(currentDaysFilter != null) {
-                    $.each(daysFilterSelect.children("option"), (i, el)  => {
-                        if($(el).val() == currentDaysFilter) {
-                            rHelper.data.tradeLog.skipCount = i - 1;
-                        }
+                const showTradeLogHabits = (hours) => {
+                    Highcharts.chart("graph-tradelog-habits", {
+                        chart: {
+                            type: "column",
+                            backgroundColor: "transparent"
+                        },
+                        title: {
+                            text: "Selling habits per hour",
+                            style: {
+                                color: "#dedede"
+                            }
+                        },
+                        xAxis: {
+                            type: "category",
+                            labels: {
+                                rotation: -45,
+                                style: {
+                                    fontSize: "13px",
+                                    fontFamily: "Verdana, sans-serif",
+                                    color: "#dedede"
+                                }
+                            }
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: "Amount of trades completed",
+                                style: {
+                                    color: "#dedede"
+                                }
+                            },
+                            labels: {
+                                style: {
+                                    color: "#dedede"
+                                }
+                            }
+                        },
+                        legend: {
+                            enabled: false
+                        },
+                        tooltip: {
+                            pointFormat: "Sell actions performed at this hour: <b>{point.y}</b>"
+                        },
+                        series: [
+                            {
+                                name: "Sell action",
+                                data: hours,
+                                dataLabels: {
+                                    enabled: true,
+                                    rotation: -90,
+                                    color: "#dedede",
+                                    align: "right",
+                                    y: 10,
+                                    style: {
+                                        fontSize: "13px",
+                                        fontFamily: "Verdana, sans-serif",
+                                        color: "#dedede"
+                                    }
+                                }
+                            }
+                        ]
                     });
                 }
 
-                daysFilterSelect.empty().prepend(`<option selected disabled>jump to day X</option>`);
+                const setSkipCount = () => {
+                    const currentDaysFilter = daysFilterSelect.val();
 
-                $.each(container.days, (i, dataset) => {
-                    daysFilterSelect.append(`<option value="${dataset.date}">${dataset.date} (${dataset.entries.toLocaleString("en-US")} entries)</option>`);
-                });
+                    if(currentDaysFilter != null) {
+                        $.each(daysFilterSelect.children("option"), (i, el)  => {
+                            if($(el).val() == currentDaysFilter) {
+                                rHelper.data.tradeLog.skipCount = i - 1;
+                            }
+                        });
+                    }
+                }
 
-                $.each(container.log, (i, dataset) => {
+                const appendOptions = () => {
+                    daysFilterSelect.empty().prepend(`<option selected disabled>jump to day X</option>`);
+
+                    $.each(container.days, (i, dataset) => {
+                        daysFilterSelect.append(`<option value="${dataset.date}">${dataset.date} (${dataset.entries.toLocaleString("en-US")} entries)</option>`);
+                    });
+                }
+
+                const appendTR = (dataset) => {
                     const obj = rHelper.methods.CALC_convertId(dataset.itemId);
 
                     let [datasetSum, action, profitClass] = [dataset.price * dataset.amount, "Selling to ", "success"];
@@ -1665,15 +1728,35 @@ const rHelper = {
                     `;
 
                     tradeLogTbody.append(template);
-                });
-
-                let profitClass = "success";
-
-                if(sum < 0) {
-                    profitClass = "danger";
                 }
 
-                $("#tradelog-tfoot").empty().append(`<tr><td data-th="daily profit" colspan="5" class="${textOrientation} text-${profitClass}">${sum.toLocaleString("en-US")} <a href="#">back to top</a></td></tr>`);
+                const appendTFoot = () => {
+                    let profitClass = "success";
+
+                    if(sum < 0) {
+                        profitClass = "danger";
+                    }
+
+                    $("#tradelog-tfoot").empty().append(`<tr><td data-th="daily profit" colspan="5" class="${textOrientation} text-${profitClass}">${sum.toLocaleString("en-US")} <a href="#">back to top</a></td></tr>`);
+                }
+
+                showTradeLogHabits(container.timestamps);
+
+                const [tradeLogTbody, textOrientation, daysFilterSelect] = [$("#tradelog-tbody"), "text-md-right text-sm-left", $("#tradelog-filter-day")];
+
+                tradeLogTbody.empty();
+
+                let sum = 0;
+
+                setSkipCount();
+
+                appendOptions();
+
+                $.each(container.log, (i, dataset) => {
+                    appendTR(dataset);
+                });
+
+                appendTFoot();
             }
         },
         INSRT_attackLogDetailedGeneralInformation(dataContainer) {

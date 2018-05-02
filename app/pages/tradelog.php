@@ -20,9 +20,11 @@ $columns = [
     <hr class="mb-3">
 
     <div class="row">
-        <div class="col-xs-6 col-md-12" id="tradelog-buying"></div>
+        <div class="col-xs-6 col-md-12" id="graph-tradelog-buying"></div>
 
-        <div class="col-xs-6 col-md-12" id="tradelog-selling"></div>
+        <div class="col-xs-6 col-md-12" id="graph-tradelog-selling"></div>
+
+        <div class="col-12" id="graph-tradelog-habits"></div>
     </div>
 
     <div class="row">

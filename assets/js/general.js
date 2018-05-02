@@ -473,7 +473,7 @@ $("#attacklog-detailed-last").on("click", () => {
 $("#tradelog-next").on("click", () => {
   "use strict";
 
-  const [skipCount, filter, dateFilter] = [rHelper.data.tradeLog.skipCount + 1, $("#tradelog-filter-event").val(), $("#tradelog-filter-day").val()];
+  const [skipCount, filter, dateFilter] = [rHelper.data.tradeLog.skipCount - 1, $("#tradelog-filter-event").val(), $("#tradelog-filter-day").val()];
 
   if (skipCount >= 0) {
     rHelper.methods.API_getTradeLog(skipCount, filter, dateFilter);
