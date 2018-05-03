@@ -574,7 +574,7 @@ function generateLeaderboardData($conn, $prices)
  *
  * @param [array] $userData previously initiated user data array
  *
- * @return [int]  $sum
+ * @return [integer]  $sum
  */
 function returnWarehouseErectionSum($userData)
 {

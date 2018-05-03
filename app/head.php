@@ -7,12 +7,54 @@
 <meta name="robots" content="index,follow" />
 <!-- Google Specific -->
 <meta name="googlebot" content="index,follow" />
-
-<!-- tell Google not to translate this page -->
-<meta name="google" content="notranslate" />
-
 <!-- admin contact information -->
 <link rel="me" href="mailto:admin@gerritalex.de" />
+
+<!-- general page information -->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="Resources Helper" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="application-name" content="Resources Helper" />
+<meta name="description" content="Resources Helper is your go-to calculator for Resources mobile GPS real-time economy simulation" />
+
+<meta name="author" content="Gerrit Alex" />
+<meta name="robots" content="index, nofollow" />
+<meta name="language" content="en" />
+
+<meta name="keywords" lang="en" content="calculator, realtime, mobile, game, android, economy simulation" />
+<meta name="reply-to" content="admin@gerritalex.de" />
+<meta name="distribution" content="global" />
+<meta name="revisit-after" content="7 days" />
+<meta name="page-topic" content="Resources Helper is your go-to calculator for Resources mobile GPS real-time economy simulation" />
+
+<!-- favicons, generated via http://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="manifest" href="/manifest.json" />
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+<meta name="apple-mobile-web-app-title" content="Resources Helper" />
+<meta name="application-name" content="Resources Helper" />
+<meta name="theme-color" content="#ffffff" />
+
+<!-- OpenGraph for Facebook & WhatsApp -->
+<meta property="og:title" content="Resources Helper" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://resources-helper.de/">
+<meta property="og:description" content="Resources Helper is your go-to calculator for Resources mobile GPS real-time economy simulation" />
+
+<!-- Google+ page description -->
+<meta itemprop="name" content="Resources Helper" />
+<meta itemprop="description" content="Resources Helper is your go-to calculator for Resources mobile GPS real-time economy simulation" />
+<meta itemprop="lastReviewed" content="2018-05-03" />
+
+<!-- Twitter page description -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Resources Helper" />
+<meta name="twitter:description" content="Resources Helper is your go-to calculator for Resources mobile GPS real-time economy simulation" />
+<meta name="twitter:creator" content="@gerrit_alex" />
+
+<title>Resources Helper</title>
 
 <!-- DNS prefetch -->
 <link rel="dns-prefetch" href="//code.highcharts.com" />
@@ -76,9 +118,6 @@ if (isset($_SESSION["id"])) {
 }
 
 ?>
-
-<!-- general page information -->
-<title>Resources Helper 3.0</title>
 
 <!-- JS external -->
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>

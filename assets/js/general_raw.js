@@ -1,24 +1,22 @@
-'use strict';
-
-var loadingAnimToggler = function loadingAnimToggler(mode, text) {
+const loadingAnimToggler = (mode, text) => {
   'use strict';
 
   $('#loading-text').text(text);
 
-  var possibleAnimationClasses = ['slide-out-bck-center', 'puff-out-center', 'roll-out-blurred-left', 'slit-out-vertical', 'rotate-out-center'];
-  var rndAnimation = possibleAnimationClasses[Math.floor(Math.random() * possibleAnimationClasses.length)];
+  const possibleAnimationClasses = ['slide-out-bck-center', 'puff-out-center', 'roll-out-blurred-left', 'slit-out-vertical', 'rotate-out-center'];
+  const rndAnimation = possibleAnimationClasses[Math.floor(Math.random() * possibleAnimationClasses.length)];
 
   switch (mode) {
     case 'hide':
       $('#loading-container svg').addClass(rndAnimation);
-      $('#loading-container span').each(function(i, obj) {
+      $('#loading-container span').each((i, obj) => {
         $(obj).fadeOut(750);
       });
 
       window.setTimeout(function() {
         $('#loading-container').hide();
         $('#loading-container svg').removeClass(rndAnimation);
-        $('#loading-container span').each(function(i, obj) {
+        $('#loading-container span').each((i, obj) => {
           $(obj).fadeIn(750);
         });
       }, 750);
@@ -31,14 +29,13 @@ var loadingAnimToggler = function loadingAnimToggler(mode, text) {
 
 /* src https://www.w3schools.com/js/js_cookies.asp */
 
-var getCookie = function getCookie(cname) {
+const getCookie = cname => {
   'use strict';
-
-  var name = cname + '=';
-  var decodedCookie = decodeURIComponent(document.cookie);
-  var ca = decodedCookie.split(';');
-  for (var i = 0; i < ca.length; i++) {
-    var c = ca[i];
+  let name = cname + '=';
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
     while (c.charAt(0) == ' ') {
       c = c.substring(1);
     }
@@ -49,9 +46,8 @@ var getCookie = function getCookie(cname) {
   return '';
 };
 
-var crEl = function crEl(tag) {
+const crEl = tag => {
   'use strict';
-
   return document.createElement(tag);
 };
 
@@ -63,7 +59,7 @@ Array.prototype.max = function() {
   return Math.max.apply(null, this);
 };
 
-var applyTippyOnNewElement = function applyTippyOnNewElement(el) {
+const applyTippyOnNewElement = el => {
   'use strict';
 
   if (!el.hasClass('tippied')) {
@@ -74,13 +70,12 @@ var applyTippyOnNewElement = function applyTippyOnNewElement(el) {
   }
 };
 
-var changeElementClasses = function changeElementClasses(el, rmvClass, addClass) {
+const changeElementClasses = (el, rmvClass, addClass) => {
   'use strict';
-
-  var $el = $(el);
+  let $el = $(el);
 
   if ($.isArray(rmvClass)) {
-    $.each(rmvClass, function(i, className) {
+    $.each(rmvClass, (i, className) => {
       if ($el.hasClass(className)) {
         $el.removeClass(className);
       }
@@ -96,10 +91,9 @@ var changeElementClasses = function changeElementClasses(el, rmvClass, addClass)
   }
 };
 
-var switchActiveNavigationLink = function switchActiveNavigationLink(selectedNav) {
+const switchActiveNavigationLink = selectedNav => {
   'use strict';
-
-  $('.nav-link').each(function(i, navLink) {
+  $('.nav-link').each((i, navLink) => {
     if (selectedNav == navLink.id) {
       $(navLink).addClass('active');
     } else {
@@ -108,10 +102,9 @@ var switchActiveNavigationLink = function switchActiveNavigationLink(selectedNav
   });
 };
 
-var switchActiveModule = function switchActiveModule(targetId) {
+const switchActiveModule = targetId => {
   'use strict';
-
-  $('main > div').each(function(i, moduleEl) {
+  $('main > div').each((i, moduleEl) => {
     if (targetId == moduleEl.id) {
       $(moduleEl).css('display', 'block');
     } else {
@@ -132,21 +125,21 @@ var switchActiveModule = function switchActiveModule(targetId) {
   }
 };
 
-var toggleTab = function toggleTab(selectedNav, targetId) {
+const toggleTab = (selectedNav, targetId) => {
   'use strict';
 
   switchActiveNavigationLink(selectedNav);
   switchActiveModule(targetId);
 };
 
-var toggleTechUpgradeInfo = function toggleTechUpgradeInfo(mode) {
+const toggleTechUpgradeInfo = mode => {
   'use strict';
 
-  var loading = $('#techupgrades-loading');
-  var finished = $('#techupgrades-finished');
+  let loading = $('#techupgrades-loading');
+  let finished = $('#techupgrades-finished');
 
-  var loadingChange = '';
-  var finishedChange = '';
+  let loadingChange = '';
+  let finishedChange = '';
 
   switch (mode) {
     case 'start':
@@ -163,32 +156,32 @@ var toggleTechUpgradeInfo = function toggleTechUpgradeInfo(mode) {
   finished.css('display', finishedChange);
 };
 
-$('input').each(function(i, obj) {
+$('input').each((i, obj) => {
   'use strict';
 
-  $(obj).click(function() {
+  $(obj).click(() => {
     obj.select();
   });
 });
 
-$('#registration-reset-fields').click(function() {
+$('#registration-reset-fields').click(() => {
   'use strict';
 
-  $('#registration-form input').each(function(i, obj) {
+  $('#registration-form input').each((i, obj) => {
     $(obj).val('');
   });
 });
 
-$('#registration-form').submit(function(event) {
+$('#registration-form').submit(event => {
   'use strict';
 
-  var passwordRegex = new RegExp('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{4,}$');
-  var pw1El = $('#registration-pw-1');
-  var pw2El = $('#registration-pw-2');
-  var pw1Val = pw1El.val();
-  var pw2Val = pw2El.val();
+  let passwordRegex = new RegExp('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{4,}$');
+  let pw1El = $('#registration-pw-1');
+  let pw2El = $('#registration-pw-2');
+  let pw1Val = pw1El.val();
+  let pw2Val = pw2El.val();
 
-  $.each([pw1Val, pw2Val], function(i, value) {
+  $.each([pw1Val, pw2Val], (i, value) => {
     if (value === '') {
       swal('Error', 'password empty', 'error');
       event.preventDefault();
@@ -200,7 +193,7 @@ $('#registration-form').submit(function(event) {
     event.preventDefault();
   }
 
-  $.each([pw1El, pw2El], function(i, obj) {
+  $.each([pw1El, pw2El], (i, obj) => {
     if (passwordRegex.test(obj.val()) === false) {
       swal('Invalid password type', 'minimum of 4 characters including one number\n(e.g. "pas1").', 'error');
       event.preventDefault();
@@ -213,18 +206,18 @@ $('#registration-form').submit(function(event) {
   }
 });
 
-$('#password-change-form').submit(function(event) {
+$('#password-change-form').submit(event => {
   'use strict';
 
-  var passwordRegex = new RegExp('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{4,}$');
-  var pwOldEl = $('#settings-current-password');
-  var pw1El = $('#settings-new-password-1');
-  var pw2El = $('#settings-new-password-2');
+  let passwordRegex = new RegExp('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{4,}$');
+  let pwOldEl = $('#settings-current-password');
+  let pw1El = $('#settings-new-password-1');
+  let pw2El = $('#settings-new-password-2');
   //let pwOldElVal = pwOldEl.val();
-  var pw1Val = pw1El.val();
-  var pw2Val = pw2El.val();
+  let pw1Val = pw1El.val();
+  let pw2Val = pw2El.val();
 
-  $.each([pwOldEl, pw1Val, pw2Val], function(i, value) {
+  $.each([pwOldEl, pw1Val, pw2Val], (i, value) => {
     if (value === '') {
       swal('Error', 'password empty', 'error');
       event.preventDefault();
@@ -241,7 +234,7 @@ $('#password-change-form').submit(function(event) {
     event.preventDefault();
   }
 
-  $.each([pw1El, pw2El], function(i, obj) {
+  $.each([pw1El, pw2El], (i, obj) => {
     if (passwordRegex.test(obj.val()) === false) {
       swal('Invalid password type', 'minimum of 4 characters including one number\n(e.g. "pas1").', 'error');
       event.preventDefault();
@@ -249,7 +242,7 @@ $('#password-change-form').submit(function(event) {
   });
 });
 
-$('#login-forgot-password').click(function(e) {
+$('#login-forgot-password').click(e => {
   'use strict';
 
   e.preventDefault();
@@ -259,35 +252,33 @@ $('#login-forgot-password').click(function(e) {
     inputPlaceholder: 'mail',
     showCancelButton: true,
     confirmButtonText: 'Continue'
-  }).then(function(result) {
+  }).then(result => {
     if (result.value) {
       $.post({
         url: 'api/resetPasswordValidateMail.php',
         data: {
           mail: result.value
         },
-        success: function success(response) {
+        success: response => {
           if (response.invalid) {
             swal.showValidationError('Account not found.');
           } else if (response.valid) {
             swal({
-              title: "Security token for '" + result.value + "'",
+              title: `Security token for '${result.value}'`,
               input: 'text',
               showCancelButton: true,
               confirmButtonText: 'Validate',
               showLoaderOnConfirm: true,
-              allowOutsideClick: function allowOutsideClick() {
-                return !swal.isLoading();
-              },
-              preConfirm: function preConfirm(token) {
-                return new Promise(function(resolve) {
+              allowOutsideClick: () => !swal.isLoading(),
+              preConfirm: token => {
+                return new Promise(resolve => {
                   $.post({
                     url: 'api/resetPassword.php',
                     data: {
                       mail: result.value,
                       token: token
                     },
-                    success: function success(response) {
+                    success: response => {
                       if (response.invalid) {
                         swal.showValidationError('Invalid security token.');
                       } else if (response.url) {
@@ -306,7 +297,7 @@ $('#login-forgot-password').click(function(e) {
   });
 });
 
-var removeLoggedInButtons = function removeLoggedInButtons() {
+const removeLoggedInButtons = () => {
   'use strict';
 
   if (rHelper.data.userInformation.realKey !== false) {
@@ -315,10 +306,10 @@ var removeLoggedInButtons = function removeLoggedInButtons() {
   }
 };
 
-window.setInterval(function() {
+window.setInterval(() => {
   'use strict';
 
-  var wait = document.getElementById('loading-dots');
+  let wait = document.getElementById('loading-dots');
 
   if (wait) {
     if (wait.innerHTML.length > 3) {
@@ -329,12 +320,12 @@ window.setInterval(function() {
   }
 }, 1000);
 
-$('#settings-toggler').on('click', function(e) {
+$('#settings-toggler').on('click', e => {
   'use strict';
 
   e.preventDefault();
 
-  var settings = $('#module-settings');
+  let settings = $('#module-settings');
 
   if (settings.css('display') == 'block') {
     settings.css('display', 'none');
@@ -343,7 +334,7 @@ $('#settings-toggler').on('click', function(e) {
   }
 });
 
-$('#settings-close').on('click', function(e) {
+$('#settings-close').on('click', e => {
   'use strict';
 
   e.preventDefault();
@@ -357,29 +348,27 @@ $('#api-submit').on('click', function(e) {
   e.preventDefault();
   this.disabled = true;
 
-  var _ref = [
-      $('#api-key')
-        .val()
-        .replace(/ /g, ''),
-      false
-    ],
-    key = _ref[0],
-    anonymity = _ref[1];
+  let [key, anonymity] = [
+    $('#api-key')
+      .val()
+      .replace(/ /g, ''),
+    false
+  ];
 
   if (!key || key.length != 45) {
-    swal('API Error', 'Key missing or too short/long (' + key.length + ' instead of 45 characters)', 'error');
+    swal('API Error', `Key missing or too short/long (${key.length} instead of 45 characters)`, 'error');
     return;
   }
 
-  var API_possibilities = ['factories', 'warehouse', 'buildings', 'headquarter', 'mines-summary', 'mines-detailed', 'player', 'attack-log', 'trade-log', 'missions'];
-  var queries = [];
+  const API_possibilities = ['factories', 'warehouse', 'buildings', 'headquarter', 'mines-summary', 'mines-detailed', 'player', 'attack-log', 'trade-log', 'missions'];
+  const queries = [];
 
   if ($('#save-key').prop('checked') === true) {
     $.post('api/saveKey.php', { key: key });
   }
 
-  $.each(API_possibilities, function(i, possibility) {
-    var el = $('#api-' + possibility);
+  $.each(API_possibilities, (i, possibility) => {
+    let el = $(`#api-${possibility}`);
 
     if (el.prop('checked') === true) {
       queries.push(parseInt(el.attr('data-query')));
@@ -395,8 +384,8 @@ $('#api-submit').on('click', function(e) {
   rHelper.methods.API_init(key, queries, anonymity);
 });
 
-$('.nav-link').each(function(i, navLink) {
-  $(navLink).on('click', function() {
+$('.nav-link').each((i, navLink) => {
+  $(navLink).on('click', () => {
     toggleTab(navLink.id, navLink.dataset.target);
   });
 });
@@ -404,7 +393,7 @@ $('.nav-link').each(function(i, navLink) {
 $('#techupgrades-toggle').on('click', function() {
   'use strict';
 
-  var el = $(this);
+  const el = $(this);
 
   if (el.prop('checked') === true) {
     rHelper.methods.INSRT_techUpgradeRows('tu4');
@@ -419,9 +408,7 @@ $('#techupgrades-toggle').on('click', function() {
 $('#techupgrades-input').on('input', function() {
   'use strict';
 
-  var _ref2 = [$('#techupgrades-calc-tu4-allowance'), parseFloat(this.value)],
-    tu4Allowance = _ref2[0],
-    value = _ref2[1];
+  const [tu4Allowance, value] = [$('#techupgrades-calc-tu4-allowance'), parseFloat(this.value)];
 
   if (value >= 1.01 && value <= 5) {
     if (tu4Allowance.prop('checked') === true) {
@@ -432,7 +419,7 @@ $('#techupgrades-input').on('input', function() {
   }
 });
 
-$('#personalmap-create').on('click', function() {
+$('#personalmap-create').on('click', () => {
   'use strict';
 
   if (rHelper.data.mineMap.length == 0 && getCookie('loggedIn') == 1) {
@@ -450,9 +437,7 @@ $('#worldmap-selector').on('change', function() {
 $('#qualitycomparator-selector').on('change', function() {
   'use strict';
 
-  var _ref3 = [parseInt(this.value), $('#qualitycomparator-quality').val()],
-    type = _ref3[0],
-    quality = _ref3[1];
+  const [type, quality] = [parseInt(this.value), $('#qualitycomparator-quality').val()];
 
   rHelper.methods.INSRT_qualityComparator(type, quality);
 });
@@ -460,9 +445,7 @@ $('#qualitycomparator-selector').on('change', function() {
 $('#qualitycomparator-quality').on('input', function() {
   'use strict';
 
-  var _ref4 = [$('#qualitycomparator-selector').val(), parseInt(this.value)],
-    type = _ref4[0],
-    quality = _ref4[1];
+  const [type, quality] = [$('#qualitycomparator-selector').val(), parseInt(this.value)];
 
   rHelper.methods.INSRT_qualityComparator(type, quality);
 });
@@ -470,11 +453,7 @@ $('#qualitycomparator-quality').on('input', function() {
 $('#attacklog-detailed-selector').on('change', function() {
   'use strict';
 
-  var _ref5 = [this.value, 'attackDetailed', rHelper.data.attackLog.skipCount, rHelper.data.attackLog.data[0].target],
-    target = _ref5[0],
-    type = _ref5[1],
-    skipCount = _ref5[2],
-    currentTarget = _ref5[3];
+  let [target, type, skipCount, currentTarget] = [this.value, 'attackDetailed', rHelper.data.attackLog.skipCount, rHelper.data.attackLog.data[0].target];
 
   if (target != currentTarget) {
     skipCount = 0;
@@ -488,48 +467,36 @@ $('#attacklog-detailed-selector').on('change', function() {
   rHelper.methods.API_getAttackLog(type, target, skipCount);
 });
 
-$('#attacklog-detailed-next').on('click', function() {
+$('#attacklog-detailed-next').on('click', () => {
   'use strict';
 
-  var _ref6 = [$('#attacklog-detailed-selector').val(), 'attackDetailed', rHelper.data.attackLog.skipCount + 100],
-    target = _ref6[0],
-    type = _ref6[1],
-    skipCount = _ref6[2];
+  const [target, type, skipCount] = [$('#attacklog-detailed-selector').val(), 'attackDetailed', rHelper.data.attackLog.skipCount + 100];
 
   rHelper.methods.API_getAttackLog(type, target, skipCount);
 });
 
-$('#attacklog-detailed-last').on('click', function() {
+$('#attacklog-detailed-last').on('click', () => {
   'use strict';
 
-  var _ref7 = [$('#attacklog-detailed-selector').val(), 'attackDetailed', rHelper.data.attackLog.skipCount - 100],
-    target = _ref7[0],
-    type = _ref7[1],
-    skipCount = _ref7[2];
+  const [target, type, skipCount] = [$('#attacklog-detailed-selector').val(), 'attackDetailed', rHelper.data.attackLog.skipCount - 100];
 
   rHelper.methods.API_getAttackLog(type, target, skipCount);
 });
 
-$('#tradelog-next').on('click', function() {
+$('#tradelog-next').on('click', () => {
   'use strict';
 
-  var _ref8 = [rHelper.data.tradeLog.skipCount - 1, $('#tradelog-filter-event').val(), $('#tradelog-filter-day').val()],
-    skipCount = _ref8[0],
-    filter = _ref8[1],
-    dateFilter = _ref8[2];
+  const [skipCount, filter, dateFilter] = [rHelper.data.tradeLog.skipCount - 1, $('#tradelog-filter-event').val(), $('#tradelog-filter-day').val()];
 
   if (skipCount >= 0) {
     rHelper.methods.API_getTradeLog(skipCount, filter, dateFilter);
   }
 });
 
-$('#tradelog-previous').on('click', function() {
+$('#tradelog-previous').on('click', () => {
   'use strict';
 
-  var _ref9 = [rHelper.data.tradeLog.skipCount + 1, $('#tradelog-filter-event').val(), $('#tradelog-filter-day').val()],
-    skipCount = _ref9[0],
-    filter = _ref9[1],
-    dateFilter = _ref9[2];
+  const [skipCount, filter, dateFilter] = [rHelper.data.tradeLog.skipCount + 1, $('#tradelog-filter-event').val(), $('#tradelog-filter-day').val()];
 
   if (skipCount >= 0) {
     rHelper.methods.API_getTradeLog(skipCount, filter, dateFilter);
@@ -539,38 +506,31 @@ $('#tradelog-previous').on('click', function() {
 $('#tradelog-filter-event').on('change', function() {
   'use strict';
 
-  var _ref10 = [this.value, rHelper.data.tradeLog.skipCount, $('#tradelog-filter-day').val(), rHelper.data.tradeLog.filter],
-    filter = _ref10[0],
-    skipCount = _ref10[1],
-    dateFilter = _ref10[2],
-    currentFilter = _ref10[3];
+  const [filter, skipCount, dateFilter, currentFilter] = [this.value, rHelper.data.tradeLog.skipCount, $('#tradelog-filter-day').val(), rHelper.data.tradeLog.filter];
 
   if (filter != currentFilter) {
     rHelper.methods.API_getTradeLog(skipCount, filter, dateFilter);
   }
 });
 
-$('#save-button').on('click', function() {
+$('#save-button').on('click', () => {
   rHelper.methods.SET_save();
 });
 
 $('#tradelog-filter-day').on('change', function() {
   'use strict';
 
-  var _ref11 = [this.value, 0, $('#tradelog-filter-event').val()],
-    dateFilter = _ref11[0],
-    skipCount = _ref11[1],
-    filter = _ref11[2];
+  const [dateFilter, skipCount, filter] = [this.value, 0, $('#tradelog-filter-event').val()];
 
   rHelper.methods.API_getTradeLog(skipCount, filter, dateFilter);
 });
 
-$.each([$('#tos-trigger'), $('#contact-trigger'), $('#donate-trigger')], function(i, el) {
-  var targets = ['module-tos', 'module-contact', 'module-donate'];
-  var target = targets[i];
+$.each([$('#tos-trigger'), $('#contact-trigger'), $('#donate-trigger')], (i, el) => {
+  const targets = ['module-tos', 'module-contact', 'module-donate'];
+  const target = targets[i];
 
-  $(el).on('click', function() {
-    $.each($('main > div'), function(i, el) {
+  $(el).on('click', () => {
+    $.each($('main > div'), (i, el) => {
       if (el.id != target) {
         $(el).css('display', 'none');
       } else {
@@ -580,49 +540,40 @@ $.each([$('#tos-trigger'), $('#contact-trigger'), $('#donate-trigger')], functio
   });
 });
 
-$('#save-button').on('click', function(i, el) {
-  var _ref12 = [$('#save-button'), [], [], [], [], [], []],
-    btn = _ref12[0],
-    amountOfMines = _ref12[1],
-    mineRates = _ref12[2],
-    warehouseLevels = _ref12[3],
-    warehouseFillAmounts = _ref12[4],
-    factoryLevels = _ref12[5],
-    buildingLevels = _ref12[6];
-  var _ref13 = [rHelper.data.headquarter.user.level, rHelper.data.headquarter.user.paid],
-    headquarterLevel = _ref13[0],
-    headquarterPaid = _ref13[1];
+$('#save-button').on('click', (i, el) => {
+  const [btn, amountOfMines, mineRates, warehouseLevels, warehouseFillAmounts, factoryLevels, buildingLevels] = [$('#save-button'), [], [], [], [], [], []];
+  let [headquarterLevel, headquarterPaid] = [rHelper.data.headquarter.user.level, rHelper.data.headquarter.user.paid];
 
   btn.attr('disabled', true);
 
-  $.each(rHelper.data.material, function(i, dataset) {
+  $.each(rHelper.data.material, (i, dataset) => {
     amountOfMines.push(dataset.amountOfMines);
     mineRates.push(dataset.perHour);
     warehouseLevels.push(dataset.warehouse.level);
     warehouseFillAmounts.push(dataset.warehouse.fillAmount);
   });
 
-  $.each(rHelper.data.products, function(i, dataset) {
+  $.each(rHelper.data.products, (i, dataset) => {
     factoryLevels.push(dataset.factoryLevel);
     warehouseLevels.push(dataset.warehouse.level);
     warehouseFillAmounts.push(dataset.warehouse.fillAmount);
   });
 
-  $.each(rHelper.data.loot, function(i, dataset) {
+  $.each(rHelper.data.loot, (i, dataset) => {
     warehouseLevels.push(dataset.warehouse.level);
     warehouseFillAmounts.push(dataset.warehouse.fillAmount);
   });
 
-  $.each(rHelper.data.units, function(i, dataset) {
+  $.each(rHelper.data.units, (i, dataset) => {
     warehouseLevels.push(dataset.warehouse.level);
     warehouseFillAmounts.push(dataset.warehouse.fillAmount);
   });
 
-  $.each(rHelper.data.buildings, function(i, dataset) {
+  $.each(rHelper.data.buildings, (i, dataset) => {
     buildingLevels.push(dataset.level);
   });
 
-  var payload = {
+  const payload = {
     amountOfMines: amountOfMines,
     mineRates: mineRates,
     warehouseLevels: warehouseLevels,
@@ -638,7 +589,7 @@ $('#save-button').on('click', function(i, el) {
     data: {
       data: payload
     },
-    success: function success() {
+    success: () => {
       btn.attr('disabled', false);
       swal('Saved', 'Your data has been successfully saved!', 'success');
     }

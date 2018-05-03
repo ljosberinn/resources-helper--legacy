@@ -33,6 +33,6 @@
     "rHelper": true,
     "markerCluster": true,
     "MarkerClusterer": true,
-    "removeSaveButton": true
+    "removeLoggedInButtons": true
   }
 }

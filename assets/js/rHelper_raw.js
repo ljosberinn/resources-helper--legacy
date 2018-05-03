@@ -1511,7 +1511,7 @@ const rHelper = {
           markerArr.push(rHelper.methods.SET_mapMineHandler(now, subObj, map, mapType));
         });
 
-        let markerCluster = new MarkerClusterer(map, markerArr, { imagePath: 'assets/img/maps/cluster/m', maxZoom: 15 });
+        new MarkerClusterer(map, markerArr, { imagePath: 'assets/img/maps/cluster/m', maxZoom: 15 });
       } else {
         infoNode.text(errorText);
       }
@@ -3276,7 +3276,7 @@ const rHelper = {
 
       let paid = rHelper.data.headquarter.user.paid;
       $.each(paid, (i, amount) => {
-        $(`#hq-content-paid-${i}`).val(amount);
+        $(`#hq-content-input-${i}`).val(amount);
       });
     },
     INSRT_headquarterMissing(i) {
@@ -3592,7 +3592,7 @@ const rHelper = {
     CALC_attackLogDetailedDatasetIteration(i, dataset, dataTHs) {
       let [tr, textOrientation, factorBgColorClass] = [$(crEl('tr')).addClass(rHelper.methods.CALC_attackLogSetTRColor(dataset.result)), 'text-md-right text-sm-left', 'bg-success-25'];
 
-      for (let index = 0; index <= 7; index += 1) {
+      for (let index = 0; index <= 6; index += 1) {
         let td = $(crEl('td')).attr('data-th', dataTHs[index]);
 
         switch (index) {
@@ -4397,6 +4397,12 @@ const rHelper = {
       if (workload > 1) {
         workload = 1;
       }
+
+      // check for ideal conditions
+      if (rHelper.data.settings[2].value == 1) {
+        workload = 1;
+      }
+
       return workload;
     },
     CALC_diamondTotalProfit() {
@@ -4558,7 +4564,14 @@ const rHelper = {
     CALC_factoryWorkloadMinNonSanitized(factoryId) {
       'use strict';
 
-      return rHelper.data.products[factoryId].dependencyWorkload.min();
+      let workload = rHelper.data.products[factoryId].dependencyWorkload.min();
+
+      // check for ideal conditions
+      if (rHelper.data.settings[2].value == 1) {
+        workload = 1;
+      }
+
+      return workload;
     },
     CALC_factoryCashCostPerHour(factoryId, nextLevel) {
       'use strict';
@@ -4585,6 +4598,11 @@ const rHelper = {
         workload = nextLevelWorkload;
       }
       let outputWorth = factory.scaling * factoryLevel * price;
+
+      // check for ideal conditions
+      if (rHelper.data.settings[2].value == 1) {
+        workload = 1;
+      }
 
       if ($.isArray(factory.dependencies)) {
         $.each(factory.dependencies, index => {
@@ -4655,6 +4673,11 @@ const rHelper = {
       workload = existingAmount / requiredAmount;
       if (isNaN(workload) || workload === Infinity) {
         workload = 0;
+      }
+
+      // check for ideal conditions
+      if (rHelper.data.settings[2].value == 1) {
+        workload = 1;
       }
 
       return workload;

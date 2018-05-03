@@ -1830,7 +1830,7 @@ class resourcesGame
         }
 
         // skipCount
-        $mostRecentEntryQuery = "SELECT `timestamp` FROM `userTradeLog_1` ORDER BY `timestamp` DESC LIMIT 1";
+        $mostRecentEntryQuery = "SELECT `timestamp` FROM `userTradeLog_" .$userId. "` ORDER BY `timestamp` DESC LIMIT 1";
         $mostRecentEntry = $this->conn->query($mostRecentEntryQuery);
         if($mostRecentEntry->num_rows == 1) {
             $mostRecentEntry = $mostRecentEntry->fetch_assoc();
@@ -1864,7 +1864,7 @@ class resourcesGame
         $result['filter'] = $filter;
 
         // individual days filter
-        $getDaysAndEntriesCountQuery = "SELECT DATE(FROM_UNIXTIME(`timestamp`)) AS `date`, COUNT(1) AS `entries` FROM `userTradeLog_1` GROUP BY DATE(FROM_UNIXTIME(`timestamp`)) ORDER BY `date` DESC";
+        $getDaysAndEntriesCountQuery = "SELECT DATE(FROM_UNIXTIME(`timestamp`)) AS `date`, COUNT(1) AS `entries` FROM `" .$userId. "` GROUP BY DATE(FROM_UNIXTIME(`timestamp`)) ORDER BY `date` DESC";
         $getDaysAndEntriesCount = $this->conn->query($getDaysAndEntriesCountQuery);
 
         if($getDaysAndEntriesCount->num_rows > 0) {

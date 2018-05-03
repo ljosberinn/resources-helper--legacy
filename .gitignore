@@ -1,7 +1,6 @@
 
 api/db.php
 .ftpconfig
-app/presets
 index.html
 .vscode/sftp.json
 assets/js/*.min.js

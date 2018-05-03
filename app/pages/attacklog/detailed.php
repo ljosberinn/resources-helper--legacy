@@ -56,14 +56,14 @@ $columns = [
             <td class="text-sm-left text-md-center" id="attacklog-detailed-units-lost-avg"></td>
             <td></td>
             <td class="<?php echo $textOrientation; ?>" id="attacklog-detailed-factor-avg"></td>
-            <td colspan="3" class="<?php echo $textOrientation; ?>" id="attacklog-detailed-profit-avg"></td>
+            <td colspan="2" class="<?php echo $textOrientation; ?>" id="attacklog-detailed-profit-avg"></td>
         </tr>
         <tr class="small">
             <td colspan="2">TOTAL</td>
             <td class="text-sm-left text-md-center" id="attacklog-detailed-units-lost-total"></td>
             <td></td>
             <td class="<?php echo $textOrientation; ?>" id="attacklog-detailed-factor-total"></td>
-            <td colspan="3" class="<?php echo $textOrientation; ?>" id="attacklog-detailed-profit-total"></td>
+            <td colspan="2" class="<?php echo $textOrientation; ?>" id="attacklog-detailed-profit-total"></td>
         </tr>
     </tfoot>
 </table>
