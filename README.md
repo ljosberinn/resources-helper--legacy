@@ -4,11 +4,11 @@
 
 ## Status
 
-working - 99%
+working - stable
 
 ### TODO
 
-* remote saves of non-api-users
+* test mail ideas
 
 ## What's included
 
