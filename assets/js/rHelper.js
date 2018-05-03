@@ -1,217 +1,188 @@
-const rHelper = {
+'use strict';
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var rHelper = {
   init: {
-    user() {
-      "use strict";
+    user: function user() {
+      'use strict';
 
       rHelper.methods.INSRT_userSettings();
       rHelper.init.core();
     },
-    core() {
-      "use strict";
+    core: function core() {
+      'use strict';
 
-      removeSaveButton();
+      removeLoggedInButtons();
 
       rHelper.methods.SET_tabSwitcherAnchorBased();
-      rHelper.methods.SET_transportCost("init");
+      rHelper.methods.SET_transportCost('init');
 
-      $.each(rHelper.data.material, materialId => {
+      $.each(rHelper.data.material, function (materialId) {
         // eventListeners
         rHelper.methods.EVNT_materialInput(materialId);
         // general material data insertion
         rHelper.methods.INSRT_materialData(materialId);
         // warehouses
-        rHelper.methods.INSRT_warehouseData(materialId, "material");
+        rHelper.methods.INSRT_warehouseData(materialId, 'material');
         // price history
-        rHelper.methods.INSRT_priceHistoryName("material", materialId);
+        rHelper.methods.INSRT_priceHistoryName('material', materialId);
       });
 
       rHelper.methods.INSRT_totalMineWorth(rHelper.methods.CALC_totalMineWorth());
       rHelper.methods.INSRT_totalMineCount(rHelper.methods.CALC_totalMineCount());
 
-      let calculationOrder = rHelper.methods.GET_calculationOrder();
+      var calculationOrder = rHelper.methods.GET_calculationOrder();
 
-      $.each(calculationOrder, (index, factoryId) => {
+      $.each(calculationOrder, function (index, factoryId) {
         // eventListeners
         rHelper.methods.EVNT_factoryInput(factoryId);
         // general factory data insertion
-        rHelper.methods.INSRT_factoryDiamondData(factoryId, "product");
+        rHelper.methods.INSRT_factoryDiamondData(factoryId, 'product');
         // warehouses
-        rHelper.methods.INSRT_warehouseData(factoryId, "products");
+        rHelper.methods.INSRT_warehouseData(factoryId, 'products');
         // price history
-        rHelper.methods.INSRT_priceHistoryName("products", factoryId);
+        rHelper.methods.INSRT_priceHistoryName('products', factoryId);
       });
 
       // loot
-      $.each(rHelper.data.loot, index => {
+      $.each(rHelper.data.loot, function (index) {
         // warehouses
-        rHelper.methods.INSRT_warehouseData(index, "loot");
+        rHelper.methods.INSRT_warehouseData(index, 'loot');
         // price history
-        rHelper.methods.INSRT_priceHistoryName("loot", index);
+        rHelper.methods.INSRT_priceHistoryName('loot', index);
         // recycling table
-        if (index == 4 || (index >= 10 && index <= 13)) {
+        if (index == 4 || index >= 10 && index <= 13) {
           return;
         }
         rHelper.methods.SET_recyclingProfitObj(index);
         rHelper.methods.INSRT_recycling(index);
       });
 
-      let unitsFns = ["SET_UnitProfitObj", "INSRT_unitsCraftingPrice", "INSRT_unitsMarketPrice", "INSRT_unitsPricePerStrength"];
+      var unitsFns = ['SET_UnitProfitObj', 'INSRT_unitsCraftingPrice', 'INSRT_unitsMarketPrice', 'INSRT_unitsPricePerStrength'];
 
-      $.each(rHelper.data.units, index => {
+      $.each(rHelper.data.units, function (index) {
         // warehouses
-        rHelper.methods.INSRT_warehouseData(index, "units");
+        rHelper.methods.INSRT_warehouseData(index, 'units');
         // units table
-        $.each(unitsFns, (i, fn) => {
+        $.each(unitsFns, function (i, fn) {
           rHelper.methods[fn](index);
         });
 
-        rHelper.methods.INSRT_unitsRecyclingProfit("units", index);
+        rHelper.methods.INSRT_unitsRecyclingProfit('units', index);
         // price history
-        rHelper.methods.INSRT_priceHistoryName("units", index);
+        rHelper.methods.INSRT_priceHistoryName('units', index);
       });
 
       // buildings
-      let buildingFns = ["INSRT_buildingName", "SET_buildingBackgroundColor", "INSRT_buildingData", "INSRT_buildingToLevel10", "EVNT_buildingChange"];
-      $.each(rHelper.data.buildings, buildingId => {
-        $.each(buildingFns, (i, fn) => {
+      var buildingFns = ['INSRT_buildingName', 'SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10', 'EVNT_buildingChange'];
+      $.each(rHelper.data.buildings, function (buildingId) {
+        $.each(buildingFns, function (i, fn) {
           rHelper.methods[fn](buildingId);
         });
       });
 
-      let hqFns = ["INSRT_headquarterOvwString", "INSRT_headquarterOvwRadius", "INSRT_headquarterOvwCost", "INSRT_headquarterOvwBoost", "INSRT_headquarterOvwTransportation", "EVNT_switchHeadquarter"];
+      var hqFns = ['INSRT_headquarterOvwString', 'INSRT_headquarterOvwRadius', 'INSRT_headquarterOvwCost', 'INSRT_headquarterOvwBoost', 'INSRT_headquarterOvwTransportation', 'EVNT_switchHeadquarter'];
 
       // headquarter
-      $.each(rHelper.data.headquarter, headquarterLevel => {
-        $.each(hqFns, (i, fn) => {
+      $.each(rHelper.data.headquarter, function (headquarterLevel) {
+        $.each(hqFns, function (i, fn) {
           rHelper.methods[fn](headquarterLevel);
         });
       });
 
       // initiate graphs
-      let pieGraphs = ["material"];
+      var pieGraphs = ['material'];
 
-      $.each(pieGraphs, (i, val) => {
+      $.each(pieGraphs, function (i, val) {
         rHelper.methods.EVNT_buildGraph(val);
       });
 
-      let gaugeGraphs = ["buildings", "headquarter"];
-      $.each(gaugeGraphs, (i, val) => {
+      var gaugeGraphs = ['buildings', 'headquarter'];
+      $.each(gaugeGraphs, function (i, val) {
         rHelper.methods.INSRT_gaugeGraph(val);
       });
 
-      let nonParamBoundMethods = [
-        // mines
-        "INSRT_materialMineAmortisation",
-        "INSRT_materialHighlightMinePerfectIncome",
-        // factories
-        "INSRT_totalFactoryUpgrades",
-        "INSRT_factoryHighlightColumns",
-        "INSRT_diamondTop10Profit",
-        "INSRT_diamondTotalProfit",
-        "INSRT_flowDistributionGlobal",
-        // warehouse
-        "INSRT_warehouseTotalLevel",
-        "INSRT_warehouseTotalWorth",
-        // graphs
-        "EVNT_priceHistoryOnChange",
-        // headquarter
-        "SET_hqLevel",
-        "EVNT_headquarterInput",
-        // missions
-        "INSRT_missions",
-        "EVNT_attackLogTrigger",
-        "INSRT_companyWorth",
-        "EVNT_sortableTables",
-        "EVNT_assignTitleToIcons",
-        "EVNT_enableTippy"
-      ];
+      var nonParamBoundMethods = [
+      // mines
+      'INSRT_materialMineAmortisation', 'INSRT_materialHighlightMinePerfectIncome',
+      // factories
+      'INSRT_totalFactoryUpgrades', 'INSRT_factoryHighlightColumns', 'INSRT_diamondTop10Profit', 'INSRT_diamondTotalProfit', 'INSRT_flowDistributionGlobal',
+      // warehouse
+      'INSRT_warehouseTotalLevel', 'INSRT_warehouseTotalWorth',
+      // graphs
+      'EVNT_priceHistoryOnChange',
+      // headquarter
+      'SET_hqLevel', 'EVNT_headquarterInput',
+      // missions
+      'INSRT_missions', 'EVNT_attackLogTrigger', 'INSRT_companyWorth', 'EVNT_sortableTables', 'EVNT_assignTitleToIcons', 'EVNT_enableTippy'];
 
-      $.each(nonParamBoundMethods, (i, fn) => {
+      $.each(nonParamBoundMethods, function (i, fn) {
         rHelper.methods[fn]();
       });
     }
   },
   methods: {
-    GET_calculationOrder() {
-      "use strict";
+    GET_calculationOrder: function GET_calculationOrder() {
+      'use strict';
 
-      return [
-        0,
-        1,
-        2,
-        3,
-        4,
-        7,
-        8,
-        9,
-        10,
-        15,
-        17,
-        18, // primary order - dependant on material
-        5,
-        6,
-        13,
-        19, // secondary order - dependant on materials and products
-        11,
-        12,
-        14,
-        16,
-        20,
-        21 // tertiary order - dependant on products
+      return [0, 1, 2, 3, 4, 7, 8, 9, 10, 15, 17, 18, // primary order - dependant on material
+      5, 6, 13, 19, // secondary order - dependant on materials and products
+      11, 12, 14, 16, 20, 21 // tertiary order - dependant on products
       ];
     },
-    API_toggleLoadSuccessorHelper(target) {
-      "use strict";
+    API_toggleLoadSuccessorHelper: function API_toggleLoadSuccessorHelper(target) {
+      'use strict';
 
-      let fns = ["API_toggleLoader", "API_toggleSuccessor", "API_toggleSuccessorHelper"];
+      var fns = ['API_toggleLoader', 'API_toggleSuccessor', 'API_toggleSuccessorHelper'];
 
-      $.each(fns, (i, fn) => {
+      $.each(fns, function (i, fn) {
         rHelper.methods[fn](target);
       });
     },
-    API_toggleLoader(selector) {
-      "use strict";
+    API_toggleLoader: function API_toggleLoader(selector) {
+      'use strict';
 
-      let el = $(`#api-${selector}-loading`);
+      var el = $('#api-' + selector + '-loading');
 
-      if (el.css("display") == "none") {
-        el.fadeIn("fast").css("display", "flex");
+      if (el.css('display') == 'none') {
+        el.fadeIn('fast').css('display', 'flex');
       } else {
-        el.fadeOut("fast");
+        el.fadeOut('fast');
       }
     },
-    API_toggleSuccessor(selector) {
-      "use strict";
+    API_toggleSuccessor: function API_toggleSuccessor(selector) {
+      'use strict';
 
-      let el = $(`#api-${selector}-finished`);
+      var el = $('#api-' + selector + '-finished');
 
-      if (el.css("display") == "none") {
-        el.fadeIn("fast");
+      if (el.css('display') == 'none') {
+        el.fadeIn('fast');
       } else {
-        el.fadeOut("fast");
+        el.fadeOut('fast');
       }
     },
-    API_toggleSuccessorHelper(selector) {
-      "use strict";
+    API_toggleSuccessorHelper: function API_toggleSuccessorHelper(selector) {
+      'use strict';
 
-      setTimeout(() => {
+      setTimeout(function () {
         rHelper.methods.API_toggleSuccessor(selector);
       }, 15000);
     },
-    API_getFactories(key) {
-      "use strict";
+    API_getFactories: function API_getFactories(key) {
+      'use strict';
 
-      rHelper.methods.API_toggleLoader("factories");
+      rHelper.methods.API_toggleLoader('factories');
 
-      $.get(`api/core.php?query=1&key=${key}`, data => {
-        $.each(data, (i, value) => {
+      $.get('api/core.php?query=1&key=' + key, function (data) {
+        $.each(data, function (i, value) {
           rHelper.data.products[i].factoryLevel = value;
         });
 
-        let calculationOrder = rHelper.methods.GET_calculationOrder();
+        var calculationOrder = rHelper.methods.GET_calculationOrder();
 
-        $.each(calculationOrder, (index, factoryId) => {
-          rHelper.methods.INSRT_factoryDiamondData(factoryId, "product");
+        $.each(calculationOrder, function (index, factoryId) {
+          rHelper.methods.INSRT_factoryDiamondData(factoryId, 'product');
         });
 
         rHelper.methods.INSRT_totalFactoryUpgrades();
@@ -219,36 +190,36 @@ const rHelper = {
         rHelper.methods.INSRT_diamondTop10Profit();
         rHelper.methods.INSRT_diamondTotalProfit();
         rHelper.methods.INSRT_flowDistributionGlobal();
-        rHelper.methods.API_toggleLoadSuccessorHelper("factories");
+        rHelper.methods.API_toggleLoadSuccessorHelper('factories');
 
-        sorttable.innerSortFunction.apply($("#module-diamond th")[4], []);
-        sorttable.innerSortFunction.apply($("#module-diamond th")[5], []);
+        sorttable.innerSortFunction.apply($('#module-diamond th')[4], []);
+        sorttable.innerSortFunction.apply($('#module-diamond th')[5], []);
         rHelper.methods.SET_save();
       });
     },
-    API_getWarehouse(key) {
-      "use strict";
+    API_getWarehouse: function API_getWarehouse(key) {
+      'use strict';
 
-      rHelper.methods.API_toggleLoader("warehouse");
+      rHelper.methods.API_toggleLoader('warehouse');
 
-      $.getJSON(`api/core.php?query=2&key=${key}`, data => {
-        $.each(data, function(i, warehouseInfo) {
-          let iterator = i;
-          let targetObj = "material";
+      $.getJSON('api/core.php?query=2&key=' + key, function (data) {
+        $.each(data, function (i, warehouseInfo) {
+          var iterator = i;
+          var targetObj = 'material';
 
           if (i >= 14 && i < 36) {
             iterator -= 14;
-            targetObj = "products";
+            targetObj = 'products';
           } else if (i >= 36 && i < 52) {
             iterator -= 36;
-            targetObj = "loot";
+            targetObj = 'loot';
           } else if (i >= 52) {
             iterator -= 52;
-            targetObj = "units";
+            targetObj = 'units';
           }
 
-          let contingent = Math.pow(warehouseInfo.level, 2) * 5000;
-          let fillStatus = warehouseInfo.amount / contingent;
+          var contingent = Math.pow(warehouseInfo.level, 2) * 5000;
+          var fillStatus = warehouseInfo.amount / contingent;
           if (isNaN(fillStatus)) {
             fillStatus = 0;
           }
@@ -261,86 +232,86 @@ const rHelper = {
           rHelper.methods.SET_save();
         });
 
-        $.each(rHelper.data.material, materialId => {
-          rHelper.methods.INSRT_warehouseData(materialId, "material");
+        $.each(rHelper.data.material, function (materialId) {
+          rHelper.methods.INSRT_warehouseData(materialId, 'material');
         });
 
-        let calculationOrder = rHelper.methods.GET_calculationOrder();
+        var calculationOrder = rHelper.methods.GET_calculationOrder();
 
-        $.each(calculationOrder, index => {
-          rHelper.methods.INSRT_warehouseData(index, "products");
+        $.each(calculationOrder, function (index) {
+          rHelper.methods.INSRT_warehouseData(index, 'products');
         });
 
-        $.each(rHelper.data.loot, index => {
-          rHelper.methods.INSRT_warehouseData(index, "loot");
+        $.each(rHelper.data.loot, function (index) {
+          rHelper.methods.INSRT_warehouseData(index, 'loot');
         });
 
-        $.each(rHelper.data.units, index => {
-          rHelper.methods.INSRT_warehouseData(index, "units");
+        $.each(rHelper.data.units, function (index) {
+          rHelper.methods.INSRT_warehouseData(index, 'units');
         });
 
         rHelper.methods.INSRT_warehouseTotalLevel();
         rHelper.methods.INSRT_warehouseTotalWorth();
-        rHelper.methods.API_toggleLoadSuccessorHelper("warehouse");
+        rHelper.methods.API_toggleLoadSuccessorHelper('warehouse');
       });
     },
-    API_getMineSummary(key) {
-      rHelper.methods.API_toggleLoader("mines-summary");
-      $.get(`api/core.php?query=51&key=${key}`, data => {
-        $.each(data, (i, obj) => {
+    API_getMineSummary: function API_getMineSummary(key) {
+      rHelper.methods.API_toggleLoader('mines-summary');
+      $.get('api/core.php?query=51&key=' + key, function (data) {
+        $.each(data, function (i, obj) {
           rHelper.data.material[i].perHour = obj.perHour;
           rHelper.data.material[i].amountOfMines = obj.amountOfMines;
         });
 
-        $.each(rHelper.data.material, materialId => {
-          rHelper.methods.INSRT_materialData(materialId, "api");
+        $.each(rHelper.data.material, function (materialId) {
+          rHelper.methods.INSRT_materialData(materialId, 'api');
         });
 
-        const fns = ["INSRT_materialMineAmortisation", "INSRT_materialHighlightMinePerfectIncome", "INSRT_flowDistributionGlobal"];
+        var fns = ['INSRT_materialMineAmortisation', 'INSRT_materialHighlightMinePerfectIncome', 'INSRT_flowDistributionGlobal'];
 
-        $.each(fns, (i, fn) => {
+        $.each(fns, function (i, fn) {
           rHelper.methods[fn]();
         });
 
         rHelper.methods.INSRT_totalMineWorth(rHelper.methods.CALC_totalMineWorth());
         rHelper.methods.INSRT_totalMineCount(rHelper.methods.CALC_totalMineCount());
-        rHelper.methods.EVNT_buildGraph("material");
-        rHelper.methods.API_toggleLoadSuccessorHelper("mines-summary");
+        rHelper.methods.EVNT_buildGraph('material');
+        rHelper.methods.API_toggleLoadSuccessorHelper('mines-summary');
 
         rHelper.methods.SET_save();
       });
     },
-    API_getMineMap() {
-      "use strict";
+    API_getMineMap: function API_getMineMap() {
+      'use strict';
 
-      $.getJSON("api/core.php?mineMap", data => {
+      $.getJSON('api/core.php?mineMap', function (data) {
         rHelper.data.mineMap = data;
-        rHelper.methods.API_toggleLoadSuccessorHelper("mines-detailed");
-        rHelper.methods.EVNT_mapCreation("personal");
+        rHelper.methods.API_toggleLoadSuccessorHelper('mines-detailed');
+        rHelper.methods.EVNT_mapCreation('personal');
         rHelper.methods.SET_overTimeGraph();
       });
     },
-    API_getMineMapInitiator(key) {
-      "use strict";
+    API_getMineMapInitiator: function API_getMineMapInitiator(key) {
+      'use strict';
 
-      rHelper.methods.API_toggleLoader("mines-detailed");
-      $.getJSON(`api/core.php?query=5&key=${key}`, data => {
-        if (data.callback == "rHelper.methods.API_getMineMap()") {
+      rHelper.methods.API_toggleLoader('mines-detailed');
+      $.getJSON('api/core.php?query=5&key=' + key, function (data) {
+        if (data.callback == 'rHelper.methods.API_getMineMap()') {
           rHelper.methods.API_getMineMap();
         } else {
-          swal("Error", "Couldn't fetch mine details - API potentially unavailable!", "error");
+          swal('Error', "Couldn't fetch mine details - API potentially unavailable!", 'error');
         }
       });
     },
-    API_getPlayerInfo(key, anonymity) {
-      "use strict";
+    API_getPlayerInfo: function API_getPlayerInfo(key, anonymity) {
+      'use strict';
 
-      rHelper.methods.API_toggleLoader("player");
-      let url = `api/core.php?query=7&key=${key}`;
+      rHelper.methods.API_toggleLoader('player');
+      var url = 'api/core.php?query=7&key=' + key;
       if (anonymity) {
-        url += "&anonymity=true";
+        url += '&anonymity=true';
       }
-      $.getJSON(url, data => {
+      $.getJSON(url, function (data) {
         rHelper.data.userInformation.level = data.lvl;
         rHelper.data.userInformation.points = data.points;
         rHelper.data.userInformation.rank = data.worldrank;
@@ -349,143 +320,143 @@ const rHelper = {
         }
 
         rHelper.data.userInformation.registeredGame = rHelper.methods.CALC_convertDateToIso(data.registerdate);
-        rHelper.methods.API_toggleLoadSuccessorHelper("player");
+        rHelper.methods.API_toggleLoadSuccessorHelper('player');
       });
     },
-    API_getAttackLog(type, target, skipCount) {
-      "use strict";
+    API_getAttackLog: function API_getAttackLog(type, target, skipCount) {
+      'use strict';
 
-      if (typeof type == "undefined") {
-        type = "attackSimple";
+      if (typeof type == 'undefined') {
+        type = 'attackSimple';
       }
 
-      let url = `api/core.php?attackLog&type=${type}`;
+      var url = 'api/core.php?attackLog&type=' + type;
 
       if (target) {
-        url += `&target=${target}`;
+        url += '&target=' + target;
       }
 
       if (skipCount) {
-        url += `&skip=${skipCount}`;
+        url += '&skip=' + skipCount;
       }
 
-      $.getJSON(url, data => {
+      $.getJSON(url, function (data) {
         rHelper.data.attackLog = data;
-        rHelper.methods.API_toggleLoadSuccessorHelper("attack-log");
+        rHelper.methods.API_toggleLoadSuccessorHelper('attack-log');
 
         rHelper.methods.INSRT_attackLog(type);
       });
     },
-    API_getAttackLogInitiator(key) {
-      "use strict";
+    API_getAttackLogInitiator: function API_getAttackLogInitiator(key) {
+      'use strict';
 
-      rHelper.methods.API_toggleLoader("attack-log");
+      rHelper.methods.API_toggleLoader('attack-log');
 
-      $.getJSON(`api/core.php?query=9&key=${key}`, data => {
+      $.getJSON('api/core.php?query=9&key=' + key, function (data) {
         if (data.callback != 'rHelper.methods.API_getAttackLog("attackSimple")') {
-          swal("Error", "Couldn't fetch attack log - API potentially unavailable!", "error");
+          swal('Error', "Couldn't fetch attack log - API potentially unavailable!", 'error');
         } else {
-          rHelper.methods.API_toggleLoadSuccessorHelper("attack-log");
+          rHelper.methods.API_toggleLoadSuccessorHelper('attack-log');
         }
       });
     },
-    API_getTradeLog(skipCount, filter, dateFilter) {
-      "use strict";
+    API_getTradeLog: function API_getTradeLog(skipCount, filter, dateFilter) {
+      'use strict';
 
-      let url = "api/core.php?tradeLog";
+      var url = 'api/core.php?tradeLog';
 
       if (skipCount) {
-        url += `&skipCount=${skipCount}`;
+        url += '&skipCount=' + skipCount;
       }
 
       if (filter) {
-        url += `&filter=${filter}`;
+        url += '&filter=' + filter;
       }
 
       if (dateFilter) {
-        url += `&day=${dateFilter}`;
+        url += '&day=' + dateFilter;
       }
 
-      const buttons = [$("#tradelog-next"), $("#tradelog-previous")];
+      var buttons = [$('#tradelog-next'), $('#tradelog-previous')];
 
-      $.each(buttons, (i, btn) => {
-        btn.attr("disabled", true);
+      $.each(buttons, function (i, btn) {
+        btn.attr('disabled', true);
       });
 
-      $.getJSON(url, data => {
+      $.getJSON(url, function (data) {
         rHelper.data.tradeLog = data;
-        rHelper.methods.API_toggleLoadSuccessorHelper("trade-log");
+        rHelper.methods.API_toggleLoadSuccessorHelper('trade-log');
         rHelper.methods.INSRT_tradeLog();
 
-        $.each(buttons, (i, btn) => {
-          btn.attr("disabled", false);
+        $.each(buttons, function (i, btn) {
+          btn.attr('disabled', false);
         });
 
         if (2 == 0) {
-          buttons[0].attr("disabled", true);
+          buttons[0].attr('disabled', true);
         }
       });
     },
-    API_getTradeLogInitiator(key) {
-      "use strict";
+    API_getTradeLogInitiator: function API_getTradeLogInitiator(key) {
+      'use strict';
 
-      rHelper.methods.API_toggleLoader("trade-log");
+      rHelper.methods.API_toggleLoader('trade-log');
 
-      $.getJSON(`api/core.php?query=6&key=${key}`, data => {
-        if (data.callback == "rHelper.methods.API_getTradeLog()") {
+      $.getJSON('api/core.php?query=6&key=' + key, function (data) {
+        if (data.callback == 'rHelper.methods.API_getTradeLog()') {
           rHelper.methods.API_getTradeLog();
         } else {
-          swal("Error", "Couldn't fetch trade log - API potentially unavailable!", "error");
+          swal('Error', "Couldn't fetch trade log - API potentially unavailable!", 'error');
         }
       });
     },
-    API_getMissions() {
-      "use strict";
+    API_getMissions: function API_getMissions() {
+      'use strict';
 
-      $.getJSON("api/core.php?missions", data => {
+      $.getJSON('api/core.php?missions', function (data) {
         rHelper.data.missions = data;
-        rHelper.methods.API_toggleLoadSuccessorHelper("missions");
+        rHelper.methods.API_toggleLoadSuccessorHelper('missions');
         rHelper.methods.INSRT_missions();
       });
     },
-    API_getMissionsInitiator(key) {
-      "use strict";
+    API_getMissionsInitiator: function API_getMissionsInitiator(key) {
+      'use strict';
 
-      rHelper.methods.API_toggleLoader("missions");
-      $.getJSON(`api/core.php?query=10&key=${key}`, data => {
-        if (data.callback == "rHelper.methods.API_getMissions()") {
+      rHelper.methods.API_toggleLoader('missions');
+      $.getJSON('api/core.php?query=10&key=' + key, function (data) {
+        if (data.callback == 'rHelper.methods.API_getMissions()') {
           rHelper.methods.API_getMissions();
         }
       });
     },
-    API_getBuildings(key) {
-      "use strict";
+    API_getBuildings: function API_getBuildings(key) {
+      'use strict';
 
-      rHelper.methods.API_toggleLoader("buildings");
+      rHelper.methods.API_toggleLoader('buildings');
 
-      $.getJSON(`api/core.php?query=3&key=${key}`, data => {
-        let fns = ["INSRT_buildingName", "SET_buildingBackgroundColor", "INSRT_buildingData", "INSRT_buildingToLevel10"];
+      $.getJSON('api/core.php?query=3&key=' + key, function (data) {
+        var fns = ['INSRT_buildingName', 'SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10'];
 
-        $.each(data, (i, buildingLevel) => {
+        $.each(data, function (i, buildingLevel) {
           rHelper.data.buildings[i].level = buildingLevel;
 
-          $.each(fns, (k, fn) => {
+          $.each(fns, function (k, fn) {
             rHelper.methods[fn](i);
           });
         });
 
-        rHelper.methods.INSRT_gaugeGraph("buildings");
-        rHelper.methods.API_toggleLoadSuccessorHelper("buildings");
+        rHelper.methods.INSRT_gaugeGraph('buildings');
+        rHelper.methods.API_toggleLoadSuccessorHelper('buildings');
 
         rHelper.methods.SET_save();
       });
     },
-    API_getHeadquarter(key) {
-      "use strict";
+    API_getHeadquarter: function API_getHeadquarter(key) {
+      'use strict';
 
-      rHelper.methods.API_toggleLoader("headquarter");
+      rHelper.methods.API_toggleLoader('headquarter');
 
-      $.getJSON(`api/core.php?query=4&key=${key}`, data => {
+      $.getJSON('api/core.php?query=4&key=' + key, function (data) {
         rHelper.data.headquarter.user = rHelper.data.headquarter.user || {
           hqPosition: {
             lon: 0,
@@ -499,39 +470,37 @@ const rHelper = {
         rHelper.data.headquarter.user.hqPosition.lon = data.lon;
         rHelper.data.headquarter.user.level = data.level;
 
-        $.each(data.paid, (i, paid) => {
+        $.each(data.paid, function (i, paid) {
           rHelper.data.headquarter.user.paid[i] = paid;
         });
 
-        rHelper.methods.INSRT_gaugeGraph("headquarter");
+        rHelper.methods.INSRT_gaugeGraph('headquarter');
         rHelper.methods.SET_hqLevel();
-        rHelper.methods.API_toggleLoadSuccessorHelper("headquarter");
+        rHelper.methods.API_toggleLoadSuccessorHelper('headquarter');
 
         rHelper.methods.SET_save();
       });
     },
-    API_getCreditInformation(key) {
-      "use strict";
+    API_getCreditInformation: function API_getCreditInformation(key) {
+      'use strict';
 
-      $("#api-credits").html(
-        '<span id="api-credits-loading" class="circles-to-rhombuses-spinner"><span class="rhombuses-circle"></span><span class="rhombuses-circle"></span><span class="rhombuses-circle"></span></span>'
-      );
-      $("#api-credits-loading").css("display", "flex");
+      $('#api-credits').html('<span id="api-credits-loading" class="circles-to-rhombuses-spinner"><span class="rhombuses-circle"></span><span class="rhombuses-circle"></span><span class="rhombuses-circle"></span></span>');
+      $('#api-credits-loading').css('display', 'flex');
 
-      $.get(`api/core.php?query=0&key=${key}`, data => {
-        let remainingCredits = parseInt(data[0].creditsleft);
+      $.get('api/core.php?query=0&key=' + key, function (data) {
+        var remainingCredits = parseInt(data[0].creditsleft);
         rHelper.data.userInformation.remainingCredits = remainingCredits;
         rHelper.methods.INSRT_API_remainingCredits(remainingCredits);
 
-        $("#api-submit").attr("disabled", false);
-        $("#api-credits-loading").css("display", "none");
+        $('#api-submit').attr('disabled', false);
+        $('#api-credits-loading').css('display', 'none');
       });
     },
-    API_init(key, queries, anonymity) {
-      "use strict";
+    API_init: function API_init(key, queries, anonymity) {
+      'use strict';
 
       if ($.isArray(queries)) {
-        $.each(queries, (i, query) => {
+        $.each(queries, function (i, query) {
           switch (query) {
             case 1:
               rHelper.methods.API_getFactories(key); // STABLE
@@ -570,18 +539,17 @@ const rHelper = {
         });
       }
     },
-    API_getWorldMap(type) {
-      "use strict";
+    API_getWorldMap: function API_getWorldMap(type) {
+      'use strict';
 
-      $.getJSON(`api/core.php?worldMap=${type}`, data => {
+      $.getJSON('api/core.php?worldMap=' + type, function (data) {
         rHelper.data.worldMap = rHelper.data.worldMap || {};
         rHelper.data.worldMap = data;
-        rHelper.methods.EVNT_mapCreation("world");
+        rHelper.methods.EVNT_mapCreation('world');
       });
     },
-
-    SET_globalObject(selector, index, key, value) {
-      "use strict";
+    SET_globalObject: function SET_globalObject(selector, index, key, value) {
+      'use strict';
 
       if ($.isArray(key)) {
         rHelper.data[selector][index][key[0]][key[1]] = value;
@@ -591,117 +559,119 @@ const rHelper = {
 
       rHelper.methods.SET_save();
     },
-    SET_save() {
-      "use strict";
+    SET_save: function SET_save() {
+      'use strict';
 
-      const loggedInCookie = parseInt(getCookie("loggedIn"));
-      const hasAPIKeyAttached = typeof rHelper.data.userInformation.realKey;
+      var loggedInCookie = parseInt(getCookie('loggedIn'));
+      var hasAPIKeyAttached = _typeof(rHelper.data.userInformation.realKey);
 
-      if (loggedInCookie == 1 && hasAPIKeyAttached == "undefined") {
-        localStorage.setItem("rGame", JSON.stringify(rHelper.data));
+      if (loggedInCookie == 1 && hasAPIKeyAttached == 'undefined') {
+        localStorage.setItem('rGame', JSON.stringify(rHelper.data));
 
-        swal("Data has been saved remotely!", "<not implemented yet>", "error");
-      } else {
-      }
+        swal('Data has been saved remotely!', '<not implemented yet>', 'error');
+      } else {}
     },
-    SET_tabSwitcherAnchorBased() {
-      "use strict";
+    SET_tabSwitcherAnchorBased: function SET_tabSwitcherAnchorBased() {
+      'use strict';
 
-      let anchor = `#${window.location.hash.substr(1)}`;
-      if (anchor == "#") {
-        if (getCookie("loggedIn") != 1) {
-          anchor = "#registrationlogin";
+      var anchor = '#' + window.location.hash.substr(1);
+      if (anchor == '#') {
+        if (getCookie('loggedIn') != 1) {
+          anchor = '#registrationlogin';
         } else {
-          anchor = "#factories";
+          anchor = '#factories';
         }
       }
 
-      if (anchor == "#leaderboard") {
+      if (anchor == '#leaderboard') {
         rHelper.methods.INSRT_leaderboard();
       }
 
-      if (anchor == "#tradelog") {
+      if (anchor == '#tradelog') {
         rHelper.methods.API_getTradeLog();
       }
 
-      if (anchor == "#techupgrades") {
+      if (anchor == '#techupgrades') {
         rHelper.methods.INSRT_techUpgradeRows();
       }
 
-      $(".nav-link").each((i, navLink) => {
-        let navEl = $(navLink);
-        let target = $(`#${navLink.dataset.target}`);
-        if (navEl.attr("href") == anchor) {
-          target.css("display", "block");
-          navEl.addClass("active");
+      $('.nav-link').each(function (i, navLink) {
+        var navEl = $(navLink);
+        var target = $('#' + navLink.dataset.target);
+        if (navEl.attr('href') == anchor) {
+          target.css('display', 'block');
+          navEl.addClass('active');
         } else {
-          target.css("display", "none");
-          navEl.removeClass("active");
+          target.css('display', 'none');
+          navEl.removeClass('active');
         }
       });
     },
-    SET_transportCost(init) {
-      "use strict";
+    SET_transportCost: function SET_transportCost(init) {
+      'use strict';
 
       rHelper.data.buildings[9].transportCost = 1 + (15 - rHelper.data.buildings[9].level) / 100;
 
       if (!init) {
-        $.each(rHelper.data.buildings, buildingId => {
-          let fns = ["SET_buildingBackgroundColor", "INSRT_buildingData", "INSRT_buildingToLevel10"];
+        $.each(rHelper.data.buildings, function (buildingId) {
+          var fns = ['SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10'];
 
-          $.each(fns, (i, fn) => {
+          $.each(fns, function (i, fn) {
             rHelper.methods[fn](buildingId);
           });
         });
-        let calculationOrder = rHelper.methods.GET_calculationOrder();
-        $.each(calculationOrder, (index, factoryId) => {
-          let fns = ["INSRT_factoryUpgradeCost", "INSRT_factoryROI"];
+        var calculationOrder = rHelper.methods.GET_calculationOrder();
+        $.each(calculationOrder, function (index, factoryId) {
+          var fns = ['INSRT_factoryUpgradeCost', 'INSRT_factoryROI'];
 
-          $.each(fns, (i, fn) => {
+          $.each(fns, function (i, fn) {
             rHelper.methods[fn](factoryId);
           });
 
           rHelper.methods.INSRT_flowDistributionGlobal();
         });
 
-        $.each(rHelper.data.headquarter, headquarterLevel => {
+        $.each(rHelper.data.headquarter, function (headquarterLevel) {
           rHelper.methods.INSRT_headquarterOvwTransportation(headquarterLevel);
         });
       }
     },
-    SET_buildingBackgroundColor(buildingId) {
-      "use strict";
+    SET_buildingBackgroundColor: function SET_buildingBackgroundColor(buildingId) {
+      'use strict';
 
-      const buildingLevel = rHelper.data.buildings[buildingId].level;
+      var buildingLevel = rHelper.data.buildings[buildingId].level;
 
-      const r = 255 - buildingLevel * 10;
-      const g = 127 + buildingLevel * 7;
-      const b = 80 - buildingLevel * 3;
+      var r = 255 - buildingLevel * 10;
+      var g = 127 + buildingLevel * 7;
+      var b = 80 - buildingLevel * 3;
 
-      $(`#building-${buildingId}`).css("background-color", `rgba(${r},${g},${b}, 0.25)`);
+      $('#building-' + buildingId).css('background-color', 'rgba(' + r + ',' + g + ',' + b + ', 0.25)');
     },
-    SET_buildingTableVisibility(buildingId, state) {
-      "use strict";
+    SET_buildingTableVisibility: function SET_buildingTableVisibility(buildingId, state) {
+      'use strict';
 
-      const [tbody, tfoot] = [$(`#building-${buildingId} tbody`), $(`#building-${buildingId} tfoot`)];
+      var _ref = [$('#building-' + buildingId + ' tbody'), $('#building-' + buildingId + ' tfoot')],
+          tbody = _ref[0],
+          tfoot = _ref[1];
 
-      $.each([tbody, tfoot], (i, el) => {
+
+      $.each([tbody, tfoot], function (i, el) {
         switch (state) {
-          case "show":
-            if (el.css("display") == "none") {
-              el.css("display", "table-row-group");
+          case 'show':
+            if (el.css('display') == 'none') {
+              el.css('display', 'table-row-group');
             }
             break;
-          case "hide":
-            if (el.css("display") != "none") {
-              el.css("display", "none");
+          case 'hide':
+            if (el.css('display') != 'none') {
+              el.css('display', 'none');
             }
             break;
         }
       });
     },
-    SET_recyclingProfitObj(lootId) {
-      "use strict";
+    SET_recyclingProfitObj: function SET_recyclingProfitObj(lootId) {
+      'use strict';
 
       rHelper.data.loot[lootId].profit = {
         outputWorth: 0,
@@ -709,25 +679,25 @@ const rHelper = {
         profit: 0
       };
     },
-    SET_recyclingPlantLevel() {
-      "use strict";
+    SET_recyclingPlantLevel: function SET_recyclingPlantLevel() {
+      'use strict';
 
-      $.each(rHelper.data.loot, lootId => {
-        if (lootId == 4 || (lootId >= 10 && lootId <= 13)) {
+      $.each(rHelper.data.loot, function (lootId) {
+        if (lootId == 4 || lootId >= 10 && lootId <= 13) {
           return;
         }
 
-        let fns = ["INSRT_recyclingProducts", "INSRT_recyclingOutputWorth", "INSRT_recyclingInputWorth"];
+        var fns = ['INSRT_recyclingProducts', 'INSRT_recyclingOutputWorth', 'INSRT_recyclingInputWorth'];
 
-        $.each(fns, (i, fn) => {
+        $.each(fns, function (i, fn) {
           rHelper.methods[fn](lootId);
         });
 
-        rHelper.methods.INSRT_unitsRecyclingProfit("recycling", lootId);
+        rHelper.methods.INSRT_unitsRecyclingProfit('recycling', lootId);
       });
     },
-    SET_UnitProfitObj(unitId) {
-      "use strict";
+    SET_UnitProfitObj: function SET_UnitProfitObj(unitId) {
+      'use strict';
 
       rHelper.data.units[unitId].profit = {
         craftingPrice: 0,
@@ -735,44 +705,44 @@ const rHelper = {
         profit: 0
       };
     },
-    SET_hqLevel() {
-      "use strict";
+    SET_hqLevel: function SET_hqLevel() {
+      'use strict';
 
-      const headquarter = rHelper.data.headquarter;
+      var headquarter = rHelper.data.headquarter;
 
       if (headquarter.user) {
-        let userHqLevel = headquarter.user.level;
+        var userHqLevel = headquarter.user.level;
         rHelper.methods.SET_hqSelectorClass(userHqLevel - 1);
         rHelper.methods.INSRT_headquarterPaid();
 
-        let fns = ["INSRT_headquarterContentRequiredAmount", "INSRT_headquarterMissing", "INSRT_headquarterRemainingCost"];
+        var fns = ['INSRT_headquarterContentRequiredAmount', 'INSRT_headquarterMissing', 'INSRT_headquarterRemainingCost'];
 
-        $.each(fns, (i, fn) => {
+        $.each(fns, function (i, fn) {
           rHelper.methods[fn](userHqLevel);
         });
       }
     },
-    SET_hqSelectorClass(userHqLevel) {
-      "use strict";
+    SET_hqSelectorClass: function SET_hqSelectorClass(userHqLevel) {
+      'use strict';
 
-      for (let i = 0; i <= 9; i += 1) {
+      for (var i = 0; i <= 9; i += 1) {
         if (userHqLevel != i) {
-          $(`.hq-thumb-${i}`).addClass("disabled-hq");
+          $('.hq-thumb-' + i).addClass('disabled-hq');
         } else {
-          $(`.hq-thumb-${i}`).removeClass("disabled-hq");
+          $('.hq-thumb-' + i).removeClass('disabled-hq');
         }
       }
     },
-    SET_newMap(container, zoom, type) {
-      "use strict";
+    SET_newMap: function SET_newMap(container, zoom, type) {
+      'use strict';
 
       return new google.maps.Map(container[0], {
         zoom: zoom,
         mapTypeId: type
       });
     },
-    SET_mapOptions(map, maxZoom, primaryMine) {
-      "use strict";
+    SET_mapOptions: function SET_mapOptions(map, maxZoom, primaryMine) {
+      'use strict';
 
       map.setOptions({
         maxZoom: maxZoom,
@@ -780,57 +750,57 @@ const rHelper = {
       });
       return map;
     },
-    SET_mapImg(folder, icon, size) {
-      "use strict";
+    SET_mapImg: function SET_mapImg(folder, icon, size) {
+      'use strict';
 
       return {
-        url: `assets/img/maps/${folder}/${icon}.png`,
+        url: 'assets/img/maps/' + folder + '/' + icon + '.png',
         scaledSize: new google.maps.Size(size, size)
       };
     },
-    SET_mapInfoWindow(contentString) {
-      "use strict";
+    SET_mapInfoWindow: function SET_mapInfoWindow(contentString) {
+      'use strict';
 
       return new google.maps.InfoWindow({
         content: contentString
       });
     },
-    SET_mapFolderRelation(relation) {
-      "use strict";
+    SET_mapFolderRelation: function SET_mapFolderRelation(relation) {
+      'use strict';
 
-      let folder = "foe";
-      if (relation == "friend") {
-        folder = "friend";
+      var folder = 'foe';
+      if (relation == 'friend') {
+        folder = 'friend';
       }
 
       return folder;
     },
-    SET_mapHQHandler(map, hqObj) {
-      "use strict";
+    SET_mapHQHandler: function SET_mapHQHandler(map, hqObj) {
+      'use strict';
 
-      const hqLevel = hqObj.level;
+      var hqLevel = hqObj.level;
 
-      const [hqSize, radius, center] = [
-        hqLevel * 12.5,
-        rHelper.data.headquarter[hqLevel - 1].radius,
-        {
-          lat: hqObj.lat,
-          lng: hqObj.lon
-        }
-      ];
+      var _ref2 = [hqLevel * 12.5, rHelper.data.headquarter[hqLevel - 1].radius, {
+        lat: hqObj.lat,
+        lng: hqObj.lon
+      }],
+          hqSize = _ref2[0],
+          radius = _ref2[1],
+          center = _ref2[2];
+
 
       rHelper.methods.SET_mapHqCircle(map, center, radius, hqObj.relation);
 
       new google.maps.Marker({
         map: map,
         position: center,
-        icon: rHelper.methods.SET_mapImg("hq", hqLevel, hqSize)
+        icon: rHelper.methods.SET_mapImg('hq', hqLevel, hqSize)
       });
     },
-    SET_mapHqCircle(map, hqCenter, radius, relation) {
-      let color = "#FF0000";
-      if (relation == "friend") {
-        color = "#00FF00";
+    SET_mapHqCircle: function SET_mapHqCircle(map, hqCenter, radius, relation) {
+      var color = '#FF0000';
+      if (relation == 'friend') {
+        color = '#00FF00';
       }
 
       return new google.maps.Circle({
@@ -845,16 +815,16 @@ const rHelper = {
         draggable: true
       });
     },
-    SET_mapMineHandler(now, subObj, map, mapType) {
-      let type = subObj.type;
-      let relObj = rHelper.data.material[type];
-      let buildMilliseconds = rHelper.methods.CALC_toMilliseconds(subObj.builddate);
-      let buildDate = rHelper.methods.CALC_convertDateToIso(buildMilliseconds);
-      let age = (now - buildMilliseconds) / 1000 / 86400;
-      let estRevenue = rHelper.methods.CALC_mineEstRevenue(subObj, type, age);
-      let contentString = rHelper.methods.CALC_createMapContentString(relObj, buildDate, age, estRevenue, subObj);
-      let infoWindow = rHelper.methods.SET_mapInfoWindow(contentString);
-      let marker = new google.maps.Marker({
+    SET_mapMineHandler: function SET_mapMineHandler(now, subObj, map, mapType) {
+      var type = subObj.type;
+      var relObj = rHelper.data.material[type];
+      var buildMilliseconds = rHelper.methods.CALC_toMilliseconds(subObj.builddate);
+      var buildDate = rHelper.methods.CALC_convertDateToIso(buildMilliseconds);
+      var age = (now - buildMilliseconds) / 1000 / 86400;
+      var estRevenue = rHelper.methods.CALC_mineEstRevenue(subObj, type, age);
+      var contentString = rHelper.methods.CALC_createMapContentString(relObj, buildDate, age, estRevenue, subObj);
+      var infoWindow = rHelper.methods.SET_mapInfoWindow(contentString);
+      var marker = new google.maps.Marker({
         map: map,
         position: {
           lat: subObj.lat,
@@ -863,12 +833,12 @@ const rHelper = {
         icon: rHelper.methods.SET_mapImg(rHelper.methods.SET_mapFolderRelation(subObj.relation), type, 20)
       });
 
-      if (mapType == "personal") {
+      if (mapType == 'personal') {
         if (subObj.builddate == rHelper.data.mineMap.mines[0].builddate) {
           marker.setAnimation(google.maps.Animation.BOUNCE);
         }
       }
-      google.maps.event.addListener(marker, "click", () => {
+      google.maps.event.addListener(marker, 'click', function () {
         if (openedWindow) {
           openedWindow.close();
         }
@@ -878,55 +848,60 @@ const rHelper = {
 
       return marker;
     },
-    SET_overTimeGraph() {
-      "use strict";
+    SET_overTimeGraph: function SET_overTimeGraph() {
+      'use strict';
 
-      const data = rHelper.data.mineMap.mines;
+      var data = rHelper.data.mineMap.mines;
 
-      let [timestamps, mineCount, avgMinePrice, income, hours] = [[], [], [], [], []];
+      var timestamps = [],
+          mineCount = [],
+          avgMinePrice = [],
+          income = [],
+          hours = [];
 
-      for (let hour = 0; hour <= 23; hour += 1) {
-        hours.push([`${hour} to ${hour + 1}`, 0]);
+
+      for (var hour = 0; hour <= 23; hour += 1) {
+        hours.push([hour + ' to ' + (hour + 1), 0]);
       }
 
-      $.each(data, (index, subObj) => {
-        let buildHour = new Date(rHelper.methods.CALC_toMilliseconds(subObj.builddate)).getHours();
+      $.each(data, function (index, subObj) {
+        var buildHour = new Date(rHelper.methods.CALC_toMilliseconds(subObj.builddate)).getHours();
         hours[buildHour][1] += 1;
       });
 
-      Highcharts.chart("graph-buildinghabits", {
+      Highcharts.chart('graph-buildinghabits', {
         chart: {
-          type: "column",
-          backgroundColor: "transparent"
+          type: 'column',
+          backgroundColor: 'transparent'
         },
         title: {
-          text: "Building habits per hour",
+          text: 'Building habits per hour',
           style: {
-            color: "#dedede"
+            color: '#dedede'
           }
         },
         xAxis: {
-          type: "category",
+          type: 'category',
           labels: {
             rotation: -45,
             style: {
-              fontSize: "13px",
-              fontFamily: "Verdana, sans-serif",
-              color: "#dedede"
+              fontSize: '13px',
+              fontFamily: 'Verdana, sans-serif',
+              color: '#dedede'
             }
           }
         },
         yAxis: {
           min: 0,
           title: {
-            text: "Amount of mines",
+            text: 'Amount of mines',
             style: {
-              color: "#dedede"
+              color: '#dedede'
             }
           },
           labels: {
             style: {
-              color: "#dedede"
+              color: '#dedede'
             }
           }
         },
@@ -934,26 +909,24 @@ const rHelper = {
           enabled: false
         },
         tooltip: {
-          pointFormat: "Mines built at this hour: <b>{point.y}</b>"
+          pointFormat: 'Mines built at this hour: <b>{point.y}</b>'
         },
-        series: [
-          {
-            name: "Mines",
-            data: hours,
-            dataLabels: {
-              enabled: true,
-              rotation: -90,
-              color: "#dedede",
-              align: "right",
-              y: 10,
-              style: {
-                fontSize: "13px",
-                fontFamily: "Verdana, sans-serif",
-                color: "#dedede"
-              }
+        series: [{
+          name: 'Mines',
+          data: hours,
+          dataLabels: {
+            enabled: true,
+            rotation: -90,
+            color: '#dedede',
+            align: 'right',
+            y: 10,
+            style: {
+              fontSize: '13px',
+              fontFamily: 'Verdana, sans-serif',
+              color: '#dedede'
             }
           }
-        ],
+        }],
         exporting: {
           chartOptions: {
             chart: {
@@ -963,24 +936,24 @@ const rHelper = {
         }
       });
 
-      let firstMine = data[0].builddate;
-      let lastMine = data[data.length - 1].builddate;
-      let daysSinceFirstMine = (lastMine - firstMine) / 86400;
+      var firstMine = data[0].builddate;
+      var lastMine = data[data.length - 1].builddate;
+      var daysSinceFirstMine = (lastMine - firstMine) / 86400;
 
       timestamps.push(rHelper.methods.CALC_toMilliseconds(firstMine));
 
-      for (let i = 0; i <= daysSinceFirstMine; i += 1) {
-        let date = rHelper.methods.CALC_toMilliseconds(firstMine + 86400 * i);
+      for (var i = 0; i <= daysSinceFirstMine; i += 1) {
+        var date = rHelper.methods.CALC_toMilliseconds(firstMine + 86400 * i);
         timestamps.push(date);
       }
 
-      $.each(timestamps, (i, ts) => {
-        let mineCountAtGivenTS = 0;
-        let sum = 0;
-        let totalIncomeAtGivenTS = 0;
+      $.each(timestamps, function (i, ts) {
+        var mineCountAtGivenTS = 0;
+        var sum = 0;
+        var totalIncomeAtGivenTS = 0;
 
-        $.each(data, (index, subObj) => {
-          let builddate = rHelper.methods.CALC_toMilliseconds(subObj.builddate);
+        $.each(data, function (index, subObj) {
+          var builddate = rHelper.methods.CALC_toMilliseconds(subObj.builddate);
 
           if (builddate <= ts) {
             mineCountAtGivenTS += 1;
@@ -988,7 +961,7 @@ const rHelper = {
           }
         });
 
-        $.each(rHelper.data.material, k => {
+        $.each(rHelper.data.material, function (k) {
           sum += rHelper.methods.CALC_materialNewMinePrice(mineCountAtGivenTS, k);
         });
 
@@ -999,46 +972,46 @@ const rHelper = {
         timestamps[i] = rHelper.methods.CALC_convertDateToIso(ts);
       });
 
-      Highcharts.chart("graph-overtime", {
+      Highcharts.chart('graph-overtime', {
         chart: {
-          type: "spline",
-          zoomType: "x",
-          backgroundColor: "transparent"
+          type: 'spline',
+          zoomType: 'x',
+          backgroundColor: 'transparent'
         },
         title: {
           useHTML: true,
-          text: "Progress graph",
+          text: 'Progress graph',
           style: {
-            color: "#dedede"
+            color: '#dedede'
           }
         },
         xAxis: {
           categories: timestamps,
           labels: {
             style: {
-              color: "#dedede"
+              color: '#dedede'
             }
           }
         },
         yAxis: {
           title: {
-            text: "Price or mine count over time",
+            text: 'Price or mine count over time',
             style: {
-              color: "#dedede"
+              color: '#dedede'
             }
           },
           labels: {
-            formatter: function() {
-              return this.value.toLocaleString("en-US");
+            formatter: function formatter() {
+              return this.value.toLocaleString('en-US');
             },
             style: {
-              color: "#dedede"
+              color: '#dedede'
             }
           }
         },
         legend: {
           enabled: true,
-          backgroundColor: "#dedede"
+          backgroundColor: '#dedede'
         },
         tooltip: {
           crosshairs: true,
@@ -1048,37 +1021,33 @@ const rHelper = {
           spline: {
             marker: {
               radius: 4,
-              lineColor: "#666666",
+              lineColor: '#666666',
               lineWidth: 1
             }
           }
         },
-        series: [
-          {
-            name: "Mine count",
-            marker: {
-              symbol: "square"
-            },
-            data: mineCount,
-            color: "orange"
+        series: [{
+          name: 'Mine count',
+          marker: {
+            symbol: 'square'
           },
-          {
-            name: "Average cost of a new mine",
-            marker: {
-              symbol: "diamond"
-            },
-            data: avgMinePrice,
-            color: "coral"
+          data: mineCount,
+          color: 'orange'
+        }, {
+          name: 'Average cost of a new mine',
+          marker: {
+            symbol: 'diamond'
           },
-          {
-            name: "Average income at given time",
-            marker: {
-              symbol: "triangle"
-            },
-            data: income,
-            color: "yellowgreen"
-          }
-        ],
+          data: avgMinePrice,
+          color: 'coral'
+        }, {
+          name: 'Average income at given time',
+          marker: {
+            symbol: 'triangle'
+          },
+          data: income,
+          color: 'yellowgreen'
+        }],
         exporting: {
           chartOptions: {
             chart: {
@@ -1088,11 +1057,10 @@ const rHelper = {
         }
       });
     },
+    EVNT_enableTippy: function EVNT_enableTippy() {
+      'use strict';
 
-    EVNT_enableTippy() {
-      "use strict";
-
-      $.each($("[title]"), (i, el) => {
+      $.each($('[title]'), function (i, el) {
         if (!el._tippy) {
           tippy(el, {
             dynamicTitle: true
@@ -1100,119 +1068,112 @@ const rHelper = {
         }
       });
     },
-    EVNT_assignTitleToIconsHelper(min, max, subSelector, incrementor) {
-      "use strict";
+    EVNT_assignTitleToIconsHelper: function EVNT_assignTitleToIconsHelper(min, max, subSelector, incrementor) {
+      'use strict';
 
-      for (let i = min; i <= max; i += 1) {
-        $.each($(`.resources-${subSelector}-${i}`), (k, el) => {
-          if (!$(el).attr("title")) {
-            let convertedId = i + incrementor;
-            $(el).attr("title", rHelper.methods.CALC_returnPriceViaId(convertedId).toLocaleString("en-US"));
+      var _loop = function _loop(i) {
+        $.each($('.resources-' + subSelector + '-' + i), function (k, el) {
+          if (!$(el).attr('title')) {
+            var convertedId = i + incrementor;
+            $(el).attr('title', rHelper.methods.CALC_returnPriceViaId(convertedId).toLocaleString('en-US'));
           }
         });
+      };
+
+      for (var i = min; i <= max; i += 1) {
+        _loop(i);
       }
     },
-    EVNT_assignTitleToIcons() {
-      "use strict";
+    EVNT_assignTitleToIcons: function EVNT_assignTitleToIcons() {
+      'use strict';
 
-      rHelper.methods.EVNT_assignTitleToIconsHelper(0, 13, "material", 0);
-      rHelper.methods.EVNT_assignTitleToIconsHelper(0, 21, "product", 14);
-      rHelper.methods.EVNT_assignTitleToIconsHelper(0, 16, "loot", 36);
-      rHelper.methods.EVNT_assignTitleToIconsHelper(0, 5, "unit", 52);
+      rHelper.methods.EVNT_assignTitleToIconsHelper(0, 13, 'material', 0);
+      rHelper.methods.EVNT_assignTitleToIconsHelper(0, 21, 'product', 14);
+      rHelper.methods.EVNT_assignTitleToIconsHelper(0, 16, 'loot', 36);
+      rHelper.methods.EVNT_assignTitleToIconsHelper(0, 5, 'unit', 52);
     },
-    EVNT_sortableTables() {
-      "use strict";
+    EVNT_sortableTables: function EVNT_sortableTables() {
+      'use strict';
 
-      let tables = [$("#module-mines table")[0], $("#module-factories table")[0], $("#module-diamond table")[0], $("#techupgrades-combinations-tbl")[0], $("#recycling-tbl")[0], $("#units-tbl")[0]];
+      var tables = [$('#module-mines table')[0], $('#module-factories table')[0], $('#module-diamond table')[0], $('#techupgrades-combinations-tbl')[0], $('#recycling-tbl')[0], $('#units-tbl')[0]];
 
-      $.each(tables, (index, table) => {
+      $.each(tables, function (index, table) {
         sorttable.makeSortable(table);
 
         if (index == 2) {
-          sorttable.innerSortFunction.apply($("#module-diamond th")[5], []);
+          sorttable.innerSortFunction.apply($('#module-diamond th')[5], []);
         } else if (index == 4) {
           // sorting twice for cheapest price first...
-          sorttable.innerSortFunction.apply($("#techupgrades-combinations-tbl th")[5], []);
-          sorttable.innerSortFunction.apply($("#techupgrades-combinations-tbl th")[5], []);
+          sorttable.innerSortFunction.apply($('#techupgrades-combinations-tbl th')[5], []);
+          sorttable.innerSortFunction.apply($('#techupgrades-combinations-tbl th')[5], []);
         }
       });
     },
-    EVNT_factoryInput(factoryId) {
-      "use strict";
+    EVNT_factoryInput: function EVNT_factoryInput(factoryId) {
+      'use strict';
 
-      $(`#factories-level-${factoryId}`).on("input", function() {
-        let factoryId = parseInt(this.id.replace("factories-level-", ""));
-        let factoryLevel = parseInt(this.value);
-        rHelper.methods.SET_globalObject("products", factoryId, "factoryLevel", factoryLevel);
+      $('#factories-level-' + factoryId).on('input', function () {
+        var factoryId = parseInt(this.id.replace('factories-level-', ''));
+        var factoryLevel = parseInt(this.value);
+        rHelper.methods.SET_globalObject('products', factoryId, 'factoryLevel', factoryLevel);
 
-        let fns = [
-          // factories tab
-          "INSRT_factoryOutput",
-          "INSRT_factoryUpgradeCost",
-          "INSRT_factoryDependencies",
-          "INSRT_factoryWorkload",
-          "INSRT_factoryTurnover",
-          "INSRT_factoryTurnoverPerUpgrade",
-          "INSRT_factoryROI",
-          // diamond tab
-          "INSRT_diamondFactoryLevel",
-          "INSRT_diamondFactoryOutput",
-          "INSRT_diamondFactoryOutputWarehouse",
-          "INSRT_diamondDependencies",
-          "INSRT_diamondEfficiency",
-          "INSRT_diamondProfit"
-        ];
+        var fns = [
+        // factories tab
+        'INSRT_factoryOutput', 'INSRT_factoryUpgradeCost', 'INSRT_factoryDependencies', 'INSRT_factoryWorkload', 'INSRT_factoryTurnover', 'INSRT_factoryTurnoverPerUpgrade', 'INSRT_factoryROI',
+        // diamond tab
+        'INSRT_diamondFactoryLevel', 'INSRT_diamondFactoryOutput', 'INSRT_diamondFactoryOutputWarehouse', 'INSRT_diamondDependencies', 'INSRT_diamondEfficiency', 'INSRT_diamondProfit'];
 
-        $.each(fns, (i, fn) => {
+        $.each(fns, function (i, fn) {
           rHelper.methods[fn](factoryId);
         });
 
-        rHelper.methods.CALC_dependantFactories(factoryId, "product");
+        rHelper.methods.CALC_dependantFactories(factoryId, 'product');
         rHelper.methods.INSRT_diamondTop10Profit();
         rHelper.methods.INSRT_diamondTotalProfit();
-        rHelper.methods.INSRT_flowRate(factoryId, "product");
+        rHelper.methods.INSRT_flowRate(factoryId, 'product');
         rHelper.methods.INSRT_flowDistributionGlobal();
         rHelper.methods.INSRT_factoryHighlightColumns();
       });
     },
-    EVNT_materialInput(materialId) {
-      "use strict";
+    EVNT_materialInput: function EVNT_materialInput(materialId) {
+      'use strict';
 
-      $(`#material-rate-${materialId}`).on("input", function() {
-        let materialId = this.id.replace("material-rate-", "");
-        let materialAmount = parseInt(this.value);
+      $('#material-rate-' + materialId).on('input', function () {
+        var materialId = this.id.replace('material-rate-', '');
+        var materialAmount = parseInt(this.value);
 
-        rHelper.methods.SET_globalObject("material", materialId, "perHour", materialAmount);
+        rHelper.methods.SET_globalObject('material', materialId, 'perHour', materialAmount);
         rHelper.methods.INSRT_materialRateWorth(materialId);
         rHelper.methods.INSRT_totalMineWorth(rHelper.methods.CALC_totalMineWorth());
-        rHelper.methods.CALC_dependantFactories(materialId, "material");
-        rHelper.methods.INSRT_flowRate(materialId, "material");
+        rHelper.methods.CALC_dependantFactories(materialId, 'material');
+        rHelper.methods.INSRT_flowRate(materialId, 'material');
         rHelper.methods.INSRT_flowDistributionGlobal();
-        rHelper.methods.EVNT_buildGraph("material");
+        rHelper.methods.EVNT_buildGraph('material');
       });
 
-      $(`#material-amount-of-mines-${materialId}`).on("input", function() {
-        let materialId = this.id.replace("material-amount-of-mines-", "");
-        let materialAmountOfMines = parseInt(this.value);
+      $('#material-amount-of-mines-' + materialId).on('input', function () {
+        var materialId = this.id.replace('material-amount-of-mines-', '');
+        var materialAmountOfMines = parseInt(this.value);
 
-        rHelper.methods.SET_globalObject("material", materialId, "amountOfMines", materialAmountOfMines);
+        rHelper.methods.SET_globalObject('material', materialId, 'amountOfMines', materialAmountOfMines);
 
-        $.each(rHelper.data.material, materialId => {
+        $.each(rHelper.data.material, function (materialId) {
           rHelper.methods.INSRT_materialNewMinePrice(materialId);
         });
 
-        rHelper.methods.INSRT_warehouseRemainingTimeToFull(materialId, "material");
+        rHelper.methods.INSRT_warehouseRemainingTimeToFull(materialId, 'material');
         rHelper.methods.INSRT_materialMineAmortisation();
         rHelper.methods.INSRT_totalMineCount(rHelper.methods.CALC_totalMineCount());
-        rHelper.methods.EVNT_buildGraph("material");
+        rHelper.methods.EVNT_buildGraph('material');
       });
     },
-    EVNT_warehouseInput(id, type) {
-      "use strict";
+    EVNT_warehouseInput: function EVNT_warehouseInput(id, type) {
+      'use strict';
 
       // on upgrade calculator input
-      $(`#warehouse-${type}-calc-2-${id}`).on("input", function() {
-        let value = parseInt(this.value);
+
+      $('#warehouse-' + type + '-calc-2-' + id).on('input', function () {
+        var value = parseInt(this.value);
         if (isNaN(value)) {
           value = 0;
         }
@@ -1220,58 +1181,58 @@ const rHelper = {
       });
 
       // reset upgrade cost on select swap
-      $(`#warehouse-${type}-calc-1-${id}`).on("change", () => {
-        $(`#warehouse-${type}-upgrade-cost-${id}`).empty();
-        $(`#warehouse-${type}-calc-2-${id}`).val(0);
+      $('#warehouse-' + type + '-calc-1-' + id).on('change', function () {
+        $('#warehouse-' + type + '-upgrade-cost-' + id).empty();
+        $('#warehouse-' + type + '-calc-2-' + id).val(0);
       });
 
       // on increase of current stock
-      $(`#warehouse-${type}-stock-current-${id}`).on("input", function() {
-        let value = parseInt(this.value);
+      $('#warehouse-' + type + '-stock-current-' + id).on('input', function () {
+        var value = parseInt(this.value);
         if (isNaN(value)) {
           value = 0;
         }
-        let newFillStatus = value / rHelper.data[type][id].warehouse.contingent;
+        var newFillStatus = value / rHelper.data[type][id].warehouse.contingent;
 
-        rHelper.methods.SET_globalObject(type, id, ["warehouse", "fillAmount"], value);
-        rHelper.methods.SET_globalObject(type, id, ["warehouse", "fillStatus"], newFillStatus);
+        rHelper.methods.SET_globalObject(type, id, ['warehouse', 'fillAmount'], value);
+        rHelper.methods.SET_globalObject(type, id, ['warehouse', 'fillStatus'], newFillStatus);
 
-        let fns = ["INSRT_warehouseWorth", "INSRT_warehouseFillStatus", "INSRT_warehouseRemainingTimeToFull"];
+        var fns = ['INSRT_warehouseWorth', 'INSRT_warehouseFillStatus', 'INSRT_warehouseRemainingTimeToFull'];
 
-        $.each(fns, (i, fn) => {
+        $.each(fns, function (i, fn) {
           rHelper.methods[fn](id, type);
         });
 
         rHelper.methods.INSRT_warehouseTotalWorth();
       });
       // on increase of warehouse level
-      $(`#warehouse-${type}-level-${id}`).on("input", function() {
-        let value = parseInt(this.value);
+      $('#warehouse-' + type + '-level-' + id).on('input', function () {
+        var value = parseInt(this.value);
         if (isNaN(value)) {
           value = 0;
         }
-        let el = rHelper.data[type][id].warehouse;
+        var el = rHelper.data[type][id].warehouse;
 
-        rHelper.methods.SET_globalObject(type, id, ["warehouse", "level"], value);
-        rHelper.methods.SET_globalObject(type, id, ["warehouse", "contingent"], rHelper.methods.CALC_warehouseContingent(value));
-        rHelper.methods.SET_globalObject(type, id, ["warehouse", "fillStatus"], el.fillAmount / el.contingent);
+        rHelper.methods.SET_globalObject(type, id, ['warehouse', 'level'], value);
+        rHelper.methods.SET_globalObject(type, id, ['warehouse', 'contingent'], rHelper.methods.CALC_warehouseContingent(value));
+        rHelper.methods.SET_globalObject(type, id, ['warehouse', 'fillStatus'], el.fillAmount / el.contingent);
 
-        let fns = ["INSRT_warehouseCapacity", "INSRT_warehouseFillStatus", "INSRT_warehouseRemainingTimeToFull"];
+        var fns = ['INSRT_warehouseCapacity', 'INSRT_warehouseFillStatus', 'INSRT_warehouseRemainingTimeToFull'];
 
-        $.each(fns, (i, fn) => {
+        $.each(fns, function (i, fn) {
           rHelper.methods[fn](id, type);
         });
 
         rHelper.methods.INSRT_warehouseTotalLevel();
       });
     },
-    EVNT_buildingChange(buildingId) {
-      "use strict";
+    EVNT_buildingChange: function EVNT_buildingChange(buildingId) {
+      'use strict';
 
-      $(`#buildings-level-${buildingId}`).on("change", function() {
-        let value = parseInt(this.value);
+      $('#buildings-level-' + buildingId).on('change', function () {
+        var value = parseInt(this.value);
 
-        rHelper.methods.SET_globalObject("buildings", buildingId, "level", value);
+        rHelper.methods.SET_globalObject('buildings', buildingId, 'level', value);
 
         if (buildingId == 9) {
           rHelper.methods.SET_transportCost();
@@ -1280,43 +1241,43 @@ const rHelper = {
         }
 
         if (buildingId == 3 || buildingId == 4 || buildingId == 9) {
-          $.each(rHelper.data.units, unitId => {
+          $.each(rHelper.data.units, function (unitId) {
             rHelper.methods.INSRT_unitsPricePerStrength(unitId);
           });
         }
 
-        let fns = ["INSRT_buildingData", "INSRT_buildingToLevel10", "SET_buildingBackgroundColor"];
+        var fns = ['INSRT_buildingData', 'INSRT_buildingToLevel10', 'SET_buildingBackgroundColor'];
 
-        $.each(fns, (i, fn) => {
+        $.each(fns, function (i, fn) {
           rHelper.methods[fn](buildingId);
         });
 
-        rHelper.methods.INSRT_gaugeGraph("buildings");
+        rHelper.methods.INSRT_gaugeGraph('buildings');
       });
     },
-    EVNT_buildGraph(type) {
-      "use strict";
+    EVNT_buildGraph: function EVNT_buildGraph(type) {
+      'use strict';
 
       rHelper.graphs = rHelper.graphs || {};
 
-      let parentGraphObj = rHelper.graphs.material;
+      var parentGraphObj = rHelper.graphs.material;
       rHelper.graphs.material.reference.mineCount = rHelper.methods.CALC_totalMineCount();
       rHelper.graphs.material.reference.mineIncome = rHelper.methods.CALC_totalMineWorth();
 
-      $.each(rHelper.data.material, (i, material) => {
-        let iteration = {
+      $.each(rHelper.data.material, function (i, material) {
+        var iteration = {
           y: 0,
-          color: "",
+          color: '',
           drilldown: {
             categories: [],
             data: [],
-            color: ""
+            color: ''
           }
         };
 
-        let mineAmountPercent = parseFloat((material.amountOfMines / rHelper.graphs.material.reference.mineCount * 100).toFixed(2));
-        let mineIncomePercent = parseFloat((rHelper.methods.CALC_materialRateWorth(i) / rHelper.graphs.material.reference.mineIncome * 100).toFixed(2));
-        let materialName = material.name;
+        var mineAmountPercent = parseFloat((material.amountOfMines / rHelper.graphs.material.reference.mineCount * 100).toFixed(2));
+        var mineIncomePercent = parseFloat((rHelper.methods.CALC_materialRateWorth(i) / rHelper.graphs.material.reference.mineIncome * 100).toFixed(2));
+        var materialName = material.name;
 
         if (!isNaN(mineAmountPercent)) {
           iteration.y = mineAmountPercent;
@@ -1324,7 +1285,7 @@ const rHelper = {
           iteration.y = 0;
         }
 
-        let mineDataObj = {
+        var mineDataObj = {
           name: materialName,
           y: iteration.y,
           color: iteration.color
@@ -1345,17 +1306,15 @@ const rHelper = {
           rHelper.graphs.material.mineData[i] = mineDataObj;
         }
 
-        let drillDataLen = iteration.drilldown.data.length;
-        let brightness = 0;
+        var drillDataLen = iteration.drilldown.data.length;
+        var brightness = 0;
 
-        for (let j = 0; j < drillDataLen; j += 1) {
+        for (var j = 0; j < drillDataLen; j += 1) {
           brightness = 0.2 - j / drillDataLen / 5;
           rHelper.graphs.material.incomeData[i] = {
             name: iteration.drilldown.categories[j],
             y: iteration.drilldown.data[j],
-            color: Highcharts.Color(iteration.color)
-              .brighten(brightness)
-              .get()
+            color: Highcharts.Color(iteration.color).brighten(brightness).get()
           };
         }
         if (JSON.stringify(rHelper.graphs.material.data[i]) !== JSON.stringify(iteration)) {
@@ -1365,23 +1324,23 @@ const rHelper = {
 
       rHelper.methods.INSRT_polygonGraph(parentGraphObj.target, parentGraphObj.titleText, parentGraphObj.seriesNames, parentGraphObj.responsiveId, type);
     },
-    EVNT_switchHeadquarter(clickedHq) {
-      "use strict";
+    EVNT_switchHeadquarter: function EVNT_switchHeadquarter(clickedHq) {
+      'use strict';
 
-      $(`.hq-thumb-${clickedHq}`).on("click", () => {
-        let actualLevel = parseInt(clickedHq) + 1;
+      $('.hq-thumb-' + clickedHq).on('click', function () {
+        var actualLevel = parseInt(clickedHq) + 1;
 
         rHelper.data.headquarter.user = rHelper.data.headquarter.user || {};
         rHelper.data.headquarter.user.paid = rHelper.data.headquarter.user.paid || [0, 0, 0, 0];
         rHelper.data.headquarter.user.level = rHelper.data.headquarter.user.level || actualLevel;
 
-        rHelper.methods.SET_globalObject("headquarter", "user", "level", actualLevel);
+        rHelper.methods.SET_globalObject('headquarter', 'user', 'level', actualLevel);
         rHelper.methods.SET_hqSelectorClass(clickedHq);
-        rHelper.methods.INSRT_gaugeGraph("headquarter");
+        rHelper.methods.INSRT_gaugeGraph('headquarter');
         rHelper.methods.INSRT_headquarterContentRequiredAmount(actualLevel);
         rHelper.methods.INSRT_headquarterPaid();
 
-        for (let i = 0; i <= 3; i += 1) {
+        for (var i = 0; i <= 3; i += 1) {
           rHelper.methods.INSRT_headquarterMissing(i);
         }
 
@@ -1389,13 +1348,13 @@ const rHelper = {
         rHelper.methods.INSRT_companyWorth();
       });
     },
-    EVNT_headquarterInput() {
-      "use strict";
+    EVNT_headquarterInput: function EVNT_headquarterInput() {
+      'use strict';
 
-      $.each($("[id*='hq-content-input-']"), (i, el) => {
-        $(el).on("input", function() {
-          let thisId = parseInt(this.id.replace(/hq-content-input-/, ""));
-          let thisValue = parseInt(this.value);
+      $.each($("[id*='hq-content-input-']"), function (i, el) {
+        $(el).on('input', function () {
+          var thisId = parseInt(this.id.replace(/hq-content-input-/, ''));
+          var thisValue = parseInt(this.value);
 
           if (isNaN(thisValue)) {
             thisValue = 0;
@@ -1403,34 +1362,34 @@ const rHelper = {
             thisValue = 50000000;
           }
 
-          rHelper.methods.SET_globalObject("headquarter", "user", ["paid", thisId], thisValue);
+          rHelper.methods.SET_globalObject('headquarter', 'user', ['paid', thisId], thisValue);
           rHelper.methods.INSRT_headquarterMissing(i);
           rHelper.methods.INSRT_headquarterRemainingCost(rHelper.data.headquarter.user.level);
-          rHelper.methods.INSRT_gaugeGraph("headquarter");
+          rHelper.methods.INSRT_gaugeGraph('headquarter');
           rHelper.methods.INSRT_companyWorth();
         });
       });
     },
-    EVNT_priceHistoryOnChange() {
-      "use strict";
+    EVNT_priceHistoryOnChange: function EVNT_priceHistoryOnChange() {
+      'use strict';
 
-      $("#pricehistory-selector").on("change", function() {
-        let thisVal = parseInt(this.value);
-        let url = `api/getPriceHistory.php?id=${thisVal}`;
-        let resource = rHelper.methods.CALC_convertId(thisVal);
-        let materialName = `<span style="height: 25px; width: 25px;" class="${resource.icon}"></span> ${resource.name}`;
+      $('#pricehistory-selector').on('change', function () {
+        var thisVal = parseInt(this.value);
+        var url = 'api/getPriceHistory.php?id=' + thisVal;
+        var resource = rHelper.methods.CALC_convertId(thisVal);
+        var materialName = '<span style="height: 25px; width: 25px;" class="' + resource.icon + '"></span> ' + resource.name;
 
-        rHelper.methods.EVNT_priceHistoryToggler("loading");
+        rHelper.methods.EVNT_priceHistoryToggler('loading');
 
-        $.getJSON(url, response => {
-          let averageKI = response.avg.ki;
-          let averagePlayer = response.avg.player;
-          let timestamps = [];
-          let player = [];
-          let ki = [];
+        $.getJSON(url, function (response) {
+          var averageKI = response.avg.ki;
+          var averagePlayer = response.avg.player;
+          var timestamps = [];
+          var player = [];
+          var ki = [];
 
-          $.each(response.data, (i, dataset) => {
-            let date = rHelper.methods.CALC_convertDateToIso(rHelper.methods.CALC_toMilliseconds(dataset.ts));
+          $.each(response.data, function (i, dataset) {
+            var date = rHelper.methods.CALC_convertDateToIso(rHelper.methods.CALC_toMilliseconds(dataset.ts));
             timestamps.push(date);
 
             if (dataset.player == 0) {
@@ -1440,213 +1399,182 @@ const rHelper = {
             ki.push(dataset.ki);
           });
 
-          rHelper.methods.EVNT_priceHistoryToggler("finished");
+          rHelper.methods.EVNT_priceHistoryToggler('finished');
           rHelper.methods.INSRT_priceHistoryGraph(materialName, averageKI, averagePlayer, timestamps, player, ki);
         });
       });
     },
-    EVNT_priceHistoryToggler(state) {
-      "use strict";
+    EVNT_priceHistoryToggler: function EVNT_priceHistoryToggler(state) {
+      'use strict';
 
-      let container = $("#graph-pricehistory");
-      let selector = $("#pricehistory-selector");
+      var container = $('#graph-pricehistory');
+      var selector = $('#pricehistory-selector');
       switch (state) {
-        case "loading":
-          let svg =
-            '<svg id="pricehistory-svg" xmlns="http://www.w3.org/2000/svg" style="background:0 0" preserveAspectRatio="xMidYMid" viewBox="0 0 100 100"><g transform="translate(50 50)"><g transform="matrix(.6 0 0 .6 -19 -19)"><g transform="rotate(242)"><animateTransform attributeName="transform" begin="0s" dur="3s" keyTimes="0;1" repeatCount="indefinite" type="rotate" values="0;360"/><path fill="#9acd32" d="M37.3496988-7h10V7h-10a38 38 0 0 1-1.50391082 5.61267157l8.66025404 5-7 12.12435565-8.66025404-5a38 38 0 0 1-4.10876076 4.10876076l5 8.66025404-12.12435565 7-5-8.66025404A38 38 0 0 1 7 37.34969879v10H-7v-10a38 38 0 0 1-5.61267157-1.50391081l-5 8.66025404-12.12435565-7 5-8.66025404a38 38 0 0 1-4.10876076-4.10876076l-8.66025404 5-7-12.12435565 8.66025404-5A38 38 0 0 1-37.34969879 7h-10V-7h10a38 38 0 0 1 1.50391081-5.61267157l-8.66025404-5 7-12.12435565 8.66025404 5a38 38 0 0 1 4.10876076-4.10876076l-5-8.66025404 12.12435565-7 5 8.66025404A38 38 0 0 1-7-37.34969879v-10H7v10a38 38 0 0 1 5.61267157 1.50391081l5-8.66025404 12.12435565 7-5 8.66025404a38 38 0 0 1 4.10876076 4.10876076l8.66025404-5 7 12.12435565-8.66025404 5A38 38 0 0 1 37.34969879-7M0-30a30 30 0 1 0 0 60 30 30 0 1 0 0-60"/></g></g><g transform="matrix(.6 0 0 .6 19 19)"><g transform="rotate(103)"><animateTransform attributeName="transform" begin="-0.125s" dur="3s" keyTimes="0;1" repeatCount="indefinite" type="rotate" values="360;0"/><path fill="coral" d="M37.3496988-7h10V7h-10a38 38 0 0 1-1.50391082 5.61267157l8.66025404 5-7 12.12435565-8.66025404-5a38 38 0 0 1-4.10876076 4.10876076l5 8.66025404-12.12435565 7-5-8.66025404A38 38 0 0 1 7 37.34969879v10H-7v-10a38 38 0 0 1-5.61267157-1.50391081l-5 8.66025404-12.12435565-7 5-8.66025404a38 38 0 0 1-4.10876076-4.10876076l-8.66025404 5-7-12.12435565 8.66025404-5A38 38 0 0 1-37.34969879 7h-10V-7h10a38 38 0 0 1 1.50391081-5.61267157l-8.66025404-5 7-12.12435565 8.66025404 5a38 38 0 0 1 4.10876076-4.10876076l-5-8.66025404 12.12435565-7 5 8.66025404A38 38 0 0 1-7-37.34969879v-10H7v10a38 38 0 0 1 5.61267157 1.50391081l5-8.66025404 12.12435565 7-5 8.66025404a38 38 0 0 1 4.10876076 4.10876076l8.66025404-5 7 12.12435565-8.66025404 5A38 38 0 0 1 37.34969879-7M0-30a30 30 0 1 0 0 60 30 30 0 1 0 0-60"/></g></g></g></svg>';
+        case 'loading':
+          var svg = '<svg id="pricehistory-svg" xmlns="http://www.w3.org/2000/svg" style="background:0 0" preserveAspectRatio="xMidYMid" viewBox="0 0 100 100"><g transform="translate(50 50)"><g transform="matrix(.6 0 0 .6 -19 -19)"><g transform="rotate(242)"><animateTransform attributeName="transform" begin="0s" dur="3s" keyTimes="0;1" repeatCount="indefinite" type="rotate" values="0;360"/><path fill="#9acd32" d="M37.3496988-7h10V7h-10a38 38 0 0 1-1.50391082 5.61267157l8.66025404 5-7 12.12435565-8.66025404-5a38 38 0 0 1-4.10876076 4.10876076l5 8.66025404-12.12435565 7-5-8.66025404A38 38 0 0 1 7 37.34969879v10H-7v-10a38 38 0 0 1-5.61267157-1.50391081l-5 8.66025404-12.12435565-7 5-8.66025404a38 38 0 0 1-4.10876076-4.10876076l-8.66025404 5-7-12.12435565 8.66025404-5A38 38 0 0 1-37.34969879 7h-10V-7h10a38 38 0 0 1 1.50391081-5.61267157l-8.66025404-5 7-12.12435565 8.66025404 5a38 38 0 0 1 4.10876076-4.10876076l-5-8.66025404 12.12435565-7 5 8.66025404A38 38 0 0 1-7-37.34969879v-10H7v10a38 38 0 0 1 5.61267157 1.50391081l5-8.66025404 12.12435565 7-5 8.66025404a38 38 0 0 1 4.10876076 4.10876076l8.66025404-5 7 12.12435565-8.66025404 5A38 38 0 0 1 37.34969879-7M0-30a30 30 0 1 0 0 60 30 30 0 1 0 0-60"/></g></g><g transform="matrix(.6 0 0 .6 19 19)"><g transform="rotate(103)"><animateTransform attributeName="transform" begin="-0.125s" dur="3s" keyTimes="0;1" repeatCount="indefinite" type="rotate" values="360;0"/><path fill="coral" d="M37.3496988-7h10V7h-10a38 38 0 0 1-1.50391082 5.61267157l8.66025404 5-7 12.12435565-8.66025404-5a38 38 0 0 1-4.10876076 4.10876076l5 8.66025404-12.12435565 7-5-8.66025404A38 38 0 0 1 7 37.34969879v10H-7v-10a38 38 0 0 1-5.61267157-1.50391081l-5 8.66025404-12.12435565-7 5-8.66025404a38 38 0 0 1-4.10876076-4.10876076l-8.66025404 5-7-12.12435565 8.66025404-5A38 38 0 0 1-37.34969879 7h-10V-7h10a38 38 0 0 1 1.50391081-5.61267157l-8.66025404-5 7-12.12435565 8.66025404 5a38 38 0 0 1 4.10876076-4.10876076l-5-8.66025404 12.12435565-7 5 8.66025404A38 38 0 0 1-7-37.34969879v-10H7v10a38 38 0 0 1 5.61267157 1.50391081l5-8.66025404 12.12435565 7-5 8.66025404a38 38 0 0 1 4.10876076 4.10876076l8.66025404-5 7 12.12435565-8.66025404 5A38 38 0 0 1 37.34969879-7M0-30a30 30 0 1 0 0 60 30 30 0 1 0 0-60"/></g></g></g></svg>';
           container.html(svg);
-          selector.attr("disabled", true);
+          selector.attr('disabled', true);
           break;
-        case "finished":
+        case 'finished':
           container.empty();
-          selector.attr("disabled", false);
+          selector.attr('disabled', false);
           break;
       }
     },
-    EVNT_mapCreation(mapType) {
-      "use strict";
+    EVNT_mapCreation: function EVNT_mapCreation(mapType) {
+      'use strict';
 
-      let container;
-      let data;
-      let infoNode;
-      let errorText;
+      var _ref3 = [,,,],
+          container = _ref3[0],
+          data = _ref3[1],
+          infoNode = _ref3[2],
+          errorText = _ref3[3];
+
 
       switch (mapType) {
-        case "personal":
-          container = $("#personalmap");
+        case 'personal':
+          container = $('#personalmap');
           data = rHelper.data.mineMap;
-          infoNode = $("#personalmap-info");
+          infoNode = $('#personalmap-info');
           errorText = 'Your mine map is empty! Please import "Mines - detailed" via API first.';
           break;
-        case "world":
-          container = $("#worldmap");
+        case 'world':
+          container = $('#worldmap');
           data = rHelper.data.worldMap;
-          infoNode = $("#worldmap-info");
-          errorText = "An error occured. If this problem persists, please report this issue via Discord or mail.";
+          infoNode = $('#worldmap-info');
+          errorText = 'An error occured. If this problem persists, please report this issue via Discord or mail.';
           break;
       }
 
       if (data.length != 0) {
-        let now = new Date();
+        var _ref4 = [new Date(), rHelper.methods.SET_newMap(container, 3, 'terrain'), []],
+            now = _ref4[0],
+            map = _ref4[1],
+            markerArr = _ref4[2];
 
-        let map = rHelper.methods.SET_newMap(container, 3, "terrain");
+
         map = rHelper.methods.SET_mapOptions(map, 16, data.mines[0]);
 
-        let markerArr = [];
-
         switch (mapType) {
-          case "personal":
+          case 'personal':
             rHelper.methods.SET_mapHQHandler(map, data.hq[0]);
             break;
-          case "world":
-            $.each(data.hqs, (i, hqObj) => {
+          case 'world':
+            $.each(data.hqs, function (i, hqObj) {
               rHelper.methods.SET_mapHQHandler(map, hqObj);
             });
             break;
         }
 
-        $.each(data.mines, (i, subObj) => {
+        $.each(data.mines, function (i, subObj) {
           rHelper.methods.SET_mapMineHandler(now, subObj, map, mapType);
           markerArr.push(rHelper.methods.SET_mapMineHandler(now, subObj, map, mapType));
         });
 
-        let markerCluster = new MarkerClusterer(map, markerArr, { imagePath: "assets/img/maps/cluster/m", maxZoom: 15 });
+        var markerCluster = new MarkerClusterer(map, markerArr, { imagePath: 'assets/img/maps/cluster/m', maxZoom: 15 });
       } else {
         infoNode.text(errorText);
       }
     },
-    EVNT_attackLogTrigger() {
-      $("#heading-defenselog a").on("click", e => {
+    EVNT_attackLogTrigger: function EVNT_attackLogTrigger() {
+      $('#heading-defenselog a').on('click', function (e) {
         e.preventDefault();
-        rHelper.methods.API_getAttackLog("defenseSimple");
+        rHelper.methods.API_getAttackLog('defenseSimple');
       });
 
-      $("#heading-attacklog-1 a").on("click", e => {
+      $('#heading-attacklog-1 a').on('click', function (e) {
         e.preventDefault();
-        rHelper.methods.API_getAttackLog("attackSimple");
+        rHelper.methods.API_getAttackLog('attackSimple');
       });
 
-      $("#heading-attacklog-2 a").on("click", e => {
+      $('#heading-attacklog-2 a').on('click', function (e) {
         e.preventDefault();
-        rHelper.methods.API_getAttackLog("attackDetailed");
+        rHelper.methods.API_getAttackLog('attackDetailed');
       });
     },
+    INSRT_leaderboardTable: function INSRT_leaderboardTable() {
+      var _ref5 = [rHelper.data.leaderboard, $('#module-leaderboard tbody'), 'text-md-right text-sm-left', "class='text-right'", ''],
+          container = _ref5[0],
+          tbody = _ref5[1],
+          textOrientation = _ref5[2],
+          textClass = _ref5[3],
+          string = _ref5[4];
 
-    INSRT_leaderboardTable() {
-      let container = rHelper.data.leaderboard;
-      let tbody = $("#module-leaderboard tbody");
-      let textOrientation = "text-md-right text-sm-left";
-      let textClass = "class='text-right'";
 
-      let string = "";
-
-      let returnPlayerTitle = dataset => {
-        return `<table>
-                <tbody>
-                    <tr><td>Rank</td><td ${textClass}>${dataset.general.rank.toLocaleString("en-US")}</td></tr>
-                    <tr><td>Registered since</td><td ${textClass}>${dataset.general.registeredGame}</td></tr>
-                    <tr><td>Days playing</td><td ${textClass}>${dataset.general.daysPlaying.toLocaleString("en-US")}</td></tr>
-                </tbody>
-                </table>`;
+      var returnPlayerTitle = function returnPlayerTitle(dataset) {
+        return '<table>\n                <tbody>\n                    <tr><td>Rank</td><td ' + textClass + '>' + dataset.general.rank.toLocaleString('en-US') + '</td></tr>\n                    <tr><td>Registered since</td><td ' + textClass + '>' + dataset.general.registeredGame + '</td></tr>\n                    <tr><td>Days playing</td><td ' + textClass + '>' + dataset.general.daysPlaying.toLocaleString('en-US') + '</td></tr>\n                </tbody>\n                </table>';
       };
 
-      let returnCompanyWorthTitle = dataset => {
-        return `<table>
-                <thead>
-                    <tr><th colspan='2'>Money spent on...</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>Mines</td><td ${textClass}>${dataset.mineErectionSum.toLocaleString("en-US")}</td></tr>
-                    <tr><td>Factories</td><td ${textClass}>${dataset.factoryErectionSum.toLocaleString("en-US")}</td></tr>
-                    <tr><td>Headquarter</td><td ${textClass}>${dataset.headquarterSum.toLocaleString("en-US")}</td></tr>
-                    <tr><td>Buildings</td><td ${textClass}>${dataset.buildingsErectionSum.toLocaleString("en-US")}</td></tr>
-                    <tr><td>Warehouse</td><td ${textClass}>${dataset.warehouseErectionSum.toLocaleString("en-US")}</td></tr>
-                </tbody>
-                </table>`;
+      var returnCompanyWorthTitle = function returnCompanyWorthTitle(dataset) {
+        return '<table>\n                <thead>\n                    <tr><th colspan=\'2\'>Money spent on...</th></tr>\n                </thead>\n                <tbody>\n                    <tr><td>Mines</td><td ' + textClass + '>' + dataset.mineErectionSum.toLocaleString('en-US') + '</td></tr>\n                    <tr><td>Factories</td><td ' + textClass + '>' + dataset.factoryErectionSum.toLocaleString('en-US') + '</td></tr>\n                    <tr><td>Headquarter</td><td ' + textClass + '>' + dataset.headquarterSum.toLocaleString('en-US') + '</td></tr>\n                    <tr><td>Buildings</td><td ' + textClass + '>' + dataset.buildingsErectionSum.toLocaleString('en-US') + '</td></tr>\n                    <tr><td>Warehouse</td><td ' + textClass + '>' + dataset.warehouseErectionSum.toLocaleString('en-US') + '</td></tr>\n                </tbody>\n                </table>';
       };
 
-      let returnString = dataset => {
-        return `
-                <tr>
-                    <td data-th="Player (hover for details)" title="${returnPlayerTitle(dataset)}">${dataset.general.name} (${dataset.general.level.toLocaleString("en-US")})</td>
-                    <td sorttable_customkey="${dataset.general.points}" data-th="Points per day (total points)" class="${textOrientation}">${dataset.general.pointsPerDay.toLocaleString(
-          "en-US"
-        )} (${dataset.general.points.toLocaleString("en-US")})</td>
-                    <td data-th="Factory upgrades" class="${textOrientation}">${dataset.factoryTotalUpgrades.toLocaleString("en-US")}</td>
-                    <td data-th="Amount of mines" class="${textOrientation}">${dataset.totalMineCount.toLocaleString("en-US")}</td>
-                    <td data-th="Mines within HQ radius" class="${textOrientation}">${dataset.headquarter.mineCount.toLocaleString("en-US")}</td>
-                    <td data-th="Mine income" class="${textOrientation}">${dataset.mineIncome.toLocaleString("en-US")}</td>
-                    <td data-th="Trade income per day" class="${textOrientation}">${dataset.tradeData.tradeIncomePerDay.toLocaleString("en-US")}</td>
-                    <td data-th="Bought goods for" class="${textOrientation}">${dataset.tradeData.totalBuy.toLocaleString("en-US")}</td>
-                    <td data-th="Sold goods for..." class="${textOrientation}">${dataset.tradeData.totalSell.toLocaleString("en-US")}</td>
-                    <td data-th="Sold goods to KI for..." class="${textOrientation}">${dataset.tradeData.sumKISell.toLocaleString("en-US")}</td>
-                    <td data-th="Company worth" class="${textOrientation}" title="${returnCompanyWorthTitle(dataset)}">${dataset.companyWorth.toLocaleString("en-US")}</td>
-                </tr>
-                `;
+      var returnString = function returnString(dataset) {
+        return '\n                <tr>\n                    <td data-th="Player (hover for details)" title="' + returnPlayerTitle(dataset) + '">' + dataset.general.name + ' (' + dataset.general.level.toLocaleString('en-US') + ')</td>\n                    <td sorttable_customkey="' + dataset.general.points + '" data-th="Points per day (total points)" class="' + textOrientation + '">' + dataset.general.pointsPerDay.toLocaleString('en-US') + ' (' + dataset.general.points.toLocaleString('en-US') + ')</td>\n                    <td data-th="Factory upgrades" class="' + textOrientation + '">' + dataset.factoryTotalUpgrades.toLocaleString('en-US') + '</td>\n                    <td data-th="Amount of mines" class="' + textOrientation + '">' + dataset.totalMineCount.toLocaleString('en-US') + '</td>\n                    <td data-th="Mines within HQ radius" class="' + textOrientation + '">' + dataset.headquarter.mineCount.toLocaleString('en-US') + '</td>\n                    <td data-th="Mine income" class="' + textOrientation + '">' + dataset.mineIncome.toLocaleString('en-US') + '</td>\n                    <td data-th="Trade income per day" class="' + textOrientation + '">' + dataset.tradeData.tradeIncomePerDay.toLocaleString('en-US') + '</td>\n                    <td data-th="Bought goods for" class="' + textOrientation + '">' + dataset.tradeData.totalBuy.toLocaleString('en-US') + '</td>\n                    <td data-th="Sold goods for..." class="' + textOrientation + '">' + dataset.tradeData.totalSell.toLocaleString('en-US') + '</td>\n                    <td data-th="Sold goods to KI for..." class="' + textOrientation + '">' + dataset.tradeData.sumKISell.toLocaleString('en-US') + '</td>\n                    <td data-th="Company worth" class="' + textOrientation + '" title="' + returnCompanyWorthTitle(dataset) + '">' + dataset.companyWorth.toLocaleString('en-US') + '</td>\n                </tr>\n                ';
       };
 
-      $.each(container, (i, dataset) => {
+      $.each(container, function (i, dataset) {
         string += returnString(dataset);
       });
 
       tbody.empty().html(string);
 
-      sorttable.makeSortable($("#module-leaderboard table")[0]);
-      sorttable.innerSortFunction.apply($("#module-leaderboard th")[10], []);
+      sorttable.makeSortable($('#module-leaderboard table')[0]);
+      sorttable.innerSortFunction.apply($('#module-leaderboard th')[10], []);
 
-      $.each($("#module-leaderboard td[title]"), function(i, el) {
+      $.each($('#module-leaderboard td[title]'), function (i, el) {
         applyTippyOnNewElement($(el));
       });
     },
-    INSRT_leaderboard() {
+    INSRT_leaderboard: function INSRT_leaderboard() {
       rHelper.data.leaderboard = rHelper.data.leaderboard || {};
 
       if ($.isEmptyObject(rHelper.data.leaderboard)) {
-        $.getJSON("api/leaderboard.php", result => {
+        $.getJSON('api/leaderboard.php', function (result) {
           rHelper.data.leaderboard = result;
           rHelper.methods.INSRT_leaderboardTable();
         });
       }
     },
-    INSRT_tradeLog() {
-      const container = rHelper.data.tradeLog;
+    INSRT_tradeLog: function INSRT_tradeLog() {
+      var container = rHelper.data.tradeLog;
 
       if (container.length != 0) {
-        const showTradeLogHabits = hours => {
-          Highcharts.chart("graph-tradelog-habits", {
+        var showTradeLogHabits = function showTradeLogHabits(hours) {
+          Highcharts.chart('graph-tradelog-habits', {
             chart: {
-              type: "column",
-              backgroundColor: "transparent",
+              type: 'column',
+              backgroundColor: 'transparent',
               height: 200
             },
             title: {
-              text: "Selling habits per hour",
+              text: 'Selling habits per hour',
               style: {
-                color: "#dedede"
+                color: '#dedede'
               }
             },
             xAxis: {
-              type: "category",
+              type: 'category',
               labels: {
                 rotation: -45,
                 style: {
-                  fontSize: "13px",
-                  fontFamily: "Verdana, sans-serif",
-                  color: "#dedede"
+                  fontSize: '13px',
+                  fontFamily: 'Verdana, sans-serif',
+                  color: '#dedede'
                 }
               }
             },
             yAxis: {
               min: 0,
               title: {
-                text: "Amount of trades completed",
+                text: 'Amount of trades completed',
                 style: {
-                  color: "#dedede"
+                  color: '#dedede'
                 }
               },
               labels: {
                 style: {
-                  color: "#dedede"
+                  color: '#dedede'
                 }
               }
             },
@@ -1654,26 +1582,24 @@ const rHelper = {
               enabled: false
             },
             tooltip: {
-              pointFormat: "Sell actions performed at this hour: <b>{point.y}</b>"
+              pointFormat: 'Sell actions performed at this hour: <b>{point.y}</b>'
             },
-            series: [
-              {
-                name: "Sell action",
-                data: hours,
-                dataLabels: {
-                  enabled: true,
-                  rotation: -90,
-                  color: "#dedede",
-                  align: "right",
-                  y: 10,
-                  style: {
-                    fontSize: "13px",
-                    fontFamily: "Verdana, sans-serif",
-                    color: "#dedede"
-                  }
+            series: [{
+              name: 'Sell action',
+              data: hours,
+              dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: '#dedede',
+                align: 'right',
+                y: 10,
+                style: {
+                  fontSize: '13px',
+                  fontFamily: 'Verdana, sans-serif',
+                  color: '#dedede'
                 }
               }
-            ],
+            }],
             exporting: {
               chartOptions: {
                 chart: {
@@ -1684,11 +1610,11 @@ const rHelper = {
           });
         };
 
-        const setSkipCount = () => {
-          const currentDaysFilter = daysFilterSelect.val();
+        var setSkipCount = function setSkipCount() {
+          var currentDaysFilter = _daysFilterSelect.val();
 
           if (currentDaysFilter != null) {
-            $.each(daysFilterSelect.children("option"), (i, el) => {
+            $.each(_daysFilterSelect.children('option'), function (i, el) {
               if ($(el).val() == currentDaysFilter) {
                 rHelper.data.tradeLog.skipCount = i - 1;
               }
@@ -1696,94 +1622,86 @@ const rHelper = {
           }
         };
 
-        const appendOptions = () => {
-          daysFilterSelect.empty().prepend(`<option selected disabled>jump to day X</option>`);
+        var appendOptions = function appendOptions() {
+          _daysFilterSelect.empty().prepend('<option selected disabled>jump to day X</option>');
 
-          $.each(container.days, (i, dataset) => {
-            daysFilterSelect.append(`<option value="${dataset.date}">${dataset.date} (${dataset.entries.toLocaleString("en-US")} entries)</option>`);
+          $.each(container.days, function (i, dataset) {
+            _daysFilterSelect.append('<option value="' + dataset.date + '">' + dataset.date + ' (' + dataset.entries.toLocaleString('en-US') + ' entries)</option>');
           });
         };
 
-        const appendDetailedTR = dataset => {
-          const obj = rHelper.methods.CALC_convertId(dataset.itemId);
+        var appendDetailedTR = function appendDetailedTR(dataset) {
+          var obj = rHelper.methods.CALC_convertId(dataset.itemId);
 
-          let [datasetSum, action, profitClass, trClass] = [dataset.price * dataset.amount, "Selling to ", "success", ""];
+          var datasetSum = dataset.price * dataset.amount,
+              action = 'Selling to ',
+              profitClass = 'success',
+              trClass = '';
+
 
           if (dataset.event == 0) {
             datasetSum *= -1;
-            action = "Buying from ";
-            profitClass = "danger";
+            action = 'Buying from ';
+            profitClass = 'danger';
           }
 
-          sum += datasetSum;
+          _sum += datasetSum;
 
-          if(dataset.actor == "KI") {
-            trClass ='class="ki-sell"';
+          if (dataset.actor == 'KI') {
+            trClass = 'class="ki-sell"';
           }
 
-          const template = `
-          <tr ${trClass}>
-            <td data-th="Trade partner"><span class="text-${profitClass}">${action}</span><kbd>${dataset.actor} (${dataset.actorLevel.toLocaleString("en-US")})</kbd></td>
-            <td data-th="Timestamp" class="${textOrientation}">${rHelper.methods.CALC_convertDateToIso(dataset.timestamp * 1000)}</td>
-            <td data-th="Amount" class="${textOrientation}">${dataset.amount.toLocaleString("en-US")}x <span class="${obj.icon}"></span></td>
-            <td data-th="Price" class="${textOrientation}">${dataset.price.toLocaleString("en-US")}</td>
-            <td data-th="Sum" class="${textOrientation} text-${profitClass}">${datasetSum.toLocaleString("en-US")}</td>
-          </tr>
-          `;
+          var template = '\n          <tr ' + trClass + '>\n            <td data-th="Trade partner"><span class="text-' + profitClass + '">' + action + '</span><kbd>' + dataset.actor + ' (' + dataset.actorLevel.toLocaleString('en-US') + ')</kbd></td>\n            <td data-th="Timestamp" class="' + _textOrientation + '">' + rHelper.methods.CALC_convertDateToIso(dataset.timestamp * 1000) + '</td>\n            <td data-th="Amount" class="' + _textOrientation + '">' + dataset.amount.toLocaleString('en-US') + 'x <span class="' + obj.icon + '"></span></td>\n            <td data-th="Price" class="' + _textOrientation + '">' + dataset.price.toLocaleString('en-US') + '</td>\n            <td data-th="Sum" class="' + _textOrientation + ' text-' + profitClass + '">' + datasetSum.toLocaleString('en-US') + '</td>\n          </tr>\n          ';
 
-          tradeLogDetailedTbody.append(template);
+          _tradeLogDetailedTbody.append(template);
         };
 
-        const appendTFoot = () => {
-          let profitClass = "success";
+        var appendTFoot = function appendTFoot() {
+          var profitClass = 'success';
 
-          if (sum < 0) {
-            profitClass = "danger";
+          if (_sum < 0) {
+            profitClass = 'danger';
           }
 
-          $("#tradelog-detailed-tfoot")
-            .empty()
-            .append(`<tr><td data-th="daily profit" colspan="5" class="${textOrientation} text-${profitClass}">${sum.toLocaleString("en-US")} <a href="#">back to top</a></td></tr>`);
+          $('#tradelog-detailed-tfoot').empty().append('<tr><td data-th="daily profit" colspan="5" class="' + _textOrientation + ' text-' + profitClass + '">' + _sum.toLocaleString('en-US') + ' <a href="#">back to top</a></td></tr>');
 
-            $("#tradelog-simple-tfoot").empty().append(`<tr><td data-th="daily profit" colspan="5" class="${textOrientation} text-${profitClass}">${sum.toLocaleString("en-US")} <a href="#">back to top</a></td></tr>`);
+          $('#tradelog-simple-tfoot').empty().append('<tr><td data-th="daily profit" colspan="5" class="' + _textOrientation + ' text-' + profitClass + '">' + _sum.toLocaleString('en-US') + ' <a href="#">back to top</a></td></tr>');
         };
 
-        const showGraphs = (target, data, title) => {
+        var showGraphs = function showGraphs(target, data, title) {
           Highcharts.chart(target, {
             chart: {
-              type: "pie",
-              backgroundColor: "transparent"
+              type: 'pie',
+              backgroundColor: 'transparent'
             },
             title: {
               text: title,
               style: {
-                color: "#dedede"
+                color: '#dedede'
               }
             },
             tooltip: {
-              pointFormat: "{series.name}: <b>{point.percentage:.1f}% ({point.y:,.0f})</b>"
+              pointFormat: '{series.name}: <b>{point.percentage:.1f}% ({point.y:,.0f})</b>'
             },
             plotOptions: {
               pie: {
                 allowPointSelect: true,
-                cursor: "pointer",
+                cursor: 'pointer',
                 dataLabels: {
                   enabled: true,
-                  format: "<b>{point.name}</b>: {point.percentage:.1f} % ({point.y:,.0f})",
+                  format: '<b>{point.name}</b>: {point.percentage:.1f} % ({point.y:,.0f})',
                   style: {
-                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || "#dedede",
-                    textOutline: "none"
+                    color: Highcharts.theme && Highcharts.theme.contrastTextColor || '#dedede',
+                    textOutline: 'none'
                   }
                 }
               }
             },
-            series: [
-              {
-                name: "Percentage",
-                colorByPoint: true,
-                data: data
-              }
-            ],
+            series: [{
+              name: 'Percentage',
+              colorByPoint: true,
+              data: data
+            }],
             exporting: {
               chartOptions: {
                 chart: {
@@ -1794,21 +1712,22 @@ const rHelper = {
           });
         };
 
-        const fillEventArray = (container) => {
+        var fillEventArray = function fillEventArray(container) {
+          var _ref6 = [[], container.max()],
+              arr = _ref6[0],
+              containerMax = _ref6[1];
 
-          const [arr, containerMax] = [[], container.max()];
 
-          $.each(container, (i, amount) => {
-            const itemObj = rHelper.methods.CALC_convertId(i);
+          $.each(container, function (i, amount) {
+            var itemObj = rHelper.methods.CALC_convertId(i);
 
-            if(amount != null) {
-
-              const obj = {
+            if (amount != null) {
+              var obj = {
                 name: itemObj.name,
                 y: amount
-              }
+              };
 
-              if(containerMax == amount) {
+              if (containerMax == amount) {
                 obj.sliced = true;
                 obj.selected = true;
               }
@@ -1818,178 +1737,182 @@ const rHelper = {
           });
 
           return arr;
-        }
+        };
 
-        const appendSimpleTR = (dataset) => {
-          const obj = rHelper.methods.CALC_convertId(dataset.itemId);
+        var appendSimpleTR = function appendSimpleTR(dataset) {
+          var obj = rHelper.methods.CALC_convertId(dataset.itemId);
 
-          let profitClass = "success";
+          var profitClass = 'success';
 
-          if(dataset.sum < 0) {
-            profitClass = "danger";
+          if (dataset.sum < 0) {
+            profitClass = 'danger';
           }
 
-          const template = `
-          <tr>
-            <td data-th="Type" class="${textOrientation}"><span class="${obj.icon}"></span></td>
-            <td data-th="Bought for..." class="${textOrientation} text-danger"> ${dataset.bought.toLocaleString("en-US")}</td>
-            <td data-th="Sold for..." class="${textOrientation} text-success"> ${dataset.sold.toLocaleString("en-US")}</td>
-            <td data-th="Profit of selected day" class="${textOrientation} text-${profitClass}">${dataset.sum.toLocaleString("en-US")}</td>
-          </tr>
-          `;
+          var template = '\n          <tr>\n            <td data-th="Type" class="' + _textOrientation + '"><span class="' + obj.icon + '"></span></td>\n            <td data-th="Bought for..." class="' + _textOrientation + ' text-danger"> ' + dataset.bought.toLocaleString('en-US') + '</td>\n            <td data-th="Sold for..." class="' + _textOrientation + ' text-success"> ' + dataset.sold.toLocaleString('en-US') + '</td>\n            <td data-th="Profit of selected day" class="' + _textOrientation + ' text-' + profitClass + '">' + dataset.sum.toLocaleString('en-US') + '</td>\n          </tr>\n          ';
 
-          tradeLogSimpleTbody.append(template);
+          _tradeLogSimpleTbody.append(template);
         };
 
         showTradeLogHabits(container.timestamps);
 
-        showGraphs("graph-tradelog-buying", fillEventArray(container.buying.valuesById), 'Buy values (total: ' + container.buying.total.toLocaleString("en-US") + ')');
-        showGraphs("graph-tradelog-selling", fillEventArray(container.selling.valuesById), 'Sell values (total: ' + container.selling.total.toLocaleString("en-US") + ')');
+        showGraphs('graph-tradelog-buying', fillEventArray(container.buying.valuesById), 'Buy values (total: ' + container.buying.total.toLocaleString('en-US') + ')');
+        showGraphs('graph-tradelog-selling', fillEventArray(container.selling.valuesById), 'Sell values (total: ' + container.selling.total.toLocaleString('en-US') + ')');
 
-        const [tradeLogDetailedTbody, textOrientation, daysFilterSelect, tradeLogSimpleTbody] = [$("#tradelog-detailed-tbody"), "text-md-right text-sm-left", $("#tradelog-filter-day"), $("#tradelog-simple-tbody")];
+        var _ref7 = [$('#tradelog-detailed-tbody'), 'text-md-right text-sm-left', $('#tradelog-filter-day'), $('#tradelog-simple-tbody')],
+            _tradeLogDetailedTbody = _ref7[0],
+            _textOrientation = _ref7[1],
+            _daysFilterSelect = _ref7[2],
+            _tradeLogSimpleTbody = _ref7[3];
 
-        tradeLogDetailedTbody.empty();
-        tradeLogSimpleTbody.empty();
 
-        let sum = 0;
+        _tradeLogDetailedTbody.empty();
+        _tradeLogSimpleTbody.empty();
+
+        var _sum = 0;
 
         setSkipCount();
 
         appendOptions();
 
-        $.each(container.log, (i, dataset) => {
+        $.each(container.log, function (i, dataset) {
           appendDetailedTR(dataset);
         });
 
-        $.each(container.overview, (i, dataset) => {
+        $.each(container.overview, function (i, dataset) {
           appendSimpleTR(dataset);
         });
 
         appendTFoot();
       }
     },
-    INSRT_attackLogDetailedGeneralInformation(dataContainer) {
-      $("#attacklog-detailed-units-lost-avg").html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion("offense", dataContainer.avg.unitsLost));
-      $("#attacklog-detailed-units-lost-total").html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion("offense", dataContainer.total.unitsLost));
+    INSRT_attackLogDetailedGeneralInformation: function INSRT_attackLogDetailedGeneralInformation(dataContainer) {
+      $('#attacklog-detailed-units-lost-avg').html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion('offense', dataContainer.avg.unitsLost));
+      $('#attacklog-detailed-units-lost-total').html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion('offense', dataContainer.total.unitsLost));
 
-      $("#attacklog-detailed-factor-avg").text(`${dataContainer.avg.factor}%`);
+      $('#attacklog-detailed-factor-avg').text(dataContainer.avg.factor + '%');
 
-      $("#attacklog-detailed-profit-avg").text(dataContainer.avg.profit.toLocaleString("en-US"));
-      $("#attacklog-detailed-profit-total").text(dataContainer.total.profit.toLocaleString("en-US"));
+      $('#attacklog-detailed-profit-avg').text(dataContainer.avg.profit.toLocaleString('en-US'));
+      $('#attacklog-detailed-profit-total').text(dataContainer.total.profit.toLocaleString('en-US'));
     },
-    INSRT_attackLogDetailed(type, dataContainer) {
-      let target = $("#attacklog-tbody-detailed");
+    INSRT_attackLogDetailed: function INSRT_attackLogDetailed(type, dataContainer) {
+      var _ref8 = [$('#attacklog-tbody-detailed'), $('#attacklog-detailed-selector'), $('#collapse-attacklog-detailed table')[1], ['Attacked player (level)', 'Timestamp & position', 'Units lost', 'Units destroyed', 'Lootfactor', 'Loot', 'Profit']],
+          target = _ref8[0],
+          select = _ref8[1],
+          sortableTable = _ref8[2],
+          dataTHs = _ref8[3];
+
+
       target.empty();
 
-      let select = $("#attacklog-detailed-selector");
       if (select[0].children.length == 2) {
-        $.each(dataContainer.validTargets, (i, target) => {
-          select.append(`<option value="${target}">${target}</option>`);
+        $.each(dataContainer.validTargets, function (i, target) {
+          select.append('<option value="' + target + '">' + target + '</option>');
         });
       }
 
-      let sortableTable = $("#collapse-attacklog-detailed table")[1];
-
-      let dataTHs = ["Attacked player (level)", "Timestamp & position", "Units lost", "Units destroyed", "Lootfactor", "Loot", "Profit"];
-
-      $.each(dataContainer.data, (i, dataset) => {
+      $.each(dataContainer.data, function (i, dataset) {
         target.append(rHelper.methods.CALC_attackLogDetailedDatasetIteration(i, dataset, dataTHs));
       });
 
       rHelper.methods.INSRT_attackLogDetailedGeneralInformation(dataContainer);
 
-      ["last", "next"].forEach(type => {
+      ['last', 'next'].forEach(function (type) {
         rHelper.methods.CALC_attackLogDetailedPageButtonToggler(type, dataContainer);
       });
 
       sorttable.makeSortable(sortableTable);
     },
-    INSRT_ADLogSimple(type, data) {
-      let target = $("#attacklog-tbody-simple");
+    INSRT_ADLogSimple: function INSRT_ADLogSimple(type, data) {
+      var _ref9 = [$('#attacklog-tbody-simple'), ['Attacked player (last known level)', 'Last attacked', 'Total attacks', 'Win', 'Loss', 'Average loot factor', 'Average amount of units used', 'Profit'], [0, 2, 3], 'text-md-right text-sm-left', $('#collapse-attacklog-simple table')[0]],
+          target = _ref9[0],
+          dataTHs = _ref9[1],
+          unitIndices = _ref9[2],
+          textOrientation = _ref9[3],
+          sortableTable = _ref9[4];
+
+
       target.empty();
 
-      let dataTHs = ["Attacked player (last known level)", "Last attacked", "Total attacks", "Win", "Loss", "Average loot factor", "Average amount of units used", "Profit"];
-
-      let unitIndices = [0, 2, 3];
-      let textOrientation = "text-md-right text-sm-left";
-      let sortableTable = $("#collapse-attacklog-simple table")[0];
-
-      if (type == "defenseSimple") {
-        dataTHs[0] = "Attacking player (last known level)";
-        sortableTable = $("#collapse-defenselog-simple table")[0];
-        target = $("#defenselog-tbody-simple");
+      if (type == 'defenseSimple') {
+        dataTHs[0] = 'Attacking player (last known level)';
+        sortableTable = $('#collapse-defenselog-simple table')[0];
+        target = $('#defenselog-tbody-simple');
       }
 
-      $.each(data, (i, dataset) => {
-        let tr = $(crEl("tr"));
-        let factorBgColorClass = "bg-success-25";
+      $.each(data, function (i, dataset) {
+        var _ref10 = [$(crEl('tr')), 'bg-success-25'],
+            tr = _ref10[0],
+            factorBgColorClass = _ref10[1];
 
-        for (let index = 0; index <= 7; index += 1) {
-          let td = $(crEl("td")).attr("data-th", dataTHs[index]);
-          let loss = 0;
-          let winPercent = 0;
-          let factor = 0;
-          let unitsContent = "";
+
+        for (var index = 0; index <= 7; index += 1) {
+          var _ref11 = [$(crEl('td')).attr('data-th', dataTHs[index]), 0, 0, 0, ''],
+              td = _ref11[0],
+              loss = _ref11[1],
+              winPercent = _ref11[2],
+              factor = _ref11[3],
+              unitsContent = _ref11[4];
+
 
           switch (index) {
             case 0:
-              td.text(`${dataset.targetName} (${dataset.targetLevel})`);
+              td.text(dataset.targetName + ' (' + dataset.targetLevel + ')');
               break;
             case 1:
               td.text(rHelper.methods.CALC_convertDateToIso(dataset.lastAttacked));
               break;
             case 2:
               winPercent = (dataset.sumWin / dataset.sumAttacks * 100).toFixed(2);
-              td.text(`${dataset.sumAttacks.toLocaleString("en-US")} (${winPercent}%)`).addClass(textOrientation);
+              td.text(dataset.sumAttacks.toLocaleString('en-US') + ' (' + winPercent + '%)').addClass(textOrientation);
               break;
             case 3:
-              if (type == "defenseSimple") {
+              if (type == 'defenseSimple') {
                 loss = dataset.sumAttacks - dataset.sumWin;
-                td.text(loss.toLocaleString("en-US")).addClass(textOrientation);
-              } else if (type == "attackSimple") {
-                td.text(dataset.sumWin.toLocaleString("en-US")).addClass(textOrientation);
+                td.text(loss.toLocaleString('en-US')).addClass(textOrientation);
+              } else if (type == 'attackSimple') {
+                td.text(dataset.sumWin.toLocaleString('en-US')).addClass(textOrientation);
               }
               break;
             case 4:
-              if (type == "defenseSimple") {
-                td.text(dataset.sumWin.toLocaleString("en-US")).addClass(textOrientation);
-              } else if (type == "attackSimple") {
+              if (type == 'defenseSimple') {
+                td.text(dataset.sumWin.toLocaleString('en-US')).addClass(textOrientation);
+              } else if (type == 'attackSimple') {
                 loss = dataset.sumAttacks - dataset.sumWin;
-                td.text(loss.toLocaleString("en-US")).addClass(textOrientation);
+                td.text(loss.toLocaleString('en-US')).addClass(textOrientation);
               }
               break;
             case 5:
               if (dataset.factor < 1) {
-                factorBgColorClass = "bg-warning-25";
+                factorBgColorClass = 'bg-warning-25';
               }
               factor = (dataset.factor * 100).toFixed(2);
-              td.text(`${factor}%`).addClass(`${textOrientation} ${factorBgColorClass}`);
+              td.text(factor + '%').addClass(textOrientation + ' ' + factorBgColorClass);
               break;
             case 6:
-              for (let k = 0; k <= 2; k += 1) {
-                let span = $(crEl("span"));
-                span.addClass(`resources-unit-${unitIndices[k]}`);
-                let unitAmount = dataset[`unit${k}`];
+              for (var k = 0; k <= 2; k += 1) {
+                var span = $(crEl('span'));
+                span.addClass('resources-unit-' + unitIndices[k]);
+                var unitAmount = dataset['unit' + k];
                 if (unitAmount == null) {
                   unitAmount = 0;
                 }
-                unitsContent += `${span[0].outerHTML} ${unitAmount.toLocaleString("en-US")} `;
+                unitsContent += span[0].outerHTML + ' ' + unitAmount.toLocaleString('en-US') + ' ';
               }
 
               td.html(unitsContent);
               break;
             case 7:
-              let profit = dataset.profit;
+              var profit = dataset.profit;
               if (profit == null) {
                 profit = 0;
               }
 
-              let unitLossValue = dataset.unitLossValue;
+              var unitLossValue = dataset.unitLossValue;
               if (unitLossValue != null) {
                 profit -= unitLossValue;
               }
 
-              td.text(profit.toLocaleString("en-US")).addClass(textOrientation);
+              td.text(profit.toLocaleString('en-US')).addClass(textOrientation);
               break;
           }
 
@@ -2001,143 +1924,128 @@ const rHelper = {
 
       sorttable.makeSortable(sortableTable);
     },
-    INSRT_attackLog(type) {
-      let data = rHelper.data.attackLog;
-      let fn;
+    INSRT_attackLog: function INSRT_attackLog(type) {
+      var data = rHelper.data.attackLog;
+      var fn = void 0;
 
       switch (type) {
-        case "attackSimple":
-        case "defenseSimple":
-          fn = "INSRT_ADLogSimple";
+        case 'attackSimple':
+        case 'defenseSimple':
+          fn = 'INSRT_ADLogSimple';
           break;
-        case "attackDetailed":
-          fn = "INSRT_attackLogDetailed";
+        case 'attackDetailed':
+          fn = 'INSRT_attackLogDetailed';
           break;
       }
 
       rHelper.methods[fn](type, data);
     },
-    INSRT_materialData(materialId, api) {
-      "use strict";
+    INSRT_materialData: function INSRT_materialData(materialId, api) {
+      'use strict';
 
-      let fns = ["INSRT_materialRate", "INSRT_materialAmountOfMines", "INSRT_materialNewMinePrice", "INSRT_materialRateWorth", "INSRT_materialNewMinePerfectIncome"];
+      var fns = ['INSRT_materialRate', 'INSRT_materialAmountOfMines', 'INSRT_materialNewMinePrice', 'INSRT_materialRateWorth', 'INSRT_materialNewMinePerfectIncome'];
 
-      $.each(fns, (i, fn) => {
+      $.each(fns, function (i, fn) {
         rHelper.methods[fn](materialId);
       });
 
       if (api) {
-        rHelper.methods.CALC_dependantFactories(materialId, "material");
+        rHelper.methods.CALC_dependantFactories(materialId, 'material');
       }
 
-      rHelper.methods.INSRT_flowRate(materialId, "material");
+      rHelper.methods.INSRT_flowRate(materialId, 'material');
     },
-    INSRT_factoryDiamondData(factoryId, type) {
-      "use strict";
+    INSRT_factoryDiamondData: function INSRT_factoryDiamondData(factoryId, type) {
+      'use strict';
 
-      let fns = [
-        // factories tab
-        "INSRT_factoryLevel",
-        "INSRT_factoryOutput",
-        "INSRT_factoryUpgradeCost",
-        "INSRT_factoryDependencies",
-        "INSRT_factoryWorkload",
-        "INSRT_factoryTurnover",
-        "INSRT_factoryTurnoverPerUpgrade",
-        "INSRT_factoryROI",
-        // diamond tab
-        "INSRT_diamondFactoryOutput",
-        "INSRT_diamondFactoryOutputWarehouse",
-        "INSRT_diamondDependencies",
-        "INSRT_diamondEfficiency",
-        "INSRT_diamondProfit"
-      ];
+      var fns = [
+      // factories tab
+      'INSRT_factoryLevel', 'INSRT_factoryOutput', 'INSRT_factoryUpgradeCost', 'INSRT_factoryDependencies', 'INSRT_factoryWorkload', 'INSRT_factoryTurnover', 'INSRT_factoryTurnoverPerUpgrade', 'INSRT_factoryROI',
+      // diamond tab
+      'INSRT_diamondFactoryOutput', 'INSRT_diamondFactoryOutputWarehouse', 'INSRT_diamondDependencies', 'INSRT_diamondEfficiency', 'INSRT_diamondProfit'];
 
-      $.each(fns, (i, fn) => {
+      $.each(fns, function (i, fn) {
         rHelper.methods[fn](factoryId);
       });
 
       rHelper.methods.INSRT_flowRate(factoryId, type);
     },
-    INSRT_recycling(index) {
-      "use strict";
+    INSRT_recycling: function INSRT_recycling(index) {
+      'use strict';
 
-      let fns = ["INSRT_recyclingRequirement", "INSRT_recyclingProducts", "INSRT_recyclingOutputWorth", "INSRT_recyclingInputWorth"];
+      var fns = ['INSRT_recyclingRequirement', 'INSRT_recyclingProducts', 'INSRT_recyclingOutputWorth', 'INSRT_recyclingInputWorth'];
 
-      $.each(fns, (i, fn) => {
+      $.each(fns, function (i, fn) {
         rHelper.methods[fn](index);
       });
 
-      rHelper.methods.INSRT_unitsRecyclingProfit("recycling", index);
+      rHelper.methods.INSRT_unitsRecyclingProfit('recycling', index);
     },
-    INSRT_warehouseData(index, type) {
-      "use strict";
+    INSRT_warehouseData: function INSRT_warehouseData(index, type) {
+      'use strict';
 
-      let fns = ["INSRT_warehouseFillAmount", "INSRT_warehouseLevel", "INSRT_warehouseFillStatus", "INSRT_warehouseCapacity", "INSRT_warehouseWorth", "EVNT_warehouseInput"];
+      var fns = ['INSRT_warehouseFillAmount', 'INSRT_warehouseLevel', 'INSRT_warehouseFillStatus', 'INSRT_warehouseCapacity', 'INSRT_warehouseWorth', 'EVNT_warehouseInput'];
 
-      $.each(fns, (i, fn) => {
+      $.each(fns, function (i, fn) {
         rHelper.methods[fn](index, type);
       });
 
-      if (type == "products" || type == "material") {
+      if (type == 'products' || type == 'material') {
         rHelper.methods.INSRT_warehouseRemainingTimeToFull(index, type);
       }
     },
-    INSRT_priceHistoryGraph(materialName, averageKI, averagePlayer, timestamps, player, ki) {
-      "use strict";
+    INSRT_priceHistoryGraph: function INSRT_priceHistoryGraph(materialName, averageKI, averagePlayer, timestamps, player, ki) {
+      'use strict';
 
-      Highcharts.chart("graph-pricehistory", {
+      Highcharts.chart('graph-pricehistory', {
         chart: {
-          type: "spline",
-          zoomType: "x"
+          type: 'spline',
+          zoomType: 'x'
         },
         title: {
           useHTML: true,
-          text: `Price history for ${materialName}`
+          text: 'Price history for ' + materialName
         },
         subtitle: {
-          text: "last 28 days"
+          text: 'last 28 days'
         },
         xAxis: {
           categories: timestamps
         },
         yAxis: {
           title: {
-            text: "Price"
+            text: 'Price'
           },
           labels: {
-            formatter: function() {
-              return this.value.toLocaleString("en-US");
+            formatter: function formatter() {
+              return this.value.toLocaleString('en-US');
             }
           },
-          plotLines: [
-            {
-              color: "red",
-              value: averageKI,
-              width: "1",
-              zIndex: 5,
-              label: {
-                text: `average KI price of ${averageKI.toLocaleString("en-US")}`,
-                align: "right",
-                style: {
-                  color: "darkgreen"
-                }
-              }
-            },
-            {
-              color: "darkgreen",
-              value: averagePlayer,
-              width: "1",
-              zIndex: 5,
-              label: {
-                text: `average player price of ${averagePlayer.toLocaleString("en-US")}`,
-                align: "right",
-                style: {
-                  color: "orange"
-                }
+          plotLines: [{
+            color: 'red',
+            value: averageKI,
+            width: '1',
+            zIndex: 5,
+            label: {
+              text: 'average KI price of ' + averageKI.toLocaleString('en-US'),
+              align: 'right',
+              style: {
+                color: 'darkgreen'
               }
             }
-          ]
+          }, {
+            color: 'darkgreen',
+            value: averagePlayer,
+            width: '1',
+            zIndex: 5,
+            label: {
+              text: 'average player price of ' + averagePlayer.toLocaleString('en-US'),
+              align: 'right',
+              style: {
+                color: 'orange'
+              }
+            }
+          }]
         },
         legend: {
           enabled: false
@@ -2150,29 +2058,26 @@ const rHelper = {
           spline: {
             marker: {
               radius: 4,
-              lineColor: "#666666",
+              lineColor: '#666666',
               lineWidth: 1
             }
           }
         },
-        series: [
-          {
-            name: "KI",
-            marker: {
-              symbol: "square"
-            },
-            color: "darkgreen",
-            data: ki
+        series: [{
+          name: 'KI',
+          marker: {
+            symbol: 'square'
           },
-          {
-            name: "Player",
-            marker: {
-              symbol: "diamond"
-            },
-            color: "orange",
-            data: player
-          }
-        ],
+          color: 'darkgreen',
+          data: ki
+        }, {
+          name: 'Player',
+          marker: {
+            symbol: 'diamond'
+          },
+          color: 'orange',
+          data: player
+        }],
         exporting: {
           chartOptions: {
             chart: {
@@ -2182,81 +2087,74 @@ const rHelper = {
         }
       });
     },
-    INSRT_polygonGraph(target, titleText, seriesNames, responsiveId, targetObj) {
-      "use strict";
+    INSRT_polygonGraph: function INSRT_polygonGraph(target, titleText, seriesNames, responsiveId, targetObj) {
+      'use strict';
 
-      let dataObj = rHelper.graphs[targetObj];
+      var dataObj = rHelper.graphs[targetObj];
 
       Highcharts.chart(target, {
         chart: {
-          type: "pie",
-          backgroundColor: "transparent"
+          type: 'pie',
+          backgroundColor: 'transparent'
         },
         title: {
           text: titleText,
           style: {
-            color: "#dedede"
+            color: '#dedede'
           }
         },
         plotOptions: {
           pie: {
             shadow: false,
-            center: ["50%", "50%"]
+            center: ['50%', '50%']
           }
         },
         tooltip: {
-          valueSuffix: "%"
+          valueSuffix: '%'
         },
-        series: [
-          {
-            name: seriesNames[0],
-            data: dataObj.mineData,
-            colors: dataObj.colors,
-            size: "60%",
-            dataLabels: {
-              formatter: function() {
-                return this.y > 5 ? this.point.name : null;
-              },
-              color: "#dedede",
-              distance: -30
+        series: [{
+          name: seriesNames[0],
+          data: dataObj.mineData,
+          colors: dataObj.colors,
+          size: '60%',
+          dataLabels: {
+            formatter: function formatter() {
+              return this.y > 5 ? this.point.name : null;
+            },
+            color: '#dedede',
+            distance: -30
+          }
+        }, {
+          name: seriesNames[1],
+          data: dataObj.incomeData,
+          colors: dataObj.colors,
+          size: '80%',
+          innerSize: '60%',
+          dataLabels: {
+            formatter: function formatter() {
+              return this.y > 1 ? '<b> ' + this.point.name + ' :</b> ' + this.y + ' %' : null;
+            },
+            style: {
+              color: 'white',
+              textOutline: 'none'
             }
           },
-          {
-            name: seriesNames[1],
-            data: dataObj.incomeData,
-            colors: dataObj.colors,
-            size: "80%",
-            innerSize: "60%",
-            dataLabels: {
-              formatter: function() {
-                return this.y > 1 ? `<b> ${this.point.name} :</b> ${this.y} %` : null;
-              },
-              style: {
-                color: "white",
-                textOutline: "none"
-              }
-            },
-            id: responsiveId
-          }
-        ],
+          id: responsiveId
+        }],
         responsive: {
-          rules: [
-            {
-              condition: {
-                maxWidth: 400
-              },
-              chartOptions: {
-                series: [
-                  {
-                    id: responsiveId,
-                    dataLabels: {
-                      enabled: false
-                    }
-                  }
-                ]
-              }
+          rules: [{
+            condition: {
+              maxWidth: 400
+            },
+            chartOptions: {
+              series: [{
+                id: responsiveId,
+                dataLabels: {
+                  enabled: false
+                }
+              }]
             }
-          ]
+          }]
         },
         exporting: {
           chartOptions: {
@@ -2267,370 +2165,379 @@ const rHelper = {
         }
       });
     },
-    INSRT_gaugeGraph(type) {
-      "use strict";
+    INSRT_gaugeGraph: function INSRT_gaugeGraph(type) {
+      'use strict';
 
-      if (type == "buildings") {
-        Highcharts.chart(
-          "graph-buildings",
-          Highcharts.merge(rHelper.graphs.gaugeOptions, {
-            yAxis: {
-              min: 0,
-              max: rHelper.methods.CALC_perfectWorth("buildings"),
-              title: {
-                text: "total building worth"
-              }
-            },
-            series: [
-              {
-                name: "total building worth",
-                data: [rHelper.methods.CALC_totalBuildingErectionSum()]
-              }
-            ]
-          })
-        );
-      } else if (type == "headquarter") {
-        Highcharts.chart(
-          "graph-headquarter",
-          Highcharts.merge(rHelper.graphs.gaugeOptions, {
-            yAxis: {
-              min: 0,
-              max: rHelper.methods.CALC_perfectWorth("headquarter"),
-              title: {
-                text: "total headquarter worth"
-              }
-            },
-            series: [
-              {
-                name: "total headquarter worth",
-                data: [rHelper.methods.CALC_totalHeadquarterErectionSum()]
-              }
-            ]
-          })
-        );
+      if (type == 'buildings') {
+        Highcharts.chart('graph-buildings', Highcharts.merge(rHelper.graphs.gaugeOptions, {
+          yAxis: {
+            min: 0,
+            max: rHelper.methods.CALC_perfectWorth('buildings'),
+            title: {
+              text: 'total building worth'
+            }
+          },
+          series: [{
+            name: 'total building worth',
+            data: [rHelper.methods.CALC_totalBuildingErectionSum()]
+          }]
+        }));
+      } else if (type == 'headquarter') {
+        Highcharts.chart('graph-headquarter', Highcharts.merge(rHelper.graphs.gaugeOptions, {
+          yAxis: {
+            min: 0,
+            max: rHelper.methods.CALC_perfectWorth('headquarter'),
+            title: {
+              text: 'total headquarter worth'
+            }
+          },
+          series: [{
+            name: 'total headquarter worth',
+            data: [rHelper.methods.CALC_totalHeadquarterErectionSum()]
+          }]
+        }));
       }
     },
-    INSRT_totalMineWorth(totalMineWorth) {
-      "use strict";
+    INSRT_totalMineWorth: function INSRT_totalMineWorth(totalMineWorth) {
+      'use strict';
 
-      $("#material-total-worth").text(totalMineWorth.toLocaleString("en-US"));
+      $('#material-total-worth').text(totalMineWorth.toLocaleString('en-US'));
     },
-    INSRT_totalMineCount(totalMineCount) {
-      "use strict";
+    INSRT_totalMineCount: function INSRT_totalMineCount(totalMineCount) {
+      'use strict';
 
-      $("#material-total-mine-count").text(totalMineCount.toLocaleString("en-US"));
+      $('#material-total-mine-count').text(totalMineCount.toLocaleString('en-US'));
     },
-    INSRT_materialRate(materialId) {
-      "use strict";
+    INSRT_materialRate: function INSRT_materialRate(materialId) {
+      'use strict';
 
-      $(`#material-rate-${materialId}`).val(rHelper.data.material[materialId].perHour);
+      $('#material-rate-' + materialId).val(rHelper.data.material[materialId].perHour);
     },
-    INSRT_materialAmountOfMines(materialId) {
-      "use strict";
+    INSRT_materialAmountOfMines: function INSRT_materialAmountOfMines(materialId) {
+      'use strict';
 
-      $(`#material-amount-of-mines-${materialId}`).val(rHelper.data.material[materialId].amountOfMines);
+      $('#material-amount-of-mines-' + materialId).val(rHelper.data.material[materialId].amountOfMines);
     },
-    INSRT_userSettings() {
-      "use strict";
+    INSRT_userSettings: function INSRT_userSettings() {
+      'use strict';
 
-      let userInfo = rHelper.data.userInformation;
-      $("#security-token").text(userInfo.securityToken);
+      var userInfo = rHelper.data.userInformation;
+      $('#security-token').text(userInfo.securityToken);
 
-      if (userInfo.realKey != "" && typeof userInfo.realKey !== undefined) {
-        $("#api-key").val(userInfo.realKey);
+      if (userInfo.realKey != '' && _typeof(userInfo.realKey) !== undefined) {
+        $('#api-key').val(userInfo.realKey);
         rHelper.methods.INSRT_API_remainingCredits(userInfo.remainingCredits);
       }
 
-      if (userInfo.name != "") {
-        $("#api-player-anonymity")[0].parentNode.remove();
+      if (userInfo.name != '') {
+        $('#api-player-anonymity')[0].parentNode.remove();
       }
 
-      $.each(rHelper.data.settings, (index, setting) => {
-        let value = 0;
+      $.each(rHelper.data.settings, function (index, setting) {
+        var value = 0;
         switch (setting.setting) {
-          case "lang":
+          case 'lang':
             switch (setting.value) {
-              case "de":
+              case 'de':
                 value = 0;
                 break;
-              case "en":
+              case 'en':
                 value = 1;
                 break;
-              case "fr":
+              case 'fr':
                 value = 2;
                 break;
-              case "in":
+              case 'in':
                 value = 3;
                 break;
-              case "jp":
+              case 'jp':
                 value = 4;
                 break;
-              case "ru":
+              case 'ru':
                 value = 5;
                 break;
             }
-            $("#settings-language").val(value);
+            $('#settings-language').val(value);
             break;
-          case "customTU":
-            for (let i = 0; i <= 3; i += 1) {
-              $(`#settings-custom-tu-${i + 1}`).val(setting.value[i]);
+          case 'customTU':
+            for (var i = 0; i <= 3; i += 1) {
+              $('#settings-custom-tu-' + (i + 1)).val(setting.value[i]);
             }
             break;
-          case "idealCondition":
+          case 'idealCondition':
             if (setting.value === 1) {
-              $("#settings-ideal-conditions").prop("checked", true);
+              $('#settings-ideal-conditions').prop('checked', true);
             }
             break;
-          case "transportCostInclusion":
+          case 'transportCostInclusion':
             if (setting.value === 1) {
-              $("#settings-toggle-transport-cost-inclusion").prop("checked", true);
+              $('#settings-toggle-transport-cost-inclusion').prop('checked', true);
             }
             break;
-          case "mapVisibleHQ":
+          case 'mapVisibleHQ':
             if (setting.value === 1) {
-              $("#settings-hq-visibility").val(1);
+              $('#settings-hq-visibility').val(1);
             }
             break;
-          case "priceAge":
-            $("#settings-price-age").val(setting.value);
+          case 'priceAge':
+            $('#settings-price-age').val(setting.value);
             break;
         }
       });
     },
-    INSRT_materialNewMinePrice(materialId) {
-      "use strict";
+    INSRT_materialNewMinePrice: function INSRT_materialNewMinePrice(materialId) {
+      'use strict';
 
-      $(`#material-new-price-${materialId}`).text(rHelper.methods.CALC_materialNewMinePrice(rHelper.methods.CALC_totalMineCount(), materialId).toLocaleString("en-US"));
+      $('#material-new-price-' + materialId).text(rHelper.methods.CALC_materialNewMinePrice(rHelper.methods.CALC_totalMineCount(), materialId).toLocaleString('en-US'));
     },
-    INSRT_materialRateWorth(materialId) {
-      "use strict";
+    INSRT_materialRateWorth: function INSRT_materialRateWorth(materialId) {
+      'use strict';
 
-      $(`#material-worth-${materialId}`).text(rHelper.methods.CALC_materialRateWorth(materialId).toLocaleString("en-US"));
+      $('#material-worth-' + materialId).text(rHelper.methods.CALC_materialRateWorth(materialId).toLocaleString('en-US'));
     },
-    INSRT_materialMineAmortisation() {
-      "use strict";
+    INSRT_materialMineAmortisation: function INSRT_materialMineAmortisation() {
+      'use strict';
 
-      let roi100Array = rHelper.methods.CALC_materialMineROI("100");
-      let roi500Array = rHelper.methods.CALC_materialMineROI("505");
-      let roiXArray = rHelper.methods.CALC_materialMineROI("505hq");
+      var roi100Array = rHelper.methods.CALC_materialMineROI('100');
+      var roi500Array = rHelper.methods.CALC_materialMineROI('505');
+      var roiXArray = rHelper.methods.CALC_materialMineROI('505hq');
 
-      $.each(roi100Array, (i, value) => {
-        $(`#material-roi-100-${i}`).text(value.toFixed(2).toLocaleString("en-US"));
+      $.each(roi100Array, function (i, value) {
+        $('#material-roi-100-' + i).text(value.toFixed(2).toLocaleString('en-US'));
       });
-      $.each(roi500Array, (i, value) => {
-        $(`#material-roi-500-${i}`).text(value.toFixed(2).toLocaleString("en-US"));
+      $.each(roi500Array, function (i, value) {
+        $('#material-roi-500-' + i).text(value.toFixed(2).toLocaleString('en-US'));
       });
-      $.each(roiXArray, (i, value) => {
-        $(`#material-roi-x-${i}`).text(value.toFixed(2).toLocaleString("en-US"));
+      $.each(roiXArray, function (i, value) {
+        $('#material-roi-x-' + i).text(value.toFixed(2).toLocaleString('en-US'));
       });
 
-      rHelper.methods.INSRT_materialHighlightColumns(roi100Array, "#material-roi-100-", "text-success", "text-danger");
-      rHelper.methods.INSRT_materialHighlightColumns(roi500Array, "#material-roi-500-", "text-success", "text-danger");
-      rHelper.methods.INSRT_materialHighlightColumns(roiXArray, "#material-roi-x-", "text-success", "text-danger");
+      rHelper.methods.INSRT_materialHighlightColumns(roi100Array, '#material-roi-100-', 'text-success', 'text-danger');
+      rHelper.methods.INSRT_materialHighlightColumns(roi500Array, '#material-roi-500-', 'text-success', 'text-danger');
+      rHelper.methods.INSRT_materialHighlightColumns(roiXArray, '#material-roi-x-', 'text-success', 'text-danger');
     },
-    INSRT_materialNewMinePerfectIncome(materialId) {
-      "use strict";
+    INSRT_materialNewMinePerfectIncome: function INSRT_materialNewMinePerfectIncome(materialId) {
+      'use strict';
 
-      $(`#material-perfect-income-${materialId}`).text(rHelper.methods.CALC_materialMinePerfectIncome(materialId).toLocaleString("en-US"));
+      $('#material-perfect-income-' + materialId).text(rHelper.methods.CALC_materialMinePerfectIncome(materialId).toLocaleString('en-US'));
     },
-    INSRT_materialHighlightMinePerfectIncome() {
-      "use strict";
+    INSRT_materialHighlightMinePerfectIncome: function INSRT_materialHighlightMinePerfectIncome() {
+      'use strict';
 
-      let array = [];
+      var array = [];
 
-      $.each(rHelper.data.material, materialId => {
+      $.each(rHelper.data.material, function (materialId) {
         array.push(rHelper.methods.CALC_materialMinePerfectIncome(materialId));
       });
 
-      rHelper.methods.INSRT_materialHighlightColumns(array, "#material-perfect-income-", "text-danger", "text-success");
+      rHelper.methods.INSRT_materialHighlightColumns(array, '#material-perfect-income-', 'text-danger', 'text-success');
     },
-    INSRT_materialHighlightColumns(array, target, minClass, maxClass) {
-      "use strict";
+    INSRT_materialHighlightColumns: function INSRT_materialHighlightColumns(array, target, minClass, maxClass) {
+      'use strict';
 
-      let selectors = ["min", "max"];
-      let value = 0;
-      let addClass;
-      let rmvClass;
+      var selectors = ['min', 'max'];
+      var value = 0;
+      var addClass = void 0;
+      var rmvClass = void 0;
 
-      $.each(selectors, (i, selector) => {
+      $.each(selectors, function (i, selector) {
         switch (selector) {
-          case "min":
+          case 'min':
             value = array.min();
             addClass = minClass;
             rmvClass = maxClass;
             break;
-          case "max":
+          case 'max':
             value = array.max();
             addClass = maxClass;
             rmvClass = minClass;
             break;
         }
 
-        let el = $(target + array.indexOf(value));
+        var el = $(target + array.indexOf(value));
         el.removeClass(rmvClass).addClass(addClass);
       });
     },
-    INSRT_factoryLevel(factoryId) {
-      "use strict";
+    INSRT_factoryLevel: function INSRT_factoryLevel(factoryId) {
+      'use strict';
 
-      let factoryLevel = rHelper.data.products[factoryId].factoryLevel;
-      $(`#factories-level-${factoryId}`).val(factoryLevel);
-      $(`#diamond-level-${factoryId}`).text(factoryLevel);
+      var factoryLevel = rHelper.data.products[factoryId].factoryLevel;
+      $('#factories-level-' + factoryId).val(factoryLevel);
+      $('#diamond-level-' + factoryId).text(factoryLevel);
     },
-    INSRT_factoryOutput(factoryId) {
-      "use strict";
+    INSRT_factoryOutput: function INSRT_factoryOutput(factoryId) {
+      'use strict';
 
-      $(`#factories-product-${factoryId}`).text(rHelper.methods.CALC_factoryOutput(factoryId).toLocaleString("en-US"));
+      $('#factories-product-' + factoryId).text(rHelper.methods.CALC_factoryOutput(factoryId).toLocaleString('en-US'));
     },
-    INSRT_factoryUpgradeCost(factoryId) {
-      "use strict";
+    INSRT_factoryUpgradeCost: function INSRT_factoryUpgradeCost(factoryId) {
+      'use strict';
 
-      let target = $(`#factories-upgrade-cost-${factoryId}`);
-      let calculateFactoryUpgradeCostObj = rHelper.methods.CALC_factoryUpgradeCost(factoryId);
+      var target = $('#factories-upgrade-cost-' + factoryId);
+      var calculateFactoryUpgradeCostObj = rHelper.methods.CALC_factoryUpgradeCost(factoryId);
 
-      target.text(calculateFactoryUpgradeCostObj.sum.toLocaleString("en-US"));
-      target.attr("title", calculateFactoryUpgradeCostObj.title);
+      target.text(calculateFactoryUpgradeCostObj.sum.toLocaleString('en-US'));
+      target.attr('title', calculateFactoryUpgradeCostObj.title);
       applyTippyOnNewElement(target);
     },
-    INSRT_totalFactoryUpgrades() {
-      "use strict";
+    INSRT_totalFactoryUpgrades: function INSRT_totalFactoryUpgrades() {
+      'use strict';
 
-      $("#factories-total-upgrades").text(rHelper.methods.CALC_totalFactoryUpgrades().toLocaleString("en-US"));
+      $('#factories-total-upgrades').text(rHelper.methods.CALC_totalFactoryUpgrades().toLocaleString('en-US'));
     },
-    INSRT_factoryDependencies(factoryId) {
-      "use strict";
+    INSRT_factoryDependencies: function INSRT_factoryDependencies(factoryId) {
+      'use strict';
 
-      let product = rHelper.data.products[factoryId];
-      let dependencies = product.dependencies;
-      let dependencyString = "";
+      var product = rHelper.data.products[factoryId];
+      var dependencies = product.dependencies;
+      var dependencyString = '';
 
       if ($.isArray(dependencies)) {
-        $.each(dependencies, (dependencyIndex, dependency) => {
-          let dependantObj = rHelper.methods.CALC_convertId(dependency);
-          let price = rHelper.methods.CALC_returnPriceViaId(dependency).toLocaleString("en-US");
-          let requiredAmount = rHelper.methods.CALC_factoryDependencyRequiredAmount(factoryId, dependencyIndex);
-          let existingAmount = rHelper.methods.CALC_factoryDependencyExistingAmount(dependantObj, dependencyIndex);
-          let addClass = rHelper.methods.CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount);
-          let outerSpan = $(crEl("span"));
-          let imgSpan = $(crEl("span"));
-          let innerSpan = $(crEl("span"));
+        $.each(dependencies, function (dependencyIndex, dependency) {
+          var dependantObj = rHelper.methods.CALC_convertId(dependency);
 
-          imgSpan.addClass(dependantObj.icon).attr("title", price.toLocaleString("en-US"));
-          innerSpan.addClass(addClass).text(requiredAmount.toLocaleString("en-US"));
-          outerSpan.append(`${imgSpan[0].outerHTML} ${innerSpan[0].outerHTML} `);
+          var price = rHelper.methods.CALC_returnPriceViaId(dependency).toLocaleString('en-US');
+          var requiredAmount = rHelper.methods.CALC_factoryDependencyRequiredAmount(factoryId, dependencyIndex);
+          var existingAmount = rHelper.methods.CALC_factoryDependencyExistingAmount(dependantObj, dependencyIndex);
+          var addClass = rHelper.methods.CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount);
+
+          var _ref12 = [$(crEl('span')), $(crEl('span')), $(crEl('span'))],
+              outerSpan = _ref12[0],
+              imgSpan = _ref12[1],
+              innerSpan = _ref12[2];
+
+
+          imgSpan.addClass(dependantObj.icon).attr('title', price.toLocaleString('en-US'));
+          innerSpan.addClass(addClass).text(requiredAmount.toLocaleString('en-US'));
+          outerSpan.append(imgSpan[0].outerHTML + ' ' + innerSpan[0].outerHTML + ' ');
           dependencyString += outerSpan[0].outerHTML;
         });
       } else {
-        let dependantObj = rHelper.methods.CALC_convertId(dependencies);
-        let price = rHelper.methods.CALC_returnPriceViaId(dependencies).toLocaleString("en-US");
-        let requiredAmount = rHelper.methods.CALC_factoryDependencyRequiredAmount(factoryId, 0);
-        let existingAmount = rHelper.methods.CALC_factoryDependencyExistingAmount(dependantObj, 0);
-        let addClass = rHelper.methods.CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount);
-        let outerSpan = $(crEl("span"));
-        let imgSpan = $(crEl("span"));
-        let innerSpan = $(crEl("span"));
+        var dependantObj = rHelper.methods.CALC_convertId(dependencies);
 
-        imgSpan.addClass(dependantObj.icon).attr("title", price.toLocaleString("en-US"));
-        innerSpan.addClass(addClass).text(requiredAmount.toLocaleString("en-US"));
-        outerSpan.append(`${imgSpan[0].outerHTML} ${innerSpan[0].outerHTML} `);
+        var price = rHelper.methods.CALC_returnPriceViaId(dependencies).toLocaleString('en-US');
+        var requiredAmount = rHelper.methods.CALC_factoryDependencyRequiredAmount(factoryId, 0);
+        var existingAmount = rHelper.methods.CALC_factoryDependencyExistingAmount(dependantObj, 0);
+        var addClass = rHelper.methods.CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount);
+
+        var _ref13 = [$(crEl('span')), $(crEl('span')), $(crEl('span'))],
+            outerSpan = _ref13[0],
+            imgSpan = _ref13[1],
+            innerSpan = _ref13[2];
+
+
+        imgSpan.addClass(dependantObj.icon).attr('title', price.toLocaleString('en-US'));
+        innerSpan.addClass(addClass).text(requiredAmount.toLocaleString('en-US'));
+        outerSpan.append(imgSpan[0].outerHTML + ' ' + innerSpan[0].outerHTML + ' ');
         dependencyString += outerSpan[0].outerHTML;
       }
-      $(`#factories-dependencies-${factoryId}`).html(dependencyString);
+      $('#factories-dependencies-' + factoryId).html(dependencyString);
     },
-    INSRT_factoryAmortisation(factoryId) {
-      "use strict";
+    INSRT_factoryAmortisation: function INSRT_factoryAmortisation(factoryId) {
+      'use strict';
 
-      let target = `#factories-roi-${factoryId}`;
-      let amortisation = rHelper.methods.CALC_factoryAmortisation(factoryId);
+      var _ref14 = ['#factories-roi-' + factoryId, rHelper.methods.CALC_factoryAmortisation(factoryId)],
+          target = _ref14[0],
+          amortisation = _ref14[1];
+
 
       if (amortisation < 0 || amortisation == Infinity) {
-        amortisation = "∞";
+        amortisation = '∞';
       } else {
         amortisation = amortisation.toFixed(2);
       }
 
       $(target).text(amortisation);
     },
-    INSRT_factoryWorkload(factoryId) {
-      "use strict";
+    INSRT_factoryWorkload: function INSRT_factoryWorkload(factoryId) {
+      'use strict';
 
-      let target = $(`#factories-workload-${factoryId}`);
-      let dependencies = rHelper.data.products[factoryId].dependencies;
+      var _ref15 = [$('#factories-workload-' + factoryId), rHelper.data.products[factoryId].dependencies],
+          target = _ref15[0],
+          dependencies = _ref15[1];
+
+
       rHelper.data.products[factoryId].dependencyWorkload = [];
 
       if ($.isArray(dependencies)) {
-        $.each(dependencies, dependencyIndex => {
-          let dependencyWorkload = rHelper.methods.CALC_factoryDepedencyWorkload(factoryId, dependencyIndex);
+        $.each(dependencies, function (dependencyIndex) {
+          var dependencyWorkload = rHelper.methods.CALC_factoryDepedencyWorkload(factoryId, dependencyIndex);
           rHelper.data.products[factoryId].dependencyWorkload.push(dependencyWorkload);
         });
       } else {
-        let dependencyWorkload = rHelper.methods.CALC_factoryDepedencyWorkload(factoryId, 0);
+        var dependencyWorkload = rHelper.methods.CALC_factoryDepedencyWorkload(factoryId, 0);
         rHelper.data.products[factoryId].dependencyWorkload.push(dependencyWorkload);
       }
 
-      let workload = rHelper.methods.CALC_factoryWorkloadMinNonSanitized(factoryId);
-      let removeClass;
-      let addClass;
+      var _ref16 = [rHelper.methods.CALC_factoryWorkloadMinNonSanitized(factoryId),,],
+          workload = _ref16[0],
+          removeClass = _ref16[1],
+          addClass = _ref16[2];
+
 
       if (workload >= 1) {
-        removeClass = "text-danger";
-        addClass = "text-success";
+        removeClass = 'text-danger';
+        addClass = 'text-success';
       } else {
-        removeClass = "text-success";
-        addClass = "text-danger";
+        removeClass = 'text-success';
+        addClass = 'text-danger';
       }
 
       target.removeClass(removeClass).addClass(addClass);
-      target.text((workload * 100).toFixed(2) + " %");
+      target.text((workload * 100).toFixed(2) + ' %');
     },
-    INSRT_factoryTurnover(factoryId) {
-      "use strict";
+    INSRT_factoryTurnover: function INSRT_factoryTurnover(factoryId) {
+      'use strict';
 
-      let target = $(`#factories-turnover-${factoryId}`);
-      let turnover = rHelper.methods.CALC_factoryTurnover(factoryId);
-      let removeClass;
-      let addClass;
+      var _ref17 = [$('#factories-turnover-' + factoryId), rHelper.methods.CALC_factoryTurnover(factoryId),,],
+          target = _ref17[0],
+          turnover = _ref17[1],
+          removeClass = _ref17[2],
+          addClass = _ref17[3];
+
 
       if (turnover <= 0) {
-        removeClass = "text-success";
-        addClass = "text-danger";
+        removeClass = 'text-success';
+        addClass = 'text-danger';
       } else {
-        removeClass = "text-danger";
-        addClass = "text-success";
+        removeClass = 'text-danger';
+        addClass = 'text-success';
       }
       rHelper.data.products[factoryId].turnover = turnover;
       target.removeClass(removeClass).addClass(addClass);
-      target.text(turnover.toLocaleString("en-US"));
+      target.text(turnover.toLocaleString('en-US'));
     },
-    INSRT_factoryHighlightColumns() {
-      "use strict";
+    INSRT_factoryHighlightColumns: function INSRT_factoryHighlightColumns() {
+      'use strict';
 
-      let subArray;
-      let columns = ["#factories-upgrade-cost-", "#factories-increase-per-upgrade-", "#factories-roi-", "#diamond-profit-"];
+      var subArray,
+          columns = ['#factories-upgrade-cost-', '#factories-increase-per-upgrade-', '#factories-roi-', '#diamond-profit-'];
 
-      $.each(columns, (i, column) => {
+
+      $.each(columns, function (i, column) {
         switch (i) {
           case 0:
-            subArray = "upgradeCost";
+            subArray = 'upgradeCost';
             break;
           case 1:
-            subArray = "turnoverIncrease";
+            subArray = 'turnoverIncrease';
             break;
           case 2:
-            subArray = "roi";
+            subArray = 'roi';
             break;
           case 3:
             subArray = [];
             break;
         }
 
-        let valueArray = [];
-        let idArray = [];
+        var valueArray = [],
+            idArray = [];
 
-        $.each(rHelper.data.products, (k, factory) => {
-          $(column + k).removeClass("text-success text-danger");
-          let value = 0;
-          if (typeof subArray == "object") {
+
+        $.each(rHelper.data.products, function (k, factory) {
+          $(column + k).removeClass('text-success text-danger');
+          var value = 0;
+          if ((typeof subArray === 'undefined' ? 'undefined' : _typeof(subArray)) == 'object') {
             value = factory.diamond.profit;
           } else {
             value = factory[subArray];
@@ -2642,224 +2549,241 @@ const rHelper = {
         });
 
         /*
-                arrayMin/Max = search within idArray for the same index thats min/max of the value array
-                */
-        let arrayMin = idArray[valueArray.indexOf(valueArray.min())];
-        let arrayMax = idArray[valueArray.indexOf(valueArray.max())];
+        arrayMin/Max = search within idArray for the same index thats min/max of the value array
+        */
+
+        var _ref18 = [idArray[valueArray.indexOf(valueArray.min())], idArray[valueArray.indexOf(valueArray.max())]],
+            arrayMin = _ref18[0],
+            arrayMax = _ref18[1];
+
+
         switch (i) {
           case 0:
           case 2:
-            $(column + arrayMin).addClass("text-success");
+            $(column + arrayMin).addClass('text-success');
             if (arrayMin != arrayMax) {
-              $(column + arrayMax).addClass("text-danger");
+              $(column + arrayMax).addClass('text-danger');
             }
             break;
           case 1:
           case 3:
-            $(column + arrayMax).addClass("text-success");
+            $(column + arrayMax).addClass('text-success');
             if (arrayMin != arrayMax) {
-              $(column + arrayMin).addClass("text-danger");
+              $(column + arrayMin).addClass('text-danger');
             }
             break;
         }
       });
     },
-    INSRT_factoryROI(factoryId) {
-      "use strict";
+    INSRT_factoryROI: function INSRT_factoryROI(factoryId) {
+      'use strict';
 
-      let target = $(`#factories-roi-${factoryId}`);
-      let roi = rHelper.methods.CALC_factoryROI(factoryId);
+      var _ref19 = [$('#factories-roi-' + factoryId), rHelper.methods.CALC_factoryROI(factoryId)],
+          target = _ref19[0],
+          roi = _ref19[1];
+
+
       rHelper.data.products[factoryId].roi = roi;
 
       if (roi < 0 || roi === Infinity) {
-        roi = "∞";
+        roi = '∞';
       } else {
         roi = roi.toFixed(2);
       }
 
-      target.text(roi.toLocaleString("en-US"));
+      target.text(roi.toLocaleString('en-US'));
     },
-    INSRT_factoryTurnoverPerUpgrade(factoryId) {
-      "use strict";
+    INSRT_factoryTurnoverPerUpgrade: function INSRT_factoryTurnoverPerUpgrade(factoryId) {
+      'use strict';
 
-      let target = $(`#factories-increase-per-upgrade-${factoryId}`);
-      let turnoverPerUpgrade = rHelper.methods.CALC_factoryTurnoverPerUpgrade(factoryId);
+      var _ref20 = [$('#factories-increase-per-upgrade-' + factoryId), rHelper.methods.CALC_factoryTurnoverPerUpgrade(factoryId)],
+          target = _ref20[0],
+          turnoverPerUpgrade = _ref20[1];
+
 
       rHelper.data.products[factoryId].turnoverIncrease = turnoverPerUpgrade;
-      target.text(turnoverPerUpgrade.toLocaleString("en-US"));
+      target.text(turnoverPerUpgrade.toLocaleString('en-US'));
     },
-    INSRT_API_remainingCredits(value) {
-      "use strict";
+    INSRT_API_remainingCredits: function INSRT_API_remainingCredits(value) {
+      'use strict';
 
       if (value) {
-        $("#api-credits").text(value.toLocaleString("en-US") + " Credits left");
+        $('#api-credits').text(value.toLocaleString('en-US') + ' Credits left');
       }
     },
-    INSRT_diamondFactoryOutput(factoryId) {
-      "use strict";
+    INSRT_diamondFactoryOutput: function INSRT_diamondFactoryOutput(factoryId) {
+      'use strict';
 
-      $(`#diamond-product-${factoryId}`).text(rHelper.methods.CALC_diamondFactoryOutput(factoryId).toLocaleString("en-US"));
+      $('#diamond-product-' + factoryId).text(rHelper.methods.CALC_diamondFactoryOutput(factoryId).toLocaleString('en-US'));
     },
-    INSRT_diamondFactoryOutputWarehouse(factoryId) {
-      "use strict";
+    INSRT_diamondFactoryOutputWarehouse: function INSRT_diamondFactoryOutputWarehouse(factoryId) {
+      'use strict';
 
-      let diamondFactoryOutput = rHelper.methods.CALC_diamondFactoryOutput(factoryId);
-      let requiredWarehouseLevel = rHelper.methods.CALC_nextGreaterWarehouseLevel(diamondFactoryOutput);
+      var diamondFactoryOutput = rHelper.methods.CALC_diamondFactoryOutput(factoryId);
+      var requiredWarehouseLevel = rHelper.methods.CALC_nextGreaterWarehouseLevel(diamondFactoryOutput);
 
-      $(`#diamond-product-warehouse-${factoryId}`).text(requiredWarehouseLevel.toLocaleString("en-US"));
+      $('#diamond-product-warehouse-' + factoryId).text(requiredWarehouseLevel.toLocaleString('en-US'));
     },
-    INSRT_diamondDependenciesHelper(dependantObj, price, requiredAmount, factoryId, warehouseIconSpan) {
-      "use strict";
+    INSRT_diamondDependenciesHelper: function INSRT_diamondDependenciesHelper(dependantObj, price, requiredAmount, factoryId, warehouseIconSpan) {
+      'use strict';
 
-      let requiredWarehouseLevel = rHelper.methods.CALC_nextGreaterWarehouseLevel(requiredAmount);
+      var requiredWarehouseLevel = rHelper.methods.CALC_nextGreaterWarehouseLevel(requiredAmount);
       rHelper.data.products[factoryId].diamond.dependenciesWorth += price * requiredAmount;
 
-      let imgSpan = $(crEl("span"))
-        .addClass(dependantObj.icon)
-        .attr("title", price.toLocaleString("en-US"));
-      let innerSpan = $(crEl("span")).text(requiredAmount.toLocaleString("en-US"));
-      let warehouseSamp = $(crEl("span")).text(requiredWarehouseLevel);
-      let kbd = $(crEl("kbd")).append(`${warehouseIconSpan[0].outerHTML} ${warehouseSamp[0].outerHTML}`);
+      var imgSpan = $(crEl('span')).addClass(dependantObj.icon).attr('title', price.toLocaleString('en-US'));
+      var innerSpan = $(crEl('span')).text(requiredAmount.toLocaleString('en-US'));
+      var warehouseSamp = $(crEl('span')).text(requiredWarehouseLevel);
+      var kbd = $(crEl('kbd')).append(warehouseIconSpan[0].outerHTML + ' ' + warehouseSamp[0].outerHTML);
 
-      let outerSpan = $(crEl("span")).append(`${imgSpan[0].outerHTML} ${innerSpan[0].outerHTML} ${kbd[0].outerHTML} `);
+      var outerSpan = $(crEl('span')).append(imgSpan[0].outerHTML + ' ' + innerSpan[0].outerHTML + ' ' + kbd[0].outerHTML + ' ');
 
       return outerSpan[0].outerHTML;
     },
-    INSRT_diamondDependencies(factoryId) {
-      "use strict";
+    INSRT_diamondDependencies: function INSRT_diamondDependencies(factoryId) {
+      'use strict';
 
-      let product = rHelper.data.products[factoryId];
-      let dependencies = product.dependencies;
-      let dependencyString = "";
-      let warehouseIconSpan = $(crEl("span")).addClass("nav-icon-warehouses");
+      var product = rHelper.data.products[factoryId];
+
+      var _ref21 = [product.dependencies, '', $(crEl('span')).addClass('nav-icon-warehouses')],
+          dependencies = _ref21[0],
+          dependencyString = _ref21[1],
+          warehouseIconSpan = _ref21[2];
+
 
       if ($.isArray(dependencies)) {
-        $.each(dependencies, (dependencyIndex, dependency) => {
-          let dependantObj = rHelper.methods.CALC_convertId(dependency);
-          let price = rHelper.methods.CALC_returnPriceViaId(dependency);
-          let requiredAmount = rHelper.methods.CALC_factoryDependencyRequiredAmount(factoryId, dependencyIndex) * 5 * 24;
+        $.each(dependencies, function (dependencyIndex, dependency) {
+          var _ref22 = [rHelper.methods.CALC_convertId(dependency), rHelper.methods.CALC_returnPriceViaId(dependency), rHelper.methods.CALC_factoryDependencyRequiredAmount(factoryId, dependencyIndex) * 5 * 24],
+              dependantObj = _ref22[0],
+              price = _ref22[1],
+              requiredAmount = _ref22[2];
+
+
           dependencyString += rHelper.methods.INSRT_diamondDependenciesHelper(dependantObj, price, requiredAmount, factoryId, warehouseIconSpan);
         });
       } else {
-        let dependantObj = rHelper.methods.CALC_convertId(dependencies);
-        let price = rHelper.methods.CALC_returnPriceViaId(dependencies);
-        let requiredAmount = rHelper.methods.CALC_factoryDependencyRequiredAmount(factoryId, 0) * 5 * 24;
+        var _ref23 = [rHelper.methods.CALC_convertId(dependencies), rHelper.methods.CALC_returnPriceViaId(dependencies), rHelper.methods.CALC_factoryDependencyRequiredAmount(factoryId, 0) * 5 * 24],
+            dependantObj = _ref23[0],
+            price = _ref23[1],
+            requiredAmount = _ref23[2];
+
+
         dependencyString += rHelper.methods.INSRT_diamondDependenciesHelper(dependantObj, price, requiredAmount, factoryId, warehouseIconSpan);
       }
 
-      $(`#diamond-dependencies-${factoryId}`).html(dependencyString);
+      $('#diamond-dependencies-' + factoryId).html(dependencyString);
     },
-    INSRT_diamondEfficiency(factoryId) {
-      "use strict";
+    INSRT_diamondEfficiency: function INSRT_diamondEfficiency(factoryId) {
+      'use strict';
 
-      $(`#diamond-efficiency-${factoryId}`).text((rHelper.methods.CALC_diamondEfficiency(factoryId) * 100).toFixed(2).toLocaleString("en-US") + "%");
+      $('#diamond-efficiency-' + factoryId).text((rHelper.methods.CALC_diamondEfficiency(factoryId) * 100).toFixed(2).toLocaleString('en-US') + '%');
     },
-    INSRT_diamondProfit(factoryId) {
-      "use strict";
+    INSRT_diamondProfit: function INSRT_diamondProfit(factoryId) {
+      'use strict';
 
-      $(`#diamond-profit-${factoryId}`).text(rHelper.methods.CALC_diamondProfit(factoryId).toLocaleString("en-US"));
+      $('#diamond-profit-' + factoryId).text(rHelper.methods.CALC_diamondProfit(factoryId).toLocaleString('en-US'));
     },
-    INSRT_diamondFactoryLevel(factoryId) {
-      "use strict";
+    INSRT_diamondFactoryLevel: function INSRT_diamondFactoryLevel(factoryId) {
+      'use strict';
 
-      $(`#diamond-level-${factoryId}`).text(rHelper.data.products[factoryId].factoryLevel);
+      $('#diamond-level-' + factoryId).text(rHelper.data.products[factoryId].factoryLevel);
     },
-    INSRT_diamondTop10Profit() {
-      "use strict";
+    INSRT_diamondTop10Profit: function INSRT_diamondTop10Profit() {
+      'use strict';
 
-      let top10Profit = rHelper.methods.CALC_diamondTop10Profit().toLocaleString("en-US");
-      $("#diamond-top-10").text(top10Profit);
+      var top10Profit = rHelper.methods.CALC_diamondTop10Profit().toLocaleString('en-US');
+      $('#diamond-top-10').text(top10Profit);
     },
-    INSRT_diamondTotalProfit() {
-      "use strict";
+    INSRT_diamondTotalProfit: function INSRT_diamondTotalProfit() {
+      'use strict';
 
-      let totalProfit = rHelper.methods.CALC_diamondTotalProfit().toLocaleString("en-US");
-      $("#diamond-total").text(totalProfit);
+      var totalProfit = rHelper.methods.CALC_diamondTotalProfit().toLocaleString('en-US');
+      $('#diamond-total').text(totalProfit);
     },
-    INSRT_flowRate(id, type) {
-      "use strict";
+    INSRT_flowRate: function INSRT_flowRate(id, type) {
+      'use strict';
 
-      let target = $(`#flow-${type}-rate-${id}`);
-      let rate = rHelper.methods.CALC_flowRate(id, type);
+      var _ref24 = [$('#flow-' + type + '-rate-' + id), rHelper.methods.CALC_flowRate(id, type)],
+          target = _ref24[0],
+          rate = _ref24[1];
 
-      if (type == "product") {
+
+      if (type == 'product') {
         if (rHelper.data.products[id].turnover < 0) {
           rate = 0;
         }
       }
 
-      target.text(rate.toLocaleString("en-US"));
+      target.text(rate.toLocaleString('en-US'));
     },
-    INSRT_flowDistributionGlobal() {
-      "use strict";
+    INSRT_flowDistributionGlobal: function INSRT_flowDistributionGlobal() {
+      'use strict';
 
-      let materialTotal = 0;
-      let productsTotal = 0;
-      let materialColor = "yellowgreen";
-      let productColor = "yellowgreen";
+      var materialTotal = 0,
+          productsTotal = 0,
+          materialColor = 'yellowgreen',
+          productColor = 'yellowgreen';
 
-      $.each(rHelper.data.material, materialId => {
-        materialTotal += rHelper.methods.INSRT_flowDistributionSingle(materialId, "material");
+
+      $.each(rHelper.data.material, function (materialId) {
+        materialTotal += rHelper.methods.INSRT_flowDistributionSingle(materialId, 'material');
       });
 
-      let calculationOrder = rHelper.methods.GET_calculationOrder();
+      var calculationOrder = rHelper.methods.GET_calculationOrder();
 
-      $.each(calculationOrder, (index, factoryId) => {
-        productsTotal += rHelper.methods.INSRT_flowDistributionSingle(factoryId, "product");
+      $.each(calculationOrder, function (index, factoryId) {
+        productsTotal += rHelper.methods.INSRT_flowDistributionSingle(factoryId, 'product');
       });
 
       if (materialTotal < 0) {
-        materialColor = "coral";
+        materialColor = 'coral';
       }
       if (productsTotal < 0) {
-        productColor = "coral";
+        productColor = 'coral';
       }
 
       rHelper.data.material.totalIncomePerHour = materialTotal;
       rHelper.data.products.totalIncomePerHour = productsTotal;
 
-      $("#flow-material-total")
-        .text(materialTotal.toLocaleString("en-US"))
-        .css("color", materialColor);
-      $("#flow-products-total")
-        .text(productsTotal.toLocaleString("en-US"))
-        .css("color", productColor);
-      $("#effective-hourly-income").text((materialTotal + productsTotal).toLocaleString("en-US"));
+      $('#flow-material-total').text(materialTotal.toLocaleString('en-US')).css('color', materialColor);
+      $('#flow-products-total').text(productsTotal.toLocaleString('en-US')).css('color', productColor);
+      $('#effective-hourly-income').text((materialTotal + productsTotal).toLocaleString('en-US'));
     },
-    INSRT_flowSurplus(id, type, remainingAmount) {
-      "use strict";
+    INSRT_flowSurplus: function INSRT_flowSurplus(id, type, remainingAmount) {
+      'use strict';
 
-      let surplusTarget = $(`#flow-${type}-surplus-${id}`);
-      let color = "#dedede";
+      var surplusTarget = $('#flow-' + type + '-surplus-' + id);
+      var color = '#dedede';
       if (remainingAmount <= 0) {
-        color = "coral";
+        color = 'coral';
       }
-      surplusTarget.css("color", color);
-      surplusTarget.html(`<span class="resources-${type}-${id}"></span> ${remainingAmount.toLocaleString("en-US")}`);
+      surplusTarget.css('color', color);
+      surplusTarget.html('<span class="resources-' + type + '-' + id + '"></span> ' + remainingAmount.toLocaleString('en-US'));
     },
-    INSRT_flowDistributionSingle(id, type) {
-      "use strict";
+    INSRT_flowDistributionSingle: function INSRT_flowDistributionSingle(id, type) {
+      'use strict';
 
-      let worthTarget = $(`#flow-${type}-worth-${id}`);
-      let price = 0;
-      let worth = 0;
-      let remainingAmount = rHelper.methods.CALC_flowDistribution(id, type);
-      let color = "yellowgreen";
-      let productionCost = 0;
+      var _ref25 = [$('#flow-' + type + '-worth-' + id), 0, 0, 'yellowgreen', 0, rHelper.methods.CALC_flowDistribution(id, type)],
+          worthTarget = _ref25[0],
+          price = _ref25[1],
+          worth = _ref25[2],
+          color = _ref25[3],
+          productionCost = _ref25[4],
+          remainingAmount = _ref25[5];
+
 
       switch (type) {
-        case "material":
+        case 'material':
           price = rHelper.methods.CALC_returnPriceViaId(id);
           break;
-        case "product":
+        case 'product':
           price = rHelper.methods.CALC_returnPriceViaId(id + 14);
           break;
       }
 
-      if (type == "product") {
+      if (type == 'product') {
         if (rHelper.data.products[id].turnover < 0) {
           remainingAmount *= -1;
-          if (rHelper.data.products[id].dependantFactories == "") {
+          if (rHelper.data.products[id].dependantFactories == '') {
             remainingAmount = 0;
           }
         } else {
@@ -2870,249 +2794,248 @@ const rHelper = {
       worth = remainingAmount * price;
       if (remainingAmount < 0) {
         worth *= rHelper.data.buildings[9].transportCost;
-        color = "coral";
+        color = 'coral';
       }
 
       worth = Math.round(worth - productionCost);
       switch (type) {
-        case "material":
+        case 'material':
           rHelper.data.material[id].effectiveTurnover = worth;
           break;
-        case "product":
+        case 'product':
           rHelper.data.products[id].effectiveTurnover = worth;
           break;
       }
 
-      worthTarget.css("color", color).text(worth.toLocaleString("en-US"));
+      worthTarget.css('color', color).text(worth.toLocaleString('en-US'));
       rHelper.methods.INSRT_flowSurplus(id, type, remainingAmount);
       return worth;
     },
-    INSRT_warehouseFillAmount(id, type) {
-      "use strict";
+    INSRT_warehouseFillAmount: function INSRT_warehouseFillAmount(id, type) {
+      'use strict';
 
-      $(`#warehouse-${type}-stock-current-${id}`).val(rHelper.data[type][id].warehouse.fillAmount);
+      $('#warehouse-' + type + '-stock-current-' + id).val(rHelper.data[type][id].warehouse.fillAmount);
     },
-    INSRT_warehouseLevel(id, type) {
-      "use strict";
+    INSRT_warehouseLevel: function INSRT_warehouseLevel(id, type) {
+      'use strict';
 
-      let warehouseLevel = rHelper.data[type][id].warehouse.level;
-      $(`#warehouse-${type}-level-${id}`).val(warehouseLevel);
-      $(`#warehouse-${type}-stock-current-${id}`).attr("max", rHelper.methods.CALC_warehouseContingent(warehouseLevel));
+      var warehouseLevel = rHelper.data[type][id].warehouse.level;
+      $('#warehouse-' + type + '-level-' + id).val(warehouseLevel);
+      $('#warehouse-' + type + '-stock-current-' + id).attr('max', rHelper.methods.CALC_warehouseContingent(warehouseLevel));
     },
-    INSRT_warehouseFillStatus(id, type) {
-      "use strict";
+    INSRT_warehouseFillStatus: function INSRT_warehouseFillStatus(id, type) {
+      'use strict';
 
-      let target = $(`#warehouse-${type}-fill-percent-${id}`);
-      let percent = (rHelper.data[type][id].warehouse.fillStatus * 100).toFixed(2);
-      let color = "rgb(255, 38, 41)";
+      var target = $('#warehouse-' + type + '-fill-percent-' + id);
+      var percent = (rHelper.data[type][id].warehouse.fillStatus * 100).toFixed(2);
+      var color = 'rgb(255, 38, 41)';
 
       if (percent < 75) {
-        color = "rgb(70, 252, 6)";
+        color = 'rgb(70, 252, 6)';
       } else if (percent >= 75 && percent < 90) {
-        color = "rgb(255, 252, 38)";
+        color = 'rgb(255, 252, 38)';
       } else if (percent >= 90 && percent < 95) {
-        color = "rgb(255, 155, 38)";
+        color = 'rgb(255, 155, 38)';
       }
 
-      target.text(percent).css("color", color);
+      target.text(percent).css('color', color);
     },
-    INSRT_warehouseCapacity(id, type) {
-      "use strict";
+    INSRT_warehouseCapacity: function INSRT_warehouseCapacity(id, type) {
+      'use strict';
 
-      $(`#warehouse-${type}-stock-cap-${id}`).text(rHelper.data[type][id].warehouse.contingent.toLocaleString("en-US"));
+      $('#warehouse-' + type + '-stock-cap-' + id).text(rHelper.data[type][id].warehouse.contingent.toLocaleString('en-US'));
     },
-    INSRT_warehouseWorth(id, type) {
-      "use strict";
+    INSRT_warehouseWorth: function INSRT_warehouseWorth(id, type) {
+      'use strict';
 
-      let price = rHelper.methods.CALC_warehouseWorth(id, type);
-      let worth = price * rHelper.data[type][id].warehouse.fillAmount;
-      $(`#warehouse-${type}-worth-${id}`).text(worth.toLocaleString("en-US"));
+      var price = rHelper.methods.CALC_warehouseWorth(id, type);
+      var worth = price * rHelper.data[type][id].warehouse.fillAmount;
+      $('#warehouse-' + type + '-worth-' + id).text(worth.toLocaleString('en-US'));
     },
-    INSRT_warehouseTotalWorth() {
-      "use strict";
+    INSRT_warehouseTotalWorth: function INSRT_warehouseTotalWorth() {
+      'use strict';
 
-      let warehouseTotalWorth = rHelper.methods.CALC_warehouseTotalWorth();
-      $("#warehouse-total-worth").text(warehouseTotalWorth.toLocaleString("en-US"));
+      var warehouseTotalWorth = rHelper.methods.CALC_warehouseTotalWorth();
+      $('#warehouse-total-worth').text(warehouseTotalWorth.toLocaleString('en-US'));
     },
-    INSRT_warehouseTotalLevel() {
-      "use strict";
+    INSRT_warehouseTotalLevel: function INSRT_warehouseTotalLevel() {
+      'use strict';
 
-      let warehouseTotalLevel = rHelper.methods.CALC_warehouseTotalLevel();
-      $("#warehouse-total-level").text(warehouseTotalLevel.toLocaleString("en-US"));
+      var warehouseTotalLevel = rHelper.methods.CALC_warehouseTotalLevel();
+      $('#warehouse-total-level').text(warehouseTotalLevel.toLocaleString('en-US'));
     },
-    INSRT_warehouseRemainingTimeToFull(id, type) {
-      "use strict";
+    INSRT_warehouseRemainingTimeToFull: function INSRT_warehouseRemainingTimeToFull(id, type) {
+      'use strict';
 
-      let remainingTime = rHelper.methods.CALC_warehouseRemainingTimeToFull(id, type);
-      $(`#warehouse-${type}-remaining-${id}`).text(remainingTime);
+      var remainingTime = rHelper.methods.CALC_warehouseRemainingTimeToFull(id, type);
+      $('#warehouse-' + type + '-remaining-' + id).text(remainingTime);
     },
-    INSRT_warehouseUpgradeCost(id, type, value) {
-      "use strict";
+    INSRT_warehouseUpgradeCost: function INSRT_warehouseUpgradeCost(id, type, value) {
+      'use strict';
 
-      let target = $(`#warehouse-${type}-upgrade-cost-${id}`);
-      let upgradeCost = rHelper.methods.CALC_warehouseUpgradeCostOnInput(id, type, value);
-      target.text(upgradeCost.toLocaleString("en-US"));
+      var target = $('#warehouse-' + type + '-upgrade-cost-' + id);
+      var upgradeCost = rHelper.methods.CALC_warehouseUpgradeCostOnInput(id, type, value);
+      target.text(upgradeCost.toLocaleString('en-US'));
     },
-    INSRT_buildingName(buildingId) {
-      "use strict";
+    INSRT_buildingName: function INSRT_buildingName(buildingId) {
+      'use strict';
 
-      $(`#buildings-name-${buildingId}`).text(rHelper.data.buildings[buildingId].name);
+      $('#buildings-name-' + buildingId).text(rHelper.data.buildings[buildingId].name);
     },
-    INSRT_buildingData(buildingId) {
-      "use strict";
+    INSRT_buildingData: function INSRT_buildingData(buildingId) {
+      'use strict';
 
-      let building = rHelper.data.buildings[buildingId];
-      let buildingLevel = building.level;
-      let dropdown = $(`#buildings-level-${buildingId}`);
+      var building = rHelper.data.buildings[buildingId];
+      var buildingLevel = building.level;
+      var dropdown = $('#buildings-level-' + buildingId);
 
       if (parseInt(dropdown.val()) != buildingLevel) {
-        $(dropdown[0][buildingLevel]).attr("selected", "true");
+        $(dropdown[0][buildingLevel]).attr('selected', 'true');
       }
 
-      let materialWorthSum = 0;
-      let materialTransportationSum = 0;
+      var materialWorthSum = 0;
+      var materialTransportationSum = 0;
 
       if (buildingLevel != 10) {
-        rHelper.methods.SET_buildingTableVisibility(buildingId, "show");
+        rHelper.methods.SET_buildingTableVisibility(buildingId, 'show');
 
-        for (let i = 0; i <= 3; i += 1) {
+        for (var i = 0; i <= 3; i += 1) {
           if (i === 0) {
-            let cashTarget = $(`#buildings-cash-${buildingId}`);
-            let cash = building.materialAmount0[buildingLevel];
-            if (typeof cash == "undefined") {
+            var cashTarget = $('#buildings-cash-' + buildingId);
+            var cash = building.materialAmount0[buildingLevel];
+            if (typeof cash == 'undefined') {
               cash = 0;
             }
             materialWorthSum += cash;
-            cashTarget.text(cash.toLocaleString("en-US"));
+            cashTarget.text(cash.toLocaleString('en-US'));
           } else {
-            let selector = `materialAmount${i}`;
-            let material = rHelper.methods.CALC_convertId(building.material[i]);
+            var selector = 'materialAmount' + i;
+            var material = rHelper.methods.CALC_convertId(building.material[i]);
 
-            $(`#buildings-mat-${i}-${buildingId}`).addClass(material.icon);
-            let materialAmount = building[selector][buildingLevel];
+            $('#buildings-mat-' + i + '-' + buildingId).addClass(material.icon);
+            var materialAmount = building[selector][buildingLevel];
 
-            if (typeof materialAmount === "number") {
-              $(`#buildings-amount-${i}-${buildingId}`).text(materialAmount.toLocaleString("en-US"));
-              let materialPrice = rHelper.methods.CALC_returnPriceViaId(building.material[i]);
-              let materialWorth = materialPrice * materialAmount;
-              let transportation = (rHelper.data.buildings[9].transportCost - 1) * materialWorth;
+            if (typeof materialAmount === 'number') {
+              $('#buildings-amount-' + i + '-' + buildingId).text(materialAmount.toLocaleString('en-US'));
+              var materialPrice = rHelper.methods.CALC_returnPriceViaId(building.material[i]);
+              var materialWorth = materialPrice * materialAmount;
+              var transportation = (rHelper.data.buildings[9].transportCost - 1) * materialWorth;
 
               materialWorthSum += materialWorth;
               materialTransportationSum += transportation;
-              $(`#buildings-worth-${i}-${buildingId}`).text(materialWorth.toLocaleString("en-US"));
-              $(`#buildings-transportation-${i}-${buildingId}`).text(transportation.toLocaleString("en-US"));
+              $('#buildings-worth-' + i + '-' + buildingId).text(materialWorth.toLocaleString('en-US'));
+              $('#buildings-transportation-' + i + '-' + buildingId).text(transportation.toLocaleString('en-US'));
             }
           }
         }
       } else {
-        rHelper.methods.SET_buildingTableVisibility(buildingId, "hide");
+        rHelper.methods.SET_buildingTableVisibility(buildingId, 'hide');
       }
 
-      $(`#buildings-sum-${buildingId}`).text(materialWorthSum.toLocaleString("en-US"));
-      $(`#buildings-transportation-sum-${buildingId}`).text(Math.round(materialTransportationSum).toLocaleString("en-US"));
+      $('#buildings-sum-' + buildingId).text(materialWorthSum.toLocaleString('en-US'));
+      $('#buildings-transportation-sum-' + buildingId).text(Math.round(materialTransportationSum).toLocaleString('en-US'));
     },
-    INSRT_buildingToLevel10(buildingId) {
-      "use strict";
+    INSRT_buildingToLevel10: function INSRT_buildingToLevel10(buildingId) {
+      'use strict';
 
-      let buildingToLevel10 = rHelper.methods.CALC_buildingToLevel10(buildingId);
-      $(`#buildings-cap-${buildingId}`).text(buildingToLevel10.level10Cost.toLocaleString("en-US"));
-      $(`#buildings-transportation-cap-${buildingId}`).text(buildingToLevel10.level10Transportation.toLocaleString("en-US"));
+      var buildingToLevel10 = rHelper.methods.CALC_buildingToLevel10(buildingId);
+      $('#buildings-cap-' + buildingId).text(buildingToLevel10.level10Cost.toLocaleString('en-US'));
+      $('#buildings-transportation-cap-' + buildingId).text(buildingToLevel10.level10Transportation.toLocaleString('en-US'));
     },
-    INSRT_techUpgradeRows(tu4Trigger) {
-      "use strict";
+    INSRT_techUpgradeRows: function INSRT_techUpgradeRows(tu4Trigger) {
+      'use strict';
 
-      const iterateTUData = () => {
-        $.each(rHelper.tu, (index, combination) => {
-          if (typeof tu4Trigger == "undefined" && combination.tu4 != 0) {
+      var iterateTUData = function iterateTUData() {
+        $.each(rHelper.tu, function (index, combination) {
+          if (typeof tu4Trigger == 'undefined' && combination.tu4 != 0) {
             return;
           }
-          let tr = $(crEl("tr"));
-          for (let i = 0; i <= 6; i += 1) {
-            let td = $(crEl("td"));
-            td.addClass("text-md-right text-sm-left");
-            let tus = [combination.tu1, combination.tu2, combination.tu3, combination.tu4];
+          var tr = $(crEl('tr'));
+          for (var i = 0; i <= 6; i += 1) {
+            var td = $(crEl('td'));
+            td.addClass('text-md-right text-sm-left');
+            var tus = [combination.tu1, combination.tu2, combination.tu3, combination.tu4];
             switch (i) {
               case 0:
               case 1:
               case 2:
               case 3:
-                td.text(tus[i]).attr("data-th", `Tech-Upgrade ${i}`);
+                td.text(tus[i]).attr('data-th', 'Tech-Upgrade ' + i);
                 break;
               case 4:
-                td.text(combination.factor).attr("data-th", "Boost");
+                td.text(combination.factor).attr('data-th', 'Boost');
                 break;
               case 5:
-                let price = 0;
-                for (let k = 0; k < tus.length; k += 1) {
+                var price = 0;
+                for (var k = 0; k < tus.length; k += 1) {
                   price += tus[k] * prices[k];
                 }
-                td.text(price.toLocaleString("en-US")).attr("data-th", "Price");
+                td.text(price.toLocaleString('en-US')).attr('data-th', 'Price');
                 break;
               case 6:
-                let count = tus[0] * 1 + tus[1] * 2 + tus[2] * 3 + tus[3] * 5;
-                td.text(count).attr("data-th", "Pimp my mine count");
+                var count = tus[0] * 1 + tus[1] * 2 + tus[2] * 3 + tus[3] * 5;
+                td.text(count).attr('data-th', 'Pimp my mine count');
                 break;
             }
             tr.append(td[0]);
           }
           techUpgradeTbody.append(tr[0]);
         });
-      }
+      };
 
-      let techUpgradeTbody = $("#techupgrades-combinations-tbl tbody");
+      var techUpgradeTbody = $('#techupgrades-combinations-tbl tbody');
       if (techUpgradeTbody[0].childNodes.length > 0) {
         techUpgradeTbody.empty();
       }
 
-      let prices = [];
+      var prices = [];
 
-      for (let i = 46; i <= 49; i += 1) {
+      for (var i = 46; i <= 49; i += 1) {
         prices.push(rHelper.methods.CALC_returnPriceViaId(i, 0));
       }
 
-      if(rHelper.tu.length == 0) {
-        $.getJSON('api/tu.json', (data) => {
+      if (rHelper.tu.length == 0) {
+        $.getJSON('api/tu.json', function (data) {
           rHelper.tu = data;
           iterateTUData();
         });
       } else {
         iterateTUData();
       }
-
     },
-    INSRT_techUpgradeCalculator(value, tu4Inclusion) {
-      "use strict";
+    INSRT_techUpgradeCalculator: function INSRT_techUpgradeCalculator(value, tu4Inclusion) {
+      'use strict';
 
-      toggleTechUpgradeInfo("start");
-      let table = $("#techupgrades-calc-tbl");
+      toggleTechUpgradeInfo('start');
+      var table = $('#techupgrades-calc-tbl');
 
-      if (table.css("display") == "none") {
-        table.css("display", "table");
+      if (table.css('display') == 'none') {
+        table.css('display', 'table');
       }
 
-      let target = $("#techupgrades-calc-tbl tbody");
+      var target = $('#techupgrades-calc-tbl tbody');
       target.empty();
 
-      let url = `api/getTechCombination.php?factor=${value}`;
-      if (typeof tu4Inclusion == "string") {
-        url += "&tu4=allowed";
+      var url = 'api/getTechCombination.php?factor=' + value;
+      if (typeof tu4Inclusion == 'string') {
+        url += '&tu4=allowed';
       }
 
-      $.getJSON(url, data => {
-        let prices = [];
-        for (let i = 46; i <= 49; i += 1) {
+      $.getJSON(url, function (data) {
+        var prices = [];
+        for (var i = 46; i <= 49; i += 1) {
           prices.push(rHelper.methods.CALC_returnPriceViaId(i, 0));
         }
 
-        $.each(data, (i, combination) => {
-          let tr = $(crEl("tr"));
-          for (let k = 0; k <= 6; k += 1) {
-            let td = $(crEl("td"));
+        $.each(data, function (i, combination) {
+          var tr = $(crEl('tr'));
+          for (var k = 0; k <= 6; k += 1) {
+            var td = $(crEl('td'));
 
-            td.addClass("text-md-right text-sm-left");
-            td.attr("data-th", `missing Tech-Upgrade ${k + 1}`);
+            td.addClass('text-md-right text-sm-left');
+            td.attr('data-th', 'missing Tech-Upgrade ' + (k + 1));
 
-            let tus = [combination.tu1, combination.tu2, combination.tu3, combination.tu4];
+            var tus = [combination.tu1, combination.tu2, combination.tu3, combination.tu4];
 
             switch (k) {
               case 0:
@@ -3122,18 +3045,18 @@ const rHelper = {
                 td.text(tus[k]);
                 break;
               case 4:
-                td.text(combination.factor).attr("data-th", "resulting Boost");
+                td.text(combination.factor).attr('data-th', 'resulting Boost');
                 break;
               case 5:
-                let price = 0;
-                for (let l = 0; l < tus.length; l += 1) {
+                var price = 0;
+                for (var l = 0; l < tus.length; l += 1) {
                   price += tus[l] * prices[l];
                 }
-                td.text(price.toLocaleString("en-US")).attr("data-th", "Price");
+                td.text(price.toLocaleString('en-US')).attr('data-th', 'Price');
                 break;
               case 6:
-                let count = tus[0] * 1 + tus[1] * 2 + tus[2] * 3 + tus[3] * 5;
-                td.text(count).attr("data-th", "remaining Pimp my mine count");
+                var count = tus[0] * 1 + tus[1] * 2 + tus[2] * 3 + tus[3] * 5;
+                td.text(count).attr('data-th', 'remaining Pimp my mine count');
                 break;
             }
             tr.append(td);
@@ -3142,213 +3065,209 @@ const rHelper = {
         });
 
         sorttable.makeSortable(table[0]);
-        sorttable.innerSortFunction.apply($("#techupgrades-calc-tbl th")[5], []);
-        sorttable.innerSortFunction.apply($("#techupgrades-calc-tbl th")[5], []);
-        toggleTechUpgradeInfo("end");
-      }).fail(() => {
-        let tr = $(crEl("tr"));
-        let td = $(crEl("td"));
-        td
-          .addClass("text-warning text-center")
-          .attr("data-th", "Attention")
-          .attr("colspan", 7)
-          .text("No entries found or invalid value. Try to lower the value a bit – up to 5 decimals are allowed (e.g. 3.00005).");
+        sorttable.innerSortFunction.apply($('#techupgrades-calc-tbl th')[5], []);
+        sorttable.innerSortFunction.apply($('#techupgrades-calc-tbl th')[5], []);
+        toggleTechUpgradeInfo('end');
+      }).fail(function () {
+        var tr = $(crEl('tr'));
+        var td = $(crEl('td'));
+        td.addClass('text-warning text-center').attr('data-th', 'Attention').attr('colspan', 7).text('No entries found or invalid value. Try to lower the value a bit – up to 5 decimals are allowed (e.g. 3.00005).');
         tr.append(td);
         target.append(tr);
-        toggleTechUpgradeInfo("end");
+        toggleTechUpgradeInfo('end');
       });
     },
-    INSRT_recyclingRequirement(lootId) {
-      "use strict";
+    INSRT_recyclingRequirement: function INSRT_recyclingRequirement(lootId) {
+      'use strict';
 
-      $(`#recycling-requirement-${lootId}`).text(rHelper.methods.CALC_recyclingRequirement(lootId).toLocaleString("en-US"));
+      $('#recycling-requirement-' + lootId).text(rHelper.methods.CALC_recyclingRequirement(lootId).toLocaleString('en-US'));
     },
-    INSRT_recyclingProducts(lootId) {
-      "use strict";
+    INSRT_recyclingProducts: function INSRT_recyclingProducts(lootId) {
+      'use strict';
 
-      let recyclingPlantLevel = rHelper.data.buildings[5].level;
-      let recyclingProducts = rHelper.methods.CALC_recyclingProducts(lootId, recyclingPlantLevel);
-      $(`#recycling-products-${lootId}`).html(recyclingProducts);
+      var recyclingPlantLevel = rHelper.data.buildings[5].level;
+      var recyclingProducts = rHelper.methods.CALC_recyclingProducts(lootId, recyclingPlantLevel);
+      $('#recycling-products-' + lootId).html(recyclingProducts);
     },
-    INSRT_recyclingOutputWorth(lootId) {
-      "use strict";
+    INSRT_recyclingOutputWorth: function INSRT_recyclingOutputWorth(lootId) {
+      'use strict';
 
-      let recyclingPlantLevel = rHelper.data.buildings[5].level;
-      $(`#recycling-output-${lootId}`).text(rHelper.methods.CALC_recyclingOutputWorth(lootId, recyclingPlantLevel).toLocaleString("en-US"));
+      var recyclingPlantLevel = rHelper.data.buildings[5].level;
+      $('#recycling-output-' + lootId).text(rHelper.methods.CALC_recyclingOutputWorth(lootId, recyclingPlantLevel).toLocaleString('en-US'));
     },
-    INSRT_recyclingInputWorth(lootId) {
-      "use strict";
+    INSRT_recyclingInputWorth: function INSRT_recyclingInputWorth(lootId) {
+      'use strict';
 
-      $(`#recycling-input-${lootId}`).text(rHelper.methods.CALC_recyclingInputWorth(lootId).toLocaleString("en-US"));
+      $('#recycling-input-' + lootId).text(rHelper.methods.CALC_recyclingInputWorth(lootId).toLocaleString('en-US'));
     },
-    INSRT_unitsRecyclingProfit(type, id) {
-      "use strict";
+    INSRT_unitsRecyclingProfit: function INSRT_unitsRecyclingProfit(type, id) {
+      'use strict';
 
-      let target = $(`#${type}-profit-${id}`);
-      let profit = 0;
-      let result;
-      let color;
+      var target = $('#' + type + '-profit-' + id);
+      var profit = 0;
+      var result = void 0;
+      var color = void 0;
 
-      if (type == "recycling") {
+      if (type == 'recycling') {
         profit = rHelper.methods.CALC_recyclingProfit(id);
-      } else if (type == "units") {
+      } else if (type == 'units') {
         profit = rHelper.methods.CALC_unitsProfit(id);
       }
 
       if (profit > 0) {
-        color = "#9acd3225";
+        color = '#9acd3225';
       } else {
-        color = "#ff7f5025";
+        color = '#ff7f5025';
       }
 
-      $(target[0].parentNode).css("background-color", color);
+      $(target[0].parentNode).css('background-color', color);
 
-      result = profit.toFixed(2).toLocaleString("en-US") + "%";
+      result = profit.toFixed(2).toLocaleString('en-US') + '%';
       target.text(result);
     },
-    INSRT_unitsCraftingPrice(unitId) {
-      "use strict";
+    INSRT_unitsCraftingPrice: function INSRT_unitsCraftingPrice(unitId) {
+      'use strict';
 
-      $(`#units-crafting-${unitId}`).text(rHelper.methods.CALC_unitsCraftingPrice(unitId).toLocaleString("en-US"));
+      $('#units-crafting-' + unitId).text(rHelper.methods.CALC_unitsCraftingPrice(unitId).toLocaleString('en-US'));
     },
-    INSRT_unitsPricePerStrength(unitId) {
-      "use strict";
+    INSRT_unitsPricePerStrength: function INSRT_unitsPricePerStrength(unitId) {
+      'use strict';
 
-      $(`#units-pps-${unitId}`).text(rHelper.methods.CALC_unitsPricePerStrength(unitId).toLocaleString("en-US"));
+      $('#units-pps-' + unitId).text(rHelper.methods.CALC_unitsPricePerStrength(unitId).toLocaleString('en-US'));
     },
-    INSRT_unitsMarketPrice(unitId) {
-      "use strict";
+    INSRT_unitsMarketPrice: function INSRT_unitsMarketPrice(unitId) {
+      'use strict';
 
-      let convertedId = unitId + 52;
-      let marketPrice = rHelper.methods.CALC_returnPriceViaId(convertedId);
+      var convertedId = unitId + 52;
+      var marketPrice = rHelper.methods.CALC_returnPriceViaId(convertedId);
       rHelper.data.units[unitId].profit.marketPrice = marketPrice;
 
-      $(`#units-market-${unitId}`).text(marketPrice.toLocaleString("en-US"));
+      $('#units-market-' + unitId).text(marketPrice.toLocaleString('en-US'));
     },
-    INSRT_companyWorth() {
-      "use strict";
+    INSRT_companyWorth: function INSRT_companyWorth() {
+      'use strict';
 
-      let companyWorth = rHelper.methods.CALC_companyWorth();
-      $("#company-worth").text(companyWorth.toLocaleString("en-US"));
+      var companyWorth = rHelper.methods.CALC_companyWorth();
+      $('#company-worth').text(companyWorth.toLocaleString('en-US'));
     },
-    INSRT_headquarterOvwTransportation(level) {
-      "use strict";
+    INSRT_headquarterOvwTransportation: function INSRT_headquarterOvwTransportation(level) {
+      'use strict';
 
-      let hqLevel = rHelper.data.headquarter[level];
+      var hqLevel = rHelper.data.headquarter[level];
       if ($.isArray(hqLevel.material)) {
-        let hqCost = rHelper.methods.CALC_headquarterLevelCost(level);
-        let transportation = Math.round(hqCost * (rHelper.data.buildings[9].transportCost - 1));
-        $(`#hq-ovw-transportation-${level}`).text(transportation.toLocaleString("en-US"));
+        var hqCost = rHelper.methods.CALC_headquarterLevelCost(level);
+        var transportation = Math.round(hqCost * (rHelper.data.buildings[9].transportCost - 1));
+        $('#hq-ovw-transportation-' + level).text(transportation.toLocaleString('en-US'));
       }
     },
-    INSRT_headquarterOvwCost(level) {
-      "use strict";
+    INSRT_headquarterOvwCost: function INSRT_headquarterOvwCost(level) {
+      'use strict';
 
-      let hqCost = rHelper.methods.CALC_headquarterLevelCost(level);
-      $(`#hq-ovw-sum-${level}`).text(hqCost.toLocaleString("en-US"));
+      var hqCost = rHelper.methods.CALC_headquarterLevelCost(level);
+      $('#hq-ovw-sum-' + level).text(hqCost.toLocaleString('en-US'));
     },
-    INSRT_headquarterOvwRadius(level) {
-      "use strict";
+    INSRT_headquarterOvwRadius: function INSRT_headquarterOvwRadius(level) {
+      'use strict';
 
-      let hqLevel = rHelper.data.headquarter[level];
-      $(`#hq-ovw-radius-${level}`).text(`${hqLevel.radius} m | ${rHelper.methods.CALC_convertMeterToYards(hqLevel.radius)} yards`);
+      var hqLevel = rHelper.data.headquarter[level];
+      $('#hq-ovw-radius-' + level).text(hqLevel.radius + ' m | ' + rHelper.methods.CALC_convertMeterToYards(hqLevel.radius) + ' yards');
     },
-    INSRT_headquarterOvwBoost(level) {
-      "use strict";
+    INSRT_headquarterOvwBoost: function INSRT_headquarterOvwBoost(level) {
+      'use strict';
 
-      let hqLevel = rHelper.data.headquarter[level];
-      $(`#hq-ovw-boost-${level}`).text(hqLevel.boost);
+      var hqLevel = rHelper.data.headquarter[level];
+      $('#hq-ovw-boost-' + level).text(hqLevel.boost);
     },
-    INSRT_headquarterOvwString(level) {
-      "use strict";
+    INSRT_headquarterOvwString: function INSRT_headquarterOvwString(level) {
+      'use strict';
 
-      let hqLevel = rHelper.data.headquarter[level];
+      var hqLevel = rHelper.data.headquarter[level];
 
       if ($.isArray(hqLevel.material)) {
-        let string = `${rHelper.methods.CALC_headquarterOvwMaterial(level)} x ${hqLevel.amount.toLocaleString("en-US")}`;
-        $(`#hq-ovw-mat-${level}`).html(string);
+        var string = rHelper.methods.CALC_headquarterOvwMaterial(level) + ' x ' + hqLevel.amount.toLocaleString('en-US');
+        $('#hq-ovw-mat-' + level).html(string);
       }
     },
-    INSRT_headquarterContentRequiredAmount(level) {
-      "use strict";
+    INSRT_headquarterContentRequiredAmount: function INSRT_headquarterContentRequiredAmount(level) {
+      'use strict';
 
-      let hqContent = $("#hq-content");
+      var hqContent = $('#hq-content');
       if (level != 10) {
-        hqContent.css("display", "block");
-        let headquarter = rHelper.data.headquarter[level];
-        let amount = headquarter.amount;
+        hqContent.css('display', 'block');
+        var headquarter = rHelper.data.headquarter[level];
+        var amount = headquarter.amount;
 
-        $.each(headquarter.material, (i, material) => {
-          let icon = rHelper.methods.CALC_headquarterContentIcon(material);
-          let span = rHelper.methods.CALC_headquarterContentRequiredAmount(amount);
+        $.each(headquarter.material, function (i, material) {
+          var icon = rHelper.methods.CALC_headquarterContentIcon(material);
+          var span = rHelper.methods.CALC_headquarterContentRequiredAmount(amount);
 
-          $(`#hq-content-icon-${i}`).html(icon);
-          $(`#hq-content-requirement-${i}`).html(span);
+          $('#hq-content-icon-' + i).html(icon);
+          $('#hq-content-requirement-' + i).html(span);
         });
       } else {
-        hqContent.css("display", "none");
+        hqContent.css('display', 'none');
       }
     },
-    INSRT_headquarterPaid() {
-      "use strict";
+    INSRT_headquarterPaid: function INSRT_headquarterPaid() {
+      'use strict';
 
-      let paid = rHelper.data.headquarter.user.paid;
-      $.each(paid, (i, amount) => {
-        $(`#hq-content-paid-${i}`).val(amount);
+      var paid = rHelper.data.headquarter.user.paid;
+      $.each(paid, function (i, amount) {
+        $('#hq-content-paid-' + i).val(amount);
       });
     },
-    INSRT_headquarterMissing(i) {
-      "use strict";
+    INSRT_headquarterMissing: function INSRT_headquarterMissing(i) {
+      'use strict';
 
-      let userHqLevel = rHelper.data.headquarter.user.level;
+      var userHqLevel = rHelper.data.headquarter.user.level;
       if (userHqLevel != 10) {
-        let requiredAmount = rHelper.data.headquarter[userHqLevel].amount;
-        let paid = rHelper.data.headquarter.user.paid[i];
-        let missing = requiredAmount - paid;
+        var requiredAmount = rHelper.data.headquarter[userHqLevel].amount;
+        var paid = rHelper.data.headquarter.user.paid[i];
+        var missing = requiredAmount - paid;
         if (missing < 0) {
           missing = 0;
         }
-        $(`#hq-content-missing-${i}`).text(missing.toLocaleString("en-US"));
+        $('#hq-content-missing-' + i).text(missing.toLocaleString('en-US'));
       }
     },
-    INSRT_headquarterRemainingCost(userHqLevel) {
-      "use strict";
+    INSRT_headquarterRemainingCost: function INSRT_headquarterRemainingCost(userHqLevel) {
+      'use strict';
 
       if (userHqLevel != 10) {
-        let headquarter = rHelper.data.headquarter[userHqLevel];
-        let totalCost = 0;
-        let totalTransportation = 0;
+        var headquarter = rHelper.data.headquarter[userHqLevel];
+        var totalCost = 0;
+        var totalTransportation = 0;
 
-        $.each(headquarter.material, (i, material) => {
-          let worth = rHelper.methods.CALC_headquarterRemainingCost(i, material, userHqLevel);
+        $.each(headquarter.material, function (i, material) {
+          var worth = rHelper.methods.CALC_headquarterRemainingCost(i, material, userHqLevel);
           totalCost += worth;
-          let transportation = Math.round(worth * (rHelper.data.buildings[9].transportCost - 1));
+          var transportation = Math.round(worth * (rHelper.data.buildings[9].transportCost - 1));
           totalTransportation += transportation;
-          $(`#hq-content-cost-${i}`).text(worth.toLocaleString("en-US"));
-          $(`#hq-content-transportation-${i}`).text(transportation.toLocaleString("en-US"));
+          $('#hq-content-cost-' + i).text(worth.toLocaleString('en-US'));
+          $('#hq-content-transportation-' + i).text(transportation.toLocaleString('en-US'));
         });
 
         rHelper.methods.INSRT_headquarterTotalCost(totalCost);
         rHelper.methods.INSRT_headquarterTotalTransportation(totalTransportation);
       }
     },
-    INSRT_headquarterTotalCost(sum) {
-      "use strict";
+    INSRT_headquarterTotalCost: function INSRT_headquarterTotalCost(sum) {
+      'use strict';
 
-      $("#hq-content-cost-sum").text(sum.toLocaleString("en-US"));
+      $('#hq-content-cost-sum').text(sum.toLocaleString('en-US'));
     },
-    INSRT_headquarterTotalTransportation(sum) {
-      "use strict";
+    INSRT_headquarterTotalTransportation: function INSRT_headquarterTotalTransportation(sum) {
+      'use strict';
 
-      $("#hq-content-transportation-sum").text(sum.toLocaleString("en-US"));
+      $('#hq-content-transportation-sum').text(sum.toLocaleString('en-US'));
     },
-    INSRT_priceHistoryName(type, id) {
-      "use strict";
+    INSRT_priceHistoryName: function INSRT_priceHistoryName(type, id) {
+      'use strict';
 
-      $(`#pricehistory-${type}-${id}`).text(rHelper.data[type][id].name);
+      $('#pricehistory-' + type + '-' + id).text(rHelper.data[type][id].name);
     },
-    INSRT_qualityComparator(type, quality) {
-      "use strict";
+    INSRT_qualityComparator: function INSRT_qualityComparator(type, quality) {
+      'use strict';
 
       if (!type || type == null) {
         type = 0;
@@ -3359,39 +3278,40 @@ const rHelper = {
         quality /= 100;
       }
 
-      let price = rHelper.methods.CALC_returnPriceViaId(type);
-      let worth = price * rHelper.data.material[type].maxRate * quality;
-      $("#qualitycomparator-income").text(worth.toLocaleString("en-US"));
+      var price = rHelper.methods.CALC_returnPriceViaId(type);
+      var worth = price * rHelper.data.material[type].maxRate * quality;
+      $('#qualitycomparator-income').text(worth.toLocaleString('en-US'));
 
-      $.each(rHelper.data.material, (i, material) => {
-        let qualityTarget = $(`#qualitycomparator-${i}`);
-        let parentElement = $(qualityTarget[0].parentNode.parentNode);
-        let thisPrice = rHelper.methods.CALC_returnPriceViaId(i);
-        let thisMaxRate = material.maxRate;
-        let thisResourcesRequiredAmount = worth / thisPrice;
+      $.each(rHelper.data.material, function (i, material) {
+        var qualityTarget = $('#qualitycomparator-' + i);
+        var parentElement = $(qualityTarget[0].parentNode.parentNode);
+        var thisPrice = rHelper.methods.CALC_returnPriceViaId(i);
+        var thisMaxRate = material.maxRate;
+        var thisResourcesRequiredAmount = worth / thisPrice;
 
         // hide row if identical to current scan or more required than possible
         if (i == type || thisResourcesRequiredAmount > thisMaxRate) {
-          parentElement.css("opacity", 0.1);
+          parentElement.css('opacity', 0.1);
         } else {
-          parentElement.css("opacity", 1);
-          let percent = (thisResourcesRequiredAmount / thisMaxRate * 100).toFixed(2);
-          qualityTarget.text(`${percent} %`);
+          parentElement.css('opacity', 1);
+          var percent = (thisResourcesRequiredAmount / thisMaxRate * 100).toFixed(2);
+          qualityTarget.text(percent + ' %');
         }
       });
     },
-    INSRT_missions() {
-      "use strict";
+    INSRT_missions: function INSRT_missions() {
+      'use strict';
 
-      let missionContainer = rHelper.data.missions;
+      var missionContainer = rHelper.data.missions;
       if (missionContainer.length != 0) {
-        let now = Math.round(Date.now() / 1000);
+        var now = Math.round(Date.now() / 1000);
 
-        let calculateMissionCost = (i, mission) => {
-          let uncalculatableMissions = [9, 12, 17, 21, 22, 25, 30, 31, 32, 35, 37, 38, 41, 42, 43, 44, 50, 55];
-          let requirementId = 0;
-          let materialCost = 0;
-          let missionCost = 0;
+        var calculateMissionCost = function calculateMissionCost(i, mission) {
+          var uncalculatableMissions = [9, 12, 17, 21, 22, 25, 30, 31, 32, 35, 37, 38, 41, 42, 43, 44, 50, 55],
+              requirementId = 0,
+              materialCost = 0,
+              missionCost = 0;
+
 
           if (uncalculatableMissions.indexOf(i) == -1) {
             switch (i) {
@@ -3420,14 +3340,16 @@ const rHelper = {
                 missionCost += rHelper.methods.CALC_currentScanCost() * mission.goal;
                 break;
               case 33:
-                let calcSmallestUnitPrice = () => {
-                  let min = Infinity;
+                var calcSmallestUnitPrice = function calcSmallestUnitPrice() {
+                  var min = Infinity;
 
-                  $.each(rHelper.data.units, (i, unit) => {
+                  $.each(rHelper.data.units, function (i, unit) {
                     if (i == 1 || i == 4 || i == 5) {
-                      let craftingPrice = unit.profit.craftingPrice;
-                      let marketPrice = unit.profit.marketPrice * rHelper.data.buildings[9].transportCost;
-                      let result = 0;
+                      var _ref26 = [unit.profit.craftingPrice, unit.profit.marketPrice * rHelper.data.buildings[9].transportCost, 0],
+                          craftingPrice = _ref26[0],
+                          marketPrice = _ref26[1],
+                          result = _ref26[2];
+
 
                       if (marketPrice > craftingPrice) {
                         result = craftingPrice;
@@ -3456,117 +3378,121 @@ const rHelper = {
           return missionCost;
         };
 
-        let calculateMissionReward = (i, mission) => {
-          let rewardId = mission.rewardId;
-          let rewardWorth = 0;
+        var calculateMissionReward = function calculateMissionReward(i, mission) {
+          var _ref27 = [mission.rewardId, 0],
+              rewardId = _ref27[0],
+              rewardWorth = _ref27[1];
+
 
           if (rewardId != -1) {
-            $(`#mission-reward-${i}`).addClass(rHelper.methods.CALC_convertId(rewardId).icon);
-            let price = rHelper.methods.CALC_returnPriceViaId(rewardId);
+            $('#mission-reward-' + i).addClass(rHelper.methods.CALC_convertId(rewardId).icon);
+            var price = rHelper.methods.CALC_returnPriceViaId(rewardId);
             rewardWorth += mission.rewardAmount * price;
           } else {
-            $(`#mission-reward-${i}`).html('<img src="assets/img/cash.png" alt="Cash" />');
+            $('#mission-reward-' + i).html('<img src="assets/img/cash.png" alt="Cash" />');
             rewardWorth += mission.rewardAmount;
           }
 
           return rewardWorth;
         };
 
-        let returnWorthColor = missionWorth => {
-          let color = "coral";
+        var returnWorthColor = function returnWorthColor(missionWorth) {
+          var color = 'coral';
 
           if (missionWorth > 0) {
-            color = "yellowgreen";
+            color = 'yellowgreen';
           }
 
           return color;
         };
 
-        let insertMissionReward = (i, mission) => {
-          let parsedI = parseInt(i);
+        var insertMissionReward = function insertMissionReward(i, mission) {
+          var parsedI = parseInt(i);
 
-          let rewardWorth = calculateMissionReward(i, mission);
-          let missionCost = calculateMissionCost(parsedI, mission);
+          var rewardWorth = calculateMissionReward(i, mission);
+          var missionCost = calculateMissionCost(parsedI, mission);
 
-          let missionWorth = rewardWorth - missionCost;
-          let color = returnWorthColor(missionWorth);
+          var missionWorth = rewardWorth - missionCost;
+          var color = returnWorthColor(missionWorth);
+
+          if (isNaN(missionWorth)) {
+            missionWorth = 0;
+          }
 
           if (parsedI != 50 && parsedI != 55 && parsedI != 31) {
-            $(`#mission-profit-${i}`)
-              .text(missionWorth.toLocaleString("en-US"))
-              .css("color", color);
+            $('#mission-profit-' + i).text(missionWorth.toLocaleString('en-US')).css('color', color);
           }
         };
 
-        let colorProgress = progressPercent => {
-          let color = "coral";
+        var colorProgress = function colorProgress(progressPercent) {
+          var color = 'coral';
 
           if (progressPercent > 33 && progressPercent < 66) {
-            color = "orange";
+            color = 'orange';
           } else if (progressPercent >= 66) {
-            color = "yellowgreen";
+            color = 'yellowgreen';
           }
           return color;
         };
 
-        let returnMissionProgress = (progress, goal) => {
+        var returnMissionProgress = function returnMissionProgress(progress, goal) {
           return progress / goal * 100;
         };
 
-        let calculateRemainingDuration = (now, finish) => {
-          let remainingDuration = finish - now;
+        var calculateRemainingDuration = function calculateRemainingDuration(now, finish) {
+          var remainingDuration = finish - now;
 
           if (remainingDuration < 60) {
-            return remainingDuration + "s";
+            return remainingDuration + 's';
           } else if (remainingDuration >= 60 && remainingDuration < 3600) {
-            return (remainingDuration / 60).toFixed(2) + "m";
+            return (remainingDuration / 60).toFixed(2) + 'm';
           } else if (remainingDuration >= 3600 && remainingDuration < 86400) {
-            return (remainingDuration / 3600).toFixed(2) + "h";
+            return (remainingDuration / 3600).toFixed(2) + 'h';
           } else {
-            return (remainingDuration / 86400).toFixed(2) + "d";
+            return (remainingDuration / 86400).toFixed(2) + 'd';
           }
         };
 
-        let fadeOutMission = (i, mission) => {
-          let cooldown = calculateRemainingDuration(now, mission.cooldown);
+        var fadeOutMission = function fadeOutMission(i, mission) {
+          var cooldown = calculateRemainingDuration(now, mission.cooldown);
 
-          $(`#mission-progress-${i}`)
-            .attr("colspan", 3)
-            .html('Mission on cooldown for <span style="color: orange;">' + cooldown + "</span>")
-            .css("text-align", "center");
-          $(`#mission-start-${i}`).remove();
-          $(`#mission-end-${i}`).remove();
-          $(`#mission-${i}`).addClass("faded-mission");
+          $('#mission-progress-' + i).attr('colspan', 3).html('Mission on cooldown for <span style="color: orange;">' + cooldown + '</span>').css('text-align', 'center');
+          $('#mission-start-' + i).remove();
+          $('#mission-end-' + i).remove();
+          $('#mission-' + i).addClass('faded-mission');
         };
 
-        let highlightAvailableMission = i => {
-          $(`#mission-${i}`).addClass("yellowgreen-10");
+        var highlightAvailableMission = function highlightAvailableMission(i) {
+          $('#mission-' + i).addClass('yellowgreen-10');
         };
 
-        let insertMissionConstants = (i, mission) => {
-          $(`#mission-duration-${i}`).text(mission.duration / 24);
-          $(`#mission-goal-${i}`).text(mission.goal.toLocaleString("en-US"));
-          $(`#mission-interval-${i}`).text(mission.intervalDays);
-          $(`#mission-penalty-${i}`).text(mission.penalty.toLocaleString("en-US"));
-          $(`#mission-reward-amount-${i}`).text(mission.rewardAmount.toLocaleString("en-US"));
+        var insertMissionConstants = function insertMissionConstants(i, mission) {
+          $('#mission-duration-' + i).text(mission.duration / 24);
+          $('#mission-interval-' + i).text(mission.intervalDays);
+
+          if (mission.goal) {
+            $('#mission-goal-' + i).text(mission.goal.toLocaleString('en-US'));
+            $('#mission-penalty-' + i).text(mission.penalty.toLocaleString('en-US'));
+            $('#mission-reward-amount-' + i).text(mission.rewardAmount.toLocaleString('en-US'));
+          }
         };
 
-        let onActiveMission = (i, mission) => {
-          let progressPercent = returnMissionProgress(mission.progress, mission.goal);
-          $(`#mission-progress-bar-${i}`).css({
-            width: progressPercent + "%",
-            "background-color": colorProgress(progressPercent)
+        var onActiveMission = function onActiveMission(i, mission) {
+          var progressPercent = returnMissionProgress(mission.progress, mission.goal);
+          $('#mission-progress-bar-' + i).css({
+            width: progressPercent + '%',
+            'background-color': colorProgress(progressPercent)
           });
 
-          $(`#mission-start-${i}`).text(rHelper.methods.CALC_convertDateToIso(rHelper.methods.CALC_toMilliseconds(mission.startTimestamp)));
-          $(`#mission-end-${i}`).text(calculateRemainingDuration(now, mission.endTimestamp));
+          $('#mission-start-' + i).text(rHelper.methods.CALC_convertDateToIso(rHelper.methods.CALC_toMilliseconds(mission.startTimestamp)));
+          $('#mission-end-' + i).text(calculateRemainingDuration(now, mission.endTimestamp));
         };
 
-        let onPassiveMission = i => {
-          $(`#mission-progress-wrap-${i}`).css("display", "none");
+        var onPassiveMission = function onPassiveMission(i) {
+          $('#mission-progress-wrap-' + i).css('display', 'none');
         };
 
-        let checkForMissionStatus = (i, mission) => {
+        var checkForMissionStatus = function checkForMissionStatus(i, mission) {
           if (mission.status == 1) {
             onActiveMission(i, mission);
           } else {
@@ -3574,7 +3500,7 @@ const rHelper = {
           }
         };
 
-        $.each(missionContainer, (i, mission) => {
+        $.each(missionContainer, function (i, mission) {
           insertMissionReward(i, mission);
           insertMissionConstants(i, mission);
 
@@ -3588,69 +3514,71 @@ const rHelper = {
         });
       }
     },
+    CALC_attackLogDetailedUnitStringInsertion: function CALC_attackLogDetailedUnitStringInsertion(type, container) {
+      var _ref28 = [''],
+          content = _ref28[0],
+          unitArray = _ref28[1];
 
-    CALC_attackLogDetailedUnitStringInsertion(type, container) {
-      let content = "";
-      let unitArray;
 
-      if (type == "offense") {
+      if (type == 'offense') {
         unitArray = [0, 2, 3];
-      } else if (type == "defense") {
+      } else if (type == 'defense') {
         unitArray = [5, 4, 1];
       }
 
-      $.each(container, (i, unitAmount) => {
+      $.each(container, function (i, unitAmount) {
         if (unitAmount != 0) {
-          content += ' <span class="resources-unit-' + unitArray[i] + '"></span> ' + unitAmount.toLocaleString("en-US");
+          content += ' <span class="resources-unit-' + unitArray[i] + '"></span> ' + unitAmount.toLocaleString('en-US');
         }
       });
 
       return content;
     },
-    CALC_attackLogDetailedDatasetIteration(i, dataset, dataTHs) {
-      let tr = $(crEl("tr")).addClass(rHelper.methods.CALC_attackLogSetTRColor(dataset.result));
-      let textOrientation = "text-md-right text-sm-left";
-      let factorBgColorClass = "bg-success-25";
+    CALC_attackLogDetailedDatasetIteration: function CALC_attackLogDetailedDatasetIteration(i, dataset, dataTHs) {
+      var _ref29 = [$(crEl('tr')).addClass(rHelper.methods.CALC_attackLogSetTRColor(dataset.result)), 'text-md-right text-sm-left', 'bg-success-25'],
+          tr = _ref29[0],
+          textOrientation = _ref29[1],
+          factorBgColorClass = _ref29[2];
 
-      for (let index = 0; index <= 7; index += 1) {
-        let td = $(crEl("td")).attr("data-th", dataTHs[index]);
+
+      for (var index = 0; index <= 7; index += 1) {
+        var td = $(crEl('td')).attr('data-th', dataTHs[index]);
 
         switch (index) {
           case 0:
-            td.text(`${dataset.target} (${dataset.targetLevel})`);
+            td.text(dataset.target + ' (' + dataset.targetLevel + ')');
             break;
           case 1:
             td.html(rHelper.methods.CALC_attackLogDetailedCoordsTimestampString(dataset));
             break;
           case 2:
-            td.html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion("offense", dataset.offense.units)).addClass("text-sm-left text-md-center");
+            td.html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion('offense', dataset.offense.units)).addClass('text-sm-left text-md-center');
             break;
           case 3:
-            td.html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion("defense", dataset.defense.units)).addClass("text-sm-left text-md-center");
+            td.html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion('defense', dataset.defense.units)).addClass('text-sm-left text-md-center');
             break;
           case 4:
             if (dataset.factor < 100) {
-              factorBgColorClass = "bg-warning-25";
+              factorBgColorClass = 'bg-warning-25';
             }
 
-            td.text(dataset.factor.toLocaleString("en-US") + "%").addClass(`${textOrientation} ${factorBgColorClass}`);
+            td.text(dataset.factor.toLocaleString('en-US') + '%').addClass(textOrientation + ' ' + factorBgColorClass);
             break;
           case 5:
             td.html(rHelper.methods.CALC_attackLogDetailedLootString(dataset.loot));
             break;
           case 6:
-            let profit = dataset.profit;
-            let result = dataset.result;
-            let profitColor = "#dedede";
+            var _ref30 = [dataset.profit, dataset.result, '#dedede'],
+                profit = _ref30[0],
+                result = _ref30[1],
+                profitColor = _ref30[2];
 
-            if ((profit < 0 && result) || !result) {
-              profitColor = "coral";
+
+            if (profit < 0 && result || !result) {
+              profitColor = 'coral';
             }
 
-            td
-              .text(profit.toLocaleString("en-US"))
-              .addClass(textOrientation)
-              .css("color", profitColor);
+            td.text(profit.toLocaleString('en-US')).addClass(textOrientation).css('color', profitColor);
             break;
         }
 
@@ -3659,46 +3587,52 @@ const rHelper = {
 
       return tr;
     },
-    CALC_attackLogSetTRColor(result) {
-      let colorClass = "bg-success-25";
+    CALC_attackLogSetTRColor: function CALC_attackLogSetTRColor(result) {
+      var colorClass = 'bg-success-25';
 
       if (!result || result < 0) {
-        colorClass = "bg-warning-25";
+        colorClass = 'bg-warning-25';
       }
 
       return colorClass;
     },
-    CALC_attackLogDetailedCoordsTimestampString(dataset) {
-      let coords = `${dataset.coordinates.lat}, ${dataset.coordinates.lon}`;
-      let timestamp = rHelper.methods.CALC_convertDateToIso(dataset.attackedAt);
-      let a = `<a href="https://www.google.com/maps/search/${coords}" target="_blank" rel="noopener nofollow noreferrer">${coords}</a>`;
+    CALC_attackLogDetailedCoordsTimestampString: function CALC_attackLogDetailedCoordsTimestampString(dataset) {
+      var _ref31 = [dataset.coordinates.lat + ', ' + dataset.coordinates.lon, rHelper.methods.CALC_convertDateToIso(dataset.attackedAt)],
+          coords = _ref31[0],
+          timestamp = _ref31[1];
 
-      return `${timestamp} | ${a}`;
+      var a = '<a href="https://www.google.com/maps/search/' + coords + '" target="_blank" rel="noopener nofollow noreferrer">' + coords + '</a>';
+
+      return timestamp + ' | ' + a;
     },
-    CALC_attackLogDetailedPageButtonToggler(type, dataContainer) {
-      let button = $(`#attacklog-detailed-${type}`);
-      let success = "btn-success";
+    CALC_attackLogDetailedPageButtonToggler: function CALC_attackLogDetailedPageButtonToggler(type, dataContainer) {
+      var _ref32 = [$('#attacklog-detailed-' + type), 'btn-success'],
+          button = _ref32[0],
+          success = _ref32[1];
 
-      if (type == "last") {
+
+      if (type == 'last') {
         if (dataContainer.skipCount == 0) {
-          button.attr("disabled", true).removeClass(success);
+          button.attr('disabled', true).removeClass(success);
         } else {
-          button.attr("disabled", false).addClass(success);
+          button.attr('disabled', false).addClass(success);
         }
-      } else if (type == "next") {
+      } else if (type == 'next') {
         if (dataContainer.maxLength > dataContainer.skipCount + 100) {
-          button.addClass(success).attr("disabled", false);
+          button.addClass(success).attr('disabled', false);
         } else {
-          button.removeClass(success).attr("disabled", true);
+          button.removeClass(success).attr('disabled', true);
         }
       }
     },
-    CALC_attackLogDetailedLootString(lootContainer) {
-      let lootString = "";
+    CALC_attackLogDetailedLootString: function CALC_attackLogDetailedLootString(lootContainer) {
+      var lootString = '';
 
-      $.each(lootContainer, (index, iteration) => {
-        let type = iteration.type;
-        let icon = "";
+      $.each(lootContainer, function (index, iteration) {
+        var _ref33 = [iteration.type, ''],
+            type = _ref33[0],
+            icon = _ref33[1];
+
 
         if (type == -1) {
           icon = '<img src="assets/img/cash.png" alt="Cash" />';
@@ -3706,120 +3640,101 @@ const rHelper = {
           icon = '<span class="' + rHelper.methods.CALC_convertId(type).icon + '"></span>';
         }
 
-        lootString += `${icon} ${iteration.amount.toLocaleString("en-US")} `;
+        lootString += icon + ' ' + iteration.amount.toLocaleString('en-US') + ' ';
       });
 
       return lootString;
     },
-    CALC_convertDateToIso(milliseconds) {
+    CALC_convertDateToIso: function CALC_convertDateToIso(milliseconds) {
       /*
-            src https://stackoverflow.com/questions/10830357/javascript-toisostring-ignores-timezone-offset?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
-             */
+      src https://stackoverflow.com/questions/10830357/javascript-toisostring-ignores-timezone-offset?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+      */
 
-      let tzoffset = new Date(milliseconds).getTimezoneOffset() * 60000;
-      let date = new Date(milliseconds - tzoffset)
-        .toISOString()
-        .slice(0, -1)
-        .match(/(\d{4}\-\d{2}\-\d{2})T(\d{2}:\d{2}:\d{2})/);
-      return `${date[1]} ${date[2]}`;
+      var tzoffset = new Date(milliseconds).getTimezoneOffset() * 60000;
+      var date = new Date(milliseconds - tzoffset).toISOString().slice(0, -1).match(/(\d{4}\-\d{2}\-\d{2})T(\d{2}:\d{2}:\d{2})/);
+      return date[1] + ' ' + date[2];
     },
-    CALC_currentScanCost() {
-      let techCenterLevel = rHelper.data.buildings[0].level;
-      let mineCount = rHelper.methods.CALC_totalMineCount();
+    CALC_currentScanCost: function CALC_currentScanCost() {
+      var _ref34 = [rHelper.data.buildings[0].level, rHelper.methods.CALC_totalMineCount()],
+          techCenterLevel = _ref34[0],
+          mineCount = _ref34[1];
+
 
       return Math.round(10000 * Math.pow(2.4, techCenterLevel) * (1 + mineCount / 1000) / 5000) * 5000;
     },
-    CALC_toMilliseconds(unix) {
+    CALC_toMilliseconds: function CALC_toMilliseconds(unix) {
       return unix * 1000;
     },
-    CALC_mineEstRevenue(subObj, type, age) {
-      "use strict";
+    CALC_mineEstRevenue: function CALC_mineEstRevenue(subObj, type, age) {
+      'use strict';
 
       return Math.round(subObj.fullRate * rHelper.methods.CALC_returnPriceViaId(type, 8) * age * 24 * subObj.HQBoost);
     },
-    CALC_createMapContentString(relObj, buildDate, age, estRevenue, subObj) {
-      "use strict";
+    CALC_createMapContentString: function CALC_createMapContentString(relObj, buildDate, age, estRevenue, subObj) {
+      'use strict';
 
-      let quality = subObj.quality * 100;
-      return `<div>
-        <h1 class="firstHeading">${relObj.name}</h1>
-        <div>
-        <p><strong>Built:</strong> ${buildDate}</p>
-        <p><strong>Age (days)</strong>: ${age.toFixed(2)}</p>
-        <p><strong>Estimated revenue (condition always 100%):</strong> ${estRevenue.toLocaleString("en-US")}</p>
-        <table class="table table-break-medium mb-3 text-center">
-        <thead>
-        <tr>
-          <th>Raw rate</th>
-          <th>Full rate</th>
-          <th>Tech factor</th>
-          <th>Quality</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td>${subObj.rawRate.toLocaleString("en-US")}</td>
-          <td>${subObj.fullRate.toLocaleString("en-US")}</td>
-          <td>${subObj.techFactor.toLocaleString("en-US")}</td>
-          <td>${quality.toFixed(2)}% => ${(quality * subObj.techFactor).toFixed(2)} %</td>
-        </tr>
-        </tbody>
-        </table>
-        </div>
-        </div>`;
+      var quality = subObj.quality * 100;
+      return '<div>\n        <h1 class="firstHeading">' + relObj.name + '</h1>\n        <div>\n        <p><strong>Built:</strong> ' + buildDate + '</p>\n        <p><strong>Age (days)</strong>: ' + age.toFixed(2) + '</p>\n        <p><strong>Estimated revenue (condition always 100%):</strong> ' + estRevenue.toLocaleString('en-US') + '</p>\n        <table class="table table-break-medium mb-3 text-center">\n        <thead>\n        <tr>\n          <th>Raw rate</th>\n          <th>Full rate</th>\n          <th>Tech factor</th>\n          <th>Quality</th>\n        </tr>\n        </thead>\n        <tbody>\n        <tr>\n          <td>' + subObj.rawRate.toLocaleString('en-US') + '</td>\n          <td>' + subObj.fullRate.toLocaleString('en-US') + '</td>\n          <td>' + subObj.techFactor.toLocaleString('en-US') + '</td>\n          <td>' + quality.toFixed(2) + '% => ' + (quality * subObj.techFactor).toFixed(2) + ' %</td>\n        </tr>\n        </tbody>\n        </table>\n        </div>\n        </div>';
     },
-    CALC_headquarterRemainingCost(i, material, userHqLevel) {
-      "use strict";
+    CALC_headquarterRemainingCost: function CALC_headquarterRemainingCost(i, material, userHqLevel) {
+      'use strict';
 
-      let price = rHelper.methods.CALC_returnPriceViaId(material);
-      let missing = rHelper.data.headquarter[userHqLevel].amount - rHelper.data.headquarter.user.paid[i];
+      var _ref35 = [rHelper.methods.CALC_returnPriceViaId(material), rHelper.data.headquarter[userHqLevel].amount - rHelper.data.headquarter.user.paid[i]],
+          price = _ref35[0],
+          missing = _ref35[1];
+
+
       if (missing < 0) {
         missing = 0;
       }
 
       return price * missing;
     },
-    CALC_headquarterContentIcon(material) {
-      "use strict";
+    CALC_headquarterContentIcon: function CALC_headquarterContentIcon(material) {
+      'use strict';
 
-      let container = $(crEl("span"));
+      var container = $(crEl('span'));
       container.addClass(rHelper.methods.CALC_convertId(material).icon);
       return container[0].outerHTML;
     },
-    CALC_headquarterContentRequiredAmount(amount) {
-      "use strict";
+    CALC_headquarterContentRequiredAmount: function CALC_headquarterContentRequiredAmount(amount) {
+      'use strict';
 
-      let span = $(crEl("span")).html(amount.toLocaleString("en-US"));
+      var span = $(crEl('span')).html(amount.toLocaleString('en-US'));
       return span[0].outerHTML;
     },
-    CALC_convertMeterToYards(meter) {
-      "use strict";
+    CALC_convertMeterToYards: function CALC_convertMeterToYards(meter) {
+      'use strict';
 
       return Math.round(meter * 1.09361);
     },
-    CALC_headquarterLevelCost(level) {
-      "use strict";
+    CALC_headquarterLevelCost: function CALC_headquarterLevelCost(level) {
+      'use strict';
 
-      let cost = 0;
-      let hqLevel = rHelper.data.headquarter[level];
+      var _ref36 = [0, rHelper.data.headquarter[level]],
+          cost = _ref36[0],
+          hqLevel = _ref36[1];
+
 
       if ($.isArray(hqLevel.material)) {
-        $.each(hqLevel.material, (k, material) => {
+        $.each(hqLevel.material, function (k, material) {
           cost += hqLevel.amount * rHelper.methods.CALC_returnPriceViaId(material);
         });
       }
 
       return cost;
     },
-    CALC_headquarterOvwMaterial(level) {
-      "use strict";
+    CALC_headquarterOvwMaterial: function CALC_headquarterOvwMaterial(level) {
+      'use strict';
 
-      let hqLevel = rHelper.data.headquarter[level];
-      let string = "";
+      var _ref37 = [rHelper.data.headquarter[level], ''],
+          hqLevel = _ref37[0],
+          string = _ref37[1];
+
 
       if ($.isArray(hqLevel.material)) {
-        $.each(hqLevel.material, (k, material) => {
-          let addClass;
+        $.each(hqLevel.material, function (k, material) {
+          var addClass = void 0;
 
           if (material <= 13) {
             addClass = rHelper.data.material[material].icon;
@@ -3834,21 +3749,21 @@ const rHelper = {
             addClass = rHelper.data.units[material].icon;
           }
 
-          let span = $(crEl("span")).addClass(addClass);
-          string += span[0].outerHTML + " ";
+          var span = $(crEl('span')).addClass(addClass);
+          string += span[0].outerHTML + ' ';
         });
       }
 
       return string;
     },
-    CALC_totalBuildingErectionSum() {
-      "use strict";
+    CALC_totalBuildingErectionSum: function CALC_totalBuildingErectionSum() {
+      'use strict';
 
-      let total = 0;
-      $.each(rHelper.data.buildings, (i, building) => {
-        for (let level = 0; level < building.level; level += 1) {
-          $.each(building.material, (k, material) => {
-            let materialAmount = `materialAmount${k}`;
+      var total = 0;
+      $.each(rHelper.data.buildings, function (i, building) {
+        var _loop2 = function _loop2(level) {
+          $.each(building.material, function (k, material) {
+            var materialAmount = 'materialAmount' + k;
 
             if (material != -1) {
               total += rHelper.methods.CALC_returnPriceViaId(material) * building[materialAmount][level];
@@ -3856,27 +3771,31 @@ const rHelper = {
               total += building[materialAmount][level];
             }
           });
+        };
+
+        for (var level = 0; level < building.level; level += 1) {
+          _loop2(level);
         }
       });
 
       return total;
     },
-    CALC_perfectWorth(type) {
-      "use strict";
+    CALC_perfectWorth: function CALC_perfectWorth(type) {
+      'use strict';
 
-      let total = 0;
+      var total = 0;
 
-      if (type == "headquarter") {
-        $.each(rHelper.data.headquarter, (i, hqLevel) => {
-          $.each(hqLevel.material, (k, material) => {
+      if (type == 'headquarter') {
+        $.each(rHelper.data.headquarter, function (i, hqLevel) {
+          $.each(hqLevel.material, function (k, material) {
             total += hqLevel.amount * rHelper.methods.CALC_returnPriceViaId(material);
           });
         });
-      } else if (type == "buildings") {
-        $.each(rHelper.data.buildings, (i, building) => {
-          for (let level = 0; level < 10; level += 1) {
-            $.each(building.material, (k, material) => {
-              let materialAmount = `materialAmount${k}`;
+      } else if (type == 'buildings') {
+        $.each(rHelper.data.buildings, function (i, building) {
+          var _loop3 = function _loop3(level) {
+            $.each(building.material, function (k, material) {
+              var materialAmount = 'materialAmount' + k;
 
               if (material != -1) {
                 total += rHelper.methods.CALC_returnPriceViaId(material) * building[materialAmount][level];
@@ -3884,44 +3803,53 @@ const rHelper = {
                 total += building[materialAmount][level];
               }
             });
+          };
+
+          for (var level = 0; level < 10; level += 1) {
+            _loop3(level);
           }
         });
       }
 
       return total;
     },
-    CALC_companyWorth() {
-      "use strict";
+    CALC_companyWorth: function CALC_companyWorth() {
+      'use strict';
 
-      let companyWorth = 0;
+      var companyWorth = 0;
 
-      let fns = ["CALC_totalHeadquarterErectionSum", "CALC_totalBuildingErectionSum", "CALC_totalFactoryErectionWorth", "CALC_totalWarehouseErectionWorth", "CALC_totalMineErectionSum"];
+      var fns = ['CALC_totalHeadquarterErectionSum', 'CALC_totalBuildingErectionSum', 'CALC_totalFactoryErectionWorth', 'CALC_totalWarehouseErectionWorth', 'CALC_totalMineErectionSum'];
 
-      $.each(fns, (i, fn) => {
+      $.each(fns, function (i, fn) {
         companyWorth += rHelper.methods[fn]();
       });
 
       return companyWorth;
     },
-    CALC_totalHeadquarterErectionSum() {
-      "use strict";
+    CALC_totalHeadquarterErectionSum: function CALC_totalHeadquarterErectionSum() {
+      'use strict';
 
-      let total = 0;
-      let headquarter = rHelper.data.headquarter;
+      var total = 0;
+      var headquarter = rHelper.data.headquarter;
 
       if (headquarter.user) {
-        let userHq = headquarter.user;
-        let userHqLevel = userHq.level;
-        for (let i = userHqLevel - 1; i >= 1; i -= 1) {
-          let hqLevel = rHelper.data.headquarter[i];
-          $.each(hqLevel.material, (k, material) => {
+        var userHq = headquarter.user;
+        var userHqLevel = userHq.level;
+
+        var _loop4 = function _loop4(i) {
+          var hqLevel = rHelper.data.headquarter[i];
+          $.each(hqLevel.material, function (k, material) {
             total += hqLevel.amount * rHelper.methods.CALC_returnPriceViaId(material);
           });
+        };
+
+        for (var i = userHqLevel - 1; i >= 1; i -= 1) {
+          _loop4(i);
         }
         if (userHqLevel != 10) {
-          $.each(userHq.paid, (i, paid) => {
+          $.each(userHq.paid, function (i, paid) {
             if (paid != 0) {
-              let material = rHelper.data.headquarter[userHqLevel - 1].material[i];
+              var material = rHelper.data.headquarter[userHqLevel - 1].material[i];
               total += paid * rHelper.methods.CALC_returnPriceViaId(material);
             }
           });
@@ -3930,71 +3858,75 @@ const rHelper = {
 
       return total;
     },
-    CALC_totalMineErectionSum() {
-      "use strict";
+    CALC_totalMineErectionSum: function CALC_totalMineErectionSum() {
+      'use strict';
 
-      let total = 0;
-      let totalMines = rHelper.methods.CALC_totalMineCount();
+      var total = 0;
+      var totalMines = rHelper.methods.CALC_totalMineCount();
 
-      $.each(rHelper.data.material, (i, material) => {
+      $.each(rHelper.data.material, function (i, material) {
         total += material.basePrice * (1 + 0.01 * totalMines) * material.amountOfMines;
       });
 
       return Math.round(total);
     },
-    CALC_totalWarehouseErectionWorth() {
-      "use strict";
+    CALC_totalWarehouseErectionWorth: function CALC_totalWarehouseErectionWorth() {
+      'use strict';
 
-      let total = 0;
-      let subArrays = ["material", "products", "loot", "units"];
+      var total = 0;
+      var subArrays = ['material', 'products', 'loot', 'units'];
 
-      $.each(subArrays, (i, index) => {
-        $.each(rHelper.data[index], (k, obj) => {
-          for (let k = 1; k <= obj.warehouse.level; k += 1) {
-            total += Math.pow(k - 1, 2) * 1250000;
+      $.each(subArrays, function (i, index) {
+        $.each(rHelper.data[index], function (k, obj) {
+          for (var _k = 1; _k <= obj.warehouse.level; _k += 1) {
+            total += Math.pow(_k - 1, 2) * 1250000;
           }
         });
       });
 
       return total;
     },
-    CALC_totalFactoryErectionWorth() {
-      "use strict";
+    CALC_totalFactoryErectionWorth: function CALC_totalFactoryErectionWorth() {
+      'use strict';
 
-      let total = 0;
+      var total = 0;
 
-      $.each(rHelper.data.products, (i, factory) => {
-        for (let level = 0; level <= factory.factoryLevel; level += 1) {
-          $.each(factory.upgradeMaterial, (k, material) => {
-            let value = Math.pow(level, 2) * factory.upgradeMaterialAmount[k];
+      $.each(rHelper.data.products, function (i, factory) {
+        var _loop5 = function _loop5(level) {
+          $.each(factory.upgradeMaterial, function (k, material) {
+            var value = Math.pow(level, 2) * factory.upgradeMaterialAmount[k];
             if (material != -1) {
               total += value * rHelper.methods.CALC_returnPriceViaId(material);
             } else {
               total += value;
             }
           });
+        };
+
+        for (var level = 0; level <= factory.factoryLevel; level += 1) {
+          _loop5(level);
         }
       });
 
       return total;
     },
-    CALC_unitsCraftingPrice(unitId) {
-      "use strict";
+    CALC_unitsCraftingPrice: function CALC_unitsCraftingPrice(unitId) {
+      'use strict';
 
-      let unit = rHelper.data.units[unitId];
-      let worth = unit.prices.current.ai;
-      let requiredAmount = unit.requiredAmount;
-      let requirements = unit.requirements;
+      var unit = rHelper.data.units[unitId];
+      var worth = unit.prices.current.ai;
+      var requiredAmount = unit.requiredAmount;
+      var requirements = unit.requirements;
 
-      $.each(requirements, (index, requirement) => {
-        let price = rHelper.methods.CALC_returnPriceViaId(requirement);
+      $.each(requirements, function (index, requirement) {
+        var price = rHelper.methods.CALC_returnPriceViaId(requirement);
         worth += price * requiredAmount[index];
       });
 
-      let settings = rHelper.data.settings[3];
-      let transportCostInclusion = 1;
+      var settings = rHelper.data.settings[3];
+      var transportCostInclusion = 1;
 
-      if (typeof settings !== undefined) {
+      if ((typeof settings === 'undefined' ? 'undefined' : _typeof(settings)) !== undefined) {
         transportCostInclusion = rHelper.data.settings[3].value;
       }
 
@@ -4006,14 +3938,14 @@ const rHelper = {
       unit.profit.craftingPrice = worth;
       return worth;
     },
-    CALC_unitsPricePerStrength(unitId) {
-      "use strict";
+    CALC_unitsPricePerStrength: function CALC_unitsPricePerStrength(unitId) {
+      'use strict';
 
-      let buildingLevel = 0;
-      let strength = 0;
-      let pricePerStrength = 0;
-      let referencePrice = 0;
-      let profitObj = rHelper.data.units[unitId].profit;
+      var buildingLevel = 0;
+      var strength = 0;
+      var pricePerStrength = 0;
+      var referencePrice = 0;
+      var profitObj = rHelper.data.units[unitId].profit;
 
       switch (unitId) {
         case 0:
@@ -4029,7 +3961,7 @@ const rHelper = {
       }
 
       strength = rHelper.data.units[unitId].baseStrength * buildingLevel;
-      let marketPriceIncludingTransportation = profitObj.marketPrice * rHelper.data.buildings[9].transportCost;
+      var marketPriceIncludingTransportation = profitObj.marketPrice * rHelper.data.buildings[9].transportCost;
 
       if (marketPriceIncludingTransportation >= profitObj.craftingPrice) {
         referencePrice = profitObj.craftingPrice;
@@ -4040,38 +3972,38 @@ const rHelper = {
       pricePerStrength = Math.round(referencePrice / strength);
       return pricePerStrength;
     },
-    CALC_unitsProfit(unitId) {
-      "use strict";
+    CALC_unitsProfit: function CALC_unitsProfit(unitId) {
+      'use strict';
 
-      let profitObj = rHelper.data.units[unitId].profit;
-      let profit = (1 - profitObj.marketPrice / profitObj.craftingPrice) * 100;
+      var profitObj = rHelper.data.units[unitId].profit;
+      var profit = (1 - profitObj.marketPrice / profitObj.craftingPrice) * 100;
       profit *= -1;
       profitObj.profit = profit;
 
       return profit;
     },
-    CALC_recyclingProfit(lootId) {
-      "use strict";
+    CALC_recyclingProfit: function CALC_recyclingProfit(lootId) {
+      'use strict';
 
-      let profitObj = rHelper.data.loot[lootId].profit;
-      let profit = (1 - profitObj.outputWorth / profitObj.inputWorth) * 100;
+      var profitObj = rHelper.data.loot[lootId].profit;
+      var profit = (1 - profitObj.outputWorth / profitObj.inputWorth) * 100;
       profit *= -1;
 
       return profit;
     },
-    CALC_recyclingInputWorth(lootId) {
-      "use strict";
+    CALC_recyclingInputWorth: function CALC_recyclingInputWorth(lootId) {
+      'use strict';
 
-      let loot = rHelper.data.loot[lootId];
-      let amount = loot.recyclingDivisor;
-      let convertedId = lootId + 36;
-      let price = rHelper.methods.CALC_returnPriceViaId(convertedId, 0);
-      let worth = price * amount;
+      var loot = rHelper.data.loot[lootId];
+      var amount = loot.recyclingDivisor;
+      var convertedId = lootId + 36;
+      var price = rHelper.methods.CALC_returnPriceViaId(convertedId, 0);
+      var worth = price * amount;
 
-      let settings = rHelper.data.settings[3];
-      let transportCostInclusion = 1;
+      var settings = rHelper.data.settings[3];
+      var transportCostInclusion = 1;
 
-      if (typeof settings !== undefined) {
+      if ((typeof settings === 'undefined' ? 'undefined' : _typeof(settings)) !== undefined) {
         transportCostInclusion = rHelper.data.settings[3].value;
       }
 
@@ -4083,15 +4015,15 @@ const rHelper = {
       loot.profit.inputWorth = worth;
       return worth;
     },
-    CALC_recyclingOutputWorth(lootId, recyclingPlantLevel) {
-      "use strict";
+    CALC_recyclingOutputWorth: function CALC_recyclingOutputWorth(lootId, recyclingPlantLevel) {
+      'use strict';
 
-      let resultingAmount = rHelper.data.loot[lootId].recyclingAmount;
-      let resultingProducts = rHelper.data.loot[lootId].recyclingProduct;
-      let worth = 0;
+      var resultingAmount = rHelper.data.loot[lootId].recyclingAmount;
+      var resultingProducts = rHelper.data.loot[lootId].recyclingProduct;
+      var worth = 0;
 
       if ($.isArray(resultingProducts)) {
-        $.each(resultingProducts, (index, resultingProduct) => {
+        $.each(resultingProducts, function (index, resultingProduct) {
           worth += rHelper.methods.CALC_recyclingOutputWorthHelper(recyclingPlantLevel, resultingProduct, resultingAmount, index);
         });
       } else {
@@ -4102,33 +4034,33 @@ const rHelper = {
       rHelper.data.loot[lootId].profit.outputWorth = worth;
       return worth;
     },
-    CALC_recyclingOutputWorthHelper(recyclingPlantLevel, resultingProduct, resultingAmount, index) {
-      "use strict";
+    CALC_recyclingOutputWorthHelper: function CALC_recyclingOutputWorthHelper(recyclingPlantLevel, resultingProduct, resultingAmount, index) {
+      'use strict';
 
-      let price = rHelper.methods.CALC_returnPriceViaId(resultingProduct, 0);
-      let amount = resultingAmount * recyclingPlantLevel;
+      var price = rHelper.methods.CALC_returnPriceViaId(resultingProduct, 0);
+      var amount = resultingAmount * recyclingPlantLevel;
 
       if ($.isArray(resultingAmount)) {
         amount = resultingAmount[index] * recyclingPlantLevel;
       }
 
-      let worth = amount * price;
+      var worth = amount * price;
       return worth;
     },
-    CALC_recyclingRequirement(lootId) {
-      "use strict";
+    CALC_recyclingRequirement: function CALC_recyclingRequirement(lootId) {
+      'use strict';
 
       return rHelper.data.loot[lootId].recyclingDivisor;
     },
-    CALC_recyclingProducts(lootId, recyclingPlantLevel) {
-      "use strict";
+    CALC_recyclingProducts: function CALC_recyclingProducts(lootId, recyclingPlantLevel) {
+      'use strict';
 
-      let resultingAmount = rHelper.data.loot[lootId].recyclingAmount;
-      let resultingProducts = rHelper.data.loot[lootId].recyclingProduct;
-      let string = "";
+      var resultingAmount = rHelper.data.loot[lootId].recyclingAmount;
+      var resultingProducts = rHelper.data.loot[lootId].recyclingProduct;
+      var string = '';
 
       if ($.isArray(resultingProducts)) {
-        $.each(resultingProducts, (index, resultingProduct) => {
+        $.each(resultingProducts, function (index, resultingProduct) {
           string += rHelper.methods.CALC_recyclingProductsHelper(recyclingPlantLevel, resultingProduct, resultingAmount, index);
         });
       } else {
@@ -4137,41 +4069,41 @@ const rHelper = {
 
       return string;
     },
-    CALC_recyclingProductsHelper(recyclingPlantLevel, resultingProduct, resultingAmount, index) {
-      "use strict";
+    CALC_recyclingProductsHelper: function CALC_recyclingProductsHelper(recyclingPlantLevel, resultingProduct, resultingAmount, index) {
+      'use strict';
 
-      let product = rHelper.methods.CALC_convertId(resultingProduct);
-      let icon = $(crEl("span")).addClass(product.icon);
-      let amount = resultingAmount * recyclingPlantLevel;
+      var product = rHelper.methods.CALC_convertId(resultingProduct);
+      var icon = $(crEl('span')).addClass(product.icon);
+      var amount = resultingAmount * recyclingPlantLevel;
 
       if ($.isArray(resultingAmount)) {
         amount = resultingAmount[index] * recyclingPlantLevel;
       }
 
-      let string = `${icon[0].outerHTML} ${amount.toLocaleString("en-US")} `;
+      var string = icon[0].outerHTML + ' ' + amount.toLocaleString('en-US') + ' ';
       return string;
     },
-    CALC_buildingToLevel10(buildingId) {
-      "use strict";
+    CALC_buildingToLevel10: function CALC_buildingToLevel10(buildingId) {
+      'use strict';
 
-      let building = rHelper.data.buildings[buildingId];
-      let buildingLevel = building.level;
-      let level10Cost = 0;
-      let level10Transportation = 0;
+      var building = rHelper.data.buildings[buildingId];
+      var buildingLevel = building.level;
+      var level10Cost = 0;
+      var level10Transportation = 0;
 
-      for (let level = buildingLevel; level < 10; level += 1) {
-        for (let i = 0; i <= 3; i += 1) {
+      for (var level = buildingLevel; level < 10; level += 1) {
+        for (var i = 0; i <= 3; i += 1) {
           if (i === 0) {
-            let cash = building.materialAmount0[level];
+            var cash = building.materialAmount0[level];
             level10Cost += cash;
           } else {
-            let selector = `materialAmount${i}`;
-            let materialAmount = building[selector][level];
+            var selector = 'materialAmount' + i;
+            var materialAmount = building[selector][level];
 
-            if (typeof materialAmount === "number") {
-              let materialPrice = rHelper.methods.CALC_returnPriceViaId(building.material[i]);
-              let materialWorth = materialPrice * materialAmount;
-              let transportation = (rHelper.data.buildings[9].transportCost - 1) * materialWorth;
+            if (typeof materialAmount === 'number') {
+              var materialPrice = rHelper.methods.CALC_returnPriceViaId(building.material[i]);
+              var materialWorth = materialPrice * materialAmount;
+              var transportation = (rHelper.data.buildings[9].transportCost - 1) * materialWorth;
               level10Cost += materialWorth;
               level10Transportation += transportation;
             }
@@ -4183,69 +4115,69 @@ const rHelper = {
         level10Transportation: Math.round(level10Transportation)
       };
     },
-    CALC_warehouseUpgradeCost(targetLevel) {
-      "use strict";
+    CALC_warehouseUpgradeCost: function CALC_warehouseUpgradeCost(targetLevel) {
+      'use strict';
 
       return Math.pow(targetLevel - 1, 2) * 1250000;
     },
-    CALC_warehouseCostFromTo(start, end) {
-      "use strict";
+    CALC_warehouseCostFromTo: function CALC_warehouseCostFromTo(start, end) {
+      'use strict';
 
-      let warehouseCost = 0;
-      for (let i = end; i > start; i -= 1) {
+      var warehouseCost = 0;
+      for (var i = end; i > start; i -= 1) {
         warehouseCost += rHelper.methods.CALC_warehouseUpgradeCost(i);
       }
       return warehouseCost;
     },
-    CALC_warehouseContingent(level) {
-      "use strict";
+    CALC_warehouseContingent: function CALC_warehouseContingent(level) {
+      'use strict';
 
       return Math.pow(level, 2) * 5000;
     },
-    CALC_warehouseUpgradeCostContigentBased(startLevel, endContingent) {
-      "use strict";
+    CALC_warehouseUpgradeCostContigentBased: function CALC_warehouseUpgradeCostContigentBased(startLevel, endContingent) {
+      'use strict';
 
-      let warehouseCost = 0;
-      let nextBiggerTargetLevel = Math.ceil(Math.sqrt(endContingent / 5000));
+      var warehouseCost = 0;
+      var nextBiggerTargetLevel = Math.ceil(Math.sqrt(endContingent / 5000));
 
       warehouseCost += rHelper.methods.CALC_warehouseCostFromTo(startLevel, nextBiggerTargetLevel);
       return warehouseCost;
     },
-    CALC_warehouseUpgradeCostOnInput(id, type, value) {
-      "use strict";
+    CALC_warehouseUpgradeCostOnInput: function CALC_warehouseUpgradeCostOnInput(id, type, value) {
+      'use strict';
 
-      let mode = $(`#warehouse-${type}-calc-1-${id}`).val();
-      let currentWarehouseLevel = rHelper.data[type][id].warehouse.level;
-      let upgradeCost = 0;
+      var mode = $('#warehouse-' + type + '-calc-1-' + id).val();
+      var currentWarehouseLevel = rHelper.data[type][id].warehouse.level;
+      var upgradeCost = 0;
 
       switch (mode) {
-        case "level":
+        case 'level':
           upgradeCost = rHelper.methods.CALC_warehouseCostFromTo(currentWarehouseLevel, value);
           break;
-        case "contingent":
+        case 'contingent':
           upgradeCost = rHelper.methods.CALC_warehouseUpgradeCostContigentBased(currentWarehouseLevel, value);
           break;
       }
 
       return upgradeCost;
     },
-    CALC_warehouseWorth(id, type) {
-      "use strict";
+    CALC_warehouseWorth: function CALC_warehouseWorth(id, type) {
+      'use strict';
 
-      let price = 0;
-      let priceId = 0;
+      var price = 0;
+      var priceId = 0;
 
       switch (type) {
-        case "material":
+        case 'material':
           priceId = id;
           break;
-        case "products":
+        case 'products':
           priceId = id + 14;
           break;
-        case "loot":
+        case 'loot':
           priceId = id + 36;
           break;
-        case "units":
+        case 'units':
           priceId = id + 51;
           break;
       }
@@ -4253,77 +4185,76 @@ const rHelper = {
       price = rHelper.methods.CALC_returnPriceViaId(priceId);
       return price;
     },
-    CALC_warehouseRemainingTimeToFull(id, type) {
-      "use strict";
+    CALC_warehouseRemainingTimeToFull: function CALC_warehouseRemainingTimeToFull(id, type) {
+      'use strict';
 
-      let el = rHelper.data[type][id];
-      let remainingCapacity = el.warehouse.contingent - el.warehouse.fillAmount;
-      let remainingTime = 0;
-      let divisor = 1;
+      var el = rHelper.data[type][id];
+      var remainingCapacity = el.warehouse.contingent - el.warehouse.fillAmount;
+      var remainingTime = 0;
+      var divisor = 1;
 
-      if (type == "material") {
+      if (type == 'material') {
         divisor = el.perHour;
-      } else if (type == "products") {
+      } else if (type == 'products') {
         divisor = el.scaling * el.factoryLevel * rHelper.methods.CALC_factoryMinWorkload(id);
       }
 
       remainingTime = remainingCapacity / divisor;
 
-      if (isNaN(remainingTime) || (type == "products" && el.turnover <= 0) || type == "loot" || type == "units") {
-        remainingTime = "∞";
+      if (isNaN(remainingTime) || type == 'products' && el.turnover <= 0 || type == 'loot' || type == 'units') {
+        remainingTime = '∞';
       } else {
         if (remainingTime > 24) {
-          remainingTime = `> ${(remainingTime / 24).toFixed(2)} days`;
+          remainingTime = '> ' + (remainingTime / 24).toFixed(2) + ' days';
         } else {
-          remainingTime = `> ${remainingTime.toFixed(2)} hours`;
+          remainingTime = '> ' + remainingTime.toFixed(2) + ' hours';
         }
       }
 
       return remainingTime;
     },
-    CALC_warehouseTotalLevel() {
-      "use strict";
+    CALC_warehouseTotalLevel: function CALC_warehouseTotalLevel() {
+      'use strict';
 
-      let total = 0;
+      var total = 0;
 
-      let arr = ["material", "products", "loot", "units"];
+      var arr = ['material', 'products', 'loot', 'units'];
 
-      $.each(arr, (index, pointer) => {
-        $.each(rHelper.data[pointer], (index, el) => {
+      $.each(arr, function (index, pointer) {
+        $.each(rHelper.data[pointer], function (index, el) {
           total += el.warehouse.level;
         });
       });
 
       return total;
     },
-    CALC_warehouseTotalWorth() {
-      "use strict";
+    CALC_warehouseTotalWorth: function CALC_warehouseTotalWorth() {
+      'use strict';
 
-      let total = 0;
+      var total = 0;
 
-      let arr = ["material", "products", "loot", "units"];
+      var arr = ['material', 'products', 'loot', 'units'];
 
-      $.each(arr, (index, pointer) => {
-        $.each(rHelper.data[pointer], (index, el) => {
+      $.each(arr, function (index, pointer) {
+        $.each(rHelper.data[pointer], function (index, el) {
           total += rHelper.methods.CALC_warehouseWorth(index, pointer) * el.warehouse.fillAmount;
         });
       });
 
       return total;
     },
-    CALC_flowDistributionHelper(type, dependantFactory, id, i) {
-      "use strict";
+    CALC_flowDistributionHelper: function CALC_flowDistributionHelper(type, dependantFactory, id, i) {
+      'use strict';
 
-      let originalIndex = 0;
-      let dependantIconIndex = 0;
-      let requiredAmountPerLevel = 0;
-      let dependantObj = {};
-      let requiredAmount = 0;
-      let string = "";
-      let arrow =
-        '<svg xmlns="http://www.w3.org/2000/svg" width="15" fill="#fff" viewBox="0 0 31.49 31.49"><path d="M21.205 5.007c-.429-.444-1.143-.444-1.587 0-.429.429-.429 1.143 0 1.571l8.047 8.047H1.111C.492 14.626 0 15.118 0 15.737c0 .619.492 1.127 1.111 1.127h26.554l-8.047 8.032c-.429.444-.429 1.159 0 1.587.444.444 1.159.444 1.587 0l9.952-9.952c.444-.429.444-1.143 0-1.571l-9.952-9.953z"/></svg>';
+      var originalIndex = 0;
+      var dependantIconIndex = 0;
+      var requiredAmountPerLevel = 0;
+      var dependantObj = {};
+      var requiredAmount = 0;
+      var string = '';
+      var arrow = '<svg xmlns="http://www.w3.org/2000/svg" width="15" fill="#fff" viewBox="0 0 31.49 31.49"><path d="M21.205 5.007c-.429-.444-1.143-.444-1.587 0-.429.429-.429 1.143 0 1.571l8.047 8.047H1.111C.492 14.626 0 15.118 0 15.737c0 .619.492 1.127 1.111 1.127h26.554l-8.047 8.032c-.429.444-.429 1.159 0 1.587.444.444 1.159.444 1.587 0l9.952-9.952c.444-.429.444-1.143 0-1.571l-9.952-9.953z"/></svg>';
 
-      if (type == "material") {
+      if (type == 'material') {
         dependantIconIndex = dependantFactory - 14;
         dependantObj = rHelper.data.products[dependantIconIndex];
 
@@ -4351,89 +4282,87 @@ const rHelper = {
         requiredAmount = dependantObj.factoryLevel * requiredAmountPerLevel;
       }
 
-      string += `<span class="resources-${type}-${id}"></span> ${requiredAmount.toLocaleString("en-US")} ${arrow} <span class="resources-product-${dependantIconIndex}"></span>`;
-      let name1 = "";
-      let name2 = dependantObj.name;
+      string += '<span class="resources-' + type + '-' + id + '"></span> ' + requiredAmount.toLocaleString('en-US') + ' ' + arrow + ' <span class="resources-product-' + dependantIconIndex + '"></span>';
+      var name1 = '';
+      var name2 = dependantObj.name;
 
       switch (type) {
-        case "material":
+        case 'material':
           name1 = rHelper.data.material[id].name;
           break;
-        case "product":
+        case 'product':
           name1 = rHelper.data.products[id].name;
           break;
       }
 
-      $(`#flow-${type}-distribution-${id}-${i}`)
-        .html(string)
-        .attr("data-th", `${name1} to ${name2}`);
+      $('#flow-' + type + '-distribution-' + id + '-' + i).html(string).attr('data-th', name1 + ' to ' + name2);
       return requiredAmount;
     },
-    CALC_flowDistribution(id, type) {
-      "use strict";
+    CALC_flowDistribution: function CALC_flowDistribution(id, type) {
+      'use strict';
 
-      let perHour = 0;
-      let obj = {};
-      let requiredAmount = 0;
+      var perHour = 0;
+      var obj = {};
+      var requiredAmount = 0;
 
       switch (type) {
-        case "material":
+        case 'material':
           obj = rHelper.data.material[id];
           perHour = obj.perHour;
           break;
-        case "product":
+        case 'product':
           obj = rHelper.data.products[id];
-          let factoryLevel = obj.factoryLevel;
-          let scaling = obj.scaling;
-          let workload = rHelper.methods.CALC_factoryMinWorkload(id);
+          var factoryLevel = obj.factoryLevel;
+          var scaling = obj.scaling;
+          var workload = rHelper.methods.CALC_factoryMinWorkload(id);
           perHour = factoryLevel * scaling * workload;
           break;
       }
 
-      let dependantFactories = obj.dependantFactories;
+      var dependantFactories = obj.dependantFactories;
 
       if ($.isArray(dependantFactories)) {
-        $.each(dependantFactories, (i, dependantFactory) => {
+        $.each(dependantFactories, function (i, dependantFactory) {
           requiredAmount += rHelper.methods.CALC_flowDistributionHelper(type, dependantFactory, id, i);
         });
-      } else if (dependantFactories != "") {
+      } else if (dependantFactories != '') {
         requiredAmount += rHelper.methods.CALC_flowDistributionHelper(type, dependantFactories, id, 0);
       }
 
       return perHour - requiredAmount;
     },
-    CALC_flowRate(id, type) {
-      "use strict";
+    CALC_flowRate: function CALC_flowRate(id, type) {
+      'use strict';
 
-      let rate = 0;
+      var rate = 0;
       switch (type) {
-        case "material":
+        case 'material':
           rate = rHelper.data.material[id].perHour;
           break;
-        case "product":
-          let factory = rHelper.data.products[id];
-          let workload = rHelper.methods.CALC_factoryMinWorkload(id);
+        case 'product':
+          var factory = rHelper.data.products[id];
+          var workload = rHelper.methods.CALC_factoryMinWorkload(id);
           rate = factory.factoryLevel * factory.scaling * workload;
           break;
       }
       return rate;
     },
-    CALC_factoryMinWorkload(factoryId) {
-      "use strict";
+    CALC_factoryMinWorkload: function CALC_factoryMinWorkload(factoryId) {
+      'use strict';
 
-      let workload = rHelper.data.products[factoryId].dependencyWorkload.min();
+      var workload = rHelper.data.products[factoryId].dependencyWorkload.min();
       if (workload > 1) {
         workload = 1;
       }
       return workload;
     },
-    CALC_diamondTotalProfit() {
-      "use strict";
+    CALC_diamondTotalProfit: function CALC_diamondTotalProfit() {
+      'use strict';
 
-      let val = 0;
+      var val = 0;
 
-      $.each(rHelper.data.products, (i, factory) => {
-        let diamondProfit = factory.diamond.profit;
+      $.each(rHelper.data.products, function (i, factory) {
+        var diamondProfit = factory.diamond.profit;
         if (diamondProfit > 0) {
           val += diamondProfit;
         }
@@ -4441,34 +4370,34 @@ const rHelper = {
 
       return val;
     },
-    CALC_diamondTop10Profit() {
-      "use strict";
+    CALC_diamondTop10Profit: function CALC_diamondTop10Profit() {
+      'use strict';
 
-      let arr = [];
+      var arr = [];
 
-      $.each(rHelper.data.products, (i, factory) => {
-        let diamondProfit = factory.diamond.profit;
+      $.each(rHelper.data.products, function (i, factory) {
+        var diamondProfit = factory.diamond.profit;
         if (diamondProfit > 0) {
           arr.push(diamondProfit);
         }
       });
 
-      let sum = 0;
-      arr = arr.sort((a, b) => {
+      var sum = 0;
+      arr = arr.sort(function (a, b) {
         return b - a;
       });
-      for (let i = 0; i <= 9; i += 1) {
+      for (var i = 0; i <= 9; i += 1) {
         if (arr[i]) {
           sum += arr[i];
         }
       }
       return sum;
     },
-    CALC_diamondEfficiency(factoryId) {
-      "use strict";
+    CALC_diamondEfficiency: function CALC_diamondEfficiency(factoryId) {
+      'use strict';
 
-      let factoryDiamond = rHelper.data.products[factoryId].diamond;
-      let efficiency = factoryDiamond.outputWorth / (factoryDiamond.dependenciesWorth + factoryDiamond.productionCost);
+      var factoryDiamond = rHelper.data.products[factoryId].diamond;
+      var efficiency = factoryDiamond.outputWorth / (factoryDiamond.dependenciesWorth + factoryDiamond.productionCost);
       if (isNaN(efficiency)) {
         efficiency = 0;
       }
@@ -4476,24 +4405,24 @@ const rHelper = {
       factoryDiamond.efficiency = efficiency;
       return efficiency;
     },
-    CALC_diamondProfit(factoryId) {
-      "use strict";
+    CALC_diamondProfit: function CALC_diamondProfit(factoryId) {
+      'use strict';
 
-      let factoryDiamond = rHelper.data.products[factoryId].diamond;
+      var factoryDiamond = rHelper.data.products[factoryId].diamond;
       factoryDiamond.profit = factoryDiamond.outputWorth - (factoryDiamond.dependenciesWorth + factoryDiamond.productionCost);
       return factoryDiamond.profit;
     },
-    CALC_nextGreaterWarehouseLevel(amount) {
-      "use strict";
+    CALC_nextGreaterWarehouseLevel: function CALC_nextGreaterWarehouseLevel(amount) {
+      'use strict';
 
       return Math.ceil(Math.sqrt(amount / 5000));
     },
-    CALC_diamondFactoryOutput(factoryId) {
-      "use strict";
+    CALC_diamondFactoryOutput: function CALC_diamondFactoryOutput(factoryId) {
+      'use strict';
 
-      let factory = rHelper.data.products[factoryId];
-      let outputAmount = factory.factoryLevel * factory.scaling * 5 * 24;
-      let productionCost = 5 * 24 * factory.cashPerHour;
+      var factory = rHelper.data.products[factoryId];
+      var outputAmount = factory.factoryLevel * factory.scaling * 5 * 24;
+      var productionCost = 5 * 24 * factory.cashPerHour;
 
       if (factory.factoryLevel == 0) {
         productionCost = 0;
@@ -4508,73 +4437,73 @@ const rHelper = {
       };
       return factory.factoryLevel * factory.scaling * 5 * 24;
     },
-    CALC_dependantFactoriesHelper(dependantFactory, type) {
-      "use strict";
+    CALC_dependantFactoriesHelper: function CALC_dependantFactoriesHelper(dependantFactory, type) {
+      'use strict';
 
-      if (type == "material") {
+      if (type == 'material') {
         dependantFactory -= 14;
       }
 
-      let fns = ["INSRT_factoryDependencies", "INSRT_factoryWorkload", "INSRT_factoryTurnover", "INSRT_factoryTurnoverPerUpgrade", "INSRT_factoryROI"];
+      var fns = ['INSRT_factoryDependencies', 'INSRT_factoryWorkload', 'INSRT_factoryTurnover', 'INSRT_factoryTurnoverPerUpgrade', 'INSRT_factoryROI'];
 
-      $.each(fns, (i, fn) => {
+      $.each(fns, function (i, fn) {
         rHelper.methods[fn](dependantFactory);
       });
 
       rHelper.methods.INSRT_factoryHighlightColumns();
-      if (rHelper.data.products[dependantFactory].dependantFactories != "") {
-        rHelper.methods.CALC_dependantFactories(dependantFactory, "product");
+      if (rHelper.data.products[dependantFactory].dependantFactories != '') {
+        rHelper.methods.CALC_dependantFactories(dependantFactory, 'product');
       }
     },
-    CALC_dependantFactories(id, type) {
-      "use strict";
+    CALC_dependantFactories: function CALC_dependantFactories(id, type) {
+      'use strict';
 
-      let dependantFactories = "";
+      var dependantFactories = '';
       switch (type) {
-        case "material":
+        case 'material':
           dependantFactories = rHelper.data.material[id].dependantFactories;
           break;
-        case "product":
+        case 'product':
           dependantFactories = rHelper.data.products[id].dependantFactories;
           break;
       }
 
       if ($.isArray(dependantFactories)) {
-        $.each(dependantFactories, (k, dependantFactory) => {
+        $.each(dependantFactories, function (k, dependantFactory) {
           rHelper.methods.CALC_dependantFactoriesHelper(dependantFactory, type);
         });
-      } else if (dependantFactories != "") {
+      } else if (dependantFactories != '') {
         rHelper.methods.CALC_dependantFactoriesHelper(dependantFactories, type);
       }
     },
-    CALC_factoryTurnoverPerUpgrade(factoryId) {
-      "use strict";
+    CALC_factoryTurnoverPerUpgrade: function CALC_factoryTurnoverPerUpgrade(factoryId) {
+      'use strict';
 
-      let value = 0;
-      let nextLevelWorkloadArray = [];
-      let dependencies = rHelper.data.products[factoryId].dependencies;
+      var value = 0;
+      var nextLevelWorkloadArray = [];
+      var dependencies = rHelper.data.products[factoryId].dependencies;
 
       if ($.isArray(dependencies)) {
-        $.each(dependencies, dependencyIndex => {
-          let dependencyWorkload = rHelper.methods.CALC_factoryDepedencyWorkload(factoryId, dependencyIndex, "nextLevel");
+        $.each(dependencies, function (dependencyIndex) {
+          var dependencyWorkload = rHelper.methods.CALC_factoryDepedencyWorkload(factoryId, dependencyIndex, 'nextLevel');
           nextLevelWorkloadArray.push(dependencyWorkload);
         });
       } else {
-        let dependencyWorkload = rHelper.methods.CALC_factoryDepedencyWorkload(factoryId, 0, "nextLevel");
+        var dependencyWorkload = rHelper.methods.CALC_factoryDepedencyWorkload(factoryId, 0, 'nextLevel');
         nextLevelWorkloadArray.push(dependencyWorkload);
       }
-      let nextLevelWorkload = nextLevelWorkloadArray.min();
+      var nextLevelWorkload = nextLevelWorkloadArray.min();
       if (nextLevelWorkload > 1) {
         nextLevelWorkload = 1;
       }
-      value = parseInt(rHelper.methods.CALC_factoryTurnover(factoryId, "nextLevel", nextLevelWorkload) - rHelper.data.products[factoryId].turnover);
+      value = parseInt(rHelper.methods.CALC_factoryTurnover(factoryId, 'nextLevel', nextLevelWorkload) - rHelper.data.products[factoryId].turnover);
       if (value < 10 && value > -10) {
         value = 0;
       }
       return value;
     },
-    CALC_factoryDependencyExistingAmount(dependantObj, dependencyIndex) {
-      "use strict";
+    CALC_factoryDependencyExistingAmount: function CALC_factoryDependencyExistingAmount(dependantObj, dependencyIndex) {
+      'use strict';
 
       if (dependantObj.perHour) {
         return dependantObj.perHour;
@@ -4583,57 +4512,58 @@ const rHelper = {
         return dependantObj.factoryLevel * dependantObj.scaling;
       }
     },
-    CALC_factoryWorkloadMinNonSanitized(factoryId) {
-      "use strict";
+    CALC_factoryWorkloadMinNonSanitized: function CALC_factoryWorkloadMinNonSanitized(factoryId) {
+      'use strict';
 
       return rHelper.data.products[factoryId].dependencyWorkload.min();
     },
-    CALC_factoryCashCostPerHour(factoryId, nextLevel) {
-      "use strict";
+    CALC_factoryCashCostPerHour: function CALC_factoryCashCostPerHour(factoryId, nextLevel) {
+      'use strict';
 
-      let factory = rHelper.data.products[factoryId];
-      let factoryLevel = factory.factoryLevel;
+      var factory = rHelper.data.products[factoryId];
+      var factoryLevel = factory.factoryLevel;
       if (nextLevel) {
         factoryLevel += 1;
       }
       return factory.cashPerHour * factoryLevel;
     },
-    CALC_factoryTurnover(factoryId, nextLevel, nextLevelWorkload) {
-      "use strict";
+    CALC_factoryTurnover: function CALC_factoryTurnover(factoryId, nextLevel, nextLevelWorkload) {
+      'use strict';
 
-      let factory = rHelper.data.products[factoryId];
-      let price = rHelper.methods.CALC_returnPriceViaId(factoryId + 14);
-      let factoryLevel = factory.factoryLevel;
-      let cashCost = rHelper.methods.CALC_factoryCashCostPerHour(factoryId, nextLevel);
-      let workload = rHelper.methods.CALC_factoryMinWorkload(factoryId);
-      let materialWorth = 0;
+      var factory = rHelper.data.products[factoryId];
+      var price = rHelper.methods.CALC_returnPriceViaId(factoryId + 14);
+      var factoryLevel = factory.factoryLevel;
+      var cashCost = rHelper.methods.CALC_factoryCashCostPerHour(factoryId, nextLevel);
+      var workload = rHelper.methods.CALC_factoryMinWorkload(factoryId);
+      var materialWorth = 0;
 
       if (nextLevel) {
         factoryLevel += 1;
         workload = nextLevelWorkload;
       }
-      let outputWorth = factory.scaling * factoryLevel * price;
+      var outputWorth = factory.scaling * factoryLevel * price;
 
       if ($.isArray(factory.dependencies)) {
-        $.each(factory.dependencies, index => {
-          let dependencyWorth = rHelper.methods.CALC_factoryDependencyWorth(factoryId, index, nextLevel);
+        $.each(factory.dependencies, function (index) {
+          var dependencyWorth = rHelper.methods.CALC_factoryDependencyWorth(factoryId, index, nextLevel);
           materialWorth += dependencyWorth;
         });
       } else {
-        let dependencyWorth = rHelper.methods.CALC_factoryDependencyWorth(factoryId, 0, nextLevel);
+        var dependencyWorth = rHelper.methods.CALC_factoryDependencyWorth(factoryId, 0, nextLevel);
         materialWorth += dependencyWorth;
       }
 
-      let remainingValue = (outputWorth - materialWorth - cashCost) * workload;
-      return remainingValue;
+      return Math.round((outputWorth - materialWorth - cashCost) * workload);
     },
-    CALC_factoryDependencyWorth(factoryId, dependencyIndex, nextLevel) {
-      "use strict";
+    CALC_factoryDependencyWorth: function CALC_factoryDependencyWorth(factoryId, dependencyIndex, nextLevel) {
+      'use strict';
 
-      let factory = rHelper.data.products[factoryId];
-      let factoryLevel = factory.factoryLevel;
-      let requiredAmount = 0;
-      let dependencyPrice = 0;
+      var factory = rHelper.data.products[factoryId];
+      var factoryLevel = factory.factoryLevel;
+
+      var requiredAmount = 0,
+          dependencyPrice = 0;
+
 
       if (nextLevel) {
         factoryLevel += 1;
@@ -4648,15 +4578,18 @@ const rHelper = {
 
       return factoryLevel * requiredAmount * dependencyPrice;
     },
-    CALC_factoryDepedencyWorkload(factoryId, dependencyIndex, nextLevel) {
-      "use strict";
+    CALC_factoryDepedencyWorkload: function CALC_factoryDepedencyWorkload(factoryId, dependencyIndex, nextLevel) {
+      'use strict';
 
-      let workload = 0;
-      let factory = rHelper.data.products[factoryId];
-      let factoryLevel = factory.factoryLevel;
-      let thisDependency;
-      let baseAmountRequirement;
-      let existingAmount = 0;
+      var factory = rHelper.data.products[factoryId];
+      var factoryLevel = factory.factoryLevel;
+
+      var _ref38 = [0, 0,,],
+          workload = _ref38[0],
+          existingAmount = _ref38[1],
+          thisDependency = _ref38[2],
+          baseAmountRequirement = _ref38[3];
+
 
       if (nextLevel) {
         factoryLevel += 1;
@@ -4670,13 +4603,13 @@ const rHelper = {
         baseAmountRequirement = factory.requiredAmount;
       }
 
-      let requiredAmount = baseAmountRequirement * factoryLevel;
+      var requiredAmount = baseAmountRequirement * factoryLevel;
 
       if (thisDependency <= 13) {
         existingAmount = rHelper.data.material[thisDependency].perHour;
       } else {
-        let actualFactory = rHelper.methods.CALC_convertId(thisDependency);
-        let minDependencyWorkload = actualFactory.dependencyWorkload.min();
+        var actualFactory = rHelper.methods.CALC_convertId(thisDependency);
+        var minDependencyWorkload = actualFactory.dependencyWorkload.min();
         if (minDependencyWorkload > 1) {
           minDependencyWorkload = 1;
         }
@@ -4690,15 +4623,15 @@ const rHelper = {
 
       return workload;
     },
-    CALC_factoryROI(factoryId) {
-      "use strict";
+    CALC_factoryROI: function CALC_factoryROI(factoryId) {
+      'use strict';
 
       return rHelper.data.products[factoryId].upgradeCost / rHelper.data.products[factoryId].turnoverIncrease / 24;
     },
-    CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount) {
-      "use strict";
+    CALC_factoryComparatorRequiredVsExistingAmount: function CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount) {
+      'use strict';
 
-      let addClass;
+      var addClass = void 0;
 
       if (isNaN(existingAmount)) {
         existingAmount = 0;
@@ -4707,16 +4640,16 @@ const rHelper = {
       if (existingAmount < requiredAmount) {
         addClass = 'class="faulty-dependency"';
       } else {
-        addClass = "";
+        addClass = '';
       }
 
       return addClass;
     },
-    CALC_factoryDependencyRequiredAmount(factoryId, dependencyIndex) {
-      "use strict";
+    CALC_factoryDependencyRequiredAmount: function CALC_factoryDependencyRequiredAmount(factoryId, dependencyIndex) {
+      'use strict';
 
-      let factory = rHelper.data.products[factoryId];
-      let requiredAmount = 0;
+      var factory = rHelper.data.products[factoryId];
+      var requiredAmount = 0;
 
       if ($.isArray(factory.requiredAmount)) {
         requiredAmount = factory.requiredAmount[dependencyIndex];
@@ -4726,104 +4659,103 @@ const rHelper = {
 
       return requiredAmount * factory.factoryLevel;
     },
-    CALC_totalFactoryUpgrades() {
-      "use strict";
+    CALC_totalFactoryUpgrades: function CALC_totalFactoryUpgrades() {
+      'use strict';
 
-      let totalFactoryUpgrades = 0;
+      var totalFactoryUpgrades = 0;
 
-      $.each(rHelper.data.products, (i, factory) => {
+      $.each(rHelper.data.products, function (i, factory) {
         totalFactoryUpgrades += factory.factoryLevel;
       });
 
       return totalFactoryUpgrades;
     },
-    CALC_factoryUpgradeCost(factoryId) {
-      "use strict";
+    CALC_factoryUpgradeCost: function CALC_factoryUpgradeCost(factoryId) {
+      'use strict';
 
-      let factoryLevel = rHelper.data.products[factoryId].factoryLevel;
-      if (typeof factoryLevel == "undefined" || !factoryLevel) {
+      var factoryLevel = rHelper.data.products[factoryId].factoryLevel;
+      if (typeof factoryLevel == 'undefined' || !factoryLevel) {
         factoryLevel = 0;
       }
-      let nextLevel = factoryLevel + 1;
-      let sum = 0;
-      let sumTransportation = 0;
-      let table = $(crEl("table"));
-      let tbody = $(crEl("tbody"));
-      let td;
-      let small;
+      var nextLevel = factoryLevel + 1;
 
-      $.each(rHelper.data.products[factoryId].upgradeMaterialAmount, (i, amount) => {
-        let tr = $(crEl("tr"));
-        let k = 0;
+      var _ref39 = [0, 0,,, $(crEl('table')), $(crEl('tbody'))],
+          sum = _ref39[0],
+          sumTransportation = _ref39[1],
+          td = _ref39[2],
+          small = _ref39[3],
+          table = _ref39[4],
+          tbody = _ref39[5];
+
+
+      $.each(rHelper.data.products[factoryId].upgradeMaterialAmount, function (i, amount) {
+        var _ref40 = [$(crEl('tr')), 0],
+            tr = _ref40[0],
+            k = _ref40[1];
+
+
         if (i === 0) {
           sum += amount * Math.pow(nextLevel, 2);
           for (k = 0; k <= 2; k += 1) {
-            td = $(crEl("td"));
+            td = $(crEl('td'));
             switch (k) {
               case 0:
-                let img = $(crEl("img"))
-                  .attr("src", "assets/img/cash.png")
-                  .attr("alt", "Cash");
+                var img = $(crEl('img')).attr('src', 'assets/img/cash.png').attr('alt', 'Cash');
                 td.append(img[0]);
                 break;
               case 1:
-                td
-                  .addClass("text-right")
-                  .attr("colspan", 3)
-                  .text(sum.toLocaleString("en-US"));
+                td.addClass('text-right').attr('colspan', 3).text(sum.toLocaleString('en-US'));
                 break;
               case 2:
-                small = $(crEl("small")).text("Transportation");
-                td.addClass("text-right text-warning").append(small[0]);
+                small = $(crEl('small')).text('Transportation');
+                td.addClass('text-right text-warning').append(small[0]);
                 break;
             }
             tr.append(td[0]);
           }
         } else {
-          let upgradeMaterial = rHelper.data.products[factoryId].upgradeMaterial[i];
-          let upgradeMaterialAmount = amount * Math.pow(nextLevel, 2);
-          let price = rHelper.methods.CALC_returnPriceViaId(upgradeMaterial);
-          let materialWorth = price * upgradeMaterialAmount;
-          let transportation = (rHelper.data.buildings[9].transportCost - 1) * materialWorth;
-          let className;
+          var upgradeMaterial = rHelper.data.products[factoryId].upgradeMaterial[i];
+          var upgradeMaterialAmount = amount * Math.pow(nextLevel, 2);
+          var price = rHelper.methods.CALC_returnPriceViaId(upgradeMaterial);
+          var materialWorth = price * upgradeMaterialAmount;
+          var transportation = (rHelper.data.buildings[9].transportCost - 1) * materialWorth;
+          var className = void 0;
 
           sum += materialWorth;
           sumTransportation += transportation;
           upgradeMaterial += 1;
 
           if (upgradeMaterial <= 13) {
-            className = "material";
+            className = 'material';
           } else if (upgradeMaterial >= 14 && upgradeMaterial <= 35) {
             upgradeMaterial -= 14;
-            className = "product";
+            className = 'product';
           } else if (upgradeMaterial >= 36 && upgradeMaterial <= 51) {
             upgradeMaterial -= 36;
-            className = "loot";
+            className = 'loot';
           } else {
             upgradeMaterial -= 51;
-            className = "units";
+            className = 'units';
           }
 
           for (k = 0; k <= 4; k += 1) {
-            td = $(crEl("td"));
+            td = $(crEl('td'));
             switch (k) {
               case 0:
-                td.addClass(`resources-${className}-${upgradeMaterial - 1}`);
+                td.addClass('resources-' + className + '-' + (upgradeMaterial - 1));
                 break;
               case 1:
-                td.addClass("text-right").text(upgradeMaterialAmount.toLocaleString("en-US"));
+                td.addClass('text-right').text(upgradeMaterialAmount.toLocaleString('en-US'));
                 break;
               case 2:
-                td.text("≙");
+                td.text('≙');
                 break;
               case 3:
-                td.addClass("text-right").text(materialWorth.toLocaleString("en-US"));
+                td.addClass('text-right').text(materialWorth.toLocaleString('en-US'));
                 break;
               case 4:
-                small = $(crEl("small"))
-                  .addClass("text-warning")
-                  .text(transportation.toLocaleString("en-US"));
-                td.addClass("text-right").append(small[0]);
+                small = $(crEl('small')).addClass('text-warning').text(transportation.toLocaleString('en-US'));
+                td.addClass('text-right').append(small[0]);
                 break;
             }
             tr.append(td[0]);
@@ -4831,16 +4763,14 @@ const rHelper = {
         }
         tbody.append(tr[0]);
       });
-      let tr = $(crEl("tr"));
-      for (let k = 0; k <= 1; k += 1) {
-        td = $(crEl("td")).addClass("text-right");
+      var tr = $(crEl('tr'));
+      for (var k = 0; k <= 1; k += 1) {
+        td = $(crEl('td')).addClass('text-right');
 
         if (k === 0) {
-          td.attr("colspan", 4).text(sum.toLocaleString("en-US"));
+          td.attr('colspan', 4).text(sum.toLocaleString('en-US'));
         } else {
-          small = $(crEl("small"))
-            .addClass("text-warning")
-            .text(sumTransportation.toLocaleString("en-US"));
+          small = $(crEl('small')).addClass('text-warning').text(sumTransportation.toLocaleString('en-US'));
           td.append(small[0]);
         }
         tr.append(td[0]);
@@ -4850,59 +4780,59 @@ const rHelper = {
       table.append(tbody[0]);
       rHelper.data.products[factoryId].upgradeCost = sum;
 
-      let result = {
+      var result = {
         sum: sum,
         title: table[0].outerHTML
       };
       return result;
     },
-    CALC_factoryOutput(factoryId) {
-      "use strict";
+    CALC_factoryOutput: function CALC_factoryOutput(factoryId) {
+      'use strict';
 
-      let factory = rHelper.data.products[factoryId];
+      var factory = rHelper.data.products[factoryId];
       return factory.factoryLevel * factory.scaling;
     },
-    CALC_totalMineCount() {
-      "use strict";
+    CALC_totalMineCount: function CALC_totalMineCount() {
+      'use strict';
 
-      let totalMineCount = 0;
-      $.each(rHelper.data.material, (i, material) => {
+      var totalMineCount = 0;
+      $.each(rHelper.data.material, function (i, material) {
         totalMineCount += material.amountOfMines;
       });
 
       return totalMineCount;
     },
-    CALC_totalMineWorth() {
-      "use strict";
+    CALC_totalMineWorth: function CALC_totalMineWorth() {
+      'use strict';
 
-      let totalMineWorth = 0;
-      $.each(rHelper.data.material, i => {
+      var totalMineWorth = 0;
+      $.each(rHelper.data.material, function (i) {
         totalMineWorth += rHelper.methods.CALC_materialRateWorth(i);
       });
 
       return totalMineWorth;
     },
-    CALC_returnPriceViaId(id, period) {
-      "use strict";
+    CALC_returnPriceViaId: function CALC_returnPriceViaId(id, period) {
+      'use strict';
 
-      let possiblePrices = ["current", "1day", "3days", "7days", "4weeks", "3months", "6months", "1year", "max"];
+      var possiblePrices = ['current', '1day', '3days', '7days', '4weeks', '3months', '6months', '1year', 'max'];
 
-      let index = 0;
-      if (typeof period == "undefined") {
-        let settings = rHelper.data.settings[5];
-        let priceAgeSetting = 2;
+      var index = 0;
+      if (typeof period == 'undefined') {
+        var settings = rHelper.data.settings[5];
+        var priceAgeSetting = 2;
 
-        if (typeof settings !== undefined) {
+        if ((typeof settings === 'undefined' ? 'undefined' : _typeof(settings)) !== undefined) {
           priceAgeSetting = rHelper.data.settings[5].value;
         }
 
         index = possiblePrices[priceAgeSetting];
-      } else if (typeof period === "number") {
+      } else if (typeof period === 'number') {
         index = possiblePrices[period];
       }
 
-      let target = rHelper.methods.CALC_convertId(id);
-      let targetPrices = target.prices[index];
+      var target = rHelper.methods.CALC_convertId(id);
+      var targetPrices = target.prices[index];
 
       if (targetPrices.ai >= targetPrices.player) {
         return targetPrices.ai;
@@ -4910,8 +4840,8 @@ const rHelper = {
         return targetPrices.player;
       }
     },
-    CALC_convertId(id) {
-      "use strict";
+    CALC_convertId: function CALC_convertId(id) {
+      'use strict';
 
       if (id <= 13) {
         return rHelper.data.material[id];
@@ -4926,44 +4856,44 @@ const rHelper = {
         return rHelper.data.units[id];
       }
     },
-    CALC_materialNewMinePrice(totalMineCount, materialId) {
-      "use strict";
+    CALC_materialNewMinePrice: function CALC_materialNewMinePrice(totalMineCount, materialId) {
+      'use strict';
 
       return Math.round(rHelper.data.material[materialId].basePrice * (1 + totalMineCount / 50));
     },
-    CALC_materialRateWorth(materialId) {
-      "use strict";
+    CALC_materialRateWorth: function CALC_materialRateWorth(materialId) {
+      'use strict';
 
       return rHelper.data.material[materialId].perHour * rHelper.methods.CALC_returnPriceViaId(materialId);
     },
-    CALC_materialMinePerfectIncome(materialId) {
-      "use strict";
+    CALC_materialMinePerfectIncome: function CALC_materialMinePerfectIncome(materialId) {
+      'use strict';
 
       return rHelper.data.material[materialId].maxRate * rHelper.methods.CALC_returnPriceViaId(materialId);
     },
-    CALC_materialMineROI(type) {
-      "use strict";
+    CALC_materialMineROI: function CALC_materialMineROI(type) {
+      'use strict';
 
-      let array = [];
+      var array = [];
 
-      for (let i = 0; i <= 13; i += 1) {
-        let newMinePrice = rHelper.methods.CALC_materialNewMinePrice(rHelper.methods.CALC_totalMineCount(), i);
-        let perfectIncome = rHelper.methods.CALC_materialMinePerfectIncome(i);
-        let customTUPrice = rHelper.methods.CALC_customTUPrice();
+      for (var i = 0; i <= 13; i += 1) {
+        var newMinePrice = rHelper.methods.CALC_materialNewMinePrice(rHelper.methods.CALC_totalMineCount(), i);
+        var perfectIncome = rHelper.methods.CALC_materialMinePerfectIncome(i);
+        var customTUPrice = rHelper.methods.CALC_customTUPrice();
 
         switch (type) {
-          case "100":
+          case '100':
             array.push(newMinePrice / perfectIncome / 24);
             break;
-          case "505":
+          case '505':
             array.push((newMinePrice + customTUPrice) / perfectIncome / 24 / 5.05);
             break;
-          case "505hq":
-            let userHQLevel = 1;
+          case '505hq':
+            var userHQLevel = 1;
             if (rHelper.data.headquarter.user) {
               userHQLevel = rHelper.data.headquarter.user.level;
             }
-            let hqBoost = rHelper.data.headquarter[userHQLevel - 1].boost - 0.9;
+            var hqBoost = rHelper.data.headquarter[userHQLevel - 1].boost - 0.9;
             array.push((newMinePrice + customTUPrice) / perfectIncome / 24 / 5.05 / hqBoost);
             break;
         }
@@ -4971,20 +4901,20 @@ const rHelper = {
 
       return array;
     },
-    CALC_customTUPrice() {
-      "use strict";
+    CALC_customTUPrice: function CALC_customTUPrice() {
+      'use strict';
 
-      let customTUPrice = 0;
-      let tuIndex = 46;
+      var customTUPrice = 0;
+      var tuIndex = 46;
 
-      let settings = rHelper.data.settings[1];
-      let customTUCombination = [111, 26, 0, 0];
+      var settings = rHelper.data.settings[1];
+      var customTUCombination = [111, 26, 0, 0];
 
-      if (typeof settings !== undefined) {
+      if ((typeof settings === 'undefined' ? 'undefined' : _typeof(settings)) !== undefined) {
         customTUCombination = settings.value;
       }
 
-      for (let i = 0; i <= 3; i += 1) {
+      for (var i = 0; i <= 3; i += 1) {
         customTUPrice += customTUCombination[i] * rHelper.methods.CALC_returnPriceViaId(tuIndex + i);
       }
 
@@ -4994,28 +4924,28 @@ const rHelper = {
   graphs: {
     gaugeOptions: {
       chart: {
-        type: "solidgauge",
-        backgroundColor: "transparent"
+        type: 'solidgauge',
+        backgroundColor: 'transparent'
       },
       title: null,
       pane: {
-        center: ["50%", "85%"],
-        size: "140%",
+        center: ['50%', '85%'],
+        size: '140%',
         startAngle: -90,
         endAngle: 90,
         background: {
-          backgroundColor: "#EEE",
-          innerRadius: "60%",
-          outerRadius: "100%",
-          shape: "arc"
+          backgroundColor: '#EEE',
+          innerRadius: '60%',
+          outerRadius: '100%',
+          shape: 'arc'
         }
       },
       tooltip: {
         enabled: false
       },
       yAxis: {
-        minColor: "rgba(255, 127, 80, 0.75)",
-        maxColor: "rgba(154, 205, 50, 0.75)",
+        minColor: 'rgba(255, 127, 80, 0.75)',
+        maxColor: 'rgba(154, 205, 50, 0.75)',
         lineWidth: 0,
         minorTickInterval: null,
         title: {
@@ -5031,7 +4961,7 @@ const rHelper = {
             y: 5,
             borderWidth: 0,
             style: {
-              color: "#dedede"
+              color: '#dedede'
             },
             useHTML: true
           }
@@ -5046,57 +4976,57 @@ const rHelper = {
       }
     },
     material: {
-      target: "graph-material",
+      target: 'graph-material',
       categories: [],
       mineData: [],
       incomeData: [],
       data: [],
-      colors: ["#8a4f3e", "#a4938e", "#aba59a", "#2d2c2b", "#8a5a3a", "#d8d8d8", "#b58359", "#b87259", "#9b7953", "#c4b9ab", "#957e60", "#cccbc2", "#b28b3d", "#b0a17d"],
+      colors: ['#8a4f3e', '#a4938e', '#aba59a', '#2d2c2b', '#8a5a3a', '#d8d8d8', '#b58359', '#b87259', '#9b7953', '#c4b9ab', '#957e60', '#cccbc2', '#b28b3d', '#b0a17d'],
       reference: {
         mineCount: 0,
         mineIncome: 0
       },
-      seriesNames: ["Mines", "Mine income"],
-      responsiveId: "income",
-      titleText: "mine distribution vs mine income"
+      seriesNames: ['Mines', 'Mine income'],
+      responsiveId: 'income',
+      titleText: 'mine distribution vs mine income'
     }
   },
   data: {},
   tu: []
 };
 
-(() => {
-  $("#loading-text").text("fetching data");
+(function () {
+  $('#loading-text').text('fetching data');
 
-  if (typeof localStorage.rGame != "undefined" && getCookie("loggedIn") != 1) {
+  if (typeof localStorage.rGame != 'undefined' && getCookie('loggedIn') != 1) {
     // if logged out and data in localStorage
-    rHelper.data = JSON.parse(localStorage.getItem("rGame"));
-    loadingAnimToggler("hide");
-    console.log("Found existing data!");
+    rHelper.data = JSON.parse(localStorage.getItem('rGame'));
+    loadingAnimToggler('hide');
+    console.log('Found existing data!');
     rHelper.init.core();
   } else {
     // if logged in or no data in localStorage
     $.get({
-      url: "api/core.php",
-      success: response => {
+      url: 'api/core.php',
+      success: function success(response) {
         rHelper.data = response;
-        localStorage.setItem("rGame", JSON.stringify(response));
-        loadingAnimToggler("hide");
-        switch (parseInt(getCookie("loggedIn"))) {
+        localStorage.setItem('rGame', JSON.stringify(response));
+        loadingAnimToggler('hide');
+        switch (parseInt(getCookie('loggedIn'))) {
           case 1:
-            console.log("Returning user - fetched existing data!");
+            console.log('Returning user - fetched existing data!');
             break;
           default:
-            console.log("New user - fetched basic data!");
+            console.log('New user - fetched basic data!');
             break;
         }
         rHelper.init.user();
       },
-      error: response => {
-        swal("Error fetching data", `Error message:<br />${response}<br /> Please try again.`, "error");
+      error: function error(response) {
+        swal('Error fetching data', 'Error message:<br />' + response + '<br /> Please try again.', 'error');
       }
     });
   }
 })();
 
-let openedWindow;
+var openedWindow = void 0;

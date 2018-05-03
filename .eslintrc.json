@@ -7,9 +7,6 @@
     "jquery": true
   },
   "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
     "sourceType": "module",
     "ecmaVersion": 6
   },
@@ -35,6 +32,7 @@
     "loadingAnimToggler": true,
     "rHelper": true,
     "markerCluster": true,
-    "MarkerClusterer": true
+    "MarkerClusterer": true,
+    "removeSaveButton": true
   }
 }

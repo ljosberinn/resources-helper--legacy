@@ -79,19 +79,27 @@
         </small>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" id="registration-language-container">
         <select required class="custom-select" name="registration-language" id="registration-language">
-                <option selected disabled value="">select your preferred language</option>
+                <option disabled value="">select your preferred language</option>
 
                 <?php
 
                 $languageQuery = "SELECT * FROM `languages` WHERE `active` = 1 ORDER BY `short` ASC";
                 $getLanguages = $conn->query($languageQuery);
+                $langIterator = 0;
 
                 if ($getLanguages->num_rows > 0) {
                     while ($language = $getLanguages->fetch_assoc()) {
+
+                        if ($langIterator == 0) {
+                            $selected = 'selected';
+                        } else {
+                            $selected = '';
+                        }
+
                         echo '
-                        <option value="' .$language["id"]. '">' .$language["short"]. ' | ' .$language["name"]. '</option>';
+                        <option ' .$selected. ' value="' .$language["id"]. '">' .$language["short"]. ' | ' .$language["name"]. '</option>';
                     }
                 } else {
                     echo '
