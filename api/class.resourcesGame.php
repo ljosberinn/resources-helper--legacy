@@ -1786,8 +1786,8 @@ class resourcesGame
      public function getTradeLog($userId, $skipCount, $filter, $dateFilter)
      {
 
-        $result = $selling = $buying = $last100Entries = [];
-        $result['log'] = $result['timestamps'] = $result['days'] = [];
+        $result = $selling = $buying = $last100Entries = $ids = [];
+        $result['log'] = $result['timestamps'] = $result['days'] = $result['overview'] = [];
         $result['selling']['total'] = $result['buying']['total'] = $result['selling']['valuesById'] = $result['buying']['valuesById'] = 0;
 
         for($i = 0; $i <= 23; $i += 1) {
@@ -1886,6 +1886,55 @@ class resourcesGame
                 array_push($result['log'], $data);
             }
         }
+
+        // overview
+        $distinctIdsQuery = "SELECT DISTINCT(`itemId`) AS `id` FROM `userTradeLog_" .$userId. "` WHERE `timestamp` > " .$end. " AND `timestamp` <= " .$start;
+        $distinctIds = $this->conn->query($distinctIdsQuery);
+
+        if ($distinctIds->num_rows > 0) {
+          while ($data = $distinctIds->fetch_assoc()) {
+            array_push($ids, $data['id']);
+          }
+        }
+
+        foreach ($ids as $id) {
+          $sellSumQuery = "SELECT SUM(`amount` * `price`) AS `sumSell` FROM `userTradeLog_" .$userId. "` WHERE `timestamp` > " .$end. " AND `timestamp` <= " .$start. " AND `event` = 1 AND `itemId` = " .$id. "";
+
+            $sellSum = $this->conn->query($sellSumQuery);
+            if ($sellSum->num_rows == 1) {
+              while ($data = $sellSum->fetch_assoc()) {
+                $positive = $data['sumSell'];
+              }
+            }
+
+            $buySumQuery = "SELECT SUM(`amount` * `price`) AS `sumBuy` FROM `userTradeLog_" .$userId. "` WHERE `timestamp` > " .$end. " AND `timestamp` <= " .$start. " AND `event` = 0 AND `itemId` = " .$id. "";
+
+            $buySum = $this->conn->query($buySumQuery);
+            if ($buySum->num_rows == 1) {
+              while ($data = $buySum->fetch_assoc()) {
+                $negative = $data['sumBuy'];
+              }
+            }
+
+            if(is_null($positive)) {
+                $positive = 0;
+            }
+
+            if(is_null($negative)) {
+                $negative = 0;
+            }
+
+            $result['overview'][$id] = [
+                'itemId' => $id,
+                'sum' => $positive - $negative,
+                'bought' => $negative,
+                'sold' => $positive
+            ];
+        }
+
+        usort($result['overview'], function ($a, $b) {
+            return $b['sum'] - $a['sum'];
+        });
 
         return $result;
      }

@@ -27,61 +27,49 @@ $columns = [
         <div class="col-12" id="graph-tradelog-habits"></div>
     </div>
 
-    <div class="row">
-        <div class="col-xs-12 col-md-12">
+    <div id="tradelog-accordion" role="tablist" aria-multiselectable="true" class="col">
+        <div class="card">
+            <div class="card-header bg-dark" role="tab" id="heading-tradelog-simple">
+                <h5 class="mb-0">
+                    <a class="collapsed" data-toggle="collapse" data-parent="#tradelog-accordion" href="#collapse-tradelog-simple" aria-expanded="false" aria-controls="collapse-tradelog-simple">
+                        Simple Trade Log
+                    </a>
+                </h5>
+            </div>
 
-            <table class="table table-responsive table-break-medium mb-3">
-                <tbody>
-                    <tr>
-                        <td class="sorttable_nosort">
-                        <button class="btn btn-success" id="tradelog-previous">previous day</button>
-                        </td>
-                        <td class="text-center">
-                            <select class="custom-select" id="tradelog-filter-day">
-                                <option selected disabled>jump to day X</option>
-                            </select>
-                            <select class="custom-select" id="tradelog-filter-event">
-                                <option selected disabled>filter event type</option>
-                                <option value="-1">show all</option>
-                                <option value="0">show only BUY events</option>
-                                <option value="1">show only SELL events</option>
-                            </select>
-                        </td>
-                        <td class="sorttable_nosort <?php echo $textOrientation; ?>">
-                        <button class="btn btn-success" id="tradelog-next" disabled>next day</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div id="collapse-tradelog-simple" class="collapse show" role="tabpanel" aria-labelledby="heading-tradelog-simple">
+                <div class="card-block p-4 bg-light">
 
-            <table class="table table-responsive table-break-medium table-striped mb-3">
-                <thead>
-                    <tr class="small">
+                <?php
 
-                    <?php
+                require "app/pages/tradelog/simple.php";
 
-                    foreach ($columns as $column => $classes) {
+                ?>
 
-                        if (empty($classes)) {
-                            $class = $classes;
-                        } else {
-                            $class = 'class="' .$classes. '"';
-                        }
+                </div>
+            </div>
+        </div>
 
-                        echo '
-                    <th ' .$class. '>' .$column. '</th>';
-                    }
+        <div class="card">
+            <div class="card-header bg-dark" role="tab" id="heading-tradelog-detailed">
+                <h5 class="mb-0">
+                    <a class="collapsed" data-toggle="collapse" data-parent="#tradelog-accordion" href="#collapse-tradelog-detailed" aria-expanded="false" aria-controls="collapse-tradelog-detailed">
+                        Detailed Trade Log
+                    </a>
+                </h5>
+            </div>
 
-                    ?>
-                </tr>
-                </thead>
-                <tbody id="tradelog-tbody">
+            <div id="collapse-tradelog-detailed" class="collapse" role="tabpanel" aria-labelledby="heading-tradelog-detailed">
+                <div class="card-block p-4 bg-light">
 
-                </tbody>
-                <tfoot id="tradelog-tfoot">
+                <?php
 
-                </tfoot>
-            </table>
+                require "app/pages/tradelog/detailed.php";
+
+                ?>
+
+                </div>
+            </div>
         </div>
     </div>
 

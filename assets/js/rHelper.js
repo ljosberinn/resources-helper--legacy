@@ -1704,7 +1704,7 @@ const rHelper = {
           });
         };
 
-        const appendTR = dataset => {
+        const appendDetailedTR = dataset => {
           const obj = rHelper.methods.CALC_convertId(dataset.itemId);
 
           let [datasetSum, action, profitClass, trClass] = [dataset.price * dataset.amount, "Selling to ", "success", ""];
@@ -1731,7 +1731,7 @@ const rHelper = {
           </tr>
           `;
 
-          tradeLogTbody.append(template);
+          tradeLogDetailedTbody.append(template);
         };
 
         const appendTFoot = () => {
@@ -1741,9 +1741,11 @@ const rHelper = {
             profitClass = "danger";
           }
 
-          $("#tradelog-tfoot")
+          $("#tradelog-detailed-tfoot")
             .empty()
             .append(`<tr><td data-th="daily profit" colspan="5" class="${textOrientation} text-${profitClass}">${sum.toLocaleString("en-US")} <a href="#">back to top</a></td></tr>`);
+
+            $("#tradelog-simple-tfoot").empty().append(`<tr><td data-th="daily profit" colspan="5" class="${textOrientation} text-${profitClass}">${sum.toLocaleString("en-US")} <a href="#">back to top</a></td></tr>`);
         };
 
         const showGraphs = (target, data, title) => {
@@ -1818,14 +1820,36 @@ const rHelper = {
           return arr;
         }
 
+        const appendSimpleTR = (dataset) => {
+          const obj = rHelper.methods.CALC_convertId(dataset.itemId);
+
+          let profitClass = "success";
+
+          if(dataset.sum < 0) {
+            profitClass = "danger";
+          }
+
+          const template = `
+          <tr>
+            <td data-th="Type" class="${textOrientation}"><span class="${obj.icon}"></span></td>
+            <td data-th="Bought for..." class="${textOrientation} text-danger"> ${dataset.bought.toLocaleString("en-US")}</td>
+            <td data-th="Sold for..." class="${textOrientation} text-success"> ${dataset.sold.toLocaleString("en-US")}</td>
+            <td data-th="Profit of selected day" class="${textOrientation} text-${profitClass}">${dataset.sum.toLocaleString("en-US")}</td>
+          </tr>
+          `;
+
+          tradeLogSimpleTbody.append(template);
+        };
+
         showTradeLogHabits(container.timestamps);
 
         showGraphs("graph-tradelog-buying", fillEventArray(container.buying.valuesById), 'Buy values (total: ' + container.buying.total.toLocaleString("en-US") + ')');
         showGraphs("graph-tradelog-selling", fillEventArray(container.selling.valuesById), 'Sell values (total: ' + container.selling.total.toLocaleString("en-US") + ')');
 
-        const [tradeLogTbody, textOrientation, daysFilterSelect] = [$("#tradelog-tbody"), "text-md-right text-sm-left", $("#tradelog-filter-day")];
+        const [tradeLogDetailedTbody, textOrientation, daysFilterSelect, tradeLogSimpleTbody] = [$("#tradelog-detailed-tbody"), "text-md-right text-sm-left", $("#tradelog-filter-day"), $("#tradelog-simple-tbody")];
 
-        tradeLogTbody.empty();
+        tradeLogDetailedTbody.empty();
+        tradeLogSimpleTbody.empty();
 
         let sum = 0;
 
@@ -1834,7 +1858,11 @@ const rHelper = {
         appendOptions();
 
         $.each(container.log, (i, dataset) => {
-          appendTR(dataset);
+          appendDetailedTR(dataset);
+        });
+
+        $.each(container.overview, (i, dataset) => {
+          appendSimpleTR(dataset);
         });
 
         appendTFoot();

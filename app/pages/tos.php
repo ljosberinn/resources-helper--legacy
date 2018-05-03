@@ -22,7 +22,7 @@
   Be informed, that
 
   <ul>
-    <li>except for data required for the Leaderboard and World Map, none of your data is visible to anyone else.</li>
+    <li>except for data required for the Leaderboard and World Map, none of your API data is visible to anyone else. If you are not using the API, nothing is visible for anyone else.</li>
     <li>this website does not show any ads, nor will it in the future.</li>
     <li>this website does not track you via any third-party library (e.g. Google Analytics), however the provider of this server anonymously logs access rates, times and IP adress of vistors.</li>
     <li>both your password and API key, if provided, are stored encrypted without decryption possibilities for authorized persons. However, storing your API key server-side to allow easier API access without continously re-entering the key requires it to be non-encrypted.</li>
