@@ -27,7 +27,7 @@
         2 => [
             "class" => "show active",
             "title" => "Resources Helper 3.0",
-            "date" => "April 2018",
+            "date" => "March - May 3rd 2018",
             "description" => "
             <strong>General</strong><br />
             – NEW: added API options for: Trade Log and Missions<br />
@@ -41,7 +41,7 @@
             – HEAVILY MODIFIED: moved clunky settings to own menu with more options and less clutter<br />
             – HEAVILY MODIFIED: leaderboard now only shows metrics that cannot be seen in-game<br />
             <br />
-            - CHANGED: Missions, Personal Mine Map, Trade Log and Attack Log are only available for registered users, due to their size they need to be saved serverside<br />
+            – CHANGED: Missions, Personal Mine Map, Trade Log and Attack Log are only available for registered users, due to their size they need to be saved serverside<br />
             – CHANGED: Price History shows both KI and Player price now, including averages. Last 28 days/4 weeks are shown. Downloadable .csv has properly named columns now.<br />
             <br />
             <strong>Bugfixes</strong><br />
