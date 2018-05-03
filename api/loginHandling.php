@@ -27,8 +27,8 @@ if(!empty($mail) && $passwordPreg !== 0) {
 		if(password_verify($password, $hashedPasswordDB)) {
 			$_SESSION["id"] = $userId;
 			$_SESSION["mail"] = $mail;
-			setcookie("returningUser", "" .$mail. "", time()+31536000, '/', 'gerritalex.de');
-      setcookie("loggedIn", true, time()+1440, '/', 'gerritalex.de');
+			setcookie("returningUser", "" .$mail. "", time()+31536000, '/', 'resources-helper.de');
+      setcookie("loggedIn", true, time()+1440, '/', 'resources-helper.de');
 
 		} else {
 			header("Location: index.php?invalidCredentials");

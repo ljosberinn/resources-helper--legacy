@@ -3,3 +3,4 @@ api/db.php
 .ftpconfig
 .vscode/sftp.json
 vendor
+.htaccess
