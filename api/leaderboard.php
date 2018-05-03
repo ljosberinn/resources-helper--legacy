@@ -633,6 +633,18 @@ function returnTradeLogData($userId, $conn)
     unset($result["lastKnownAction"]);
     unset($result["firstKnownAction"]);
 
+    $potentiallyMissingData = [
+        "totalSell",
+        "sumKISell",
+        "totalBuy"
+    ];
+
+    foreach ($potentiallyMissingData as $dataset) {
+        if(!$result[$dataset]) {
+            $result[$dataset] = 0;
+        }
+    }
+
     return $result;
 }
 
