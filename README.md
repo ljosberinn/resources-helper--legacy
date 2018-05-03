@@ -4,13 +4,11 @@
 
 ## Status
 
-working - 98%
+working - 99%
 
 ### TODO
 
 * remote saves of non-api-users
-
-* possibility of adding api key post registration
 
 ## What's included
 

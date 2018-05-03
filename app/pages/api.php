@@ -66,13 +66,6 @@
       "login"       => "required",
     ],
     [
-      "inputId"     => "player-anonymity",
-      "description" => "Should your player name appear in world ranking?",
-      "cost"        => "",
-      "checked"     => "checked",
-      "login"       => "required",
-    ],
-    [
       "inputId"     => "attack-log",
       "description" => "Attack log (last 30 days)",
       "cost"        => "1 Credit",
@@ -98,6 +91,13 @@
       "data-query"  => 10,
       "login"       => "required",
       "warning"     => " - only available for registered users",
+    ],
+    [
+      "inputId"     => "player-anonymity",
+      "description" => "Should your player name appear in world ranking?",
+      "cost"        => "",
+      "checked"     => "checked",
+      "login"       => "required",
     ],
   ];
 

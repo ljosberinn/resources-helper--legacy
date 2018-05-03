@@ -539,3 +539,52 @@ $.each([$('#tos-trigger'), $('#contact-trigger'), $('#donate-trigger')], (i, el)
     });
   });
 });
+
+$('#save-button').on('click', () => {
+  const [amountOfMines, mineRates, warehouseLevels, warehouseFillAmounts, factoryLevels, buildingLevels] = [[], [], [], [], [], []];
+  let [headquarterLevel, headquarterPaid] = [rHelper.data.headquarter.user.level, rHelper.data.headquarter.user.paid];
+
+  $.each(rHelper.data.material, (i, dataset) => {
+    amountOfMines.push(dataset.amountOfMines);
+    mineRates.push(dataset.perHour);
+    warehouseLevels.push(dataset.warehouse.level);
+    warehouseFillAmounts.push(dataset.warehouse.fillAmount);
+  });
+
+  $.each(rHelper.data.products, (i, dataset) => {
+    factoryLevels.push(dataset.factoryLevel);
+    warehouseLevels.push(dataset.warehouse.level);
+    warehouseFillAmounts.push(dataset.warehouse.fillAmount);
+  });
+
+  $.each(rHelper.data.loot, (i, dataset) => {
+    warehouseLevels.push(dataset.warehouse.level);
+    warehouseFillAmounts.push(dataset.warehouse.fillAmount);
+  });
+
+  $.each(rHelper.data.units, (i, dataset) => {
+    warehouseLevels.push(dataset.warehouse.level);
+    warehouseFillAmounts.push(dataset.warehouse.fillAmount);
+  });
+
+  $.each(rHelper.data.buildings, (i, dataset) => {
+    buildingLevels.push(dataset.level);
+  });
+
+  const payload = {
+    amountOfMines: amountOfMines,
+    mineRates: mineRates,
+    warehouseLevels: warehouseLevels,
+    warehouseFillAmounts: warehouseFillAmounts,
+    factoryLevels: factoryLevels,
+    buildingLevels: buildingLevels,
+    headquarterLevel: headquarterLevel,
+    headquarterPaid: headquarterPaid
+  };
+
+  console.log(payload);
+
+  $.post('api/saveCustomData.php', {
+    data: payload
+  });
+});

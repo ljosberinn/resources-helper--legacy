@@ -6,3 +6,4 @@ index.html
 .vscode/sftp.json
 assets/js/*.min.js
 assets/css/*.min.css
+vendor
