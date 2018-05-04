@@ -1864,7 +1864,7 @@ class resourcesGame
         $result['filter'] = $filter;
 
         // individual days filter
-        $getDaysAndEntriesCountQuery = "SELECT DATE(FROM_UNIXTIME(`timestamp`)) AS `date`, COUNT(1) AS `entries` FROM `" .$userId. "` GROUP BY DATE(FROM_UNIXTIME(`timestamp`)) ORDER BY `date` DESC";
+        $getDaysAndEntriesCountQuery = "SELECT DATE(FROM_UNIXTIME(`timestamp`)) AS `date`, COUNT(1) AS `entries` FROM `userTradeLog_" .$userId. "` GROUP BY DATE(FROM_UNIXTIME(`timestamp`)) ORDER BY `date` DESC";
         $getDaysAndEntriesCount = $this->conn->query($getDaysAndEntriesCountQuery);
 
         if($getDaysAndEntriesCount->num_rows > 0) {
@@ -2433,6 +2433,11 @@ class resourcesGame
              if($anonymity == true && $column == "username") {
                continue;
              } else {
+
+                if($column == "username") {
+                    $value = str_replace('?', '', $value);
+                }
+
                $result[$column] = $value;
                $query .= " = '" .$value. "',";
              }
