@@ -5,14 +5,14 @@ session_start(['cookie_lifetime' => 86400, ]);
 ob_start();
 
 $generalHeaders = [
-    "X-Content-Type-Options: nosniff",
-    "Strict-Transport-Security: max-age=63072000; includeSubDomains; preload",
-    "X-Frame-Options: DENY",
-    "X-XSS-Protection: 1; mode=block",
+  "X-Content-Type-Options: nosniff",
+  "Strict-Transport-Security: max-age=63072000; includeSubDomains; preload",
+  "X-Frame-Options: DENY",
+  "X-XSS-Protection: 1; mode=block",
 ];
 
 foreach ($generalHeaders as $header) {
-    header($header);
+  header($header);
 }
 
 require 'api/functions.php';
@@ -22,30 +22,30 @@ $conn = new mysqli($host, $user, $pw, $db);
 $conn->set_charset("utf-8");
 
 if (isset($_GET["source"])) {
-    highlight_file("index.php");
-    die();
+  highlight_file("index.php");
+  die();
 }
 
 if (isset($_GET["logout"])) {
-    session_destroy();
-    unset($_COOKIE["loggedIn"]);
-    setcookie("loggedIn", false, 0, '/', 'gerritalex.de');
-    header("Location: index.php");
+  session_destroy();
+  unset($_COOKIE["loggedIn"]);
+  setcookie("loggedIn", false, 0, '/', 'resources-helper.de');
+  header("Location: index.php");
 }
 
 if (isset($_POST["registration-mail"])
-    && isset($_POST["registration-pw-1"])
-    && isset($_POST["registration-pw-2"])
-    && isset($_POST["registration-language"])
-    && isset($_POST["registration-api-key"])
+&& isset($_POST["registration-pw-1"])
+&& isset($_POST["registration-pw-2"])
+&& isset($_POST["registration-language"])
+&& isset($_POST["registration-api-key"])
 ) {
-    include "api/registrationHandling.php";
+  include "api/registrationHandling.php";
 }
 
 if (isset($_POST["login-mail"])
-    && isset($_POST["login-pw"])
+&& isset($_POST["login-pw"])
 ) {
-    include "api/loginHandling.php";
+  include "api/loginHandling.php";
 }
 
 ob_end_flush();
@@ -53,122 +53,122 @@ ob_end_flush();
 ?>
 <!DOCTYPE html>
 <html prefix="og: http://ogp.me/ns#" lang="en" itemscope itemtype="http://schema.org/WebPage">
-    <head>
+<head>
 
-    <?php
+<?php
 
-    require "app/head.php";
+require "app/head.php";
 
-    ?>
+?>
 
-    </head>
+</head>
 
 <body class="container-fluid">
-    <!-- header -->
-    <header class="row mt-2 mb-2 ml-1 mr-1">
+<!-- header -->
+<header class="row mt-2 mb-2 ml-1 mr-1">
 
-    <?php
+<?php
 
-    require "app/pages/header.php";
+require "app/pages/header.php";
 
-    if (isset($_SESSION["id"])) {
-        include "app/pages/statusbar.php";
-    }
+if (isset($_SESSION["id"])) {
+  include "app/pages/statusbar.php";
+}
 
-    require "app/pages/navigation.php";
+require "app/pages/navigation.php";
 
-    ?>
+?>
 
-    </header>
-    <!-- main -->
-    <main class="row mt-2 mb-2 ml-1 mr-1">
+</header>
+<!-- main -->
+<main class="row mt-2 mb-2 ml-1 mr-1">
 
-    <?php
+<?php
 
-    if (!isset($_SESSION["id"])) {
-        include "app/pages/registrationlogin.php";
-    } elseif (isset($_SESSION["id"])) {
-        include "app/pages/settings.php";
-    }
+if (!isset($_SESSION["id"])) {
+  include "app/pages/registrationlogin.php";
+} elseif (isset($_SESSION["id"])) {
+  include "app/pages/settings.php";
+}
 
-    $subPages = [
-        "noscript",
-        "api",
-        "mines",
-        "qualitycomparator",
-        "factories",
-        "flow",
-        "diamond",
-        "changelog",
-        "maps",
-        "warehouses",
-        "buildings",
-        "pricehistory",
-        "recyclingunits",
-        "techupgrades",
-        "headquarter",
-        "leaderboard",
-        "discord",
-        "contact",
-        "tos",
-        "donate",
-    ];
+$subPages = [
+  "noscript",
+  "api",
+  "mines",
+  "qualitycomparator",
+  "factories",
+  "flow",
+  "diamond",
+  "changelog",
+  "maps",
+  "warehouses",
+  "buildings",
+  "pricehistory",
+  "recyclingunits",
+  "techupgrades",
+  "headquarter",
+  "leaderboard",
+  "discord",
+  "contact",
+  "tos",
+  "donate",
+];
 
-    if (isset($_SESSION["id"])) {
-        $additionalFeatures = [
-            "tradelog",
-            "attacklog",
-            "missions",
-        ];
+if (isset($_SESSION["id"])) {
+  $additionalFeatures = [
+    "tradelog",
+    "attacklog",
+    "missions",
+  ];
 
-        foreach ($additionalFeatures as $link) {
-            array_push($subPages, $link);
-        }
-    }
+  foreach ($additionalFeatures as $link) {
+    array_push($subPages, $link);
+  }
+}
 
-    foreach ($subPages as $pageLink) {
-        include "app/pages/" .$pageLink. ".php";
-    }
+foreach ($subPages as $pageLink) {
+  include "app/pages/" .$pageLink. ".php";
+}
 
-    ?>
-    </main>
-    <!-- footer -->
-    <footer class="row mt-2 mb-2 ml-1 mr-1 bg-light rounded justify-content-center">
-    <?php
+?>
+</main>
+<!-- footer -->
+<footer class="row mt-2 mb-2 ml-1 mr-1 bg-light rounded justify-content-center">
+<?php
 
-    require "app/pages/footer.php";
+require "app/pages/footer.php";
 
-    ?>
-    </footer>
+?>
+</footer>
 
-    <?php
+<?php
 
-    $JSFiles = [
-        "assets/js/bootstrap.bundle.min.js" => [
-            "mode" => "",
-            "params" => "",
-            "type" => "js",
-        ],
-        "assets/js/general.min.js" => [
-            "mode" => "",
-            "params" => "",
-            "type" => "js",
-        ],
-        "assets/js/rHelper.min.js" => [
-            "mode" => "",
-            "params" => "",
-            "type" => "js",
-        ],
-        "assets/js/variableJS.php" => [
-            "mode" => "",
-            "params" => explodeGET($_GET),
-            "type" => "js",
-        ],
-    ];
+$JSFiles = [
+  "assets/js/bootstrap.bundle.min.js" => [
+    "mode" => "",
+    "params" => "",
+    "type" => "js",
+  ],
+  "assets/js/general.min.js" => [
+    "mode" => "",
+    "params" => "",
+    "type" => "js",
+  ],
+  "assets/js/rHelper.min.js" => [
+    "mode" => "",
+    "params" => "",
+    "type" => "js",
+  ],
+  "assets/js/variableJS.php" => [
+    "mode" => "",
+    "params" => explodeGET($_GET),
+    "type" => "js",
+  ],
+];
 
-    appendFiles($JSFiles);
+appendFiles($JSFiles);
 
-    ?>
+?>
 
 </body>
 

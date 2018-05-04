@@ -835,13 +835,14 @@ kbd {
 }
 
 [class*='hq-thumb-'] {
-  max-width: 1000%;
-  background: url('../img/hqsprite.png') 100%;
-  cursor: pointer;
-  -webkit-transition: all 0.25s ease-in-out;
-  transition: all 0.25s ease-in-out;
-  height: 75px;
-  width: 75px;
+    max-width: 100%;
+    background-size: 100%;
+    background: url("../img/hqsprite.png");
+    cursor: pointer;
+    -webkit-transition: all 0.25s ease-in-out;
+    transition: all 0.25s ease-in-out;
+    height: 75px;
+    width: 75px;
 }
 
 @media (max-width: 767px) {
@@ -1340,43 +1341,43 @@ kbd {
 }
 
 .hq-thumb-0 {
-  background-position: 0 0;
+	background-position: -0px -0px;
 }
 
 .hq-thumb-9 {
-  background-position: 0 11.111111%;
+	background-position: -75px -0px;
 }
 
 .hq-thumb-1 {
-  background-position: 0 22.222222%;
+	background-position: -150px -0px;
 }
 
 .hq-thumb-2 {
-  background-position: 0 33.333333%;
+	background-position: -0px -75px;
 }
 
 .hq-thumb-3 {
-  background-position: 0 44.444444%;
+	background-position: -75px -75px;
 }
 
 .hq-thumb-4 {
-  background-position: 0 55.555556%;
+	background-position: -150px -75px;
 }
 
 .hq-thumb-5 {
-  background-position: 0 66.666667%;
+	background-position: -0px -150px;
 }
 
 .hq-thumb-6 {
-  background-position: 0 77.777778%;
+	background-position: -75px -150px;
 }
 
 .hq-thumb-7 {
-  background-position: 0 88.888889%;
+	background-position: -150px -150px;
 }
 
 .hq-thumb-8 {
-  background-position: 0 100%;
+	background-position: -0px -225px;
 }
 
 .resources-missions-10 {

@@ -18,7 +18,6 @@
 <meta name="description" content="Resources Helper is your go-to calculator for Resources mobile GPS real-time economy simulation" />
 
 <meta name="author" content="Gerrit Alex" />
-<meta name="robots" content="index, nofollow" />
 <meta name="language" content="en" />
 
 <meta name="keywords" lang="en" content="calculator, realtime, mobile, game, android, economy simulation" />

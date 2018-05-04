@@ -1,13 +1,6 @@
 'use strict';
 
-var _typeof =
-  typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol'
-    ? function(obj) {
-        return typeof obj;
-      }
-    : function(obj) {
-        return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
-      };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var rHelper = {
   init: {
@@ -25,7 +18,7 @@ var rHelper = {
       rHelper.methods.SET_tabSwitcherAnchorBased();
       rHelper.methods.SET_transportCost('init');
 
-      $.each(rHelper.data.material, function(materialId) {
+      $.each(rHelper.data.material, function (materialId) {
         // eventListeners
         rHelper.methods.EVNT_materialInput(materialId);
         // general material data insertion
@@ -41,7 +34,7 @@ var rHelper = {
 
       var calculationOrder = rHelper.methods.GET_calculationOrder();
 
-      $.each(calculationOrder, function(index, factoryId) {
+      $.each(calculationOrder, function (index, factoryId) {
         // eventListeners
         rHelper.methods.EVNT_factoryInput(factoryId);
         // general factory data insertion
@@ -53,13 +46,13 @@ var rHelper = {
       });
 
       // loot
-      $.each(rHelper.data.loot, function(index) {
+      $.each(rHelper.data.loot, function (index) {
         // warehouses
         rHelper.methods.INSRT_warehouseData(index, 'loot');
         // price history
         rHelper.methods.INSRT_priceHistoryName('loot', index);
         // recycling table
-        if (index == 4 || (index >= 10 && index <= 13)) {
+        if (index == 4 || index >= 10 && index <= 13) {
           return;
         }
         rHelper.methods.SET_recyclingProfitObj(index);
@@ -68,11 +61,11 @@ var rHelper = {
 
       var unitsFns = ['SET_UnitProfitObj', 'INSRT_unitsCraftingPrice', 'INSRT_unitsMarketPrice', 'INSRT_unitsPricePerStrength'];
 
-      $.each(rHelper.data.units, function(index) {
+      $.each(rHelper.data.units, function (index) {
         // warehouses
         rHelper.methods.INSRT_warehouseData(index, 'units');
         // units table
-        $.each(unitsFns, function(i, fn) {
+        $.each(unitsFns, function (i, fn) {
           rHelper.methods[fn](index);
         });
 
@@ -83,8 +76,8 @@ var rHelper = {
 
       // buildings
       var buildingFns = ['INSRT_buildingName', 'SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10', 'EVNT_buildingChange'];
-      $.each(rHelper.data.buildings, function(buildingId) {
-        $.each(buildingFns, function(i, fn) {
+      $.each(rHelper.data.buildings, function (buildingId) {
+        $.each(buildingFns, function (i, fn) {
           rHelper.methods[fn](buildingId);
         });
       });
@@ -92,8 +85,8 @@ var rHelper = {
       var hqFns = ['INSRT_headquarterOvwString', 'INSRT_headquarterOvwRadius', 'INSRT_headquarterOvwCost', 'INSRT_headquarterOvwBoost', 'INSRT_headquarterOvwTransportation', 'EVNT_switchHeadquarter'];
 
       // headquarter
-      $.each(rHelper.data.headquarter, function(headquarterLevel) {
-        $.each(hqFns, function(i, fn) {
+      $.each(rHelper.data.headquarter, function (headquarterLevel) {
+        $.each(hqFns, function (i, fn) {
           rHelper.methods[fn](headquarterLevel);
         });
       });
@@ -101,43 +94,30 @@ var rHelper = {
       // initiate graphs
       var pieGraphs = ['material'];
 
-      $.each(pieGraphs, function(i, val) {
+      $.each(pieGraphs, function (i, val) {
         rHelper.methods.EVNT_buildGraph(val);
       });
 
       var gaugeGraphs = ['buildings', 'headquarter'];
-      $.each(gaugeGraphs, function(i, val) {
+      $.each(gaugeGraphs, function (i, val) {
         rHelper.methods.INSRT_gaugeGraph(val);
       });
 
       var nonParamBoundMethods = [
-        // mines
-        'INSRT_materialMineAmortisation',
-        'INSRT_materialHighlightMinePerfectIncome',
-        // factories
-        'INSRT_totalFactoryUpgrades',
-        'INSRT_factoryHighlightColumns',
-        'INSRT_diamondTop10Profit',
-        'INSRT_diamondTotalProfit',
-        'INSRT_flowDistributionGlobal',
-        // warehouse
-        'INSRT_warehouseTotalLevel',
-        'INSRT_warehouseTotalWorth',
-        // graphs
-        'EVNT_priceHistoryOnChange',
-        // headquarter
-        'SET_hqLevel',
-        'EVNT_headquarterInput',
-        // missions
-        'INSRT_missions',
-        'EVNT_attackLogTrigger',
-        'INSRT_companyWorth',
-        'EVNT_sortableTables',
-        'EVNT_assignTitleToIcons',
-        'EVNT_enableTippy'
-      ];
+      // mines
+      'INSRT_materialMineAmortisation', 'INSRT_materialHighlightMinePerfectIncome',
+      // factories
+      'INSRT_totalFactoryUpgrades', 'INSRT_factoryHighlightColumns', 'INSRT_diamondTop10Profit', 'INSRT_diamondTotalProfit', 'INSRT_flowDistributionGlobal',
+      // warehouse
+      'INSRT_warehouseTotalLevel', 'INSRT_warehouseTotalWorth',
+      // graphs
+      'EVNT_priceHistoryOnChange',
+      // headquarter
+      'SET_hqLevel', 'EVNT_headquarterInput',
+      // missions
+      'INSRT_missions', 'EVNT_attackLogTrigger', 'INSRT_companyWorth', 'EVNT_sortableTables', 'EVNT_assignTitleToIcons', 'EVNT_enableTippy'];
 
-      $.each(nonParamBoundMethods, function(i, fn) {
+      $.each(nonParamBoundMethods, function (i, fn) {
         rHelper.methods[fn]();
       });
     }
@@ -146,29 +126,9 @@ var rHelper = {
     GET_calculationOrder: function GET_calculationOrder() {
       'use strict';
 
-      return [
-        0,
-        1,
-        2,
-        3,
-        4,
-        7,
-        8,
-        9,
-        10,
-        15,
-        17,
-        18, // primary order - dependant on material
-        5,
-        6,
-        13,
-        19, // secondary order - dependant on materials and products
-        11,
-        12,
-        14,
-        16,
-        20,
-        21 // tertiary order - dependant on products
+      return [0, 1, 2, 3, 4, 7, 8, 9, 10, 15, 17, 18, // primary order - dependant on material
+      5, 6, 13, 19, // secondary order - dependant on materials and products
+      11, 12, 14, 16, 20, 21 // tertiary order - dependant on products
       ];
     },
     API_toggleLoadSuccessorHelper: function API_toggleLoadSuccessorHelper(target) {
@@ -176,7 +136,7 @@ var rHelper = {
 
       var fns = ['API_toggleLoader', 'API_toggleSuccessor', 'API_toggleSuccessorHelper'];
 
-      $.each(fns, function(i, fn) {
+      $.each(fns, function (i, fn) {
         rHelper.methods[fn](target);
       });
     },
@@ -205,7 +165,7 @@ var rHelper = {
     API_toggleSuccessorHelper: function API_toggleSuccessorHelper(selector) {
       'use strict';
 
-      setTimeout(function() {
+      setTimeout(function () {
         rHelper.methods.API_toggleSuccessor(selector);
       }, 15000);
     },
@@ -214,14 +174,14 @@ var rHelper = {
 
       rHelper.methods.API_toggleLoader('factories');
 
-      $.get('api/core.php?query=1&key=' + key, function(data) {
-        $.each(data, function(i, value) {
+      $.get('api/core.php?query=1&key=' + key, function (data) {
+        $.each(data, function (i, value) {
           rHelper.data.products[i].factoryLevel = value;
         });
 
         var calculationOrder = rHelper.methods.GET_calculationOrder();
 
-        $.each(calculationOrder, function(index, factoryId) {
+        $.each(calculationOrder, function (index, factoryId) {
           rHelper.methods.INSRT_factoryDiamondData(factoryId, 'product');
         });
 
@@ -242,8 +202,8 @@ var rHelper = {
 
       rHelper.methods.API_toggleLoader('warehouse');
 
-      $.getJSON('api/core.php?query=2&key=' + key, function(data) {
-        $.each(data, function(i, warehouseInfo) {
+      $.getJSON('api/core.php?query=2&key=' + key, function (data) {
+        $.each(data, function (i, warehouseInfo) {
           var iterator = i;
           var targetObj = 'material';
 
@@ -272,21 +232,21 @@ var rHelper = {
           rHelper.methods.SET_save();
         });
 
-        $.each(rHelper.data.material, function(materialId) {
+        $.each(rHelper.data.material, function (materialId) {
           rHelper.methods.INSRT_warehouseData(materialId, 'material');
         });
 
         var calculationOrder = rHelper.methods.GET_calculationOrder();
 
-        $.each(calculationOrder, function(index) {
+        $.each(calculationOrder, function (index) {
           rHelper.methods.INSRT_warehouseData(index, 'products');
         });
 
-        $.each(rHelper.data.loot, function(index) {
+        $.each(rHelper.data.loot, function (index) {
           rHelper.methods.INSRT_warehouseData(index, 'loot');
         });
 
-        $.each(rHelper.data.units, function(index) {
+        $.each(rHelper.data.units, function (index) {
           rHelper.methods.INSRT_warehouseData(index, 'units');
         });
 
@@ -297,19 +257,19 @@ var rHelper = {
     },
     API_getMineSummary: function API_getMineSummary(key) {
       rHelper.methods.API_toggleLoader('mines-summary');
-      $.get('api/core.php?query=51&key=' + key, function(data) {
-        $.each(data, function(i, obj) {
+      $.get('api/core.php?query=51&key=' + key, function (data) {
+        $.each(data, function (i, obj) {
           rHelper.data.material[i].perHour = obj.perHour;
           rHelper.data.material[i].amountOfMines = obj.amountOfMines;
         });
 
-        $.each(rHelper.data.material, function(materialId) {
+        $.each(rHelper.data.material, function (materialId) {
           rHelper.methods.INSRT_materialData(materialId, 'api');
         });
 
         var fns = ['INSRT_materialMineAmortisation', 'INSRT_materialHighlightMinePerfectIncome', 'INSRT_flowDistributionGlobal'];
 
-        $.each(fns, function(i, fn) {
+        $.each(fns, function (i, fn) {
           rHelper.methods[fn]();
         });
 
@@ -324,7 +284,7 @@ var rHelper = {
     API_getMineMap: function API_getMineMap() {
       'use strict';
 
-      $.getJSON('api/core.php?mineMap', function(data) {
+      $.getJSON('api/core.php?mineMap', function (data) {
         rHelper.data.mineMap = data;
         rHelper.methods.API_toggleLoadSuccessorHelper('mines-detailed');
         rHelper.methods.EVNT_mapCreation('personal');
@@ -335,7 +295,7 @@ var rHelper = {
       'use strict';
 
       rHelper.methods.API_toggleLoader('mines-detailed');
-      $.getJSON('api/core.php?query=5&key=' + key, function(data) {
+      $.getJSON('api/core.php?query=5&key=' + key, function (data) {
         if (data.callback == 'rHelper.methods.API_getMineMap()') {
           rHelper.methods.API_getMineMap();
         } else {
@@ -351,7 +311,7 @@ var rHelper = {
       if (anonymity) {
         url += '&anonymity=true';
       }
-      $.getJSON(url, function(data) {
+      $.getJSON(url, function (data) {
         rHelper.data.userInformation.level = data.lvl;
         rHelper.data.userInformation.points = data.points;
         rHelper.data.userInformation.rank = data.worldrank;
@@ -380,7 +340,7 @@ var rHelper = {
         url += '&skip=' + skipCount;
       }
 
-      $.getJSON(url, function(data) {
+      $.getJSON(url, function (data) {
         rHelper.data.attackLog = data;
         rHelper.methods.API_toggleLoadSuccessorHelper('attack-log');
 
@@ -392,7 +352,7 @@ var rHelper = {
 
       rHelper.methods.API_toggleLoader('attack-log');
 
-      $.getJSON('api/core.php?query=9&key=' + key, function(data) {
+      $.getJSON('api/core.php?query=9&key=' + key, function (data) {
         if (data.callback != 'rHelper.methods.API_getAttackLog("attackSimple")') {
           swal('Error', "Couldn't fetch attack log - API potentially unavailable!", 'error');
         } else {
@@ -419,16 +379,16 @@ var rHelper = {
 
       var buttons = [$('#tradelog-next'), $('#tradelog-previous')];
 
-      $.each(buttons, function(i, btn) {
+      $.each(buttons, function (i, btn) {
         btn.attr('disabled', true);
       });
 
-      $.getJSON(url, function(data) {
+      $.getJSON(url, function (data) {
         rHelper.data.tradeLog = data;
         rHelper.methods.API_toggleLoadSuccessorHelper('trade-log');
         rHelper.methods.INSRT_tradeLog();
 
-        $.each(buttons, function(i, btn) {
+        $.each(buttons, function (i, btn) {
           btn.attr('disabled', false);
         });
 
@@ -442,7 +402,7 @@ var rHelper = {
 
       rHelper.methods.API_toggleLoader('trade-log');
 
-      $.getJSON('api/core.php?query=6&key=' + key, function(data) {
+      $.getJSON('api/core.php?query=6&key=' + key, function (data) {
         if (data.callback == 'rHelper.methods.API_getTradeLog()') {
           rHelper.methods.API_getTradeLog();
         } else {
@@ -453,7 +413,7 @@ var rHelper = {
     API_getMissions: function API_getMissions() {
       'use strict';
 
-      $.getJSON('api/core.php?missions', function(data) {
+      $.getJSON('api/core.php?missions', function (data) {
         rHelper.data.missions = data;
         rHelper.methods.API_toggleLoadSuccessorHelper('missions');
         rHelper.methods.INSRT_missions();
@@ -463,7 +423,7 @@ var rHelper = {
       'use strict';
 
       rHelper.methods.API_toggleLoader('missions');
-      $.getJSON('api/core.php?query=10&key=' + key, function(data) {
+      $.getJSON('api/core.php?query=10&key=' + key, function (data) {
         if (data.callback == 'rHelper.methods.API_getMissions()') {
           rHelper.methods.API_getMissions();
         }
@@ -474,13 +434,13 @@ var rHelper = {
 
       rHelper.methods.API_toggleLoader('buildings');
 
-      $.getJSON('api/core.php?query=3&key=' + key, function(data) {
+      $.getJSON('api/core.php?query=3&key=' + key, function (data) {
         var fns = ['INSRT_buildingName', 'SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10'];
 
-        $.each(data, function(i, buildingLevel) {
+        $.each(data, function (i, buildingLevel) {
           rHelper.data.buildings[i].level = buildingLevel;
 
-          $.each(fns, function(k, fn) {
+          $.each(fns, function (k, fn) {
             rHelper.methods[fn](i);
           });
         });
@@ -496,7 +456,7 @@ var rHelper = {
 
       rHelper.methods.API_toggleLoader('headquarter');
 
-      $.getJSON('api/core.php?query=4&key=' + key, function(data) {
+      $.getJSON('api/core.php?query=4&key=' + key, function (data) {
         rHelper.data.headquarter.user = rHelper.data.headquarter.user || {
           hqPosition: {
             lon: 0,
@@ -510,7 +470,7 @@ var rHelper = {
         rHelper.data.headquarter.user.hqPosition.lon = data.lon;
         rHelper.data.headquarter.user.level = data.level;
 
-        $.each(data.paid, function(i, paid) {
+        $.each(data.paid, function (i, paid) {
           rHelper.data.headquarter.user.paid[i] = paid;
         });
 
@@ -524,12 +484,10 @@ var rHelper = {
     API_getCreditInformation: function API_getCreditInformation(key) {
       'use strict';
 
-      $('#api-credits').html(
-        '<span id="api-credits-loading" class="circles-to-rhombuses-spinner"><span class="rhombuses-circle"></span><span class="rhombuses-circle"></span><span class="rhombuses-circle"></span></span>'
-      );
+      $('#api-credits').html('<span id="api-credits-loading" class="circles-to-rhombuses-spinner"><span class="rhombuses-circle"></span><span class="rhombuses-circle"></span><span class="rhombuses-circle"></span></span>');
       $('#api-credits-loading').css('display', 'flex');
 
-      $.get('api/core.php?query=0&key=' + key, function(data) {
+      $.get('api/core.php?query=0&key=' + key, function (data) {
         var remainingCredits = parseInt(data[0].creditsleft);
         rHelper.data.userInformation.remainingCredits = remainingCredits;
         rHelper.methods.INSRT_API_remainingCredits(remainingCredits);
@@ -542,7 +500,7 @@ var rHelper = {
       'use strict';
 
       if ($.isArray(queries)) {
-        $.each(queries, function(i, query) {
+        $.each(queries, function (i, query) {
           switch (query) {
             case 1:
               rHelper.methods.API_getFactories(key); // STABLE
@@ -584,7 +542,7 @@ var rHelper = {
     API_getWorldMap: function API_getWorldMap(type) {
       'use strict';
 
-      $.getJSON('api/core.php?worldMap=' + type, function(data) {
+      $.getJSON('api/core.php?worldMap=' + type, function (data) {
         rHelper.data.worldMap = rHelper.data.worldMap || {};
         rHelper.data.worldMap = data;
         rHelper.methods.EVNT_mapCreation('world');
@@ -611,8 +569,7 @@ var rHelper = {
         localStorage.setItem('rGame', JSON.stringify(rHelper.data));
 
         swal('Data has been saved remotely!', '<not implemented yet>', 'error');
-      } else {
-      }
+      } else {}
     },
     SET_tabSwitcherAnchorBased: function SET_tabSwitcherAnchorBased() {
       'use strict';
@@ -638,7 +595,7 @@ var rHelper = {
         rHelper.methods.INSRT_techUpgradeRows();
       }
 
-      $('.nav-link').each(function(i, navLink) {
+      $('.nav-link').each(function (i, navLink) {
         var navEl = $(navLink);
         var target = $('#' + navLink.dataset.target);
         if (navEl.attr('href') == anchor) {
@@ -656,25 +613,25 @@ var rHelper = {
       rHelper.data.buildings[9].transportCost = 1 + (15 - rHelper.data.buildings[9].level) / 100;
 
       if (!init) {
-        $.each(rHelper.data.buildings, function(buildingId) {
+        $.each(rHelper.data.buildings, function (buildingId) {
           var fns = ['SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10'];
 
-          $.each(fns, function(i, fn) {
+          $.each(fns, function (i, fn) {
             rHelper.methods[fn](buildingId);
           });
         });
         var calculationOrder = rHelper.methods.GET_calculationOrder();
-        $.each(calculationOrder, function(index, factoryId) {
+        $.each(calculationOrder, function (index, factoryId) {
           var fns = ['INSRT_factoryUpgradeCost', 'INSRT_factoryROI'];
 
-          $.each(fns, function(i, fn) {
+          $.each(fns, function (i, fn) {
             rHelper.methods[fn](factoryId);
           });
 
           rHelper.methods.INSRT_flowDistributionGlobal();
         });
 
-        $.each(rHelper.data.headquarter, function(headquarterLevel) {
+        $.each(rHelper.data.headquarter, function (headquarterLevel) {
           rHelper.methods.INSRT_headquarterOvwTransportation(headquarterLevel);
         });
       }
@@ -694,10 +651,11 @@ var rHelper = {
       'use strict';
 
       var _ref = [$('#building-' + buildingId + ' tbody'), $('#building-' + buildingId + ' tfoot')],
-        tbody = _ref[0],
-        tfoot = _ref[1];
+          tbody = _ref[0],
+          tfoot = _ref[1];
 
-      $.each([tbody, tfoot], function(i, el) {
+
+      $.each([tbody, tfoot], function (i, el) {
         switch (state) {
           case 'show':
             if (el.css('display') == 'none') {
@@ -724,14 +682,14 @@ var rHelper = {
     SET_recyclingPlantLevel: function SET_recyclingPlantLevel() {
       'use strict';
 
-      $.each(rHelper.data.loot, function(lootId) {
-        if (lootId == 4 || (lootId >= 10 && lootId <= 13)) {
+      $.each(rHelper.data.loot, function (lootId) {
+        if (lootId == 4 || lootId >= 10 && lootId <= 13) {
           return;
         }
 
         var fns = ['INSRT_recyclingProducts', 'INSRT_recyclingOutputWorth', 'INSRT_recyclingInputWorth'];
 
-        $.each(fns, function(i, fn) {
+        $.each(fns, function (i, fn) {
           rHelper.methods[fn](lootId);
         });
 
@@ -759,7 +717,7 @@ var rHelper = {
 
         var fns = ['INSRT_headquarterContentRequiredAmount', 'INSRT_headquarterMissing', 'INSRT_headquarterRemainingCost'];
 
-        $.each(fns, function(i, fn) {
+        $.each(fns, function (i, fn) {
           rHelper.methods[fn](userHqLevel);
         });
       }
@@ -822,17 +780,14 @@ var rHelper = {
 
       var hqLevel = hqObj.level;
 
-      var _ref2 = [
-          hqLevel * 12.5,
-          rHelper.data.headquarter[hqLevel - 1].radius,
-          {
-            lat: hqObj.lat,
-            lng: hqObj.lon
-          }
-        ],
-        hqSize = _ref2[0],
-        radius = _ref2[1],
-        center = _ref2[2];
+      var _ref2 = [hqLevel * 12.5, rHelper.data.headquarter[hqLevel - 1].radius, {
+        lat: hqObj.lat,
+        lng: hqObj.lon
+      }],
+          hqSize = _ref2[0],
+          radius = _ref2[1],
+          center = _ref2[2];
+
 
       rHelper.methods.SET_mapHqCircle(map, center, radius, hqObj.relation);
 
@@ -883,7 +838,7 @@ var rHelper = {
           marker.setAnimation(google.maps.Animation.BOUNCE);
         }
       }
-      google.maps.event.addListener(marker, 'click', function() {
+      google.maps.event.addListener(marker, 'click', function () {
         if (openedWindow) {
           openedWindow.close();
         }
@@ -899,16 +854,17 @@ var rHelper = {
       var data = rHelper.data.mineMap.mines;
 
       var timestamps = [],
-        mineCount = [],
-        avgMinePrice = [],
-        income = [],
-        hours = [];
+          mineCount = [],
+          avgMinePrice = [],
+          income = [],
+          hours = [];
+
 
       for (var hour = 0; hour <= 23; hour += 1) {
         hours.push([hour + ' to ' + (hour + 1), 0]);
       }
 
-      $.each(data, function(index, subObj) {
+      $.each(data, function (index, subObj) {
         var buildHour = new Date(rHelper.methods.CALC_toMilliseconds(subObj.builddate)).getHours();
         hours[buildHour][1] += 1;
       });
@@ -955,24 +911,22 @@ var rHelper = {
         tooltip: {
           pointFormat: 'Mines built at this hour: <b>{point.y}</b>'
         },
-        series: [
-          {
-            name: 'Mines',
-            data: hours,
-            dataLabels: {
-              enabled: true,
-              rotation: -90,
-              color: '#dedede',
-              align: 'right',
-              y: 10,
-              style: {
-                fontSize: '13px',
-                fontFamily: 'Verdana, sans-serif',
-                color: '#dedede'
-              }
+        series: [{
+          name: 'Mines',
+          data: hours,
+          dataLabels: {
+            enabled: true,
+            rotation: -90,
+            color: '#dedede',
+            align: 'right',
+            y: 10,
+            style: {
+              fontSize: '13px',
+              fontFamily: 'Verdana, sans-serif',
+              color: '#dedede'
             }
           }
-        ],
+        }],
         exporting: {
           chartOptions: {
             chart: {
@@ -993,12 +947,12 @@ var rHelper = {
         timestamps.push(date);
       }
 
-      $.each(timestamps, function(i, ts) {
+      $.each(timestamps, function (i, ts) {
         var mineCountAtGivenTS = 0;
         var sum = 0;
         var totalIncomeAtGivenTS = 0;
 
-        $.each(data, function(index, subObj) {
+        $.each(data, function (index, subObj) {
           var builddate = rHelper.methods.CALC_toMilliseconds(subObj.builddate);
 
           if (builddate <= ts) {
@@ -1007,7 +961,7 @@ var rHelper = {
           }
         });
 
-        $.each(rHelper.data.material, function(k) {
+        $.each(rHelper.data.material, function (k) {
           sum += rHelper.methods.CALC_materialNewMinePrice(mineCountAtGivenTS, k);
         });
 
@@ -1072,32 +1026,28 @@ var rHelper = {
             }
           }
         },
-        series: [
-          {
-            name: 'Mine count',
-            marker: {
-              symbol: 'square'
-            },
-            data: mineCount,
-            color: 'orange'
+        series: [{
+          name: 'Mine count',
+          marker: {
+            symbol: 'square'
           },
-          {
-            name: 'Average cost of a new mine',
-            marker: {
-              symbol: 'diamond'
-            },
-            data: avgMinePrice,
-            color: 'coral'
+          data: mineCount,
+          color: 'orange'
+        }, {
+          name: 'Average cost of a new mine',
+          marker: {
+            symbol: 'diamond'
           },
-          {
-            name: 'Average income at given time',
-            marker: {
-              symbol: 'triangle'
-            },
-            data: income,
-            color: 'yellowgreen'
-          }
-        ],
+          data: avgMinePrice,
+          color: 'coral'
+        }, {
+          name: 'Average income at given time',
+          marker: {
+            symbol: 'triangle'
+          },
+          data: income,
+          color: 'yellowgreen'
+        }],
         exporting: {
           chartOptions: {
             chart: {
@@ -1110,7 +1060,7 @@ var rHelper = {
     EVNT_enableTippy: function EVNT_enableTippy() {
       'use strict';
 
-      $.each($('[title]'), function(i, el) {
+      $.each($('[title]'), function (i, el) {
         if (!el._tippy) {
           tippy(el, {
             dynamicTitle: true
@@ -1123,7 +1073,7 @@ var rHelper = {
       'use strict';
 
       var _loop = function _loop(i) {
-        $.each($('.resources-' + subSelector + '-' + i), function(k, el) {
+        $.each($('.resources-' + subSelector + '-' + i), function (k, el) {
           if (!$(el).attr('title')) {
             var convertedId = i + incrementor;
             $(el).attr('title', rHelper.methods.CALC_returnPriceViaId(convertedId).toLocaleString('en-US'));
@@ -1139,10 +1089,11 @@ var rHelper = {
       'use strict';
 
       var maxIndices = [13, 21, 16, 5],
-        subObjs = ['material', 'product', 'loot', 'unit'],
-        length = [0, 14, 36, 52];
+          subObjs = ['material', 'product', 'loot', 'unit'],
+          length = [0, 14, 36, 52];
 
-      $.each(maxIndices, function(i, val) {
+
+      $.each(maxIndices, function (i, val) {
         rHelper.methods.EVNT_assignTitleToIconsHelper(0, val, subObjs[i], length[i]);
       });
       /*
@@ -1156,7 +1107,7 @@ var rHelper = {
 
       var tables = [$('#module-mines table')[0], $('#module-factories table')[0], $('#module-diamond table')[0], $('#techupgrades-combinations-tbl')[0], $('#recycling-tbl')[0], $('#units-tbl')[0]];
 
-      $.each(tables, function(index, table) {
+      $.each(tables, function (index, table) {
         sorttable.makeSortable(table);
 
         if (index == 2) {
@@ -1171,30 +1122,18 @@ var rHelper = {
     EVNT_factoryInput: function EVNT_factoryInput(factoryId) {
       'use strict';
 
-      $('#factories-level-' + factoryId).on('input', function() {
+      $('#factories-level-' + factoryId).on('input', function () {
         var factoryId = parseInt(this.id.replace('factories-level-', ''));
         var factoryLevel = parseInt(this.value);
         rHelper.methods.SET_globalObject('products', factoryId, 'factoryLevel', factoryLevel);
 
         var fns = [
-          // factories tab
-          'INSRT_factoryOutput',
-          'INSRT_factoryUpgradeCost',
-          'INSRT_factoryDependencies',
-          'INSRT_factoryWorkload',
-          'INSRT_factoryTurnover',
-          'INSRT_factoryTurnoverPerUpgrade',
-          'INSRT_factoryROI',
-          // diamond tab
-          'INSRT_diamondFactoryLevel',
-          'INSRT_diamondFactoryOutput',
-          'INSRT_diamondFactoryOutputWarehouse',
-          'INSRT_diamondDependencies',
-          'INSRT_diamondEfficiency',
-          'INSRT_diamondProfit'
-        ];
+        // factories tab
+        'INSRT_factoryOutput', 'INSRT_factoryUpgradeCost', 'INSRT_factoryDependencies', 'INSRT_factoryWorkload', 'INSRT_factoryTurnover', 'INSRT_factoryTurnoverPerUpgrade', 'INSRT_factoryROI',
+        // diamond tab
+        'INSRT_diamondFactoryLevel', 'INSRT_diamondFactoryOutput', 'INSRT_diamondFactoryOutputWarehouse', 'INSRT_diamondDependencies', 'INSRT_diamondEfficiency', 'INSRT_diamondProfit'];
 
-        $.each(fns, function(i, fn) {
+        $.each(fns, function (i, fn) {
           rHelper.methods[fn](factoryId);
         });
 
@@ -1209,7 +1148,7 @@ var rHelper = {
     EVNT_materialInput: function EVNT_materialInput(materialId) {
       'use strict';
 
-      $('#material-rate-' + materialId).on('input', function() {
+      $('#material-rate-' + materialId).on('input', function () {
         var materialId = this.id.replace('material-rate-', '');
         var materialAmount = parseInt(this.value);
 
@@ -1222,13 +1161,13 @@ var rHelper = {
         rHelper.methods.EVNT_buildGraph('material');
       });
 
-      $('#material-amount-of-mines-' + materialId).on('input', function() {
+      $('#material-amount-of-mines-' + materialId).on('input', function () {
         var materialId = this.id.replace('material-amount-of-mines-', '');
         var materialAmountOfMines = parseInt(this.value);
 
         rHelper.methods.SET_globalObject('material', materialId, 'amountOfMines', materialAmountOfMines);
 
-        $.each(rHelper.data.material, function(materialId) {
+        $.each(rHelper.data.material, function (materialId) {
           rHelper.methods.INSRT_materialNewMinePrice(materialId);
         });
 
@@ -1243,7 +1182,7 @@ var rHelper = {
 
       // on upgrade calculator input
 
-      $('#warehouse-' + type + '-calc-2-' + id).on('input', function() {
+      $('#warehouse-' + type + '-calc-2-' + id).on('input', function () {
         var value = parseInt(this.value);
         if (isNaN(value)) {
           value = 0;
@@ -1252,13 +1191,13 @@ var rHelper = {
       });
 
       // reset upgrade cost on select swap
-      $('#warehouse-' + type + '-calc-1-' + id).on('change', function() {
+      $('#warehouse-' + type + '-calc-1-' + id).on('change', function () {
         $('#warehouse-' + type + '-upgrade-cost-' + id).empty();
         $('#warehouse-' + type + '-calc-2-' + id).val(0);
       });
 
       // on increase of current stock
-      $('#warehouse-' + type + '-stock-current-' + id).on('input', function() {
+      $('#warehouse-' + type + '-stock-current-' + id).on('input', function () {
         var value = parseInt(this.value);
         if (isNaN(value)) {
           value = 0;
@@ -1270,14 +1209,14 @@ var rHelper = {
 
         var fns = ['INSRT_warehouseWorth', 'INSRT_warehouseFillStatus', 'INSRT_warehouseRemainingTimeToFull'];
 
-        $.each(fns, function(i, fn) {
+        $.each(fns, function (i, fn) {
           rHelper.methods[fn](id, type);
         });
 
         rHelper.methods.INSRT_warehouseTotalWorth();
       });
       // on increase of warehouse level
-      $('#warehouse-' + type + '-level-' + id).on('input', function() {
+      $('#warehouse-' + type + '-level-' + id).on('input', function () {
         var value = parseInt(this.value);
         if (isNaN(value)) {
           value = 0;
@@ -1290,7 +1229,7 @@ var rHelper = {
 
         var fns = ['INSRT_warehouseCapacity', 'INSRT_warehouseFillStatus', 'INSRT_warehouseRemainingTimeToFull'];
 
-        $.each(fns, function(i, fn) {
+        $.each(fns, function (i, fn) {
           rHelper.methods[fn](id, type);
         });
 
@@ -1300,7 +1239,7 @@ var rHelper = {
     EVNT_buildingChange: function EVNT_buildingChange(buildingId) {
       'use strict';
 
-      $('#buildings-level-' + buildingId).on('change', function() {
+      $('#buildings-level-' + buildingId).on('change', function () {
         var value = parseInt(this.value);
 
         rHelper.methods.SET_globalObject('buildings', buildingId, 'level', value);
@@ -1312,14 +1251,14 @@ var rHelper = {
         }
 
         if (buildingId == 3 || buildingId == 4 || buildingId == 9) {
-          $.each(rHelper.data.units, function(unitId) {
+          $.each(rHelper.data.units, function (unitId) {
             rHelper.methods.INSRT_unitsPricePerStrength(unitId);
           });
         }
 
         var fns = ['INSRT_buildingData', 'INSRT_buildingToLevel10', 'SET_buildingBackgroundColor'];
 
-        $.each(fns, function(i, fn) {
+        $.each(fns, function (i, fn) {
           rHelper.methods[fn](buildingId);
         });
 
@@ -1335,7 +1274,7 @@ var rHelper = {
       rHelper.graphs.material.reference.mineCount = rHelper.methods.CALC_totalMineCount();
       rHelper.graphs.material.reference.mineIncome = rHelper.methods.CALC_totalMineWorth();
 
-      $.each(rHelper.data.material, function(i, material) {
+      $.each(rHelper.data.material, function (i, material) {
         var iteration = {
           y: 0,
           color: '',
@@ -1385,9 +1324,7 @@ var rHelper = {
           rHelper.graphs.material.incomeData[i] = {
             name: iteration.drilldown.categories[j],
             y: iteration.drilldown.data[j],
-            color: Highcharts.Color(iteration.color)
-              .brighten(brightness)
-              .get()
+            color: Highcharts.Color(iteration.color).brighten(brightness).get()
           };
         }
         if (JSON.stringify(rHelper.graphs.material.data[i]) !== JSON.stringify(iteration)) {
@@ -1400,7 +1337,7 @@ var rHelper = {
     EVNT_switchHeadquarter: function EVNT_switchHeadquarter(clickedHq) {
       'use strict';
 
-      $('.hq-thumb-' + clickedHq).on('click', function() {
+      $('.hq-thumb-' + clickedHq).on('click', function () {
         var actualLevel = parseInt(clickedHq) + 1;
 
         rHelper.data.headquarter.user = rHelper.data.headquarter.user || {};
@@ -1424,8 +1361,8 @@ var rHelper = {
     EVNT_headquarterInput: function EVNT_headquarterInput() {
       'use strict';
 
-      $.each($("[id*='hq-content-input-']"), function(i, el) {
-        $(el).on('input', function() {
+      $.each($("[id*='hq-content-input-']"), function (i, el) {
+        $(el).on('input', function () {
           var thisId = parseInt(this.id.replace(/hq-content-input-/, ''));
           var thisValue = parseInt(this.value);
 
@@ -1446,7 +1383,7 @@ var rHelper = {
     EVNT_priceHistoryOnChange: function EVNT_priceHistoryOnChange() {
       'use strict';
 
-      $('#pricehistory-selector').on('change', function() {
+      $('#pricehistory-selector').on('change', function () {
         var thisVal = parseInt(this.value);
         var url = 'api/getPriceHistory.php?id=' + thisVal;
         var resource = rHelper.methods.CALC_convertId(thisVal);
@@ -1454,14 +1391,14 @@ var rHelper = {
 
         rHelper.methods.EVNT_priceHistoryToggler('loading');
 
-        $.getJSON(url, function(response) {
+        $.getJSON(url, function (response) {
           var averageKI = response.avg.ki;
           var averagePlayer = response.avg.player;
           var timestamps = [];
           var player = [];
           var ki = [];
 
-          $.each(response.data, function(i, dataset) {
+          $.each(response.data, function (i, dataset) {
             var date = rHelper.methods.CALC_convertDateToIso(rHelper.methods.CALC_toMilliseconds(dataset.ts));
             timestamps.push(date);
 
@@ -1481,13 +1418,13 @@ var rHelper = {
       'use strict';
 
       var _ref3 = [$('#graph-pricehistory'), $('#pricehistory-selector')],
-        container = _ref3[0],
-        selector = _ref3[1];
+          container = _ref3[0],
+          selector = _ref3[1];
+
 
       switch (state) {
         case 'loading':
-          var svg =
-            '<svg id="pricehistory-svg" xmlns="http://www.w3.org/2000/svg" style="background:0 0" preserveAspectRatio="xMidYMid" viewBox="0 0 100 100"><g transform="translate(50 50)"><g transform="matrix(.6 0 0 .6 -19 -19)"><g transform="rotate(242)"><animateTransform attributeName="transform" begin="0s" dur="3s" keyTimes="0;1" repeatCount="indefinite" type="rotate" values="0;360"/><path fill="#9acd32" d="M37.3496988-7h10V7h-10a38 38 0 0 1-1.50391082 5.61267157l8.66025404 5-7 12.12435565-8.66025404-5a38 38 0 0 1-4.10876076 4.10876076l5 8.66025404-12.12435565 7-5-8.66025404A38 38 0 0 1 7 37.34969879v10H-7v-10a38 38 0 0 1-5.61267157-1.50391081l-5 8.66025404-12.12435565-7 5-8.66025404a38 38 0 0 1-4.10876076-4.10876076l-8.66025404 5-7-12.12435565 8.66025404-5A38 38 0 0 1-37.34969879 7h-10V-7h10a38 38 0 0 1 1.50391081-5.61267157l-8.66025404-5 7-12.12435565 8.66025404 5a38 38 0 0 1 4.10876076-4.10876076l-5-8.66025404 12.12435565-7 5 8.66025404A38 38 0 0 1-7-37.34969879v-10H7v10a38 38 0 0 1 5.61267157 1.50391081l5-8.66025404 12.12435565 7-5 8.66025404a38 38 0 0 1 4.10876076 4.10876076l8.66025404-5 7 12.12435565-8.66025404 5A38 38 0 0 1 37.34969879-7M0-30a30 30 0 1 0 0 60 30 30 0 1 0 0-60"/></g></g><g transform="matrix(.6 0 0 .6 19 19)"><g transform="rotate(103)"><animateTransform attributeName="transform" begin="-0.125s" dur="3s" keyTimes="0;1" repeatCount="indefinite" type="rotate" values="360;0"/><path fill="coral" d="M37.3496988-7h10V7h-10a38 38 0 0 1-1.50391082 5.61267157l8.66025404 5-7 12.12435565-8.66025404-5a38 38 0 0 1-4.10876076 4.10876076l5 8.66025404-12.12435565 7-5-8.66025404A38 38 0 0 1 7 37.34969879v10H-7v-10a38 38 0 0 1-5.61267157-1.50391081l-5 8.66025404-12.12435565-7 5-8.66025404a38 38 0 0 1-4.10876076-4.10876076l-8.66025404 5-7-12.12435565 8.66025404-5A38 38 0 0 1-37.34969879 7h-10V-7h10a38 38 0 0 1 1.50391081-5.61267157l-8.66025404-5 7-12.12435565 8.66025404 5a38 38 0 0 1 4.10876076-4.10876076l-5-8.66025404 12.12435565-7 5 8.66025404A38 38 0 0 1-7-37.34969879v-10H7v10a38 38 0 0 1 5.61267157 1.50391081l5-8.66025404 12.12435565 7-5 8.66025404a38 38 0 0 1 4.10876076 4.10876076l8.66025404-5 7 12.12435565-8.66025404 5A38 38 0 0 1 37.34969879-7M0-30a30 30 0 1 0 0 60 30 30 0 1 0 0-60"/></g></g></g></svg>';
+          var svg = '<svg id="pricehistory-svg" xmlns="http://www.w3.org/2000/svg" style="background:0 0" preserveAspectRatio="xMidYMid" viewBox="0 0 100 100"><g transform="translate(50 50)"><g transform="matrix(.6 0 0 .6 -19 -19)"><g transform="rotate(242)"><animateTransform attributeName="transform" begin="0s" dur="3s" keyTimes="0;1" repeatCount="indefinite" type="rotate" values="0;360"/><path fill="#9acd32" d="M37.3496988-7h10V7h-10a38 38 0 0 1-1.50391082 5.61267157l8.66025404 5-7 12.12435565-8.66025404-5a38 38 0 0 1-4.10876076 4.10876076l5 8.66025404-12.12435565 7-5-8.66025404A38 38 0 0 1 7 37.34969879v10H-7v-10a38 38 0 0 1-5.61267157-1.50391081l-5 8.66025404-12.12435565-7 5-8.66025404a38 38 0 0 1-4.10876076-4.10876076l-8.66025404 5-7-12.12435565 8.66025404-5A38 38 0 0 1-37.34969879 7h-10V-7h10a38 38 0 0 1 1.50391081-5.61267157l-8.66025404-5 7-12.12435565 8.66025404 5a38 38 0 0 1 4.10876076-4.10876076l-5-8.66025404 12.12435565-7 5 8.66025404A38 38 0 0 1-7-37.34969879v-10H7v10a38 38 0 0 1 5.61267157 1.50391081l5-8.66025404 12.12435565 7-5 8.66025404a38 38 0 0 1 4.10876076 4.10876076l8.66025404-5 7 12.12435565-8.66025404 5A38 38 0 0 1 37.34969879-7M0-30a30 30 0 1 0 0 60 30 30 0 1 0 0-60"/></g></g><g transform="matrix(.6 0 0 .6 19 19)"><g transform="rotate(103)"><animateTransform attributeName="transform" begin="-0.125s" dur="3s" keyTimes="0;1" repeatCount="indefinite" type="rotate" values="360;0"/><path fill="coral" d="M37.3496988-7h10V7h-10a38 38 0 0 1-1.50391082 5.61267157l8.66025404 5-7 12.12435565-8.66025404-5a38 38 0 0 1-4.10876076 4.10876076l5 8.66025404-12.12435565 7-5-8.66025404A38 38 0 0 1 7 37.34969879v10H-7v-10a38 38 0 0 1-5.61267157-1.50391081l-5 8.66025404-12.12435565-7 5-8.66025404a38 38 0 0 1-4.10876076-4.10876076l-8.66025404 5-7-12.12435565 8.66025404-5A38 38 0 0 1-37.34969879 7h-10V-7h10a38 38 0 0 1 1.50391081-5.61267157l-8.66025404-5 7-12.12435565 8.66025404 5a38 38 0 0 1 4.10876076-4.10876076l-5-8.66025404 12.12435565-7 5 8.66025404A38 38 0 0 1-7-37.34969879v-10H7v10a38 38 0 0 1 5.61267157 1.50391081l5-8.66025404 12.12435565 7-5 8.66025404a38 38 0 0 1 4.10876076 4.10876076l8.66025404-5 7 12.12435565-8.66025404 5A38 38 0 0 1 37.34969879-7M0-30a30 30 0 1 0 0 60 30 30 0 1 0 0-60"/></g></g></g></svg>';
           container.html(svg);
           selector.attr('disabled', true);
           break;
@@ -1500,11 +1437,12 @@ var rHelper = {
     EVNT_mapCreation: function EVNT_mapCreation(mapType) {
       'use strict';
 
-      var _ref4 = [, , ,],
-        container = _ref4[0],
-        data = _ref4[1],
-        infoNode = _ref4[2],
-        errorText = _ref4[3];
+      var _ref4 = [,,,],
+          container = _ref4[0],
+          data = _ref4[1],
+          infoNode = _ref4[2],
+          errorText = _ref4[3];
+
 
       switch (mapType) {
         case 'personal':
@@ -1523,9 +1461,10 @@ var rHelper = {
 
       if (data.length != 0) {
         var _ref5 = [new Date(), rHelper.methods.SET_newMap(container, 3, 'terrain'), []],
-          now = _ref5[0],
-          map = _ref5[1],
-          markerArr = _ref5[2];
+            now = _ref5[0],
+            map = _ref5[1],
+            markerArr = _ref5[2];
+
 
         map = rHelper.methods.SET_mapOptions(map, 16, data.mines[0]);
 
@@ -1534,13 +1473,13 @@ var rHelper = {
             rHelper.methods.SET_mapHQHandler(map, data.hq[0]);
             break;
           case 'world':
-            $.each(data.hqs, function(i, hqObj) {
+            $.each(data.hqs, function (i, hqObj) {
               rHelper.methods.SET_mapHQHandler(map, hqObj);
             });
             break;
         }
 
-        $.each(data.mines, function(i, subObj) {
+        $.each(data.mines, function (i, subObj) {
           rHelper.methods.SET_mapMineHandler(now, subObj, map, mapType);
           markerArr.push(rHelper.methods.SET_mapMineHandler(now, subObj, map, mapType));
         });
@@ -1551,132 +1490,154 @@ var rHelper = {
       }
     },
     EVNT_attackLogTrigger: function EVNT_attackLogTrigger() {
-      $('#heading-defenselog a').on('click', function(e) {
+      $('#heading-defenselog a').on('click', function (e) {
         e.preventDefault();
         rHelper.methods.API_getAttackLog('defenseSimple');
       });
 
-      $('#heading-attacklog-1 a').on('click', function(e) {
+      $('#heading-attacklog-1 a').on('click', function (e) {
         e.preventDefault();
         rHelper.methods.API_getAttackLog('attackSimple');
       });
 
-      $('#heading-attacklog-2 a').on('click', function(e) {
+      $('#heading-attacklog-2 a').on('click', function (e) {
         e.preventDefault();
         rHelper.methods.API_getAttackLog('attackDetailed');
       });
     },
     INSRT_leaderboardTable: function INSRT_leaderboardTable() {
       var _ref6 = [rHelper.data.leaderboard, $('#module-leaderboard tbody'), 'text-md-right text-sm-left', "class='text-right'", ''],
-        container = _ref6[0],
-        tbody = _ref6[1],
-        textOrientation = _ref6[2],
-        textClass = _ref6[3],
-        string = _ref6[4];
+          container = _ref6[0],
+          tbody = _ref6[1],
+          textOrientation = _ref6[2],
+          textClass = _ref6[3],
+          string = _ref6[4];
+
 
       var returnPlayerTitle = function returnPlayerTitle(dataset) {
-        return (
-          '<table>\n                <tbody>\n                    <tr><td>Rank</td><td ' +
-          textClass +
-          '>' +
-          dataset.general.rank.toLocaleString('en-US') +
-          '</td></tr>\n                    <tr><td>Registered since</td><td ' +
-          textClass +
-          '>' +
-          dataset.general.registeredGame +
-          '</td></tr>\n                    <tr><td>Days playing</td><td ' +
-          textClass +
-          '>' +
-          dataset.general.daysPlaying.toLocaleString('en-US') +
-          '</td></tr>\n                </tbody>\n                </table>'
-        );
+        var _ref7 = [dataset.general.rank.toLocaleString('en-US'), dataset.general.registeredGame, dataset.general.daysPlaying.toLocaleString('en-US')],
+            rank = _ref7[0],
+            registeredGame = _ref7[1],
+            daysPlaying = _ref7[2];
+
+
+        if (rank == 0) {
+          rank = registeredGame = daysPlaying = 'unknown';
+        }
+
+        return '<table>\n                <tbody>\n                    <tr><td>Rank</td><td ' + textClass + '>' + rank + '</td></tr>\n                    <tr><td>Registered since</td><td ' + textClass + '>' + registeredGame + '</td></tr>\n                    <tr><td>Days playing</td><td ' + textClass + '>' + daysPlaying + '</td></tr>\n                </tbody>\n                </table>';
       };
 
       var returnCompanyWorthTitle = function returnCompanyWorthTitle(dataset) {
-        return (
-          "<table>\n                <thead>\n                    <tr><th colspan='2'>Money spent on...</th></tr>\n                </thead>\n                <tbody>\n                    <tr><td>Mines</td><td " +
-          textClass +
-          '>' +
-          dataset.mineErectionSum.toLocaleString('en-US') +
-          '</td></tr>\n                    <tr><td>Factories</td><td ' +
-          textClass +
-          '>' +
-          dataset.factoryErectionSum.toLocaleString('en-US') +
-          '</td></tr>\n                    <tr><td>Headquarter</td><td ' +
-          textClass +
-          '>' +
-          dataset.headquarterSum.toLocaleString('en-US') +
-          '</td></tr>\n                    <tr><td>Buildings</td><td ' +
-          textClass +
-          '>' +
-          dataset.buildingsErectionSum.toLocaleString('en-US') +
-          '</td></tr>\n                    <tr><td>Warehouse</td><td ' +
-          textClass +
-          '>' +
-          dataset.warehouseErectionSum.toLocaleString('en-US') +
-          '</td></tr>\n                </tbody>\n                </table>'
-        );
+        return '<table>\n                <thead>\n                    <tr><th colspan=\'2\'>Money spent on...</th></tr>\n                </thead>\n                <tbody>\n                    <tr><td>Mines</td><td ' + textClass + '>' + dataset.mineErectionSum.toLocaleString('en-US') + '</td></tr>\n                    <tr><td>Factories</td><td ' + textClass + '>' + dataset.factoryErectionSum.toLocaleString('en-US') + '</td></tr>\n                    <tr><td>Headquarter</td><td ' + textClass + '>' + dataset.headquarterSum.toLocaleString('en-US') + '</td></tr>\n                    <tr><td>Buildings</td><td ' + textClass + '>' + dataset.buildingsErectionSum.toLocaleString('en-US') + '</td></tr>\n                    <tr><td>Warehouse</td><td ' + textClass + '>' + dataset.warehouseErectionSum.toLocaleString('en-US') + '</td></tr>\n                </tbody>\n                </table>';
+      };
+
+      var fillHighlightingObj = function fillHighlightingObj(container, highlightingObj) {
+        $.each(container, function (i, dataset) {
+          if (dataset.mineIncome > highlightingObj.mineIncome) {
+            highlightingObj.mineIncome = dataset.mineIncome;
+          }
+          if (dataset.tradeData.tradeIncomePerDay > highlightingObj.tradeIncomePerDay) {
+            highlightingObj.tradeIncomePerDay = dataset.tradeData.tradeIncomePerDay;
+          }
+          if (dataset.factoryTotalUpgrades > highlightingObj.factoryUpgrades) {
+            highlightingObj.factoryUpgrades = dataset.factoryTotalUpgrades;
+          }
+          if (dataset.totalMineCount > highlightingObj.amountOfMines) {
+            highlightingObj.amountOfMines = dataset.totalMineCount;
+          }
+          if (dataset.headquarter.mineCount > highlightingObj.minesWithinHQRadius) {
+            highlightingObj.minesWithinHQRadius = dataset.headquarter.mineCount;
+          }
+          if (dataset.tradeData.totalBuy > highlightingObj.totalBuy) {
+            highlightingObj.totalBuy = dataset.tradeData.totalBuy;
+          }
+          if (dataset.tradeData.totalSell > highlightingObj.totalSell) {
+            highlightingObj.totalSell = dataset.tradeData.totalSell;
+          }
+          if (dataset.tradeData.sumKISell > highlightingObj.sumKISell) {
+            highlightingObj.sumKISell = dataset.tradeData.sumKISell;
+          }
+          if (dataset.general.pointsPerDay > highlightingObj.pointsPerDay) {
+            highlightingObj.pointsPerDay = dataset.general.pointsPerDay;
+          }
+        });
       };
 
       var returnString = function returnString(dataset) {
-        return (
-          '\n                <tr>\n                    <td data-th="Player (hover for details)" title="' +
-          returnPlayerTitle(dataset) +
-          '">' +
-          dataset.general.name +
-          ' (' +
-          dataset.general.level.toLocaleString('en-US') +
-          ')</td>\n                    <td sorttable_customkey="' +
-          dataset.general.points +
-          '" data-th="Points per day (total points)" class="' +
-          textOrientation +
-          '">' +
-          dataset.general.pointsPerDay.toLocaleString('en-US') +
-          ' (' +
-          dataset.general.points.toLocaleString('en-US') +
-          ')</td>\n                    <td data-th="Factory upgrades" class="' +
-          textOrientation +
-          '">' +
-          dataset.factoryTotalUpgrades.toLocaleString('en-US') +
-          '</td>\n                    <td data-th="Amount of mines" class="' +
-          textOrientation +
-          '">' +
-          dataset.totalMineCount.toLocaleString('en-US') +
-          '</td>\n                    <td data-th="Mines within HQ radius" class="' +
-          textOrientation +
-          '">' +
-          dataset.headquarter.mineCount.toLocaleString('en-US') +
-          '</td>\n                    <td data-th="Mine income" class="' +
-          textOrientation +
-          '">' +
-          dataset.mineIncome.toLocaleString('en-US') +
-          '</td>\n                    <td data-th="Trade income per day" class="' +
-          textOrientation +
-          '">' +
-          dataset.tradeData.tradeIncomePerDay.toLocaleString('en-US') +
-          '</td>\n                    <td data-th="Bought goods for" class="' +
-          textOrientation +
-          '">' +
-          dataset.tradeData.totalBuy.toLocaleString('en-US') +
-          '</td>\n                    <td data-th="Sold goods for..." class="' +
-          textOrientation +
-          '">' +
-          dataset.tradeData.totalSell.toLocaleString('en-US') +
-          '</td>\n                    <td data-th="Sold goods to KI for..." class="' +
-          textOrientation +
-          '">' +
-          dataset.tradeData.sumKISell.toLocaleString('en-US') +
-          '</td>\n                    <td data-th="Company worth" class="' +
-          textOrientation +
-          '" title="' +
-          returnCompanyWorthTitle(dataset) +
-          '">' +
-          dataset.companyWorth.toLocaleString('en-US') +
-          '</td>\n                </tr>\n                '
-        );
+        var _ref8 = [dataset.general.name, dataset.general.level.toLocaleString('en-US'), dataset.general.pointsPerDay.toLocaleString('en-US'), dataset.general.points.toLocaleString('en-US'), dataset.headquarter.mineCount.toLocaleString('en-US'), dataset.tradeData.tradeIncomePerDay.toLocaleString('en-US'), dataset.tradeData.totalBuy.toLocaleString('en-US'), dataset.tradeData.totalSell.toLocaleString('en-US'), dataset.tradeData.sumKISell.toLocaleString('en-US')],
+            name = _ref8[0],
+            level = _ref8[1],
+            pointsPerDay = _ref8[2],
+            points = _ref8[3],
+            headquarterMines = _ref8[4],
+            tradeIncome = _ref8[5],
+            totalBuy = _ref8[6],
+            totalSell = _ref8[7],
+            sumKISell = _ref8[8];
+
+
+        if (name == '') {
+          level = '';
+        } else {
+          level = '(' + level + ')';
+        }
+
+        if (pointsPerDay == 0) {
+          pointsPerDay = points = '';
+        } else {
+          points = '(' + points + ')';
+        }
+
+        if (headquarterMines == 0) {
+          headquarterMines = '';
+        }
+
+        if (tradeIncome == 0) {
+          tradeIncome = totalBuy = totalSell = sumKISell = '';
+        }
+
+        var pointsPerDayClass = '',
+            factoryUpgradesClass = '',
+            amountOfMinesClass = '',
+            minesWithinHQClass = '',
+            tradeIncomeClass = '',
+            totalBuyClass = '',
+            totalSellClass = '',
+            totalKISellClass = '',
+            mineIncomeClass = '';
+
+
+        var classes = {
+          pointsPerDayClass: dataset.general.pointsPerDay === highlightingObj.pointsPerDay ? 'text-success' : '',
+          factoryUpgradesClass: dataset.factoryTotalUpgrades === highlightingObj.factoryUpgrades ? 'text-success' : '',
+          amountOfMinesClass: dataset.totalMineCount === highlightingObj.amountOfMines ? 'text-success' : '',
+          minesWithinHQClass: dataset.headquarter.mineCount === highlightingObj.minesWithinHQRadius ? 'text-success' : '',
+          tradeIncomeClass: dataset.tradeData.tradeIncomePerDay === highlightingObj.tradeIncomePerDay ? 'text-success' : '',
+          totalBuyClass: dataset.tradeData.totalBuy === highlightingObj.totalBuy ? 'text-success' : '',
+          totalSellClass: dataset.tradeData.totalSell === highlightingObj.totalSell ? 'text-success' : '',
+          totalKISellClass: dataset.tradeData.sumKISell === highlightingObj.sumKISell ? 'text-success' : '',
+          mineIncomeClass: dataset.mineIncome === highlightingObj.mineIncome ? 'text-success' : ''
+        };
+
+        return '\n                <tr>\n                    <td data-th="Player (hover for details)" title="' + returnPlayerTitle(dataset) + '">' + name + ' ' + level + '</td>\n                    <td sorttable_customkey="' + dataset.general.points + '" data-th="Points per day (total points)" class="' + textOrientation + ' ' + classes.pointsPerDayClass + '">' + pointsPerDay + ' ' + points + '</td>\n                    <td data-th="Factory upgrades" class="' + textOrientation + ' ' + classes.factoryUpgradesClass + '">' + dataset.factoryTotalUpgrades.toLocaleString('en-US') + '</td>\n                    <td data-th="Amount of mines" class="' + textOrientation + ' ' + classes.amountOfMinesClass + '">' + dataset.totalMineCount.toLocaleString('en-US') + '</td>\n                    <td data-th="Mines within HQ radius" class="' + textOrientation + ' ' + classes.minesWithinHQClass + '">' + headquarterMines + '</td>\n                    <td data-th="Mine income" class="' + textOrientation + ' ' + classes.mineIncomeClass + '">' + dataset.mineIncome.toLocaleString('en-US') + '</td>\n                    <td data-th="Trade income per day" class="' + textOrientation + ' ' + classes.tradeIncomeClass + '">' + tradeIncome + '</td>\n                    <td data-th="Bought goods for" class="' + textOrientation + ' ' + classes.totalBuyClass + '">' + totalBuy + '</td>\n                    <td data-th="Sold goods for..." class="' + textOrientation + ' ' + classes.totalSellClass + '">' + totalSell + '</td>\n                    <td data-th="Sold goods to KI for..." class="' + textOrientation + ' ' + classes.totalKISellClass + '">' + sumKISell + '</td>\n                    <td data-th="Company worth" class="' + textOrientation + '" title="' + returnCompanyWorthTitle(dataset) + '">' + dataset.companyWorth.toLocaleString('en-US') + '</td>\n                </tr>\n                ';
       };
 
-      $.each(container, function(i, dataset) {
+      var highlightingObj = {
+        mineIncome: 0,
+        tradeIncomePerDay: 0,
+        factoryUpgrades: 0,
+        amountOfMines: 0,
+        minesWithinHQRadius: 0,
+        totalBuy: 0,
+        totalSell: 0,
+        sumKISell: 0,
+        pointsPerDay: 0
+      };
+
+      fillHighlightingObj(container, highlightingObj);
+
+      $.each(container, function (i, dataset) {
         string += returnString(dataset);
       });
 
@@ -1685,7 +1646,7 @@ var rHelper = {
       sorttable.makeSortable($('#module-leaderboard table')[0]);
       sorttable.innerSortFunction.apply($('#module-leaderboard th')[10], []);
 
-      $.each($('#module-leaderboard td[title]'), function(i, el) {
+      $.each($('#module-leaderboard td[title]'), function (i, el) {
         applyTippyOnNewElement($(el));
       });
     },
@@ -1693,7 +1654,7 @@ var rHelper = {
       rHelper.data.leaderboard = rHelper.data.leaderboard || {};
 
       if ($.isEmptyObject(rHelper.data.leaderboard)) {
-        $.getJSON('api/leaderboard.php', function(result) {
+        $.getJSON('api/leaderboard.php', function (result) {
           rHelper.data.leaderboard = result;
           rHelper.methods.INSRT_leaderboardTable();
         });
@@ -1747,24 +1708,22 @@ var rHelper = {
             tooltip: {
               pointFormat: 'Sell actions performed at this hour: <b>{point.y}</b>'
             },
-            series: [
-              {
-                name: 'Sell action',
-                data: hours,
-                dataLabels: {
-                  enabled: true,
-                  rotation: -90,
-                  color: '#dedede',
-                  align: 'right',
-                  y: 10,
-                  style: {
-                    fontSize: '13px',
-                    fontFamily: 'Verdana, sans-serif',
-                    color: '#dedede'
-                  }
+            series: [{
+              name: 'Sell action',
+              data: hours,
+              dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: '#dedede',
+                align: 'right',
+                y: 10,
+                style: {
+                  fontSize: '13px',
+                  fontFamily: 'Verdana, sans-serif',
+                  color: '#dedede'
                 }
               }
-            ],
+            }],
             exporting: {
               chartOptions: {
                 chart: {
@@ -1779,7 +1738,7 @@ var rHelper = {
           var currentDaysFilter = _daysFilterSelect.val();
 
           if (currentDaysFilter != null) {
-            $.each(_daysFilterSelect.children('option'), function(i, el) {
+            $.each(_daysFilterSelect.children('option'), function (i, el) {
               if ($(el).val() == currentDaysFilter) {
                 rHelper.data.tradeLog.skipCount = i - 1;
               }
@@ -1790,7 +1749,7 @@ var rHelper = {
         var appendOptions = function appendOptions() {
           _daysFilterSelect.empty().prepend('<option selected disabled>jump to day X</option>');
 
-          $.each(container.days, function(i, dataset) {
+          $.each(container.days, function (i, dataset) {
             _daysFilterSelect.append('<option value="' + dataset.date + '">' + dataset.date + ' (' + dataset.entries.toLocaleString('en-US') + ' entries)</option>');
           });
         };
@@ -1799,9 +1758,10 @@ var rHelper = {
           var obj = rHelper.methods.CALC_convertId(dataset.itemId);
 
           var datasetSum = dataset.price * dataset.amount,
-            action = 'Selling to ',
-            profitClass = 'success',
-            trClass = '';
+              action = 'Selling to ',
+              profitClass = 'success',
+              trClass = '';
+
 
           if (dataset.event == 0) {
             datasetSum *= -1;
@@ -1815,38 +1775,7 @@ var rHelper = {
             trClass = 'class="ki-sell"';
           }
 
-          var template =
-            '\n          <tr ' +
-            trClass +
-            '>\n            <td data-th="Trade partner"><span class="text-' +
-            profitClass +
-            '">' +
-            action +
-            '</span><kbd>' +
-            dataset.actor +
-            ' (' +
-            dataset.actorLevel.toLocaleString('en-US') +
-            ')</kbd></td>\n            <td data-th="Timestamp" class="' +
-            _textOrientation +
-            '">' +
-            rHelper.methods.CALC_convertDateToIso(dataset.timestamp * 1000) +
-            '</td>\n            <td data-th="Amount" class="' +
-            _textOrientation +
-            '">' +
-            dataset.amount.toLocaleString('en-US') +
-            'x <span class="' +
-            obj.icon +
-            '"></span></td>\n            <td data-th="Price" class="' +
-            _textOrientation +
-            '">' +
-            dataset.price.toLocaleString('en-US') +
-            '</td>\n            <td data-th="Sum" class="' +
-            _textOrientation +
-            ' text-' +
-            profitClass +
-            '">' +
-            datasetSum.toLocaleString('en-US') +
-            '</td>\n          </tr>\n          ';
+          var template = '\n          <tr ' + trClass + '>\n            <td data-th="Trade partner"><span class="text-' + profitClass + '">' + action + '</span><kbd>' + dataset.actor + ' (' + dataset.actorLevel.toLocaleString('en-US') + ')</kbd></td>\n            <td data-th="Timestamp" class="' + _textOrientation + '">' + rHelper.methods.CALC_convertDateToIso(dataset.timestamp * 1000) + '</td>\n            <td data-th="Amount" class="' + _textOrientation + '">' + dataset.amount.toLocaleString('en-US') + 'x <span class="' + obj.icon + '"></span></td>\n            <td data-th="Price" class="' + _textOrientation + '">' + dataset.price.toLocaleString('en-US') + '</td>\n            <td data-th="Sum" class="' + _textOrientation + ' text-' + profitClass + '">' + datasetSum.toLocaleString('en-US') + '</td>\n          </tr>\n          ';
 
           _tradeLogDetailedTbody.append(template);
         };
@@ -1858,13 +1787,9 @@ var rHelper = {
             profitClass = 'danger';
           }
 
-          $('#tradelog-detailed-tfoot')
-            .empty()
-            .append('<tr><td data-th="daily profit" colspan="5" class="' + _textOrientation + ' text-' + profitClass + '">' + _sum.toLocaleString('en-US') + ' <a href="#">back to top</a></td></tr>');
+          $('#tradelog-detailed-tfoot').empty().append('<tr><td data-th="daily profit" colspan="5" class="' + _textOrientation + ' text-' + profitClass + '">' + _sum.toLocaleString('en-US') + ' <a href="#">back to top</a></td></tr>');
 
-          $('#tradelog-simple-tfoot')
-            .empty()
-            .append('<tr><td data-th="daily profit" colspan="5" class="' + _textOrientation + ' text-' + profitClass + '">' + _sum.toLocaleString('en-US') + ' <a href="#">back to top</a></td></tr>');
+          $('#tradelog-simple-tfoot').empty().append('<tr><td data-th="daily profit" colspan="5" class="' + _textOrientation + ' text-' + profitClass + '">' + _sum.toLocaleString('en-US') + ' <a href="#">back to top</a></td></tr>');
         };
 
         var showGraphs = function showGraphs(target, data, title) {
@@ -1890,19 +1815,17 @@ var rHelper = {
                   enabled: true,
                   format: '<b>{point.name}</b>: {point.percentage:.1f} % ({point.y:,.0f})',
                   style: {
-                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || '#dedede',
+                    color: Highcharts.theme && Highcharts.theme.contrastTextColor || '#dedede',
                     textOutline: 'none'
                   }
                 }
               }
             },
-            series: [
-              {
-                name: 'Percentage',
-                colorByPoint: true,
-                data: data
-              }
-            ],
+            series: [{
+              name: 'Percentage',
+              colorByPoint: true,
+              data: data
+            }],
             exporting: {
               chartOptions: {
                 chart: {
@@ -1914,11 +1837,12 @@ var rHelper = {
         };
 
         var fillEventArray = function fillEventArray(container) {
-          var _ref7 = [[], container.max()],
-            arr = _ref7[0],
-            containerMax = _ref7[1];
+          var _ref9 = [[], container.max()],
+              arr = _ref9[0],
+              containerMax = _ref9[1];
 
-          $.each(container, function(i, amount) {
+
+          $.each(container, function (i, amount) {
             var itemObj = rHelper.methods.CALC_convertId(i);
 
             if (amount != null) {
@@ -1948,26 +1872,7 @@ var rHelper = {
             profitClass = 'danger';
           }
 
-          var template =
-            '\n          <tr>\n            <td data-th="Type" class="' +
-            _textOrientation +
-            '"><span class="' +
-            obj.icon +
-            '"></span></td>\n            <td data-th="Bought for..." class="' +
-            _textOrientation +
-            ' text-danger"> ' +
-            dataset.bought.toLocaleString('en-US') +
-            '</td>\n            <td data-th="Sold for..." class="' +
-            _textOrientation +
-            ' text-success"> ' +
-            dataset.sold.toLocaleString('en-US') +
-            '</td>\n            <td data-th="Profit of selected day" class="' +
-            _textOrientation +
-            ' text-' +
-            profitClass +
-            '">' +
-            dataset.sum.toLocaleString('en-US') +
-            '</td>\n          </tr>\n          ';
+          var template = '\n          <tr>\n            <td data-th="Type" class="' + _textOrientation + '"><span class="' + obj.icon + '"></span></td>\n            <td data-th="Bought for..." class="' + _textOrientation + ' text-danger"> ' + dataset.bought.toLocaleString('en-US') + '</td>\n            <td data-th="Sold for..." class="' + _textOrientation + ' text-success"> ' + dataset.sold.toLocaleString('en-US') + '</td>\n            <td data-th="Profit of selected day" class="' + _textOrientation + ' text-' + profitClass + '">' + dataset.sum.toLocaleString('en-US') + '</td>\n          </tr>\n          ';
 
           _tradeLogSimpleTbody.append(template);
         };
@@ -1977,11 +1882,12 @@ var rHelper = {
         showGraphs('graph-tradelog-buying', fillEventArray(container.buying.valuesById), 'Buy values (total: ' + container.buying.total.toLocaleString('en-US') + ')');
         showGraphs('graph-tradelog-selling', fillEventArray(container.selling.valuesById), 'Sell values (total: ' + container.selling.total.toLocaleString('en-US') + ')');
 
-        var _ref8 = [$('#tradelog-detailed-tbody'), 'text-md-right text-sm-left', $('#tradelog-filter-day'), $('#tradelog-simple-tbody')],
-          _tradeLogDetailedTbody = _ref8[0],
-          _textOrientation = _ref8[1],
-          _daysFilterSelect = _ref8[2],
-          _tradeLogSimpleTbody = _ref8[3];
+        var _ref10 = [$('#tradelog-detailed-tbody'), 'text-md-right text-sm-left', $('#tradelog-filter-day'), $('#tradelog-simple-tbody')],
+            _tradeLogDetailedTbody = _ref10[0],
+            _textOrientation = _ref10[1],
+            _daysFilterSelect = _ref10[2],
+            _tradeLogSimpleTbody = _ref10[3];
+
 
         _tradeLogDetailedTbody.empty();
         _tradeLogSimpleTbody.empty();
@@ -1992,11 +1898,11 @@ var rHelper = {
 
         appendOptions();
 
-        $.each(container.log, function(i, dataset) {
+        $.each(container.log, function (i, dataset) {
           appendDetailedTR(dataset);
         });
 
-        $.each(container.overview, function(i, dataset) {
+        $.each(container.overview, function (i, dataset) {
           appendSimpleTR(dataset);
         });
 
@@ -2013,50 +1919,41 @@ var rHelper = {
       $('#attacklog-detailed-profit-total').text(dataContainer.total.profit.toLocaleString('en-US'));
     },
     INSRT_attackLogDetailed: function INSRT_attackLogDetailed(type, dataContainer) {
-      var _ref9 = [
-          $('#attacklog-tbody-detailed'),
-          $('#attacklog-detailed-selector'),
-          $('#collapse-attacklog-detailed table')[1],
-          ['Attacked player (level)', 'Timestamp & position', 'Units lost', 'Units destroyed', 'Lootfactor', 'Loot', 'Profit']
-        ],
-        target = _ref9[0],
-        select = _ref9[1],
-        sortableTable = _ref9[2],
-        dataTHs = _ref9[3];
+      var _ref11 = [$('#attacklog-tbody-detailed'), $('#attacklog-detailed-selector'), $('#collapse-attacklog-detailed table')[1], ['Attacked player (level)', 'Timestamp & position', 'Units lost', 'Units destroyed', 'Lootfactor', 'Loot', 'Profit']],
+          target = _ref11[0],
+          select = _ref11[1],
+          sortableTable = _ref11[2],
+          dataTHs = _ref11[3];
+
 
       target.empty();
 
       if (select[0].children.length == 2) {
-        $.each(dataContainer.validTargets, function(i, target) {
+        $.each(dataContainer.validTargets, function (i, target) {
           select.append('<option value="' + target + '">' + target + '</option>');
         });
       }
 
-      $.each(dataContainer.data, function(i, dataset) {
+      $.each(dataContainer.data, function (i, dataset) {
         target.append(rHelper.methods.CALC_attackLogDetailedDatasetIteration(i, dataset, dataTHs));
       });
 
       rHelper.methods.INSRT_attackLogDetailedGeneralInformation(dataContainer);
 
-      ['last', 'next'].forEach(function(type) {
+      ['last', 'next'].forEach(function (type) {
         rHelper.methods.CALC_attackLogDetailedPageButtonToggler(type, dataContainer);
       });
 
       sorttable.makeSortable(sortableTable);
     },
     INSRT_ADLogSimple: function INSRT_ADLogSimple(type, data) {
-      var _ref10 = [
-          $('#attacklog-tbody-simple'),
-          ['Attacked player (last known level)', 'Last attacked', 'Total attacks', 'Win', 'Loss', 'Average loot factor', 'Average amount of units used', 'Profit'],
-          [0, 2, 3],
-          'text-md-right text-sm-left',
-          $('#collapse-attacklog-simple table')[0]
-        ],
-        target = _ref10[0],
-        dataTHs = _ref10[1],
-        unitIndices = _ref10[2],
-        textOrientation = _ref10[3],
-        sortableTable = _ref10[4];
+      var _ref12 = [$('#attacklog-tbody-simple'), ['Attacked player (last known level)', 'Last attacked', 'Total attacks', 'Win', 'Loss', 'Average loot factor', 'Average amount of units used', 'Profit'], [0, 2, 3], 'text-md-right text-sm-left', $('#collapse-attacklog-simple table')[0]],
+          target = _ref12[0],
+          dataTHs = _ref12[1],
+          unitIndices = _ref12[2],
+          textOrientation = _ref12[3],
+          sortableTable = _ref12[4];
+
 
       target.empty();
 
@@ -2066,18 +1963,20 @@ var rHelper = {
         target = $('#defenselog-tbody-simple');
       }
 
-      $.each(data, function(i, dataset) {
-        var _ref11 = [$(crEl('tr')), 'bg-success-25'],
-          tr = _ref11[0],
-          factorBgColorClass = _ref11[1];
+      $.each(data, function (i, dataset) {
+        var _ref13 = [$(crEl('tr')), 'bg-success-25'],
+            tr = _ref13[0],
+            factorBgColorClass = _ref13[1];
+
 
         for (var index = 0; index <= 7; index += 1) {
-          var _ref12 = [$(crEl('td')).attr('data-th', dataTHs[index]), 0, 0, 0, ''],
-            td = _ref12[0],
-            loss = _ref12[1],
-            winPercent = _ref12[2],
-            factor = _ref12[3],
-            unitsContent = _ref12[4];
+          var _ref14 = [$(crEl('td')).attr('data-th', dataTHs[index]), 0, 0, 0, ''],
+              td = _ref14[0],
+              loss = _ref14[1],
+              winPercent = _ref14[2],
+              factor = _ref14[3],
+              unitsContent = _ref14[4];
+
 
           switch (index) {
             case 0:
@@ -2170,7 +2069,7 @@ var rHelper = {
 
       var fns = ['INSRT_materialRate', 'INSRT_materialAmountOfMines', 'INSRT_materialNewMinePrice', 'INSRT_materialRateWorth', 'INSRT_materialNewMinePerfectIncome'];
 
-      $.each(fns, function(i, fn) {
+      $.each(fns, function (i, fn) {
         rHelper.methods[fn](materialId);
       });
 
@@ -2184,24 +2083,12 @@ var rHelper = {
       'use strict';
 
       var fns = [
-        // factories tab
-        'INSRT_factoryLevel',
-        'INSRT_factoryOutput',
-        'INSRT_factoryUpgradeCost',
-        'INSRT_factoryDependencies',
-        'INSRT_factoryWorkload',
-        'INSRT_factoryTurnover',
-        'INSRT_factoryTurnoverPerUpgrade',
-        'INSRT_factoryROI',
-        // diamond tab
-        'INSRT_diamondFactoryOutput',
-        'INSRT_diamondFactoryOutputWarehouse',
-        'INSRT_diamondDependencies',
-        'INSRT_diamondEfficiency',
-        'INSRT_diamondProfit'
-      ];
+      // factories tab
+      'INSRT_factoryLevel', 'INSRT_factoryOutput', 'INSRT_factoryUpgradeCost', 'INSRT_factoryDependencies', 'INSRT_factoryWorkload', 'INSRT_factoryTurnover', 'INSRT_factoryTurnoverPerUpgrade', 'INSRT_factoryROI',
+      // diamond tab
+      'INSRT_diamondFactoryOutput', 'INSRT_diamondFactoryOutputWarehouse', 'INSRT_diamondDependencies', 'INSRT_diamondEfficiency', 'INSRT_diamondProfit'];
 
-      $.each(fns, function(i, fn) {
+      $.each(fns, function (i, fn) {
         rHelper.methods[fn](factoryId);
       });
 
@@ -2212,7 +2099,7 @@ var rHelper = {
 
       var fns = ['INSRT_recyclingRequirement', 'INSRT_recyclingProducts', 'INSRT_recyclingOutputWorth', 'INSRT_recyclingInputWorth'];
 
-      $.each(fns, function(i, fn) {
+      $.each(fns, function (i, fn) {
         rHelper.methods[fn](index);
       });
 
@@ -2223,7 +2110,7 @@ var rHelper = {
 
       var fns = ['INSRT_warehouseFillAmount', 'INSRT_warehouseLevel', 'INSRT_warehouseFillStatus', 'INSRT_warehouseCapacity', 'INSRT_warehouseWorth', 'EVNT_warehouseInput'];
 
-      $.each(fns, function(i, fn) {
+      $.each(fns, function (i, fn) {
         rHelper.methods[fn](index, type);
       });
 
@@ -2258,34 +2145,31 @@ var rHelper = {
               return this.value.toLocaleString('en-US');
             }
           },
-          plotLines: [
-            {
-              color: 'red',
-              value: averageKI,
-              width: '1',
-              zIndex: 5,
-              label: {
-                text: 'average KI price of ' + averageKI.toLocaleString('en-US'),
-                align: 'right',
-                style: {
-                  color: 'darkgreen'
-                }
-              }
-            },
-            {
-              color: 'darkgreen',
-              value: averagePlayer,
-              width: '1',
-              zIndex: 5,
-              label: {
-                text: 'average player price of ' + averagePlayer.toLocaleString('en-US'),
-                align: 'right',
-                style: {
-                  color: 'orange'
-                }
+          plotLines: [{
+            color: 'red',
+            value: averageKI,
+            width: '1',
+            zIndex: 5,
+            label: {
+              text: 'average KI price of ' + averageKI.toLocaleString('en-US'),
+              align: 'right',
+              style: {
+                color: 'darkgreen'
               }
             }
-          ]
+          }, {
+            color: 'darkgreen',
+            value: averagePlayer,
+            width: '1',
+            zIndex: 5,
+            label: {
+              text: 'average player price of ' + averagePlayer.toLocaleString('en-US'),
+              align: 'right',
+              style: {
+                color: 'orange'
+              }
+            }
+          }]
         },
         legend: {
           enabled: false
@@ -2303,24 +2187,21 @@ var rHelper = {
             }
           }
         },
-        series: [
-          {
-            name: 'KI',
-            marker: {
-              symbol: 'square'
-            },
-            color: 'darkgreen',
-            data: ki
+        series: [{
+          name: 'KI',
+          marker: {
+            symbol: 'square'
           },
-          {
-            name: 'Player',
-            marker: {
-              symbol: 'diamond'
-            },
-            color: 'orange',
-            data: player
-          }
-        ],
+          color: 'darkgreen',
+          data: ki
+        }, {
+          name: 'Player',
+          marker: {
+            symbol: 'diamond'
+          },
+          color: 'orange',
+          data: player
+        }],
         exporting: {
           chartOptions: {
             chart: {
@@ -2355,56 +2236,49 @@ var rHelper = {
         tooltip: {
           valueSuffix: '%'
         },
-        series: [
-          {
-            name: seriesNames[0],
-            data: dataObj.mineData,
-            colors: dataObj.colors,
-            size: '60%',
-            dataLabels: {
-              formatter: function formatter() {
-                return this.y > 5 ? this.point.name : null;
-              },
-              color: '#dedede',
-              distance: -30
+        series: [{
+          name: seriesNames[0],
+          data: dataObj.mineData,
+          colors: dataObj.colors,
+          size: '60%',
+          dataLabels: {
+            formatter: function formatter() {
+              return this.y > 5 ? this.point.name : null;
+            },
+            color: '#dedede',
+            distance: -30
+          }
+        }, {
+          name: seriesNames[1],
+          data: dataObj.incomeData,
+          colors: dataObj.colors,
+          size: '80%',
+          innerSize: '60%',
+          dataLabels: {
+            formatter: function formatter() {
+              return this.y > 1 ? '<b> ' + this.point.name + ' :</b> ' + this.y + ' %' : null;
+            },
+            style: {
+              color: 'white',
+              textOutline: 'none'
             }
           },
-          {
-            name: seriesNames[1],
-            data: dataObj.incomeData,
-            colors: dataObj.colors,
-            size: '80%',
-            innerSize: '60%',
-            dataLabels: {
-              formatter: function formatter() {
-                return this.y > 1 ? '<b> ' + this.point.name + ' :</b> ' + this.y + ' %' : null;
-              },
-              style: {
-                color: 'white',
-                textOutline: 'none'
-              }
-            },
-            id: responsiveId
-          }
-        ],
+          id: responsiveId
+        }],
         responsive: {
-          rules: [
-            {
-              condition: {
-                maxWidth: 400
-              },
-              chartOptions: {
-                series: [
-                  {
-                    id: responsiveId,
-                    dataLabels: {
-                      enabled: false
-                    }
-                  }
-                ]
-              }
+          rules: [{
+            condition: {
+              maxWidth: 400
+            },
+            chartOptions: {
+              series: [{
+                id: responsiveId,
+                dataLabels: {
+                  enabled: false
+                }
+              }]
             }
-          ]
+          }]
         },
         exporting: {
           chartOptions: {
@@ -2419,43 +2293,33 @@ var rHelper = {
       'use strict';
 
       if (type == 'buildings') {
-        Highcharts.chart(
-          'graph-buildings',
-          Highcharts.merge(rHelper.graphs.gaugeOptions, {
-            yAxis: {
-              min: 0,
-              max: rHelper.methods.CALC_perfectWorth('buildings'),
-              title: {
-                text: 'total building worth'
-              }
-            },
-            series: [
-              {
-                name: 'total building worth',
-                data: [rHelper.methods.CALC_totalBuildingErectionSum()]
-              }
-            ]
-          })
-        );
+        Highcharts.chart('graph-buildings', Highcharts.merge(rHelper.graphs.gaugeOptions, {
+          yAxis: {
+            min: 0,
+            max: rHelper.methods.CALC_perfectWorth('buildings'),
+            title: {
+              text: 'total building worth'
+            }
+          },
+          series: [{
+            name: 'total building worth',
+            data: [rHelper.methods.CALC_totalBuildingErectionSum()]
+          }]
+        }));
       } else if (type == 'headquarter') {
-        Highcharts.chart(
-          'graph-headquarter',
-          Highcharts.merge(rHelper.graphs.gaugeOptions, {
-            yAxis: {
-              min: 0,
-              max: rHelper.methods.CALC_perfectWorth('headquarter'),
-              title: {
-                text: 'total headquarter worth'
-              }
-            },
-            series: [
-              {
-                name: 'total headquarter worth',
-                data: [rHelper.methods.CALC_totalHeadquarterErectionSum()]
-              }
-            ]
-          })
-        );
+        Highcharts.chart('graph-headquarter', Highcharts.merge(rHelper.graphs.gaugeOptions, {
+          yAxis: {
+            min: 0,
+            max: rHelper.methods.CALC_perfectWorth('headquarter'),
+            title: {
+              text: 'total headquarter worth'
+            }
+          },
+          series: [{
+            name: 'total headquarter worth',
+            data: [rHelper.methods.CALC_totalHeadquarterErectionSum()]
+          }]
+        }));
       }
     },
     INSRT_totalMineWorth: function INSRT_totalMineWorth(totalMineWorth) {
@@ -2493,7 +2357,7 @@ var rHelper = {
         $('#api-player-anonymity')[0].parentNode.remove();
       }
 
-      $.each(rHelper.data.settings, function(index, setting) {
+      $.each(rHelper.data.settings, function (index, setting) {
         var value = 0;
         switch (setting.setting) {
           case 'lang':
@@ -2562,13 +2426,13 @@ var rHelper = {
       var roi500Array = rHelper.methods.CALC_materialMineROI('505');
       var roiXArray = rHelper.methods.CALC_materialMineROI('505hq');
 
-      $.each(roi100Array, function(i, value) {
+      $.each(roi100Array, function (i, value) {
         $('#material-roi-100-' + i).text(value.toFixed(2).toLocaleString('en-US'));
       });
-      $.each(roi500Array, function(i, value) {
+      $.each(roi500Array, function (i, value) {
         $('#material-roi-500-' + i).text(value.toFixed(2).toLocaleString('en-US'));
       });
-      $.each(roiXArray, function(i, value) {
+      $.each(roiXArray, function (i, value) {
         $('#material-roi-x-' + i).text(value.toFixed(2).toLocaleString('en-US'));
       });
 
@@ -2586,7 +2450,7 @@ var rHelper = {
 
       var array = [];
 
-      $.each(rHelper.data.material, function(materialId) {
+      $.each(rHelper.data.material, function (materialId) {
         array.push(rHelper.methods.CALC_materialMinePerfectIncome(materialId));
       });
 
@@ -2595,13 +2459,14 @@ var rHelper = {
     INSRT_materialHighlightColumns: function INSRT_materialHighlightColumns(array, target, minClass, maxClass) {
       'use strict';
 
-      var _ref13 = [['min', 'max'], 0, ,],
-        selectors = _ref13[0],
-        value = _ref13[1],
-        addClass = _ref13[2],
-        rmvClass = _ref13[3];
+      var _ref15 = [['min', 'max'], 0,,],
+          selectors = _ref15[0],
+          value = _ref15[1],
+          addClass = _ref15[2],
+          rmvClass = _ref15[3];
 
-      $.each(selectors, function(i, selector) {
+
+      $.each(selectors, function (i, selector) {
         switch (selector) {
           case 'min':
             value = array.min();
@@ -2654,7 +2519,7 @@ var rHelper = {
       var dependencyString = '';
 
       if ($.isArray(dependencies)) {
-        $.each(dependencies, function(dependencyIndex, dependency) {
+        $.each(dependencies, function (dependencyIndex, dependency) {
           var dependantObj = rHelper.methods.CALC_convertId(dependency);
 
           var price = rHelper.methods.CALC_returnPriceViaId(dependency).toLocaleString('en-US');
@@ -2662,10 +2527,11 @@ var rHelper = {
           var existingAmount = rHelper.methods.CALC_factoryDependencyExistingAmount(dependantObj, dependencyIndex);
           var addClass = rHelper.methods.CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount);
 
-          var _ref14 = [$(crEl('span')), $(crEl('span')), $(crEl('span'))],
-            outerSpan = _ref14[0],
-            imgSpan = _ref14[1],
-            innerSpan = _ref14[2];
+          var _ref16 = [$(crEl('span')), $(crEl('span')), $(crEl('span'))],
+              outerSpan = _ref16[0],
+              imgSpan = _ref16[1],
+              innerSpan = _ref16[2];
+
 
           imgSpan.addClass(dependantObj.icon).attr('title', price.toLocaleString('en-US'));
           innerSpan.addClass(addClass).text(requiredAmount.toLocaleString('en-US'));
@@ -2680,10 +2546,11 @@ var rHelper = {
         var existingAmount = rHelper.methods.CALC_factoryDependencyExistingAmount(dependantObj, 0);
         var addClass = rHelper.methods.CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount);
 
-        var _ref15 = [$(crEl('span')), $(crEl('span')), $(crEl('span'))],
-          outerSpan = _ref15[0],
-          imgSpan = _ref15[1],
-          innerSpan = _ref15[2];
+        var _ref17 = [$(crEl('span')), $(crEl('span')), $(crEl('span'))],
+            outerSpan = _ref17[0],
+            imgSpan = _ref17[1],
+            innerSpan = _ref17[2];
+
 
         imgSpan.addClass(dependantObj.icon).attr('title', price.toLocaleString('en-US'));
         innerSpan.addClass(addClass).text(requiredAmount.toLocaleString('en-US'));
@@ -2695,9 +2562,10 @@ var rHelper = {
     INSRT_factoryAmortisation: function INSRT_factoryAmortisation(factoryId) {
       'use strict';
 
-      var _ref16 = ['#factories-roi-' + factoryId, rHelper.methods.CALC_factoryAmortisation(factoryId)],
-        target = _ref16[0],
-        amortisation = _ref16[1];
+      var _ref18 = ['#factories-roi-' + factoryId, rHelper.methods.CALC_factoryAmortisation(factoryId)],
+          target = _ref18[0],
+          amortisation = _ref18[1];
+
 
       if (amortisation < 0 || amortisation == Infinity) {
         amortisation = '∞';
@@ -2710,14 +2578,15 @@ var rHelper = {
     INSRT_factoryWorkload: function INSRT_factoryWorkload(factoryId) {
       'use strict';
 
-      var _ref17 = [$('#factories-workload-' + factoryId), rHelper.data.products[factoryId].dependencies],
-        target = _ref17[0],
-        dependencies = _ref17[1];
+      var _ref19 = [$('#factories-workload-' + factoryId), rHelper.data.products[factoryId].dependencies],
+          target = _ref19[0],
+          dependencies = _ref19[1];
+
 
       rHelper.data.products[factoryId].dependencyWorkload = [];
 
       if ($.isArray(dependencies)) {
-        $.each(dependencies, function(dependencyIndex) {
+        $.each(dependencies, function (dependencyIndex) {
           var dependencyWorkload = rHelper.methods.CALC_factoryDepedencyWorkload(factoryId, dependencyIndex);
           rHelper.data.products[factoryId].dependencyWorkload.push(dependencyWorkload);
         });
@@ -2726,10 +2595,11 @@ var rHelper = {
         rHelper.data.products[factoryId].dependencyWorkload.push(dependencyWorkload);
       }
 
-      var _ref18 = [rHelper.methods.CALC_factoryWorkloadMinNonSanitized(factoryId), ,],
-        workload = _ref18[0],
-        removeClass = _ref18[1],
-        addClass = _ref18[2];
+      var _ref20 = [rHelper.methods.CALC_factoryWorkloadMinNonSanitized(factoryId),,],
+          workload = _ref20[0],
+          removeClass = _ref20[1],
+          addClass = _ref20[2];
+
 
       if (workload >= 1) {
         removeClass = 'text-danger';
@@ -2745,11 +2615,12 @@ var rHelper = {
     INSRT_factoryTurnover: function INSRT_factoryTurnover(factoryId) {
       'use strict';
 
-      var _ref19 = [$('#factories-turnover-' + factoryId), rHelper.methods.CALC_factoryTurnover(factoryId), ,],
-        target = _ref19[0],
-        turnover = _ref19[1],
-        removeClass = _ref19[2],
-        addClass = _ref19[3];
+      var _ref21 = [$('#factories-turnover-' + factoryId), rHelper.methods.CALC_factoryTurnover(factoryId),,],
+          target = _ref21[0],
+          turnover = _ref21[1],
+          removeClass = _ref21[2],
+          addClass = _ref21[3];
+
 
       if (turnover <= 0) {
         removeClass = 'text-success';
@@ -2766,9 +2637,10 @@ var rHelper = {
       'use strict';
 
       var subArray,
-        columns = ['#factories-upgrade-cost-', '#factories-increase-per-upgrade-', '#factories-roi-', '#diamond-profit-'];
+          columns = ['#factories-upgrade-cost-', '#factories-increase-per-upgrade-', '#factories-roi-', '#diamond-profit-'];
 
-      $.each(columns, function(i, column) {
+
+      $.each(columns, function (i, column) {
         switch (i) {
           case 0:
             subArray = 'upgradeCost';
@@ -2785,9 +2657,10 @@ var rHelper = {
         }
 
         var valueArray = [],
-          idArray = [];
+            idArray = [];
 
-        $.each(rHelper.data.products, function(k, factory) {
+
+        $.each(rHelper.data.products, function (k, factory) {
           $(column + k).removeClass('text-success text-danger');
           var value = 0;
           if ((typeof subArray === 'undefined' ? 'undefined' : _typeof(subArray)) == 'object') {
@@ -2805,9 +2678,10 @@ var rHelper = {
         arrayMin/Max = search within idArray for the same index thats min/max of the value array
         */
 
-        var _ref20 = [idArray[valueArray.indexOf(valueArray.min())], idArray[valueArray.indexOf(valueArray.max())]],
-          arrayMin = _ref20[0],
-          arrayMax = _ref20[1];
+        var _ref22 = [idArray[valueArray.indexOf(valueArray.min())], idArray[valueArray.indexOf(valueArray.max())]],
+            arrayMin = _ref22[0],
+            arrayMax = _ref22[1];
+
 
         switch (i) {
           case 0:
@@ -2830,9 +2704,10 @@ var rHelper = {
     INSRT_factoryROI: function INSRT_factoryROI(factoryId) {
       'use strict';
 
-      var _ref21 = [$('#factories-roi-' + factoryId), rHelper.methods.CALC_factoryROI(factoryId)],
-        target = _ref21[0],
-        roi = _ref21[1];
+      var _ref23 = [$('#factories-roi-' + factoryId), rHelper.methods.CALC_factoryROI(factoryId)],
+          target = _ref23[0],
+          roi = _ref23[1];
+
 
       rHelper.data.products[factoryId].roi = roi;
 
@@ -2847,9 +2722,10 @@ var rHelper = {
     INSRT_factoryTurnoverPerUpgrade: function INSRT_factoryTurnoverPerUpgrade(factoryId) {
       'use strict';
 
-      var _ref22 = [$('#factories-increase-per-upgrade-' + factoryId), rHelper.methods.CALC_factoryTurnoverPerUpgrade(factoryId)],
-        target = _ref22[0],
-        turnoverPerUpgrade = _ref22[1];
+      var _ref24 = [$('#factories-increase-per-upgrade-' + factoryId), rHelper.methods.CALC_factoryTurnoverPerUpgrade(factoryId)],
+          target = _ref24[0],
+          turnoverPerUpgrade = _ref24[1];
+
 
       rHelper.data.products[factoryId].turnoverIncrease = turnoverPerUpgrade;
       target.text(turnoverPerUpgrade.toLocaleString('en-US'));
@@ -2880,9 +2756,7 @@ var rHelper = {
       var requiredWarehouseLevel = rHelper.methods.CALC_nextGreaterWarehouseLevel(requiredAmount);
       rHelper.data.products[factoryId].diamond.dependenciesWorth += price * requiredAmount;
 
-      var imgSpan = $(crEl('span'))
-        .addClass(dependantObj.icon)
-        .attr('title', price.toLocaleString('en-US'));
+      var imgSpan = $(crEl('span')).addClass(dependantObj.icon).attr('title', price.toLocaleString('en-US'));
       var innerSpan = $(crEl('span')).text(requiredAmount.toLocaleString('en-US'));
       var warehouseSamp = $(crEl('span')).text(requiredWarehouseLevel);
       var kbd = $(crEl('kbd')).append(warehouseIconSpan[0].outerHTML + ' ' + warehouseSamp[0].outerHTML);
@@ -2896,29 +2770,28 @@ var rHelper = {
 
       var product = rHelper.data.products[factoryId];
 
-      var _ref23 = [product.dependencies, '', $(crEl('span')).addClass('nav-icon-warehouses')],
-        dependencies = _ref23[0],
-        dependencyString = _ref23[1],
-        warehouseIconSpan = _ref23[2];
+      var _ref25 = [product.dependencies, '', $(crEl('span')).addClass('nav-icon-warehouses')],
+          dependencies = _ref25[0],
+          dependencyString = _ref25[1],
+          warehouseIconSpan = _ref25[2];
+
 
       if ($.isArray(dependencies)) {
-        $.each(dependencies, function(dependencyIndex, dependency) {
-          var _ref24 = [
-              rHelper.methods.CALC_convertId(dependency),
-              rHelper.methods.CALC_returnPriceViaId(dependency),
-              rHelper.methods.CALC_factoryDependencyRequiredAmount(factoryId, dependencyIndex) * 5 * 24
-            ],
-            dependantObj = _ref24[0],
-            price = _ref24[1],
-            requiredAmount = _ref24[2];
+        $.each(dependencies, function (dependencyIndex, dependency) {
+          var _ref26 = [rHelper.methods.CALC_convertId(dependency), rHelper.methods.CALC_returnPriceViaId(dependency), rHelper.methods.CALC_factoryDependencyRequiredAmount(factoryId, dependencyIndex) * 5 * 24],
+              dependantObj = _ref26[0],
+              price = _ref26[1],
+              requiredAmount = _ref26[2];
+
 
           dependencyString += rHelper.methods.INSRT_diamondDependenciesHelper(dependantObj, price, requiredAmount, factoryId, warehouseIconSpan);
         });
       } else {
-        var _ref25 = [rHelper.methods.CALC_convertId(dependencies), rHelper.methods.CALC_returnPriceViaId(dependencies), rHelper.methods.CALC_factoryDependencyRequiredAmount(factoryId, 0) * 5 * 24],
-          dependantObj = _ref25[0],
-          price = _ref25[1],
-          requiredAmount = _ref25[2];
+        var _ref27 = [rHelper.methods.CALC_convertId(dependencies), rHelper.methods.CALC_returnPriceViaId(dependencies), rHelper.methods.CALC_factoryDependencyRequiredAmount(factoryId, 0) * 5 * 24],
+            dependantObj = _ref27[0],
+            price = _ref27[1],
+            requiredAmount = _ref27[2];
+
 
         dependencyString += rHelper.methods.INSRT_diamondDependenciesHelper(dependantObj, price, requiredAmount, factoryId, warehouseIconSpan);
       }
@@ -2955,9 +2828,10 @@ var rHelper = {
     INSRT_flowRate: function INSRT_flowRate(id, type) {
       'use strict';
 
-      var _ref26 = [$('#flow-' + type + '-rate-' + id), rHelper.methods.CALC_flowRate(id, type)],
-        target = _ref26[0],
-        rate = _ref26[1];
+      var _ref28 = [$('#flow-' + type + '-rate-' + id), rHelper.methods.CALC_flowRate(id, type)],
+          target = _ref28[0],
+          rate = _ref28[1];
+
 
       if (type == 'product') {
         if (rHelper.data.products[id].turnover < 0) {
@@ -2971,17 +2845,18 @@ var rHelper = {
       'use strict';
 
       var materialTotal = 0,
-        productsTotal = 0,
-        materialColor = 'yellowgreen',
-        productColor = 'yellowgreen';
+          productsTotal = 0,
+          materialColor = 'yellowgreen',
+          productColor = 'yellowgreen';
 
-      $.each(rHelper.data.material, function(materialId) {
+
+      $.each(rHelper.data.material, function (materialId) {
         materialTotal += rHelper.methods.INSRT_flowDistributionSingle(materialId, 'material');
       });
 
       var calculationOrder = rHelper.methods.GET_calculationOrder();
 
-      $.each(calculationOrder, function(index, factoryId) {
+      $.each(calculationOrder, function (index, factoryId) {
         productsTotal += rHelper.methods.INSRT_flowDistributionSingle(factoryId, 'product');
       });
 
@@ -2995,12 +2870,8 @@ var rHelper = {
       rHelper.data.material.totalIncomePerHour = materialTotal;
       rHelper.data.products.totalIncomePerHour = productsTotal;
 
-      $('#flow-material-total')
-        .text(materialTotal.toLocaleString('en-US'))
-        .css('color', materialColor);
-      $('#flow-products-total')
-        .text(productsTotal.toLocaleString('en-US'))
-        .css('color', productColor);
+      $('#flow-material-total').text(materialTotal.toLocaleString('en-US')).css('color', materialColor);
+      $('#flow-products-total').text(productsTotal.toLocaleString('en-US')).css('color', productColor);
       $('#effective-hourly-income').text((materialTotal + productsTotal).toLocaleString('en-US'));
     },
     INSRT_flowSurplus: function INSRT_flowSurplus(id, type, remainingAmount) {
@@ -3017,13 +2888,14 @@ var rHelper = {
     INSRT_flowDistributionSingle: function INSRT_flowDistributionSingle(id, type) {
       'use strict';
 
-      var _ref27 = [$('#flow-' + type + '-worth-' + id), 0, 0, 'yellowgreen', 0, rHelper.methods.CALC_flowDistribution(id, type)],
-        worthTarget = _ref27[0],
-        price = _ref27[1],
-        worth = _ref27[2],
-        color = _ref27[3],
-        productionCost = _ref27[4],
-        remainingAmount = _ref27[5];
+      var _ref29 = [$('#flow-' + type + '-worth-' + id), 0, 0, 'yellowgreen', 0, rHelper.methods.CALC_flowDistribution(id, type)],
+          worthTarget = _ref29[0],
+          price = _ref29[1],
+          worth = _ref29[2],
+          color = _ref29[3],
+          productionCost = _ref29[4],
+          remainingAmount = _ref29[5];
+
 
       switch (type) {
         case 'material':
@@ -3200,7 +3072,7 @@ var rHelper = {
       'use strict';
 
       var iterateTUData = function iterateTUData() {
-        $.each(rHelper.tu, function(index, combination) {
+        $.each(rHelper.tu, function (index, combination) {
           if (typeof tu4Trigger == 'undefined' && combination.tu4 != 0) {
             return;
           }
@@ -3249,7 +3121,7 @@ var rHelper = {
       }
 
       if (rHelper.tu.length == 0) {
-        $.getJSON('api/tu.json', function(data) {
+        $.getJSON('api/tu.json', function (data) {
           rHelper.tu = data;
           iterateTUData();
         });
@@ -3275,13 +3147,13 @@ var rHelper = {
         url += '&tu4=allowed';
       }
 
-      $.getJSON(url, function(data) {
+      $.getJSON(url, function (data) {
         var prices = [];
         for (var i = 46; i <= 49; i += 1) {
           prices.push(rHelper.methods.CALC_returnPriceViaId(i, 0));
         }
 
-        $.each(data, function(i, combination) {
+        $.each(data, function (i, combination) {
           var tr = $(crEl('tr'));
           for (var k = 0; k <= 6; k += 1) {
             var td = $(crEl('td'));
@@ -3322,14 +3194,10 @@ var rHelper = {
         sorttable.innerSortFunction.apply($('#techupgrades-calc-tbl th')[5], []);
         sorttable.innerSortFunction.apply($('#techupgrades-calc-tbl th')[5], []);
         toggleTechUpgradeInfo('end');
-      }).fail(function() {
+      }).fail(function () {
         var tr = $(crEl('tr'));
         var td = $(crEl('td'));
-        td
-          .addClass('text-warning text-center')
-          .attr('data-th', 'Attention')
-          .attr('colspan', 7)
-          .text('No entries found or invalid value. Try to lower the value a bit – up to 5 decimals are allowed (e.g. 3.00005).');
+        td.addClass('text-warning text-center').attr('data-th', 'Attention').attr('colspan', 7).text('No entries found or invalid value. Try to lower the value a bit – up to 5 decimals are allowed (e.g. 3.00005).');
         tr.append(td);
         target.append(tr);
         toggleTechUpgradeInfo('end');
@@ -3455,7 +3323,7 @@ var rHelper = {
         var headquarter = rHelper.data.headquarter[level];
         var amount = headquarter.amount;
 
-        $.each(headquarter.material, function(i, material) {
+        $.each(headquarter.material, function (i, material) {
           var icon = rHelper.methods.CALC_headquarterContentIcon(material);
           var span = rHelper.methods.CALC_headquarterContentRequiredAmount(amount);
 
@@ -3470,7 +3338,7 @@ var rHelper = {
       'use strict';
 
       var paid = rHelper.data.headquarter.user.paid;
-      $.each(paid, function(i, amount) {
+      $.each(paid, function (i, amount) {
         $('#hq-content-input-' + i).val(amount);
       });
     },
@@ -3496,7 +3364,7 @@ var rHelper = {
         var totalCost = 0;
         var totalTransportation = 0;
 
-        $.each(headquarter.material, function(i, material) {
+        $.each(headquarter.material, function (i, material) {
           var worth = rHelper.methods.CALC_headquarterRemainingCost(i, material, userHqLevel);
           totalCost += worth;
           var transportation = Math.round(worth * (rHelper.data.buildings[9].transportCost - 1));
@@ -3540,7 +3408,7 @@ var rHelper = {
       var worth = price * rHelper.data.material[type].maxRate * quality;
       $('#qualitycomparator-income').text(worth.toLocaleString('en-US'));
 
-      $.each(rHelper.data.material, function(i, material) {
+      $.each(rHelper.data.material, function (i, material) {
         var qualityTarget = $('#qualitycomparator-' + i);
         var parentElement = $(qualityTarget[0].parentNode.parentNode);
         var thisPrice = rHelper.methods.CALC_returnPriceViaId(i);
@@ -3566,9 +3434,10 @@ var rHelper = {
 
         var calculateMissionCost = function calculateMissionCost(i, mission) {
           var uncalculatableMissions = [9, 12, 17, 21, 22, 25, 30, 31, 32, 35, 37, 38, 41, 42, 43, 44, 50, 55],
-            requirementId = 0,
-            materialCost = 0,
-            missionCost = 0;
+              requirementId = 0,
+              materialCost = 0,
+              missionCost = 0;
+
 
           if (uncalculatableMissions.indexOf(i) == -1) {
             switch (i) {
@@ -3600,12 +3469,13 @@ var rHelper = {
                 var calcSmallestUnitPrice = function calcSmallestUnitPrice() {
                   var min = Infinity;
 
-                  $.each(rHelper.data.units, function(i, unit) {
+                  $.each(rHelper.data.units, function (i, unit) {
                     if (i == 1 || i == 4 || i == 5) {
-                      var _ref28 = [unit.profit.craftingPrice, unit.profit.marketPrice * rHelper.data.buildings[9].transportCost, 0],
-                        craftingPrice = _ref28[0],
-                        marketPrice = _ref28[1],
-                        result = _ref28[2];
+                      var _ref30 = [unit.profit.craftingPrice, unit.profit.marketPrice * rHelper.data.buildings[9].transportCost, 0],
+                          craftingPrice = _ref30[0],
+                          marketPrice = _ref30[1],
+                          result = _ref30[2];
+
 
                       if (marketPrice > craftingPrice) {
                         result = craftingPrice;
@@ -3635,9 +3505,10 @@ var rHelper = {
         };
 
         var calculateMissionReward = function calculateMissionReward(i, mission) {
-          var _ref29 = [mission.rewardId, 0],
-            rewardId = _ref29[0],
-            rewardWorth = _ref29[1];
+          var _ref31 = [mission.rewardId, 0],
+              rewardId = _ref31[0],
+              rewardWorth = _ref31[1];
+
 
           if (rewardId != -1) {
             $('#mission-reward-' + i).addClass(rHelper.methods.CALC_convertId(rewardId).icon);
@@ -3675,9 +3546,7 @@ var rHelper = {
           }
 
           if (parsedI != 50 && parsedI != 55 && parsedI != 31) {
-            $('#mission-profit-' + i)
-              .text(missionWorth.toLocaleString('en-US'))
-              .css('color', color);
+            $('#mission-profit-' + i).text(missionWorth.toLocaleString('en-US')).css('color', color);
           }
         };
 
@@ -3713,10 +3582,7 @@ var rHelper = {
         var fadeOutMission = function fadeOutMission(i, mission) {
           var cooldown = calculateRemainingDuration(now, mission.cooldown);
 
-          $('#mission-progress-' + i)
-            .attr('colspan', 3)
-            .html('Mission on cooldown for <span style="color: orange;">' + cooldown + '</span>')
-            .css('text-align', 'center');
+          $('#mission-progress-' + i).attr('colspan', 3).html('Mission on cooldown for <span style="color: orange;">' + cooldown + '</span>').css('text-align', 'center');
           $('#mission-start-' + i).remove();
           $('#mission-end-' + i).remove();
           $('#mission-' + i).addClass('faded-mission');
@@ -3760,7 +3626,7 @@ var rHelper = {
           }
         };
 
-        $.each(missionContainer, function(i, mission) {
+        $.each(missionContainer, function (i, mission) {
           insertMissionReward(i, mission);
           insertMissionConstants(i, mission);
 
@@ -3775,9 +3641,10 @@ var rHelper = {
       }
     },
     CALC_attackLogDetailedUnitStringInsertion: function CALC_attackLogDetailedUnitStringInsertion(type, container) {
-      var _ref30 = [''],
-        content = _ref30[0],
-        unitArray = _ref30[1];
+      var _ref32 = [''],
+          content = _ref32[0],
+          unitArray = _ref32[1];
+
 
       if (type == 'offense') {
         unitArray = [0, 2, 3];
@@ -3785,7 +3652,7 @@ var rHelper = {
         unitArray = [5, 4, 1];
       }
 
-      $.each(container, function(i, unitAmount) {
+      $.each(container, function (i, unitAmount) {
         if (unitAmount != 0) {
           content += ' <span class="resources-unit-' + unitArray[i] + '"></span> ' + unitAmount.toLocaleString('en-US');
         }
@@ -3794,10 +3661,11 @@ var rHelper = {
       return content;
     },
     CALC_attackLogDetailedDatasetIteration: function CALC_attackLogDetailedDatasetIteration(i, dataset, dataTHs) {
-      var _ref31 = [$(crEl('tr')).addClass(rHelper.methods.CALC_attackLogSetTRColor(dataset.result)), 'text-md-right text-sm-left', 'bg-success-25'],
-        tr = _ref31[0],
-        textOrientation = _ref31[1],
-        factorBgColorClass = _ref31[2];
+      var _ref33 = [$(crEl('tr')).addClass(rHelper.methods.CALC_attackLogSetTRColor(dataset.result)), 'text-md-right text-sm-left', 'bg-success-25'],
+          tr = _ref33[0],
+          textOrientation = _ref33[1],
+          factorBgColorClass = _ref33[2];
+
 
       for (var index = 0; index <= 6; index += 1) {
         var td = $(crEl('td')).attr('data-th', dataTHs[index]);
@@ -3826,19 +3694,17 @@ var rHelper = {
             td.html(rHelper.methods.CALC_attackLogDetailedLootString(dataset.loot));
             break;
           case 6:
-            var _ref32 = [dataset.profit, dataset.result, '#dedede'],
-              profit = _ref32[0],
-              result = _ref32[1],
-              profitColor = _ref32[2];
+            var _ref34 = [dataset.profit, dataset.result, '#dedede'],
+                profit = _ref34[0],
+                result = _ref34[1],
+                profitColor = _ref34[2];
 
-            if ((profit < 0 && result) || !result) {
+
+            if (profit < 0 && result || !result) {
               profitColor = 'coral';
             }
 
-            td
-              .text(profit.toLocaleString('en-US'))
-              .addClass(textOrientation)
-              .css('color', profitColor);
+            td.text(profit.toLocaleString('en-US')).addClass(textOrientation).css('color', profitColor);
             break;
         }
 
@@ -3857,18 +3723,19 @@ var rHelper = {
       return colorClass;
     },
     CALC_attackLogDetailedCoordsTimestampString: function CALC_attackLogDetailedCoordsTimestampString(dataset) {
-      var _ref33 = [dataset.coordinates.lat + ', ' + dataset.coordinates.lon, rHelper.methods.CALC_convertDateToIso(dataset.attackedAt)],
-        coords = _ref33[0],
-        timestamp = _ref33[1];
+      var _ref35 = [dataset.coordinates.lat + ', ' + dataset.coordinates.lon, rHelper.methods.CALC_convertDateToIso(dataset.attackedAt)],
+          coords = _ref35[0],
+          timestamp = _ref35[1];
 
       var a = '<a href="https://www.google.com/maps/search/' + coords + '" target="_blank" rel="noopener nofollow noreferrer">' + coords + '</a>';
 
       return timestamp + ' | ' + a;
     },
     CALC_attackLogDetailedPageButtonToggler: function CALC_attackLogDetailedPageButtonToggler(type, dataContainer) {
-      var _ref34 = [$('#attacklog-detailed-' + type), 'btn-success'],
-        button = _ref34[0],
-        success = _ref34[1];
+      var _ref36 = [$('#attacklog-detailed-' + type), 'btn-success'],
+          button = _ref36[0],
+          success = _ref36[1];
+
 
       if (type == 'last') {
         if (dataContainer.skipCount == 0) {
@@ -3887,10 +3754,11 @@ var rHelper = {
     CALC_attackLogDetailedLootString: function CALC_attackLogDetailedLootString(lootContainer) {
       var lootString = '';
 
-      $.each(lootContainer, function(index, iteration) {
-        var _ref35 = [iteration.type, ''],
-          type = _ref35[0],
-          icon = _ref35[1];
+      $.each(lootContainer, function (index, iteration) {
+        var _ref37 = [iteration.type, ''],
+            type = _ref37[0],
+            icon = _ref37[1];
+
 
         if (type == -1) {
           icon = '<img src="assets/img/cash.png" alt="Cash" />';
@@ -3909,16 +3777,14 @@ var rHelper = {
       */
 
       var tzoffset = new Date(milliseconds).getTimezoneOffset() * 60000;
-      var date = new Date(milliseconds - tzoffset)
-        .toISOString()
-        .slice(0, -1)
-        .match(/(\d{4}\-\d{2}\-\d{2})T(\d{2}:\d{2}:\d{2})/);
+      var date = new Date(milliseconds - tzoffset).toISOString().slice(0, -1).match(/(\d{4}\-\d{2}\-\d{2})T(\d{2}:\d{2}:\d{2})/);
       return date[1] + ' ' + date[2];
     },
     CALC_currentScanCost: function CALC_currentScanCost() {
-      var _ref36 = [rHelper.data.buildings[0].level, rHelper.methods.CALC_totalMineCount()],
-        techCenterLevel = _ref36[0],
-        mineCount = _ref36[1];
+      var _ref38 = [rHelper.data.buildings[0].level, rHelper.methods.CALC_totalMineCount()],
+          techCenterLevel = _ref38[0],
+          mineCount = _ref38[1];
+
 
       return Math.round(10000 * Math.pow(2.4, techCenterLevel) * (1 + mineCount / 1000) / 5000) * 5000;
     },
@@ -3934,34 +3800,15 @@ var rHelper = {
       'use strict';
 
       var quality = subObj.quality * 100;
-      return (
-        '<div>\n        <h1 class="firstHeading">' +
-        relObj.name +
-        '</h1>\n        <div>\n        <p><strong>Built:</strong> ' +
-        buildDate +
-        '</p>\n        <p><strong>Age (days)</strong>: ' +
-        age.toFixed(2) +
-        '</p>\n        <p><strong>Estimated revenue (condition always 100%):</strong> ' +
-        estRevenue.toLocaleString('en-US') +
-        '</p>\n        <table class="table table-break-medium mb-3 text-center">\n        <thead>\n        <tr>\n          <th>Raw rate</th>\n          <th>Full rate</th>\n          <th>Tech factor</th>\n          <th>Quality</th>\n        </tr>\n        </thead>\n        <tbody>\n        <tr>\n          <td>' +
-        subObj.rawRate.toLocaleString('en-US') +
-        '</td>\n          <td>' +
-        subObj.fullRate.toLocaleString('en-US') +
-        '</td>\n          <td>' +
-        subObj.techFactor.toLocaleString('en-US') +
-        '</td>\n          <td>' +
-        quality.toFixed(2) +
-        '% => ' +
-        (quality * subObj.techFactor).toFixed(2) +
-        ' %</td>\n        </tr>\n        </tbody>\n        </table>\n        </div>\n        </div>'
-      );
+      return '<div>\n        <h1 class="firstHeading">' + relObj.name + '</h1>\n        <div>\n        <p><strong>Built:</strong> ' + buildDate + '</p>\n        <p><strong>Age (days)</strong>: ' + age.toFixed(2) + '</p>\n        <p><strong>Estimated revenue (condition always 100%):</strong> ' + estRevenue.toLocaleString('en-US') + '</p>\n        <table class="table table-break-medium mb-3 text-center">\n        <thead>\n        <tr>\n          <th>Raw rate</th>\n          <th>Full rate</th>\n          <th>Tech factor</th>\n          <th>Quality</th>\n        </tr>\n        </thead>\n        <tbody>\n        <tr>\n          <td>' + subObj.rawRate.toLocaleString('en-US') + '</td>\n          <td>' + subObj.fullRate.toLocaleString('en-US') + '</td>\n          <td>' + subObj.techFactor.toLocaleString('en-US') + '</td>\n          <td>' + quality.toFixed(2) + '% => ' + (quality * subObj.techFactor).toFixed(2) + ' %</td>\n        </tr>\n        </tbody>\n        </table>\n        </div>\n        </div>';
     },
     CALC_headquarterRemainingCost: function CALC_headquarterRemainingCost(i, material, userHqLevel) {
       'use strict';
 
-      var _ref37 = [rHelper.methods.CALC_returnPriceViaId(material), rHelper.data.headquarter[userHqLevel].amount - rHelper.data.headquarter.user.paid[i]],
-        price = _ref37[0],
-        missing = _ref37[1];
+      var _ref39 = [rHelper.methods.CALC_returnPriceViaId(material), rHelper.data.headquarter[userHqLevel].amount - rHelper.data.headquarter.user.paid[i]],
+          price = _ref39[0],
+          missing = _ref39[1];
+
 
       if (missing < 0) {
         missing = 0;
@@ -3990,12 +3837,13 @@ var rHelper = {
     CALC_headquarterLevelCost: function CALC_headquarterLevelCost(level) {
       'use strict';
 
-      var _ref38 = [0, rHelper.data.headquarter[level]],
-        cost = _ref38[0],
-        hqLevel = _ref38[1];
+      var _ref40 = [0, rHelper.data.headquarter[level]],
+          cost = _ref40[0],
+          hqLevel = _ref40[1];
+
 
       if ($.isArray(hqLevel.material)) {
-        $.each(hqLevel.material, function(k, material) {
+        $.each(hqLevel.material, function (k, material) {
           cost += hqLevel.amount * rHelper.methods.CALC_returnPriceViaId(material);
         });
       }
@@ -4005,12 +3853,13 @@ var rHelper = {
     CALC_headquarterOvwMaterial: function CALC_headquarterOvwMaterial(level) {
       'use strict';
 
-      var _ref39 = [rHelper.data.headquarter[level], ''],
-        hqLevel = _ref39[0],
-        string = _ref39[1];
+      var _ref41 = [rHelper.data.headquarter[level], ''],
+          hqLevel = _ref41[0],
+          string = _ref41[1];
+
 
       if ($.isArray(hqLevel.material)) {
-        $.each(hqLevel.material, function(k, material) {
+        $.each(hqLevel.material, function (k, material) {
           var addClass = void 0;
 
           if (material <= 13) {
@@ -4037,9 +3886,9 @@ var rHelper = {
       'use strict';
 
       var total = 0;
-      $.each(rHelper.data.buildings, function(i, building) {
+      $.each(rHelper.data.buildings, function (i, building) {
         var _loop2 = function _loop2(level) {
-          $.each(building.material, function(k, material) {
+          $.each(building.material, function (k, material) {
             var materialAmount = 'materialAmount' + k;
 
             if (material != -1) {
@@ -4063,15 +3912,15 @@ var rHelper = {
       var total = 0;
 
       if (type == 'headquarter') {
-        $.each(rHelper.data.headquarter, function(i, hqLevel) {
-          $.each(hqLevel.material, function(k, material) {
+        $.each(rHelper.data.headquarter, function (i, hqLevel) {
+          $.each(hqLevel.material, function (k, material) {
             total += hqLevel.amount * rHelper.methods.CALC_returnPriceViaId(material);
           });
         });
       } else if (type == 'buildings') {
-        $.each(rHelper.data.buildings, function(i, building) {
+        $.each(rHelper.data.buildings, function (i, building) {
           var _loop3 = function _loop3(level) {
-            $.each(building.material, function(k, material) {
+            $.each(building.material, function (k, material) {
               var materialAmount = 'materialAmount' + k;
 
               if (material != -1) {
@@ -4097,7 +3946,7 @@ var rHelper = {
 
       var fns = ['CALC_totalHeadquarterErectionSum', 'CALC_totalBuildingErectionSum', 'CALC_totalFactoryErectionWorth', 'CALC_totalWarehouseErectionWorth', 'CALC_totalMineErectionSum'];
 
-      $.each(fns, function(i, fn) {
+      $.each(fns, function (i, fn) {
         companyWorth += rHelper.methods[fn]();
       });
 
@@ -4115,7 +3964,7 @@ var rHelper = {
 
         var _loop4 = function _loop4(i) {
           var hqLevel = rHelper.data.headquarter[i];
-          $.each(hqLevel.material, function(k, material) {
+          $.each(hqLevel.material, function (k, material) {
             total += hqLevel.amount * rHelper.methods.CALC_returnPriceViaId(material);
           });
         };
@@ -4124,7 +3973,7 @@ var rHelper = {
           _loop4(i);
         }
         if (userHqLevel != 10) {
-          $.each(userHq.paid, function(i, paid) {
+          $.each(userHq.paid, function (i, paid) {
             if (paid != 0) {
               var material = rHelper.data.headquarter[userHqLevel - 1].material[i];
               total += paid * rHelper.methods.CALC_returnPriceViaId(material);
@@ -4141,7 +3990,7 @@ var rHelper = {
       var total = 0;
       var totalMines = rHelper.methods.CALC_totalMineCount();
 
-      $.each(rHelper.data.material, function(i, material) {
+      $.each(rHelper.data.material, function (i, material) {
         total += material.basePrice * (1 + 0.01 * totalMines) * material.amountOfMines;
       });
 
@@ -4153,8 +4002,8 @@ var rHelper = {
       var total = 0;
       var subArrays = ['material', 'products', 'loot', 'units'];
 
-      $.each(subArrays, function(i, index) {
-        $.each(rHelper.data[index], function(k, obj) {
+      $.each(subArrays, function (i, index) {
+        $.each(rHelper.data[index], function (k, obj) {
           for (var _k = 1; _k <= obj.warehouse.level; _k += 1) {
             total += Math.pow(_k - 1, 2) * 1250000;
           }
@@ -4168,9 +4017,9 @@ var rHelper = {
 
       var total = 0;
 
-      $.each(rHelper.data.products, function(i, factory) {
+      $.each(rHelper.data.products, function (i, factory) {
         var _loop5 = function _loop5(level) {
-          $.each(factory.upgradeMaterial, function(k, material) {
+          $.each(factory.upgradeMaterial, function (k, material) {
             var value = Math.pow(level, 2) * factory.upgradeMaterialAmount[k];
             if (material != -1) {
               total += value * rHelper.methods.CALC_returnPriceViaId(material);
@@ -4195,7 +4044,7 @@ var rHelper = {
       var requiredAmount = unit.requiredAmount;
       var requirements = unit.requirements;
 
-      $.each(requirements, function(index, requirement) {
+      $.each(requirements, function (index, requirement) {
         var price = rHelper.methods.CALC_returnPriceViaId(requirement);
         worth += price * requiredAmount[index];
       });
@@ -4300,7 +4149,7 @@ var rHelper = {
       var worth = 0;
 
       if ($.isArray(resultingProducts)) {
-        $.each(resultingProducts, function(index, resultingProduct) {
+        $.each(resultingProducts, function (index, resultingProduct) {
           worth += rHelper.methods.CALC_recyclingOutputWorthHelper(recyclingPlantLevel, resultingProduct, resultingAmount, index);
         });
       } else {
@@ -4337,7 +4186,7 @@ var rHelper = {
       var string = '';
 
       if ($.isArray(resultingProducts)) {
-        $.each(resultingProducts, function(index, resultingProduct) {
+        $.each(resultingProducts, function (index, resultingProduct) {
           string += rHelper.methods.CALC_recyclingProductsHelper(recyclingPlantLevel, resultingProduct, resultingAmount, index);
         });
       } else {
@@ -4478,7 +4327,7 @@ var rHelper = {
 
       remainingTime = remainingCapacity / divisor;
 
-      if (isNaN(remainingTime) || (type == 'products' && el.turnover <= 0) || type == 'loot' || type == 'units') {
+      if (isNaN(remainingTime) || type == 'products' && el.turnover <= 0 || type == 'loot' || type == 'units') {
         remainingTime = '∞';
       } else {
         if (remainingTime > 24) {
@@ -4497,8 +4346,8 @@ var rHelper = {
 
       var arr = ['material', 'products', 'loot', 'units'];
 
-      $.each(arr, function(index, pointer) {
-        $.each(rHelper.data[pointer], function(index, el) {
+      $.each(arr, function (index, pointer) {
+        $.each(rHelper.data[pointer], function (index, el) {
           total += el.warehouse.level;
         });
       });
@@ -4512,8 +4361,8 @@ var rHelper = {
 
       var arr = ['material', 'products', 'loot', 'units'];
 
-      $.each(arr, function(index, pointer) {
-        $.each(rHelper.data[pointer], function(index, el) {
+      $.each(arr, function (index, pointer) {
+        $.each(rHelper.data[pointer], function (index, el) {
           total += rHelper.methods.CALC_warehouseWorth(index, pointer) * el.warehouse.fillAmount;
         });
       });
@@ -4529,8 +4378,7 @@ var rHelper = {
       var dependantObj = {};
       var requiredAmount = 0;
       var string = '';
-      var arrow =
-        '<svg xmlns="http://www.w3.org/2000/svg" width="15" fill="#fff" viewBox="0 0 31.49 31.49"><path d="M21.205 5.007c-.429-.444-1.143-.444-1.587 0-.429.429-.429 1.143 0 1.571l8.047 8.047H1.111C.492 14.626 0 15.118 0 15.737c0 .619.492 1.127 1.111 1.127h26.554l-8.047 8.032c-.429.444-.429 1.159 0 1.587.444.444 1.159.444 1.587 0l9.952-9.952c.444-.429.444-1.143 0-1.571l-9.952-9.953z"/></svg>';
+      var arrow = '<svg xmlns="http://www.w3.org/2000/svg" width="15" fill="#fff" viewBox="0 0 31.49 31.49"><path d="M21.205 5.007c-.429-.444-1.143-.444-1.587 0-.429.429-.429 1.143 0 1.571l8.047 8.047H1.111C.492 14.626 0 15.118 0 15.737c0 .619.492 1.127 1.111 1.127h26.554l-8.047 8.032c-.429.444-.429 1.159 0 1.587.444.444 1.159.444 1.587 0l9.952-9.952c.444-.429.444-1.143 0-1.571l-9.952-9.953z"/></svg>';
 
       if (type == 'material') {
         dependantIconIndex = dependantFactory - 14;
@@ -4560,8 +4408,7 @@ var rHelper = {
         requiredAmount = dependantObj.factoryLevel * requiredAmountPerLevel;
       }
 
-      string +=
-        '<span class="resources-' + type + '-' + id + '"></span> ' + requiredAmount.toLocaleString('en-US') + ' ' + arrow + ' <span class="resources-product-' + dependantIconIndex + '"></span>';
+      string += '<span class="resources-' + type + '-' + id + '"></span> ' + requiredAmount.toLocaleString('en-US') + ' ' + arrow + ' <span class="resources-product-' + dependantIconIndex + '"></span>';
       var name1 = '';
       var name2 = dependantObj.name;
 
@@ -4574,9 +4421,7 @@ var rHelper = {
           break;
       }
 
-      $('#flow-' + type + '-distribution-' + id + '-' + i)
-        .html(string)
-        .attr('data-th', name1 + ' to ' + name2);
+      $('#flow-' + type + '-distribution-' + id + '-' + i).html(string).attr('data-th', name1 + ' to ' + name2);
       return requiredAmount;
     },
     CALC_flowDistribution: function CALC_flowDistribution(id, type) {
@@ -4603,7 +4448,7 @@ var rHelper = {
       var dependantFactories = obj.dependantFactories;
 
       if ($.isArray(dependantFactories)) {
-        $.each(dependantFactories, function(i, dependantFactory) {
+        $.each(dependantFactories, function (i, dependantFactory) {
           requiredAmount += rHelper.methods.CALC_flowDistributionHelper(type, dependantFactory, id, i);
         });
       } else if (dependantFactories != '') {
@@ -4648,7 +4493,7 @@ var rHelper = {
 
       var val = 0;
 
-      $.each(rHelper.data.products, function(i, factory) {
+      $.each(rHelper.data.products, function (i, factory) {
         var diamondProfit = factory.diamond.profit;
         if (diamondProfit > 0) {
           val += diamondProfit;
@@ -4662,7 +4507,7 @@ var rHelper = {
 
       var arr = [];
 
-      $.each(rHelper.data.products, function(i, factory) {
+      $.each(rHelper.data.products, function (i, factory) {
         var diamondProfit = factory.diamond.profit;
         if (diamondProfit > 0) {
           arr.push(diamondProfit);
@@ -4670,7 +4515,7 @@ var rHelper = {
       });
 
       var sum = 0;
-      arr = arr.sort(function(a, b) {
+      arr = arr.sort(function (a, b) {
         return b - a;
       });
       for (var i = 0; i <= 9; i += 1) {
@@ -4733,7 +4578,7 @@ var rHelper = {
 
       var fns = ['INSRT_factoryDependencies', 'INSRT_factoryWorkload', 'INSRT_factoryTurnover', 'INSRT_factoryTurnoverPerUpgrade', 'INSRT_factoryROI'];
 
-      $.each(fns, function(i, fn) {
+      $.each(fns, function (i, fn) {
         rHelper.methods[fn](dependantFactory);
       });
 
@@ -4756,7 +4601,7 @@ var rHelper = {
       }
 
       if ($.isArray(dependantFactories)) {
-        $.each(dependantFactories, function(k, dependantFactory) {
+        $.each(dependantFactories, function (k, dependantFactory) {
           rHelper.methods.CALC_dependantFactoriesHelper(dependantFactory, type);
         });
       } else if (dependantFactories != '') {
@@ -4771,7 +4616,7 @@ var rHelper = {
       var dependencies = rHelper.data.products[factoryId].dependencies;
 
       if ($.isArray(dependencies)) {
-        $.each(dependencies, function(dependencyIndex) {
+        $.each(dependencies, function (dependencyIndex) {
           var dependencyWorkload = rHelper.methods.CALC_factoryDepedencyWorkload(factoryId, dependencyIndex, 'nextLevel');
           nextLevelWorkloadArray.push(dependencyWorkload);
         });
@@ -4843,7 +4688,7 @@ var rHelper = {
       }
 
       if ($.isArray(factory.dependencies)) {
-        $.each(factory.dependencies, function(index) {
+        $.each(factory.dependencies, function (index) {
           var dependencyWorth = rHelper.methods.CALC_factoryDependencyWorth(factoryId, index, nextLevel);
           materialWorth += dependencyWorth;
         });
@@ -4861,7 +4706,8 @@ var rHelper = {
       var factoryLevel = factory.factoryLevel;
 
       var requiredAmount = 0,
-        dependencyPrice = 0;
+          dependencyPrice = 0;
+
 
       if (nextLevel) {
         factoryLevel += 1;
@@ -4882,11 +4728,12 @@ var rHelper = {
       var factory = rHelper.data.products[factoryId];
       var factoryLevel = factory.factoryLevel;
 
-      var _ref40 = [0, 0, ,],
-        workload = _ref40[0],
-        existingAmount = _ref40[1],
-        thisDependency = _ref40[2],
-        baseAmountRequirement = _ref40[3];
+      var _ref42 = [0, 0,,],
+          workload = _ref42[0],
+          existingAmount = _ref42[1],
+          thisDependency = _ref42[2],
+          baseAmountRequirement = _ref42[3];
+
 
       if (nextLevel) {
         factoryLevel += 1;
@@ -4966,7 +4813,7 @@ var rHelper = {
 
       var totalFactoryUpgrades = 0;
 
-      $.each(rHelper.data.products, function(i, factory) {
+      $.each(rHelper.data.products, function (i, factory) {
         totalFactoryUpgrades += factory.factoryLevel;
       });
 
@@ -4981,18 +4828,20 @@ var rHelper = {
       }
       var nextLevel = factoryLevel + 1;
 
-      var _ref41 = [0, 0, , , $(crEl('table')), $(crEl('tbody'))],
-        sum = _ref41[0],
-        sumTransportation = _ref41[1],
-        td = _ref41[2],
-        small = _ref41[3],
-        table = _ref41[4],
-        tbody = _ref41[5];
+      var _ref43 = [0, 0,,, $(crEl('table')), $(crEl('tbody'))],
+          sum = _ref43[0],
+          sumTransportation = _ref43[1],
+          td = _ref43[2],
+          small = _ref43[3],
+          table = _ref43[4],
+          tbody = _ref43[5];
 
-      $.each(rHelper.data.products[factoryId].upgradeMaterialAmount, function(i, amount) {
-        var _ref42 = [$(crEl('tr')), 0],
-          tr = _ref42[0],
-          k = _ref42[1];
+
+      $.each(rHelper.data.products[factoryId].upgradeMaterialAmount, function (i, amount) {
+        var _ref44 = [$(crEl('tr')), 0],
+            tr = _ref44[0],
+            k = _ref44[1];
+
 
         if (i === 0) {
           sum += amount * Math.pow(nextLevel, 2);
@@ -5000,16 +4849,11 @@ var rHelper = {
             td = $(crEl('td'));
             switch (k) {
               case 0:
-                var img = $(crEl('img'))
-                  .attr('src', 'assets/img/cash.png')
-                  .attr('alt', 'Cash');
+                var img = $(crEl('img')).attr('src', 'assets/img/cash.png').attr('alt', 'Cash');
                 td.append(img[0]);
                 break;
               case 1:
-                td
-                  .addClass('text-right')
-                  .attr('colspan', 3)
-                  .text(sum.toLocaleString('en-US'));
+                td.addClass('text-right').attr('colspan', 3).text(sum.toLocaleString('en-US'));
                 break;
               case 2:
                 small = $(crEl('small')).text('Transportation');
@@ -5059,9 +4903,7 @@ var rHelper = {
                 td.addClass('text-right').text(materialWorth.toLocaleString('en-US'));
                 break;
               case 4:
-                small = $(crEl('small'))
-                  .addClass('text-warning')
-                  .text(transportation.toLocaleString('en-US'));
+                small = $(crEl('small')).addClass('text-warning').text(transportation.toLocaleString('en-US'));
                 td.addClass('text-right').append(small[0]);
                 break;
             }
@@ -5077,9 +4919,7 @@ var rHelper = {
         if (k === 0) {
           td.attr('colspan', 4).text(sum.toLocaleString('en-US'));
         } else {
-          small = $(crEl('small'))
-            .addClass('text-warning')
-            .text(sumTransportation.toLocaleString('en-US'));
+          small = $(crEl('small')).addClass('text-warning').text(sumTransportation.toLocaleString('en-US'));
           td.append(small[0]);
         }
         tr.append(td[0]);
@@ -5105,7 +4945,7 @@ var rHelper = {
       'use strict';
 
       var totalMineCount = 0;
-      $.each(rHelper.data.material, function(i, material) {
+      $.each(rHelper.data.material, function (i, material) {
         totalMineCount += material.amountOfMines;
       });
 
@@ -5115,7 +4955,7 @@ var rHelper = {
       'use strict';
 
       var totalMineWorth = 0;
-      $.each(rHelper.data.material, function(i) {
+      $.each(rHelper.data.material, function (i) {
         totalMineWorth += rHelper.methods.CALC_materialRateWorth(i);
       });
 
@@ -5304,7 +5144,7 @@ var rHelper = {
   tu: []
 };
 
-(function() {
+(function () {
   $('#loading-text').text('fetching data');
 
   if (typeof localStorage.rGame != 'undefined' && getCookie('loggedIn') != 1) {

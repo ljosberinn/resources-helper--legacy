@@ -1537,11 +1537,17 @@ const rHelper = {
       let [container, tbody, textOrientation, textClass, string] = [rHelper.data.leaderboard, $('#module-leaderboard tbody'), 'text-md-right text-sm-left', "class='text-right'", ''];
 
       let returnPlayerTitle = dataset => {
+        let [rank, registeredGame, daysPlaying] = [dataset.general.rank.toLocaleString('en-US'), dataset.general.registeredGame, dataset.general.daysPlaying.toLocaleString('en-US')];
+
+        if (rank == 0) {
+          rank = registeredGame = daysPlaying = 'unknown';
+        }
+
         return `<table>
                 <tbody>
-                    <tr><td>Rank</td><td ${textClass}>${dataset.general.rank.toLocaleString('en-US')}</td></tr>
-                    <tr><td>Registered since</td><td ${textClass}>${dataset.general.registeredGame}</td></tr>
-                    <tr><td>Days playing</td><td ${textClass}>${dataset.general.daysPlaying.toLocaleString('en-US')}</td></tr>
+                    <tr><td>Rank</td><td ${textClass}>${rank}</td></tr>
+                    <tr><td>Registered since</td><td ${textClass}>${registeredGame}</td></tr>
+                    <tr><td>Days playing</td><td ${textClass}>${daysPlaying}</td></tr>
                 </tbody>
                 </table>`;
       };
@@ -1561,25 +1567,125 @@ const rHelper = {
                 </table>`;
       };
 
+      let fillHighlightingObj = (container, highlightingObj) => {
+        $.each(container, (i, dataset) => {
+          if (dataset.mineIncome > highlightingObj.mineIncome) {
+            highlightingObj.mineIncome = dataset.mineIncome;
+          }
+          if (dataset.tradeData.tradeIncomePerDay > highlightingObj.tradeIncomePerDay) {
+            highlightingObj.tradeIncomePerDay = dataset.tradeData.tradeIncomePerDay;
+          }
+          if (dataset.factoryTotalUpgrades > highlightingObj.factoryUpgrades) {
+            highlightingObj.factoryUpgrades = dataset.factoryTotalUpgrades;
+          }
+          if (dataset.totalMineCount > highlightingObj.amountOfMines) {
+            highlightingObj.amountOfMines = dataset.totalMineCount;
+          }
+          if (dataset.headquarter.mineCount > highlightingObj.minesWithinHQRadius) {
+            highlightingObj.minesWithinHQRadius = dataset.headquarter.mineCount;
+          }
+          if (dataset.tradeData.totalBuy > highlightingObj.totalBuy) {
+            highlightingObj.totalBuy = dataset.tradeData.totalBuy;
+          }
+          if (dataset.tradeData.totalSell > highlightingObj.totalSell) {
+            highlightingObj.totalSell = dataset.tradeData.totalSell;
+          }
+          if (dataset.tradeData.sumKISell > highlightingObj.sumKISell) {
+            highlightingObj.sumKISell = dataset.tradeData.sumKISell;
+          }
+          if (dataset.general.pointsPerDay > highlightingObj.pointsPerDay) {
+            highlightingObj.pointsPerDay = dataset.general.pointsPerDay;
+          }
+        });
+      };
+
       let returnString = dataset => {
+        let [name, level, pointsPerDay, points, headquarterMines, tradeIncome, totalBuy, totalSell, sumKISell] = [
+          dataset.general.name,
+          dataset.general.level.toLocaleString('en-US'),
+          dataset.general.pointsPerDay.toLocaleString('en-US'),
+          dataset.general.points.toLocaleString('en-US'),
+          dataset.headquarter.mineCount.toLocaleString('en-US'),
+          dataset.tradeData.tradeIncomePerDay.toLocaleString('en-US'),
+          dataset.tradeData.totalBuy.toLocaleString('en-US'),
+          dataset.tradeData.totalSell.toLocaleString('en-US'),
+          dataset.tradeData.sumKISell.toLocaleString('en-US')
+        ];
+
+        if (name == '') {
+          level = '';
+        } else {
+          level = `(${level})`;
+        }
+
+        if (pointsPerDay == 0) {
+          pointsPerDay = points = '';
+        } else {
+          points = `(${points})`;
+        }
+
+        if (headquarterMines == 0) {
+          headquarterMines = '';
+        }
+
+        if (tradeIncome == 0) {
+          tradeIncome = totalBuy = totalSell = sumKISell = '';
+        }
+
+        let [pointsPerDayClass, factoryUpgradesClass, amountOfMinesClass, minesWithinHQClass, tradeIncomeClass, totalBuyClass, totalSellClass, totalKISellClass, mineIncomeClass] = [
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          ''
+        ];
+
+        const classes = {
+          pointsPerDayClass: dataset.general.pointsPerDay === highlightingObj.pointsPerDay ? 'text-success': '',
+          factoryUpgradesClass: dataset.factoryTotalUpgrades === highlightingObj.factoryUpgrades ? 'text-success': '',
+          amountOfMinesClass: dataset.totalMineCount === highlightingObj.amountOfMines ? 'text-success': '',
+          minesWithinHQClass: dataset.headquarter.mineCount === highlightingObj.minesWithinHQRadius ? 'text-success': '',
+          tradeIncomeClass: dataset.tradeData.tradeIncomePerDay === highlightingObj.tradeIncomePerDay ? 'text-success': '',
+          totalBuyClass: dataset.tradeData.totalBuy === highlightingObj.totalBuy ? 'text-success': '',
+          totalSellClass: dataset.tradeData.totalSell === highlightingObj.totalSell ? 'text-success': '',
+          totalKISellClass: dataset.tradeData.sumKISell === highlightingObj.sumKISell ? 'text-success': '',
+          mineIncomeClass: dataset.mineIncome === highlightingObj.mineIncome ? 'text-success': ''
+        };
+
         return `
                 <tr>
-                    <td data-th="Player (hover for details)" title="${returnPlayerTitle(dataset)}">${dataset.general.name} (${dataset.general.level.toLocaleString('en-US')})</td>
-                    <td sorttable_customkey="${dataset.general.points}" data-th="Points per day (total points)" class="${textOrientation}">${dataset.general.pointsPerDay.toLocaleString(
-          'en-US'
-        )} (${dataset.general.points.toLocaleString('en-US')})</td>
-                    <td data-th="Factory upgrades" class="${textOrientation}">${dataset.factoryTotalUpgrades.toLocaleString('en-US')}</td>
-                    <td data-th="Amount of mines" class="${textOrientation}">${dataset.totalMineCount.toLocaleString('en-US')}</td>
-                    <td data-th="Mines within HQ radius" class="${textOrientation}">${dataset.headquarter.mineCount.toLocaleString('en-US')}</td>
-                    <td data-th="Mine income" class="${textOrientation}">${dataset.mineIncome.toLocaleString('en-US')}</td>
-                    <td data-th="Trade income per day" class="${textOrientation}">${dataset.tradeData.tradeIncomePerDay.toLocaleString('en-US')}</td>
-                    <td data-th="Bought goods for" class="${textOrientation}">${dataset.tradeData.totalBuy.toLocaleString('en-US')}</td>
-                    <td data-th="Sold goods for..." class="${textOrientation}">${dataset.tradeData.totalSell.toLocaleString('en-US')}</td>
-                    <td data-th="Sold goods to KI for..." class="${textOrientation}">${dataset.tradeData.sumKISell.toLocaleString('en-US')}</td>
+                    <td data-th="Player (hover for details)" title="${returnPlayerTitle(dataset)}">${name} ${level}</td>
+                    <td sorttable_customkey="${dataset.general.points}" data-th="Points per day (total points)" class="${textOrientation} ${classes.pointsPerDayClass}">${pointsPerDay} ${points}</td>
+                    <td data-th="Factory upgrades" class="${textOrientation} ${classes.factoryUpgradesClass}">${dataset.factoryTotalUpgrades.toLocaleString('en-US')}</td>
+                    <td data-th="Amount of mines" class="${textOrientation} ${classes.amountOfMinesClass}">${dataset.totalMineCount.toLocaleString('en-US')}</td>
+                    <td data-th="Mines within HQ radius" class="${textOrientation} ${classes.minesWithinHQClass}">${headquarterMines}</td>
+                    <td data-th="Mine income" class="${textOrientation} ${classes.mineIncomeClass}">${dataset.mineIncome.toLocaleString('en-US')}</td>
+                    <td data-th="Trade income per day" class="${textOrientation} ${classes.tradeIncomeClass}">${tradeIncome}</td>
+                    <td data-th="Bought goods for" class="${textOrientation} ${classes.totalBuyClass}">${totalBuy}</td>
+                    <td data-th="Sold goods for..." class="${textOrientation} ${classes.totalSellClass}">${totalSell}</td>
+                    <td data-th="Sold goods to KI for..." class="${textOrientation} ${classes.totalKISellClass}">${sumKISell}</td>
                     <td data-th="Company worth" class="${textOrientation}" title="${returnCompanyWorthTitle(dataset)}">${dataset.companyWorth.toLocaleString('en-US')}</td>
                 </tr>
                 `;
       };
+
+      let highlightingObj = {
+        mineIncome: 0,
+        tradeIncomePerDay: 0,
+        factoryUpgrades: 0,
+        amountOfMines: 0,
+        minesWithinHQRadius: 0,
+        totalBuy: 0,
+        totalSell: 0,
+        sumKISell: 0,
+        pointsPerDay: 0
+      };
+
+      fillHighlightingObj(container, highlightingObj);
 
       $.each(container, (i, dataset) => {
         string += returnString(dataset);
