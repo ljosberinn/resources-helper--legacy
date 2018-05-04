@@ -4,3 +4,5 @@ api/db.php
 .vscode/sftp.json
 vendor
 .htaccess
+assets/js/*.min.js
+assets/css/*.min.css

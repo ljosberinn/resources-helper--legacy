@@ -1644,54 +1644,30 @@ const rHelper = {
           ''
         ];
 
-        if (dataset.general.pointsPerDay == highlightingObj.pointsPerDay) {
-          pointsPerDayClass = 'text-success';
-        }
-
-        if (dataset.factoryTotalUpgrades == highlightingObj.factoryUpgrades) {
-          factoryUpgradesClass = 'text-success';
-        }
-
-        if (dataset.totalMineCount == highlightingObj.amountOfMines) {
-          amountOfMinesClass = 'text-success';
-        }
-
-        if (dataset.headquarter.mineCount == highlightingObj.minesWithinHQRadius) {
-          minesWithinHQClass = 'text-success';
-        }
-
-        if (dataset.tradeData.tradeIncomePerDay == highlightingObj.tradeIncomePerDay) {
-          tradeIncomeClass = 'text-success';
-        }
-
-        if (dataset.tradeData.totalBuy == highlightingObj.totalBuy) {
-          totalBuyClass = 'text-success';
-        }
-
-        if (dataset.tradeData.totalSell == highlightingObj.totalSell) {
-          totalSellClass = 'text-success';
-        }
-
-        if (dataset.tradeData.sumKISell == highlightingObj.sumKISell) {
-          totalKISellClass = 'text-success';
-        }
-
-        if (dataset.mineIncome == highlightingObj.mineIncome) {
-          mineIncomeClass = 'text-success';
-        }
+        const classes = {
+          pointsPerDayClass: dataset.general.pointsPerDay === highlightingObj.pointsPerDay ? 'text-success': '',
+          factoryUpgradesClass: dataset.factoryTotalUpgrades === highlightingObj.factoryUpgrades ? 'text-success': '',
+          amountOfMinesClass: dataset.totalMineCount === highlightingObj.amountOfMines ? 'text-success': '',
+          minesWithinHQClass: dataset.headquarter.mineCount === highlightingObj.minesWithinHQRadius ? 'text-success': '',
+          tradeIncomeClass: dataset.tradeData.tradeIncomePerDay === highlightingObj.tradeIncomePerDay ? 'text-success': '',
+          totalBuyClass: dataset.tradeData.totalBuy === highlightingObj.totalBuy ? 'text-success': '',
+          totalSellClass: dataset.tradeData.totalSell === highlightingObj.totalSell ? 'text-success': '',
+          totalKISellClass: dataset.tradeData.sumKISell === highlightingObj.sumKISell ? 'text-success': '',
+          mineIncomeClass: dataset.mineIncome === highlightingObj.mineIncome ? 'text-success': ''
+        };
 
         return `
                 <tr>
                     <td data-th="Player (hover for details)" title="${returnPlayerTitle(dataset)}">${name} ${level}</td>
-                    <td sorttable_customkey="${dataset.general.points}" data-th="Points per day (total points)" class="${textOrientation} ${pointsPerDayClass}">${pointsPerDay} ${points}</td>
-                    <td data-th="Factory upgrades" class="${textOrientation} ${factoryUpgradesClass}">${dataset.factoryTotalUpgrades.toLocaleString('en-US')}</td>
-                    <td data-th="Amount of mines" class="${textOrientation} ${amountOfMinesClass}">${dataset.totalMineCount.toLocaleString('en-US')}</td>
-                    <td data-th="Mines within HQ radius" class="${textOrientation} ${minesWithinHQClass}">${headquarterMines}</td>
-                    <td data-th="Mine income" class="${textOrientation} ${mineIncomeClass}">${dataset.mineIncome.toLocaleString('en-US')}</td>
-                    <td data-th="Trade income per day" class="${textOrientation} ${tradeIncomeClass}">${tradeIncome}</td>
-                    <td data-th="Bought goods for" class="${textOrientation} ${totalBuyClass}">${totalBuy}</td>
-                    <td data-th="Sold goods for..." class="${textOrientation} ${totalSellClass}">${totalSell}</td>
-                    <td data-th="Sold goods to KI for..." class="${textOrientation} ${totalKISellClass}">${sumKISell}</td>
+                    <td sorttable_customkey="${dataset.general.points}" data-th="Points per day (total points)" class="${textOrientation} ${classes.pointsPerDayClass}">${pointsPerDay} ${points}</td>
+                    <td data-th="Factory upgrades" class="${textOrientation} ${classes.factoryUpgradesClass}">${dataset.factoryTotalUpgrades.toLocaleString('en-US')}</td>
+                    <td data-th="Amount of mines" class="${textOrientation} ${classes.amountOfMinesClass}">${dataset.totalMineCount.toLocaleString('en-US')}</td>
+                    <td data-th="Mines within HQ radius" class="${textOrientation} ${classes.minesWithinHQClass}">${headquarterMines}</td>
+                    <td data-th="Mine income" class="${textOrientation} ${classes.mineIncomeClass}">${dataset.mineIncome.toLocaleString('en-US')}</td>
+                    <td data-th="Trade income per day" class="${textOrientation} ${classes.tradeIncomeClass}">${tradeIncome}</td>
+                    <td data-th="Bought goods for" class="${textOrientation} ${classes.totalBuyClass}">${totalBuy}</td>
+                    <td data-th="Sold goods for..." class="${textOrientation} ${classes.totalSellClass}">${totalSell}</td>
+                    <td data-th="Sold goods to KI for..." class="${textOrientation} ${classes.totalKISellClass}">${sumKISell}</td>
                     <td data-th="Company worth" class="${textOrientation}" title="${returnCompanyWorthTitle(dataset)}">${dataset.companyWorth.toLocaleString('en-US')}</td>
                 </tr>
                 `;
