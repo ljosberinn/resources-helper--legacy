@@ -1632,18 +1632,6 @@ const rHelper = {
           tradeIncome = totalBuy = totalSell = sumKISell = '';
         }
 
-        let [pointsPerDayClass, factoryUpgradesClass, amountOfMinesClass, minesWithinHQClass, tradeIncomeClass, totalBuyClass, totalSellClass, totalKISellClass, mineIncomeClass] = [
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-          ''
-        ];
-
         const classes = {
           pointsPerDayClass: dataset.general.pointsPerDay === highlightingObj.pointsPerDay ? 'text-success': '',
           factoryUpgradesClass: dataset.factoryTotalUpgrades === highlightingObj.factoryUpgrades ? 'text-success': '',
@@ -1688,7 +1676,9 @@ const rHelper = {
       fillHighlightingObj(container, highlightingObj);
 
       $.each(container, (i, dataset) => {
-        string += returnString(dataset);
+        if (dataset.companyWorth != 0) {
+          string += returnString(dataset);
+        }
       });
 
       tbody.empty().html(string);
