@@ -1543,7 +1543,7 @@ class resourcesGame
        if($getUserHQ->num_rows == 1) {
          while($data = $getUserHQ->fetch_assoc()) {
            // prevent default entries with visible hq to be shown
-           $bccomb = bccomp($data["lat"], $threshold, 6) + bccomp($data["lon"], $threshold, 6);
+           $bccomb = bccomp(abs($data["lat"]), $threshold, 6) + bccomp(abs($data["lon"]), $threshold, 6);
 
             if($bccomb > 0) {
               $data["relation"] = $relation;
