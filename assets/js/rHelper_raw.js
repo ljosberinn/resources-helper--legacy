@@ -1119,11 +1119,6 @@ const rHelper = {
       $.each(maxIndices, (i, val) => {
         rHelper.methods.EVNT_assignTitleToIconsHelper(0, val, subObjs[i], length[i]);
       });
-      /*
-      rHelper.methods.EVNT_assignTitleToIconsHelper(0, 13, 'material', 0);
-      rHelper.methods.EVNT_assignTitleToIconsHelper(0, 21, 'product', 14);
-      rHelper.methods.EVNT_assignTitleToIconsHelper(0, 16, 'loot', 36);
-      rHelper.methods.EVNT_assignTitleToIconsHelper(0, 5, 'unit', 52); */
     },
     EVNT_sortableTables() {
       'use strict';
@@ -1165,7 +1160,8 @@ const rHelper = {
           'INSRT_diamondFactoryOutputWarehouse',
           'INSRT_diamondDependencies',
           'INSRT_diamondEfficiency',
-          'INSRT_diamondProfit'
+          'INSRT_diamondProfit',
+          'INSRT_totalFactoryUpgrades'
         ];
 
         $.each(fns, (i, fn) => {
