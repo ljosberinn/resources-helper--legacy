@@ -40,6 +40,7 @@ $changelogContent = [
     <strong>General</strong><br />
     - NEW: factory upgrade maximum depending on current workload visible when hovering Workload (clicking on mobile)<br />
     - NEW: <a href='https://github.com/ljosberinn/resources-helper/issues/1' target='_blank' rel='noreferrer noopener'>added setting to show names for game icons</a><br />
+    - NEW: <a href='https://github.com/ljosberinn/resources-helper/issues/12' target='_blank' rel='noreferrer noopener'>page now remembers which API categories you requested</a><br />
     <br />
     <strong>Bugfixes</strong><br />
     - <a href='https://github.com/ljosberinn/resources-helper/issues/10' target='_blank' rel='noreferrer noopener'>Headquarter mobile icons fixed</a><br />
