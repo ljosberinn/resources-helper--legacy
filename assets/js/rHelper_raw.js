@@ -112,6 +112,7 @@ const rHelper = {
         // warehouse
         'INSRT_warehouseTotalLevel',
         'INSRT_warehouseTotalWorth',
+        'SET_warehouseInputSizeNormalizer',
         // graphs
         'EVNT_priceHistoryOnChange',
         // headquarter
@@ -281,6 +282,7 @@ const rHelper = {
 
         rHelper.methods.INSRT_warehouseTotalLevel();
         rHelper.methods.INSRT_warehouseTotalWorth();
+        rHelper.methods.SET_warehouseInputSizeNormalizer();
         rHelper.methods.API_toggleLoadSuccessorHelper('warehouse');
       });
     },
@@ -876,6 +878,37 @@ const rHelper = {
 
       return marker;
     },
+    SET_warehouseInputSizeNormalizer() {
+      let [selectors, maxWidth, realSelectors] = [['material', 'products', 'loot', 'units'], '', []];
+
+      $.each(selectors, (i, selector) => {
+        realSelectors.push($(`[id*="warehouse-${selector}-stock-current-"]`));
+      });
+
+      let getMaxWidth = realSelectors => {
+        $.each(realSelectors, (i, el) => {
+          let width = $(el)
+            .next('span')
+            .css('width');
+
+          if (width > maxWidth) {
+            maxWidth = width;
+          }
+        });
+      };
+
+      let setMaxWidth = realSelectors => {
+        $.each(realSelectors, (i, el) => {
+          $(el)
+            .next('span')
+            .css('width', maxWidth);
+        });
+      };
+
+      getMaxWidth(realSelectors);
+
+      setMaxWidth(realSelectors);
+    },
     SET_overTimeGraph() {
       'use strict';
 
@@ -1123,7 +1156,15 @@ const rHelper = {
     EVNT_sortableTables() {
       'use strict';
 
-      let tables = [$('#module-mines table')[0], $('#module-factories table')[0], $('#module-diamond table')[0], $('#techupgrades-combinations-tbl')[0], $('#recycling-tbl')[0], $('#units-tbl')[0], $('#module-missions table')[0]];
+      let tables = [
+        $('#module-mines table')[0],
+        $('#module-factories table')[0],
+        $('#module-diamond table')[0],
+        $('#techupgrades-combinations-tbl')[0],
+        $('#recycling-tbl')[0],
+        $('#units-tbl')[0],
+        $('#module-missions table')[0]
+      ];
 
       $.each(tables, (index, table) => {
         sorttable.makeSortable(table);
@@ -1627,15 +1668,15 @@ const rHelper = {
         }
 
         const classes = {
-          pointsPerDayClass: dataset.general.pointsPerDay === highlightingObj.pointsPerDay ? 'text-success': '',
-          factoryUpgradesClass: dataset.factoryTotalUpgrades === highlightingObj.factoryUpgrades ? 'text-success': '',
-          amountOfMinesClass: dataset.totalMineCount === highlightingObj.amountOfMines ? 'text-success': '',
-          minesWithinHQClass: dataset.headquarter.mineCount === highlightingObj.minesWithinHQRadius ? 'text-success': '',
-          tradeIncomeClass: dataset.tradeData.tradeIncomePerDay === highlightingObj.tradeIncomePerDay ? 'text-success': '',
-          totalBuyClass: dataset.tradeData.totalBuy === highlightingObj.totalBuy ? 'text-success': '',
-          totalSellClass: dataset.tradeData.totalSell === highlightingObj.totalSell ? 'text-success': '',
-          totalKISellClass: dataset.tradeData.sumKISell === highlightingObj.sumKISell ? 'text-success': '',
-          mineIncomeClass: dataset.mineIncome === highlightingObj.mineIncome ? 'text-success': ''
+          pointsPerDayClass: dataset.general.pointsPerDay === highlightingObj.pointsPerDay ? 'text-success' : '',
+          factoryUpgradesClass: dataset.factoryTotalUpgrades === highlightingObj.factoryUpgrades ? 'text-success' : '',
+          amountOfMinesClass: dataset.totalMineCount === highlightingObj.amountOfMines ? 'text-success' : '',
+          minesWithinHQClass: dataset.headquarter.mineCount === highlightingObj.minesWithinHQRadius ? 'text-success' : '',
+          tradeIncomeClass: dataset.tradeData.tradeIncomePerDay === highlightingObj.tradeIncomePerDay ? 'text-success' : '',
+          totalBuyClass: dataset.tradeData.totalBuy === highlightingObj.totalBuy ? 'text-success' : '',
+          totalSellClass: dataset.tradeData.totalSell === highlightingObj.totalSell ? 'text-success' : '',
+          totalKISellClass: dataset.tradeData.sumKISell === highlightingObj.sumKISell ? 'text-success' : '',
+          mineIncomeClass: dataset.mineIncome === highlightingObj.mineIncome ? 'text-success' : ''
         };
 
         return `
@@ -4371,7 +4412,15 @@ const rHelper = {
     CALC_flowDistributionHelper(type, dependantFactory, id, i) {
       'use strict';
 
-      let [originalIndex, dependantIconIndex, requiredAmountPerLevel, dependantObj, requiredAmount, string, arrow] = [0, 0, 0, {}, 0, '', '<svg xmlns="http://www.w3.org/2000/svg" width="15" fill="#fff" viewBox="0 0 31.49 31.49"><path d="M21.205 5.007c-.429-.444-1.143-.444-1.587 0-.429.429-.429 1.143 0 1.571l8.047 8.047H1.111C.492 14.626 0 15.118 0 15.737c0 .619.492 1.127 1.111 1.127h26.554l-8.047 8.032c-.429.444-.429 1.159 0 1.587.444.444 1.159.444 1.587 0l9.952-9.952c.444-.429.444-1.143 0-1.571l-9.952-9.953z"/></svg>'];
+      let [originalIndex, dependantIconIndex, requiredAmountPerLevel, dependantObj, requiredAmount, string, arrow] = [
+        0,
+        0,
+        0,
+        {},
+        0,
+        '',
+        '<svg xmlns="http://www.w3.org/2000/svg" width="15" fill="#fff" viewBox="0 0 31.49 31.49"><path d="M21.205 5.007c-.429-.444-1.143-.444-1.587 0-.429.429-.429 1.143 0 1.571l8.047 8.047H1.111C.492 14.626 0 15.118 0 15.737c0 .619.492 1.127 1.111 1.127h26.554l-8.047 8.032c-.429.444-.429 1.159 0 1.587.444.444 1.159.444 1.587 0l9.952-9.952c.444-.429.444-1.143 0-1.571l-9.952-9.953z"/></svg>'
+      ];
 
       if (type == 'material') {
         dependantIconIndex = dependantFactory - 14;
