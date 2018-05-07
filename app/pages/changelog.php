@@ -45,7 +45,8 @@ $changelogContent = [
     - <a href='https://github.com/ljosberinn/resources-helper/issues/9' target='_blank' rel='noreferrer noopener'>total factory uprades now work as intended</a><br />
     - <a href='https://github.com/ljosberinn/resources-helper/issues/6' target='_blank' rel='noreferrer noopener'>warehouse: warehouse contingent field size normalized</a><br />
     - <a href='https://github.com/ljosberinn/resources-helper/issues/4' target='_blank' rel='noreferrer noopener'>several other tables are sortable now</a><br />
-    - <a href='https://github.com/ljosberinn/resources-helper/issues/3' target='_blank' rel='noreferrer noopener'>removed doubled loading of Trade Log when using API and swapping to its tab afterwards</a><br />",
+    - <a href='https://github.com/ljosberinn/resources-helper/issues/3' target='_blank' rel='noreferrer noopener'>removed doubled loading of Trade Log when using API and swapping to its tab afterwards</a><br />
+    - fixed a bug where sometimes the Warehouse API would show data, but not save it<br />",
   ],
   3 => [
     "class" => "",
