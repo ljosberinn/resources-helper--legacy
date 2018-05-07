@@ -1128,7 +1128,7 @@ const rHelper = {
     EVNT_sortableTables() {
       'use strict';
 
-      let tables = [$('#module-mines table')[0], $('#module-factories table')[0], $('#module-diamond table')[0], $('#techupgrades-combinations-tbl')[0], $('#recycling-tbl')[0], $('#units-tbl')[0]];
+      let tables = [$('#module-mines table')[0], $('#module-factories table')[0], $('#module-diamond table')[0], $('#techupgrades-combinations-tbl')[0], $('#recycling-tbl')[0], $('#units-tbl')[0], $('#module-missions table')[0]];
 
       $.each(tables, (index, table) => {
         sorttable.makeSortable(table);
@@ -4324,8 +4324,7 @@ const rHelper = {
 
       let el = rHelper.data[type][id];
       let remainingCapacity = el.warehouse.contingent - el.warehouse.fillAmount;
-      let remainingTime = 0;
-      let divisor = 1;
+      let [remainingTime, divisor] = [0, 1];
 
       if (type == 'material') {
         divisor = el.perHour;
@@ -4335,7 +4334,7 @@ const rHelper = {
 
       remainingTime = remainingCapacity / divisor;
 
-      if (isNaN(remainingTime) || (type == 'products' && el.turnover <= 0) || type == 'loot' || type == 'units') {
+      if (isNaN(remainingTime) || (type == 'products' && el.turnover <= 0) || type == 'loot' || type == 'units' || remainingTime === Infinity) {
         remainingTime = '∞';
       } else {
         if (remainingTime > 24) {
@@ -4350,9 +4349,7 @@ const rHelper = {
     CALC_warehouseTotalLevel() {
       'use strict';
 
-      let total = 0;
-
-      let arr = ['material', 'products', 'loot', 'units'];
+      let [total, arr] = [0, ['material', 'products', 'loot', 'units']];
 
       $.each(arr, (index, pointer) => {
         $.each(rHelper.data[pointer], (index, el) => {
@@ -4365,9 +4362,7 @@ const rHelper = {
     CALC_warehouseTotalWorth() {
       'use strict';
 
-      let total = 0;
-
-      let arr = ['material', 'products', 'loot', 'units'];
+      let [total, arr] = [0, ['material', 'products', 'loot', 'units']];
 
       $.each(arr, (index, pointer) => {
         $.each(rHelper.data[pointer], (index, el) => {
@@ -4380,14 +4375,7 @@ const rHelper = {
     CALC_flowDistributionHelper(type, dependantFactory, id, i) {
       'use strict';
 
-      let originalIndex = 0;
-      let dependantIconIndex = 0;
-      let requiredAmountPerLevel = 0;
-      let dependantObj = {};
-      let requiredAmount = 0;
-      let string = '';
-      let arrow =
-        '<svg xmlns="http://www.w3.org/2000/svg" width="15" fill="#fff" viewBox="0 0 31.49 31.49"><path d="M21.205 5.007c-.429-.444-1.143-.444-1.587 0-.429.429-.429 1.143 0 1.571l8.047 8.047H1.111C.492 14.626 0 15.118 0 15.737c0 .619.492 1.127 1.111 1.127h26.554l-8.047 8.032c-.429.444-.429 1.159 0 1.587.444.444 1.159.444 1.587 0l9.952-9.952c.444-.429.444-1.143 0-1.571l-9.952-9.953z"/></svg>';
+      let [originalIndex, dependantIconIndex, requiredAmountPerLevel, dependantObj, requiredAmount, string, arrow] = [0, 0, 0, {}, 0, '', '<svg xmlns="http://www.w3.org/2000/svg" width="15" fill="#fff" viewBox="0 0 31.49 31.49"><path d="M21.205 5.007c-.429-.444-1.143-.444-1.587 0-.429.429-.429 1.143 0 1.571l8.047 8.047H1.111C.492 14.626 0 15.118 0 15.737c0 .619.492 1.127 1.111 1.127h26.554l-8.047 8.032c-.429.444-.429 1.159 0 1.587.444.444 1.159.444 1.587 0l9.952-9.952c.444-.429.444-1.143 0-1.571l-9.952-9.953z"/></svg>'];
 
       if (type == 'material') {
         dependantIconIndex = dependantFactory - 14;

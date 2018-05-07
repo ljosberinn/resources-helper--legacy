@@ -799,10 +799,12 @@ kbd {
 #collapse-attacklog-detailed table:last-of-type th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort)::after,
 #collapse-attacklog-simple table th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort)::after,
 #module-factories table th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort)::after,
+#module-missions table th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort)::after,
 #module-mines table th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort)::after,
 #modules-diamond table th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort)::after,
 #modules-recyclingunits table th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort)::after,
 #recycling-tbl th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort)::after,
+#techupgrades-calc-tbl th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort)::after,
 #units-tbl th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort)::after {
   content: ' \25B4\25BE';
 }
@@ -835,14 +837,13 @@ kbd {
 }
 
 [class*='hq-thumb-'] {
-    max-width: 100%;
-    background-size: 100%;
-    background: url("../img/hqsprite.png");
-    cursor: pointer;
-    -webkit-transition: all 0.25s ease-in-out;
-    transition: all 0.25s ease-in-out;
-    height: 75px;
-    width: 75px;
+  max-width: 100%;
+  background: url('../img/hqsprite.png') 100%;
+  cursor: pointer;
+  -webkit-transition: all 0.25s ease-in-out;
+  transition: all 0.25s ease-in-out;
+  height: 75px;
+  width: 75px;
 }
 
 @media (max-width: 767px) {
@@ -1341,43 +1342,43 @@ kbd {
 }
 
 .hq-thumb-0 {
-	background-position: -0px -0px;
+  background-position: 0 0;
 }
 
 .hq-thumb-9 {
-	background-position: -75px -0px;
+  background-position: -75px 0;
 }
 
 .hq-thumb-1 {
-	background-position: -150px -0px;
+  background-position: -150px 0;
 }
 
 .hq-thumb-2 {
-	background-position: -0px -75px;
+  background-position: 0 -75px;
 }
 
 .hq-thumb-3 {
-	background-position: -75px -75px;
+  background-position: -75px -75px;
 }
 
 .hq-thumb-4 {
-	background-position: -150px -75px;
+  background-position: -150px -75px;
 }
 
 .hq-thumb-5 {
-	background-position: -0px -150px;
+  background-position: 0 -150px;
 }
 
 .hq-thumb-6 {
-	background-position: -75px -150px;
+  background-position: -75px -150px;
 }
 
 .hq-thumb-7 {
-	background-position: -150px -150px;
+  background-position: -150px -150px;
 }
 
 .hq-thumb-8 {
-	background-position: -0px -225px;
+  background-position: 0 -225px;
 }
 
 .resources-missions-10 {
