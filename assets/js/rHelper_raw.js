@@ -432,9 +432,7 @@ const rHelper = {
       rHelper.methods.API_toggleLoader('trade-log');
 
       $.getJSON(`api/core.php?query=6&key=${key}`, data => {
-        if (data.callback == 'rHelper.methods.API_getTradeLog()') {
-          rHelper.methods.API_getTradeLog();
-        } else {
+        if (data.callback != 'rHelper.methods.API_getTradeLog()') {
           swal('Error', "Couldn't fetch trade log - API potentially unavailable!", 'error');
         }
       });
