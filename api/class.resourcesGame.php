@@ -144,12 +144,13 @@ class resourcesGame
     */
     const SETTINGS = [
       "language" => self::LANGUAGES[0],
-      "customTU" => 0,
+      "customTU" => [111,26,0,0],
       "idealCondition" => 0,
       "factoryNames" => 0,
       "transportCostInclusion" => 0,
       "mapVisibleHQ" => 0,
       "showNames" => 0,
+      "queryPreset" => [1,2,3,4,5,51,6,7,9,10],
     ];
 
 
@@ -936,6 +937,9 @@ class resourcesGame
 
             $baseData[6]["setting"] = "showNames";
             $baseData[6]["value"] = $data["showNames"];
+
+            $baseData[7]["setting"] = "queryPreset";
+            $baseData[7]["value"] = $this->convertArrayStringToArray($data["queryPreset"]);
 
           }
         }

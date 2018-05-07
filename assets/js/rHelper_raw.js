@@ -532,6 +532,13 @@ const rHelper = {
       'use strict';
 
       if ($.isArray(queries)) {
+        $.post({
+          url: 'api/updateQueryPreset.php',
+          data: {
+            queries: JSON.stringify(queries)
+          }
+        });
+
         $.each(queries, (i, query) => {
           switch (query) {
             case 1:
@@ -2525,9 +2532,23 @@ const rHelper = {
             $('#settings-price-age').val(setting.value);
             break;
           case 'showNames':
-            if(setting.value === 1) {
+            if (setting.value === 1) {
               $('#settings-show-names').prop('checked', true);
             }
+            break;
+          case 'queryPreset':
+            const possibleSelectors = [1, 2, 3, 4, 5, 51, 6, 7, 9, 10];
+
+            $.each(possibleSelectors, (i, selector) => {
+              const input = $(`input[data-query='${selector}']`);
+              let state = false;
+
+              if (setting.value.indexOf(selector) !== -1) {
+                state = true;
+              }
+
+              input.prop('checked', state);
+            });
             break;
         }
       });
