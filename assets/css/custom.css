@@ -838,7 +838,7 @@ kbd {
 
 [class*='hq-thumb-'] {
   max-width: 100%;
-  background: url('../img/hqsprite.png') 100%;
+  background: url('../img/hqsprite.png');
   cursor: pointer;
   -webkit-transition: all 0.25s ease-in-out;
   transition: all 0.25s ease-in-out;
@@ -856,6 +856,7 @@ kbd {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  flex-wrap: wrap;
 }
 
 .disabled-hq {
@@ -1345,40 +1346,40 @@ kbd {
   background-position: 0 0;
 }
 
-.hq-thumb-9 {
-  background-position: -75px 0;
-}
-
 .hq-thumb-1 {
-  background-position: -150px 0;
+  background-position: 0 22.222%;
 }
 
 .hq-thumb-2 {
-  background-position: 0 -75px;
+  background-position: 0 33.333%;
 }
 
 .hq-thumb-3 {
-  background-position: -75px -75px;
+  background-position: 0 44.444%;
 }
 
 .hq-thumb-4 {
-  background-position: -150px -75px;
+  background-position: 0 55.555%;
 }
 
 .hq-thumb-5 {
-  background-position: 0 -150px;
+  background-position: 0 66.666%;
 }
 
 .hq-thumb-6 {
-  background-position: -75px -150px;
+  background-position: 0 77.77%;
 }
 
 .hq-thumb-7 {
-  background-position: -150px -150px;
+  background-position: 0% 88.888%;
 }
 
 .hq-thumb-8 {
-  background-position: 0 -225px;
+  background-position: 0 100%;
+}
+
+.hq-thumb-9 {
+  background-position: 0 11.111%;
 }
 
 .resources-missions-10 {
