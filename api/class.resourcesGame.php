@@ -2406,7 +2406,7 @@ class resourcesGame
                           * @param  int   $userId [current userId]
                           * @return mixed [returns JSON-encoded array]
                           */
-                          private function insertAPIPlayerInformation($data, $userId, $anonymity, $hashedKey)
+                          private function insertAPIPlayerInformation($data, $userId, $anonymity)
                           {
                             $data = $data[0];
 
@@ -2414,7 +2414,7 @@ class resourcesGame
                             unset($data["appV"]);
                             unset($data["appVRB"]);
 
-                            $query = "UPDATE `userOverview` SET `hashedKey` = '" .$hashedKey. "' ";
+                            $query = "UPDATE `userOverview` SET ";
 
                             $result = [];
 
@@ -2985,7 +2985,7 @@ class resourcesGame
                                   return $convertAPIData;
                                   break;
                                   case 7: // player information - STABLE
-                                  $convertAPIData = $this->insertAPIPlayerInformation($decoded_data, $userId, $anonymity, $hashedKey);
+                                  $convertAPIData = $this->insertAPIPlayerInformation($decoded_data, $userId, $anonymity);
                                   return $convertAPIData;
                                   break;
                                   case 9: // attackLog - STABLE
@@ -2998,7 +2998,7 @@ class resourcesGame
                                   break;
                                 }
 
-                                $query = "UPDATE `userOverview` SET `lastUpdate` = " .$time. " WHERE `id` = '" .$userId. "'";
+                                $query = "UPDATE `userOverview` SET `lastUpdate` = " .$time. ", `hashedKey` = '" .$hashedKey. "' WHERE `id` = '" .$userId. "'";
                                 $refreshLastUpdate = $this->conn->query($query);
                               }
 

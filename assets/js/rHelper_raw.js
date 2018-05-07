@@ -417,7 +417,6 @@ const rHelper = {
 
       $.getJSON(url, data => {
         rHelper.data.tradeLog = data;
-        rHelper.methods.API_toggleLoadSuccessorHelper('trade-log');
         rHelper.methods.INSRT_tradeLog();
 
         $.each(buttons, (i, btn) => {
@@ -438,6 +437,7 @@ const rHelper = {
         if (data.callback != 'rHelper.methods.API_getTradeLog()') {
           swal('Error', "Couldn't fetch trade log - API potentially unavailable!", 'error');
         }
+        rHelper.methods.API_toggleLoadSuccessorHelper('trade-log');
       });
     },
     API_getMissions() {
