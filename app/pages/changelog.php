@@ -8,8 +8,12 @@
 <?php
 
 $changelogIndex = [
-  3 => [
+  4 => [
     "class" => "active",
+    "title" => "Resources Helper 3.0.2",
+  ],
+  3 => [
+    "class" => "",
     "title" => "Resources Helper 3.0.1",
   ],
   2 => [
@@ -28,8 +32,23 @@ $changelogIndex = [
 
 $changelogContent = [
 
-  3 => [
+  4 => [
     "class" => "show active",
+    "title" => "Resources Helper 3.0.2",
+    "date" => "May 7th 2018",
+    "description" => "
+    <strong>General</strong><br />
+    - NEW: factory upgrade maximum depending on current workload visible when hovering Workload (clicking on mobile)<br/>
+    <br />
+    <strong>Bugfixes</strong><br />
+    - <a href='https://github.com/ljosberinn/resources-helper/issues/10' target='_blank' rel='noreferrer noopener'>Headquarter mobile icons fixed</a><br />
+    - <a href='https://github.com/ljosberinn/resources-helper/issues/9' target='_blank' rel='noreferrer noopener'>total factory uprades now work as intended</a><br />
+    - <a href='https://github.com/ljosberinn/resources-helper/issues/6' target='_blank' rel='noreferrer noopener'>warehouse: warehouse contingent field size normalized</a><br />
+    - <a href='https://github.com/ljosberinn/resources-helper/issues/4' target='_blank' rel='noreferrer noopener'>several other tables are sortable now</a><br />
+    - <a href='https://github.com/ljosberinn/resources-helper/issues/3' target='_blank' rel='noreferrer noopener'>removed doubled loading of Trade Log when using API and swapping to its tab afterwards</a><br />",
+  ],
+  3 => [
+    "class" => "",
     "title" => "Resources Helper 3.0.1",
     "date" => "May 4th 2018",
     "description" => "

@@ -2706,8 +2706,13 @@ const rHelper = {
         addClass = 'text-danger';
       }
 
-      target.removeClass(removeClass).addClass(addClass);
-      target.text((workload * 100).toFixed(2) + ' %');
+      let theoreticalFactoryLevelCap = rHelper.methods.CALC_theoreticalFactoryLevelCap(factoryId, workload);
+
+      target
+        .removeClass(removeClass)
+        .addClass(addClass)
+        .text((workload * 100).toFixed(2) + ' %')
+        .prop('title', `Can be upgraded up to level <strong>${theoreticalFactoryLevelCap.toLocaleString('en-US')}</strong>`);
     },
     INSRT_factoryTurnover(factoryId) {
       'use strict';
@@ -2722,8 +2727,10 @@ const rHelper = {
         addClass = 'text-success';
       }
       rHelper.data.products[factoryId].turnover = turnover;
-      target.removeClass(removeClass).addClass(addClass);
-      target.text(turnover.toLocaleString('en-US'));
+      target
+        .removeClass(removeClass)
+        .addClass(addClass)
+        .text(turnover.toLocaleString('en-US'));
     },
     INSRT_factoryHighlightColumns() {
       'use strict';
@@ -3844,6 +3851,9 @@ const rHelper = {
       'use strict';
 
       return Math.round(subObj.fullRate * rHelper.methods.CALC_returnPriceViaId(type, 8) * age * 24 * subObj.HQBoost);
+    },
+    CALC_theoreticalFactoryLevelCap(factoryId, workload) {
+      return Math.floor(rHelper.data.products[factoryId].factoryLevel * workload);
     },
     CALC_createMapContentString(relObj, buildDate, age, estRevenue, subObj) {
       'use strict';
