@@ -124,7 +124,8 @@ const rHelper = {
         'INSRT_companyWorth',
         'EVNT_sortableTables',
         'EVNT_assignTitleToIcons',
-        'EVNT_enableTippy'
+        'EVNT_enableTippy',
+        'INSRT_showNames'
       ];
 
       $.each(nonParamBoundMethods, (i, fn) => {
@@ -1129,7 +1130,7 @@ const rHelper = {
             dynamicTitle: true
           });
         }
-        $(el).addClass('tippied');
+        $(el).attr('tippied', true);
       });
     },
     EVNT_assignTitleToIconsHelper(min, max, subSelector, incrementor) {
@@ -2524,10 +2525,31 @@ const rHelper = {
             $('#settings-price-age').val(setting.value);
             break;
           case 'showNames':
-            $('#settings-show-names').prop('checked', true);
+            if(setting.value === 1) {
+              $('#settings-show-names').prop('checked', true);
+            }
             break;
         }
       });
+    },
+    INSRT_showNames() {
+      if (rHelper.data.settings[6] && rHelper.data.settings[6].value === 1) {
+        let iconSelectors = ['material', 'factories', 'product', 'loot', 'units'];
+
+        $.each(iconSelectors, (i, iconSelector) => {
+          $.each($(`span[class*="resources-${iconSelector}-"]`), (k, el) => {
+            let [_el, stringToBeReplaced, targetArray] = [$(el), new RegExp(`resources-${iconSelector}-`), iconSelector];
+
+            let index = parseInt(_el.attr('class').replace(stringToBeReplaced, ''));
+
+            if (iconSelector === 'factories' || iconSelector === 'product') {
+              targetArray = 'products';
+            }
+
+            _el.after(` <strong class="text-muted">${rHelper.data[targetArray][index].name}</strong>`);
+          });
+        });
+      }
     },
     INSRT_materialNewMinePrice(materialId) {
       'use strict';

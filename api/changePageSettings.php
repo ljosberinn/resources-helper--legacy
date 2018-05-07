@@ -3,9 +3,9 @@
 session_start();
 
 if (!isset($_SESSION["id"])) {
-    header("../index.php");
+  header("../index.php");
 } else {
-    $possiblePOSTVars = [
+  $possiblePOSTVars = [
     "settings-language",
     "settings-custom-tu-1",
     "settings-custom-tu-2",
@@ -18,90 +18,100 @@ if (!isset($_SESSION["id"])) {
     "settings-show-names",
   ];
 
-    $query = "UPDATE `userSettings` SET ";
+  $query = "UPDATE `userSettings` SET ";
 
-    foreach ($_POST as $var => $value) {
-        if (!in_array($var, $possiblePOSTVars)) {
-            header("Location: ../index.php");
+  foreach ($_POST as $var => $value) {
+    if (!in_array($var, $possiblePOSTVars)) {
+      header("Location: ../index.php");
+    }
+
+    switch ($var) {
+      case "settings-language":
+      $query .= "`lang` = " .$value. ", ";
+      break;
+
+      case "settings-custom-tu-4":
+
+      $customTU = "";
+
+      for ($i = 1; $i <= 4; $i += 1) {
+        $tu = $_POST["settings-custom-tu-" .$i. ""];
+
+        if ($tu == "") {
+          $tu = 0;
         }
+        $customTU .= $tu. ", ";
+      }
 
-        switch ($var) {
-          case "settings-language":
-            $query .= "`lang` = " .$value. ", ";
-          break;
-          case "settings-custom-tu-4":
+      $customTU = substr($customTU, 0, -2);
 
-            $customTU = "";
+      if ($customTU != "") {
+        $query .= "`customTU` = '" .$customTU. "', ";
+      }
+      break;
 
-            for ($i = 1; $i <= 4; $i += 1) {
-                $tu = $_POST["settings-custom-tu-" .$i. ""];
+      case "settings-ideal-conditions":
+      $query .= "`idealCondition` = ";
+      if ($value == "on") {
+        $query .= "1, ";
+      }
+      break;
 
-                if ($tu == "") {
-                    $tu = 0;
-                }
-                $customTU .= $tu. ", ";
-            }
+      case "settings-toggle-transport-cost-inclusion":
+      $query .= "`transportCostInclusion` = ";
+      if ($value == "on") {
+        $query .= "1, ";
+      }
+      break;
 
-            $customTU = substr($customTU, 0, -2);
+      case "settings-hq-visibility":
+      $allowedValues = [0, 1];
+      if (in_array($value, $allowedValues)) {
+        $query .= "`mapVisibleHQ` = " .$value. ", ";
+      } else {
+        header("Location: ../index.php");
+      }
+      break;
 
-            if ($customTU != "") {
-                $query .= "`customTU` = '" .$customTU. "', ";
-            }
-          break;
-          case "settings-ideal-conditions":
-            $query .= "`idealCondition` = ";
-            if ($value == "on") {
-                $query .= "1, ";
-            }
-          break;
-          case "settings-toggle-transport-cost-inclusion":
-            $query .= "`transportCostInclusion` = ";
-            if ($value == "on") {
-                $query .= "1, ";
-            }
-          break;
-          case "settings-hq-visibility":
-            $allowedValues = [0, 1];
-            if (in_array($value, $allowedValues)) {
-                $query .= "`mapVisibleHQ` = " .$value. ", ";
-            } else {
-                header("Location: ../index.php");
-            }
-          break;
-          case "settings-price-age":
-            $allowedValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, ];
-            if (in_array($value, $allowedValues)) {
-                $query .= "`priceAge` = " .$value. ", ";
-            } else {
-                header("Location: ../index.php");
-            }
-          break;
-          case "settings-show-names":
-            $query .= "`showNames` = ";
-            if ($value == "on") {
-                $query .= "1, ";
-            }
-          break;
-        }
+      case "settings-price-age":
+      $allowedValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, ];
+      if (in_array($value, $allowedValues)) {
+        $query .= "`priceAge` = " .$value. ", ";
+      } else {
+        header("Location: ../index.php");
+      }
+      break;
+
+      case "settings-show-names":
+      $query .= "`showNames` = ";
+      if ($value == "on") {
+        $query .= "1, ";
+      }
+      break;
     }
+  }
 
-    if (!in_array("settings-ideal-conditions", array_keys($_POST))) {
-      $query .= "`idealCondition` = 0, ";
-    }
+  if (!in_array("settings-ideal-conditions", array_keys($_POST))) {
+    $query .= "`idealCondition` = 0, ";
+  }
 
-    if (!in_array("settings-toggle-transport-cost-inclusion", array_keys($_POST))) {
-      $query .= "`transportCostInclusion` = 0, ";
-    }
+  if (!in_array("settings-toggle-transport-cost-inclusion", array_keys($_POST))) {
+    $query .= "`transportCostInclusion` = 0, ";
+  }
 
-    $query = substr($query, 0, -2). " WHERE `id` = " .$_SESSION["id"];
+  if (!in_array("settings-show-names", array_keys($_POST))) {
+    $query .= "`showNames` = 0, ";
+  }
 
-    require "db.php";
+  $query = substr($query, 0, -2). " WHERE `id` = " .$_SESSION["id"];
 
-    $conn = new mysqli($host, $user, $pw, $db);
+  require "db.php";
 
-    $update = $conn->query($query);
+  $conn = new mysqli($host, $user, $pw, $db);
 
-    if ($update) {
-        header("Location: ../index.php?settingsSaved");
-    }
+  $update = $conn->query($query);
+
+  if ($update) {
+    header("Location: ../index.php?settingsSaved");
+  }
 }

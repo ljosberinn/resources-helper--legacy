@@ -148,8 +148,8 @@ class resourcesGame
       "idealCondition" => 0,
       "factoryNames" => 0,
       "transportCostInclusion" => 0,
-      "numbers" => 0,
-      "mapVisibleHQ" => 0
+      "mapVisibleHQ" => 0,
+      "showNames" => 0,
     ];
 
 

@@ -38,7 +38,8 @@ $changelogContent = [
     "date" => "May 7th 2018",
     "description" => "
     <strong>General</strong><br />
-    - NEW: factory upgrade maximum depending on current workload visible when hovering Workload (clicking on mobile)<br/>
+    - NEW: factory upgrade maximum depending on current workload visible when hovering Workload (clicking on mobile)<br />
+    - NEW: added setting to show names for game icons<br />
     <br />
     <strong>Bugfixes</strong><br />
     - <a href='https://github.com/ljosberinn/resources-helper/issues/10' target='_blank' rel='noreferrer noopener'>Headquarter mobile icons fixed</a><br />

@@ -53,7 +53,7 @@ $arrayKeys = array_keys($columns);
         echo '
         <tr>
           <td data-th="' .$arrayKeys[0]. '" class="' .$textOrientation. '">
-            <div class="resources-factories-' .$i. '"></div>
+            <span class="resources-factories-' .$i. '"></span>
           </td>
         <td data-th="' .$arrayKeys[1]. '"><input type="number" min="0" max="2000" class="form-control form-control-sm ' .$textOrientation. '" id="factories-level-' .$i. '" /></td>
         <td class="' .$textOrientation. '" data-th="' .$arrayKeys[2]. '"><span id="factories-product-' .$i. '"></span> <span class="resources-product-' .$i. '"></span></td>

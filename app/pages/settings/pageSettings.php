@@ -97,7 +97,7 @@
     <label class="custom-control custom-checkbox">
       <input class="custom-control-input" id="settings-show-names" name="settings-show-names" type="checkbox"/>
       <span class="custom-control-indicator"></span>
-      <span class="custom-control-description">toggles automatical <mark>visibility of factory names</mark> when loading page <span style="color: coral;">UNDER DEVELOPMENT - NOT WORKING YET</span></span>
+      <span class="custom-control-description">toggles automatical <mark>visibility of factory names</mark> when loading page <span class="text-warning">warning: page layout may suffer</span></span>
     </label>
   </div>
 

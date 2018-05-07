@@ -66,11 +66,11 @@ Array.prototype.max = function() {
 var applyTippyOnNewElement = function applyTippyOnNewElement(el) {
   'use strict';
 
-  if (!el.hasClass('tippied')) {
+  if (!el.attr('tippied')) {
     tippy(el[0], {
       dynamicTitle: true
     });
-    el.addClass('tippied');
+    el.attr('tippied', true);
   }
 };
 
