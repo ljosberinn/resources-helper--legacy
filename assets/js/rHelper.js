@@ -2707,6 +2707,9 @@ var rHelper = {
           case 'priceAge':
             $('#settings-price-age').val(setting.value);
             break;
+          case 'showNames':
+            $('#settings-show-names').prop('checked', true);
+            break;
         }
       });
     },

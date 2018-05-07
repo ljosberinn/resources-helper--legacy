@@ -15,6 +15,7 @@ if (!isset($_SESSION["id"])) {
     "settings-toggle-transport-cost-inclusion",
     "settings-hq-visibility",
     "settings-price-age",
+    "settings-show-names",
   ];
 
     $query = "UPDATE `userSettings` SET ";
@@ -73,6 +74,12 @@ if (!isset($_SESSION["id"])) {
                 $query .= "`priceAge` = " .$value. ", ";
             } else {
                 header("Location: ../index.php");
+            }
+          break;
+          case "settings-show-names":
+            $query .= "`showNames` = ";
+            if ($value == "on") {
+                $query .= "1, ";
             }
           break;
         }
