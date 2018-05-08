@@ -16,7 +16,7 @@ require "db.php";
 function connect($host, $user, $pw, $db)
 {
     $conn = new mysqli($host, $user, $pw, $db);
-    $conn->set_charset("UTF-8");
+    $conn->set_charset("utf8");
 
     return $conn;
 }
@@ -93,8 +93,7 @@ function shoveDataToArray($result, $query, $target, $userId)
         $result[$userId][$target] = $data;
 
         if ($target == "general") {
-            $result[$userId][$target]["name"]           = utf8_encode($data["name"]);
-                    $daysPlaying                        = round((time("now") - $data["registeredGame"])/86400) + 1;
+            $daysPlaying                                = round((time("now") - $data["registeredGame"])/86400) + 1;
             $result[$userId][$target]["pointsPerDay"]   = round($data["points"] / $daysPlaying);
             $result[$userId][$target]["daysPlaying"]    = $daysPlaying;
             $result[$userId][$target]["registeredGame"] = date("Y-m-j h:i (a)", $data["registeredGame"]);
@@ -706,6 +705,6 @@ foreach ($headers as $header) {
     header($header);
 }
 
-echo json_encode($result, JSON_NUMERIC_CHECK);
+echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
 
 ?>
