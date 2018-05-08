@@ -93,7 +93,8 @@ function shoveDataToArray($result, $query, $target, $userId)
         $result[$userId][$target] = $data;
 
         if ($target == "general") {
-            $daysPlaying                                = round((time("now") - $data["registeredGame"])/86400) + 1;
+            $result[$userId][$target]["name"]           = utf8_encode($data["name"]);
+                    $daysPlaying                        = round((time("now") - $data["registeredGame"])/86400) + 1;
             $result[$userId][$target]["pointsPerDay"]   = round($data["points"] / $daysPlaying);
             $result[$userId][$target]["daysPlaying"]    = $daysPlaying;
             $result[$userId][$target]["registeredGame"] = date("Y-m-j h:i (a)", $data["registeredGame"]);
