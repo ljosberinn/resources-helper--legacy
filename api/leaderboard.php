@@ -705,6 +705,6 @@ foreach ($headers as $header) {
     header($header);
 }
 
-echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+echo json_encode($result, JSON_NUMERIC_CHECK);
 
 ?>
