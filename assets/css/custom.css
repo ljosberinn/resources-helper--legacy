@@ -900,6 +900,10 @@ kbd {
   color: black;
 }
 
+#module-warehouses div.input-group span.input-group-addon:last-of-type {
+  width: 200px;
+}
+
 #missions-accordion a span {
   vertical-align: middle;
 }

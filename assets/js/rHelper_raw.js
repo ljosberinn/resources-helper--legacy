@@ -112,7 +112,6 @@ const rHelper = {
         // warehouse
         'INSRT_warehouseTotalLevel',
         'INSRT_warehouseTotalWorth',
-        'SET_warehouseInputSizeNormalizer',
         // graphs
         'EVNT_priceHistoryOnChange',
         // headquarter
@@ -300,7 +299,6 @@ const rHelper = {
 
         rHelper.methods.INSRT_warehouseTotalLevel();
         rHelper.methods.INSRT_warehouseTotalWorth();
-        rHelper.methods.SET_warehouseInputSizeNormalizer();
         rHelper.methods.API_toggleLoadSuccessorHelper('warehouse');
       });
     },
@@ -892,37 +890,6 @@ const rHelper = {
       });
 
       return marker;
-    },
-    SET_warehouseInputSizeNormalizer() {
-      let [selectors, maxWidth, realSelectors] = [['material', 'products', 'loot', 'units'], '', []];
-
-      $.each(selectors, (i, selector) => {
-        realSelectors.push($(`[id*="warehouse-${selector}-stock-current-"]`));
-      });
-
-      let getMaxWidth = realSelectors => {
-        $.each(realSelectors, (i, el) => {
-          let width = $(el)
-            .next('span')
-            .css('width');
-
-          if (width > maxWidth) {
-            maxWidth = width;
-          }
-        });
-      };
-
-      let setMaxWidth = realSelectors => {
-        $.each(realSelectors, (i, el) => {
-          $(el)
-            .next('span')
-            .css('width', maxWidth);
-        });
-      };
-
-      getMaxWidth(realSelectors);
-
-      setMaxWidth(realSelectors);
     },
     SET_overTimeGraph() {
       'use strict';

@@ -44,6 +44,7 @@ $changelogContent = [
     <strong>General</strong><br />
     - NEW: shortening of big numbers in Leaderboard<br />
     - NEW: highlighting of your row within Leaderboard<br />
+    - NEW: sticky headers for several tables where it makes sense<br />
     <br />
     <strong>Bugfixes</strong><br />
     - <a href='https://github.com/ljosberinn/resources-helper/issues/14' target='_blank' rel='noreferrer noopener'>Typo within mobile view of Tech upgrade combinations</a><br />",
