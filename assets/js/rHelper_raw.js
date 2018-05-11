@@ -3374,10 +3374,7 @@ const rHelper = {
     INSRT_unitsRecyclingProfit(type, id) {
       'use strict';
 
-      let target = $(`#${type}-profit-${id}`);
-      let profit = 0;
-      let result;
-      let color;
+      let [target, profit, result, color] = [$(`#${type}-profit-${id}`), 0, , ];
 
       if (type === 'recycling') {
         profit = rHelper.methods.CALC_recyclingProfit(id);
