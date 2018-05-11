@@ -3435,7 +3435,7 @@ var rHelper = {
               case 1:
               case 2:
               case 3:
-                td.text(tus[i]).attr('data-th', 'Tech-Upgrade ' + i);
+                td.text(tus[i]).attr('data-th', 'Tech-Upgrade ' + (i + 1));
                 break;
               case 4:
                 td.text(combination.factor).attr('data-th', 'Boost');
