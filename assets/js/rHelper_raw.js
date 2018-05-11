@@ -3144,16 +3144,16 @@ const rHelper = {
 
         for (let i = 0; i <= 3; i += 1) {
           if (i === 0) {
-            let cashTarget = $(`#buildings-cash-${buildingId}`);
-            let cash = building.materialAmount0[buildingLevel];
+
+            let [cashTarget, cash] = [$(`#buildings-cash-${buildingId}`), building.materialAmount0[buildingLevel]];
+
             if (typeof cash == 'undefined') {
               cash = 0;
             }
             materialWorthSum += cash;
             cashTarget.text(cash.toLocaleString('en-US'));
           } else {
-            let selector = `materialAmount${i}`;
-            let material = rHelper.methods.CALC_convertId(building.material[i]);
+            let [selector, material] = [`materialAmount${i}`, rHelper.methods.CALC_convertId(building.material[i])];
 
             $(`#buildings-mat-${i}-${buildingId}`).addClass(material.icon);
             let materialAmount = building[selector][buildingLevel];

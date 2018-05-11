@@ -3376,16 +3376,19 @@ var rHelper = {
 
         for (var i = 0; i <= 3; i += 1) {
           if (i === 0) {
-            var cashTarget = $('#buildings-cash-' + buildingId);
-            var cash = building.materialAmount0[buildingLevel];
+            var _ref31 = [$('#buildings-cash-' + buildingId), building.materialAmount0[buildingLevel]],
+              cashTarget = _ref31[0],
+              cash = _ref31[1];
+
             if (typeof cash == 'undefined') {
               cash = 0;
             }
             materialWorthSum += cash;
             cashTarget.text(cash.toLocaleString('en-US'));
           } else {
-            var selector = 'materialAmount' + i;
-            var material = rHelper.methods.CALC_convertId(building.material[i]);
+            var _ref32 = ['materialAmount' + i, rHelper.methods.CALC_convertId(building.material[i])],
+              selector = _ref32[0],
+              material = _ref32[1];
 
             $('#buildings-mat-' + i + '-' + buildingId).addClass(material.icon);
             var materialAmount = building[selector][buildingLevel];
@@ -3823,10 +3826,10 @@ var rHelper = {
 
                   $.each(rHelper.data.units, function(i, unit) {
                     if (i == 1 || i == 4 || i == 5) {
-                      var _ref31 = [unit.profit.craftingPrice, unit.profit.marketPrice * rHelper.data.buildings[9].transportCost, 0],
-                        craftingPrice = _ref31[0],
-                        marketPrice = _ref31[1],
-                        result = _ref31[2];
+                      var _ref33 = [unit.profit.craftingPrice, unit.profit.marketPrice * rHelper.data.buildings[9].transportCost, 0],
+                        craftingPrice = _ref33[0],
+                        marketPrice = _ref33[1],
+                        result = _ref33[2];
 
                       if (marketPrice > craftingPrice) {
                         result = craftingPrice;
@@ -3856,9 +3859,9 @@ var rHelper = {
         };
 
         var calculateMissionReward = function calculateMissionReward(i, mission) {
-          var _ref32 = [mission.rewardId, 0],
-            rewardId = _ref32[0],
-            rewardWorth = _ref32[1];
+          var _ref34 = [mission.rewardId, 0],
+            rewardId = _ref34[0],
+            rewardWorth = _ref34[1];
 
           if (rewardId != -1) {
             $('#mission-reward-' + i).addClass(rHelper.methods.CALC_convertId(rewardId).icon);
@@ -3996,9 +3999,9 @@ var rHelper = {
       }
     },
     CALC_attackLogDetailedUnitStringInsertion: function CALC_attackLogDetailedUnitStringInsertion(type, container) {
-      var _ref33 = [''],
-        content = _ref33[0],
-        unitArray = _ref33[1];
+      var _ref35 = [''],
+        content = _ref35[0],
+        unitArray = _ref35[1];
 
       if (type == 'offense') {
         unitArray = [0, 2, 3];
@@ -4015,10 +4018,10 @@ var rHelper = {
       return content;
     },
     CALC_attackLogDetailedDatasetIteration: function CALC_attackLogDetailedDatasetIteration(i, dataset, dataTHs) {
-      var _ref34 = [$(crEl('tr')).addClass(rHelper.methods.CALC_attackLogSetTRColor(dataset.result)), 'text-md-right text-sm-left', 'bg-success-25'],
-        tr = _ref34[0],
-        textOrientation = _ref34[1],
-        factorBgColorClass = _ref34[2];
+      var _ref36 = [$(crEl('tr')).addClass(rHelper.methods.CALC_attackLogSetTRColor(dataset.result)), 'text-md-right text-sm-left', 'bg-success-25'],
+        tr = _ref36[0],
+        textOrientation = _ref36[1],
+        factorBgColorClass = _ref36[2];
 
       for (var index = 0; index <= 6; index += 1) {
         var td = $(crEl('td')).attr('data-th', dataTHs[index]);
@@ -4047,10 +4050,10 @@ var rHelper = {
             td.html(rHelper.methods.CALC_attackLogDetailedLootString(dataset.loot));
             break;
           case 6:
-            var _ref35 = [dataset.profit, dataset.result, '#dedede'],
-              profit = _ref35[0],
-              result = _ref35[1],
-              profitColor = _ref35[2];
+            var _ref37 = [dataset.profit, dataset.result, '#dedede'],
+              profit = _ref37[0],
+              result = _ref37[1],
+              profitColor = _ref37[2];
 
             if ((profit < 0 && result) || !result) {
               profitColor = 'coral';
@@ -4078,18 +4081,18 @@ var rHelper = {
       return colorClass;
     },
     CALC_attackLogDetailedCoordsTimestampString: function CALC_attackLogDetailedCoordsTimestampString(dataset) {
-      var _ref36 = [dataset.coordinates.lat + ', ' + dataset.coordinates.lon, rHelper.methods.CALC_convertDateToIso(dataset.attackedAt)],
-        coords = _ref36[0],
-        timestamp = _ref36[1];
+      var _ref38 = [dataset.coordinates.lat + ', ' + dataset.coordinates.lon, rHelper.methods.CALC_convertDateToIso(dataset.attackedAt)],
+        coords = _ref38[0],
+        timestamp = _ref38[1];
 
       var a = '<a href="https://www.google.com/maps/search/' + coords + '" target="_blank" rel="noopener nofollow noreferrer">' + coords + '</a>';
 
       return timestamp + ' | ' + a;
     },
     CALC_attackLogDetailedPageButtonToggler: function CALC_attackLogDetailedPageButtonToggler(type, dataContainer) {
-      var _ref37 = [$('#attacklog-detailed-' + type), 'btn-success'],
-        button = _ref37[0],
-        success = _ref37[1];
+      var _ref39 = [$('#attacklog-detailed-' + type), 'btn-success'],
+        button = _ref39[0],
+        success = _ref39[1];
 
       if (type == 'last') {
         if (dataContainer.skipCount == 0) {
@@ -4109,9 +4112,9 @@ var rHelper = {
       var lootString = '';
 
       $.each(lootContainer, function(index, iteration) {
-        var _ref38 = [iteration.type, ''],
-          type = _ref38[0],
-          icon = _ref38[1];
+        var _ref40 = [iteration.type, ''],
+          type = _ref40[0],
+          icon = _ref40[1];
 
         if (type == -1) {
           icon = '<img src="assets/img/cash.png" alt="Cash" />';
@@ -4137,9 +4140,9 @@ var rHelper = {
       return date[1] + ' ' + date[2];
     },
     CALC_currentScanCost: function CALC_currentScanCost() {
-      var _ref39 = [rHelper.data.buildings[0].level, rHelper.methods.CALC_totalMineCount()],
-        techCenterLevel = _ref39[0],
-        mineCount = _ref39[1];
+      var _ref41 = [rHelper.data.buildings[0].level, rHelper.methods.CALC_totalMineCount()],
+        techCenterLevel = _ref41[0],
+        mineCount = _ref41[1];
 
       return Math.round(10000 * Math.pow(2.4, techCenterLevel) * (1 + mineCount / 1000) / 5000) * 5000;
     },
@@ -4183,9 +4186,9 @@ var rHelper = {
     CALC_headquarterRemainingCost: function CALC_headquarterRemainingCost(i, material, userHqLevel) {
       'use strict';
 
-      var _ref40 = [rHelper.methods.CALC_returnPriceViaId(material), rHelper.data.headquarter[userHqLevel].amount - rHelper.data.headquarter.user.paid[i]],
-        price = _ref40[0],
-        missing = _ref40[1];
+      var _ref42 = [rHelper.methods.CALC_returnPriceViaId(material), rHelper.data.headquarter[userHqLevel].amount - rHelper.data.headquarter.user.paid[i]],
+        price = _ref42[0],
+        missing = _ref42[1];
 
       if (missing < 0) {
         missing = 0;
@@ -4214,9 +4217,9 @@ var rHelper = {
     CALC_headquarterLevelCost: function CALC_headquarterLevelCost(level) {
       'use strict';
 
-      var _ref41 = [0, rHelper.data.headquarter[level]],
-        cost = _ref41[0],
-        hqLevel = _ref41[1];
+      var _ref43 = [0, rHelper.data.headquarter[level]],
+        cost = _ref43[0],
+        hqLevel = _ref43[1];
 
       if ($.isArray(hqLevel.material)) {
         $.each(hqLevel.material, function(k, material) {
@@ -4229,9 +4232,9 @@ var rHelper = {
     CALC_headquarterOvwMaterial: function CALC_headquarterOvwMaterial(level) {
       'use strict';
 
-      var _ref42 = [rHelper.data.headquarter[level], ''],
-        hqLevel = _ref42[0],
-        string = _ref42[1];
+      var _ref44 = [rHelper.data.headquarter[level], ''],
+        hqLevel = _ref44[0],
+        string = _ref44[1];
 
       if ($.isArray(hqLevel.material)) {
         $.each(hqLevel.material, function(k, material) {
@@ -5104,11 +5107,11 @@ var rHelper = {
       var factory = rHelper.data.products[factoryId];
       var factoryLevel = factory.factoryLevel;
 
-      var _ref43 = [0, 0, ,],
-        workload = _ref43[0],
-        existingAmount = _ref43[1],
-        thisDependency = _ref43[2],
-        baseAmountRequirement = _ref43[3];
+      var _ref45 = [0, 0, ,],
+        workload = _ref45[0],
+        existingAmount = _ref45[1],
+        thisDependency = _ref45[2],
+        baseAmountRequirement = _ref45[3];
 
       if (nextLevel) {
         factoryLevel += 1;
@@ -5203,18 +5206,18 @@ var rHelper = {
       }
       var nextLevel = factoryLevel + 1;
 
-      var _ref44 = [0, 0, , , $(crEl('table')), $(crEl('tbody'))],
-        sum = _ref44[0],
-        sumTransportation = _ref44[1],
-        td = _ref44[2],
-        small = _ref44[3],
-        table = _ref44[4],
-        tbody = _ref44[5];
+      var _ref46 = [0, 0, , , $(crEl('table')), $(crEl('tbody'))],
+        sum = _ref46[0],
+        sumTransportation = _ref46[1],
+        td = _ref46[2],
+        small = _ref46[3],
+        table = _ref46[4],
+        tbody = _ref46[5];
 
       $.each(rHelper.data.products[factoryId].upgradeMaterialAmount, function(i, amount) {
-        var _ref45 = [$(crEl('tr')), 0],
-          tr = _ref45[0],
-          k = _ref45[1];
+        var _ref47 = [$(crEl('tr')), 0],
+          tr = _ref47[0],
+          k = _ref47[1];
 
         if (i === 0) {
           sum += amount * Math.pow(nextLevel, 2);
