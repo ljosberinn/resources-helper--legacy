@@ -39,10 +39,10 @@ var getCookie = function getCookie(cname) {
   var ca = decodedCookie.split(';');
   for (var i = 0; i < ca.length; i++) {
     var c = ca[i];
-    while (c.charAt(0) == ' ') {
+    while (c.charAt(0) === ' ') {
       c = c.substring(1);
     }
-    if (c.indexOf(name) == 0) {
+    if (c.indexOf(name) === 0) {
       return c.substring(name.length, c.length);
     }
   }
@@ -66,11 +66,11 @@ Array.prototype.max = function() {
 var applyTippyOnNewElement = function applyTippyOnNewElement(el) {
   'use strict';
 
-  if (!el.attr('tippied')) {
+  if (!el.hasClass('tippied')) {
     tippy(el[0], {
       dynamicTitle: true
     });
-    el.attr('tippied', true);
+    el.addClass('tippied');
   }
 };
 
@@ -100,7 +100,7 @@ var switchActiveNavigationLink = function switchActiveNavigationLink(selectedNav
   'use strict';
 
   $('.nav-link').each(function(i, navLink) {
-    if (selectedNav == navLink.id) {
+    if (selectedNav === navLink.id) {
       $(navLink).addClass('active');
     } else {
       $(navLink).removeClass('active');
@@ -112,22 +112,22 @@ var switchActiveModule = function switchActiveModule(targetId) {
   'use strict';
 
   $('main > div').each(function(i, moduleEl) {
-    if (targetId == moduleEl.id) {
+    if (targetId === moduleEl.id) {
       $(moduleEl).css('display', 'block');
     } else {
       $(moduleEl).css('display', 'none');
     }
   });
 
-  if (targetId == 'module-leaderboard') {
+  if (targetId === 'module-leaderboard') {
     rHelper.methods.INSRT_leaderboard();
   }
 
-  if (targetId == 'module-tradelog') {
+  if (targetId === 'module-tradelog') {
     rHelper.methods.API_getTradeLog();
   }
 
-  if (targetId == 'module-techupgrades') {
+  if (targetId === 'module-techupgrades') {
     rHelper.methods.INSRT_techUpgradeRows();
   }
 };
@@ -336,7 +336,7 @@ $('#settings-toggler').on('click', function(e) {
 
   var settings = $('#module-settings');
 
-  if (settings.css('display') == 'block') {
+  if (settings.css('display') === 'block') {
     settings.css('display', 'none');
   } else {
     settings.css('display', 'block');
@@ -435,7 +435,7 @@ $('#techupgrades-input').on('input', function() {
 $('#personalmap-create').on('click', function() {
   'use strict';
 
-  if (rHelper.data.mineMap.length == 0 && getCookie('loggedIn') == 1) {
+  if (rHelper.data.mineMap.length === 0 && isLoggedIn) {
     rHelper.methods.API_getMineMap();
   }
 });
@@ -480,7 +480,7 @@ $('#attacklog-detailed-selector').on('change', function() {
     skipCount = 0;
   }
 
-  if (parseInt(target) == -1) {
+  if (parseInt(target) === -1) {
     target = 0;
     skipCount = 0;
   }
@@ -548,10 +548,6 @@ $('#tradelog-filter-event').on('change', function() {
   if (filter != currentFilter) {
     rHelper.methods.API_getTradeLog(skipCount, filter, dateFilter);
   }
-});
-
-$('#save-button').on('click', function() {
-  rHelper.methods.SET_save();
 });
 
 $('#tradelog-filter-day').on('change', function() {

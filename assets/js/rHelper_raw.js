@@ -48,7 +48,7 @@ const rHelper = {
         // price history
         rHelper.methods.INSRT_priceHistoryName('loot', index);
         // recycling table
-        if (index == 4 || (index >= 10 && index <= 13)) {
+        if (index === 4 || (index >= 10 && index <= 13)) {
           return;
         }
         rHelper.methods.SET_recyclingProfitObj(index);
@@ -176,7 +176,7 @@ const rHelper = {
 
       let el = $(`#api-${selector}-loading`);
 
-      if (el.css('display') == 'none') {
+      if (el.css('display') === 'none') {
         el.fadeIn('fast').css('display', 'flex');
       } else {
         el.fadeOut('fast');
@@ -187,7 +187,7 @@ const rHelper = {
 
       let el = $(`#api-${selector}-finished`);
 
-      if (el.css('display') == 'none') {
+      if (el.css('display') === 'none') {
         el.fadeIn('fast');
       } else {
         el.fadeOut('fast');
@@ -328,7 +328,7 @@ const rHelper = {
 
       rHelper.methods.API_toggleLoader('mines-detailed');
       $.getJSON(`api/core.php?query=5&key=${key}`, data => {
-        if (data.callback == 'rHelper.methods.API_getMineMap()') {
+        if (data.callback === 'rHelper.methods.API_getMineMap()') {
           rHelper.methods.API_getMineMap();
         } else {
           swal('Error', "Couldn't fetch mine details - API potentially unavailable!", 'error');
@@ -358,7 +358,7 @@ const rHelper = {
     API_getAttackLog(type, target, skipCount) {
       'use strict';
 
-      if (typeof type == 'undefined') {
+      if (typeof type === 'undefined') {
         type = 'attackSimple';
       }
 
@@ -423,7 +423,7 @@ const rHelper = {
           btn.attr('disabled', false);
         });
 
-        if (2 == 0) {
+        if (2 === 0) {
           buttons[0].attr('disabled', true);
         }
       });
@@ -434,7 +434,7 @@ const rHelper = {
       rHelper.methods.API_toggleLoader('trade-log');
 
       $.getJSON(`api/core.php?query=6&key=${key}`, data => {
-        if (data.callback != 'rHelper.methods.API_getTradeLog()') {
+        if (data.callback !== 'rHelper.methods.API_getTradeLog()') {
           swal('Error', "Couldn't fetch trade log - API potentially unavailable!", 'error');
         }
         rHelper.methods.API_toggleLoadSuccessorHelper('trade-log');
@@ -454,7 +454,7 @@ const rHelper = {
 
       rHelper.methods.API_toggleLoader('missions');
       $.getJSON(`api/core.php?query=10&key=${key}`, data => {
-        if (data.callback == 'rHelper.methods.API_getMissions()') {
+        if (data.callback === 'rHelper.methods.API_getMissions()') {
           rHelper.methods.API_getMissions();
         }
       });
@@ -602,44 +602,38 @@ const rHelper = {
     SET_save() {
       'use strict';
 
-      const loggedInCookie = parseInt(getCookie('loggedIn'));
-      const hasAPIKeyAttached = typeof rHelper.data.userInformation.realKey;
-
-      if (loggedInCookie == 1 && hasAPIKeyAttached == 'undefined') {
+      if (isLoggedIn) {
         localStorage.setItem('rGame', JSON.stringify(rHelper.data));
-
-        swal('Data has been saved remotely!', '<not implemented yet>', 'error');
-      } else {
       }
     },
     SET_tabSwitcherAnchorBased() {
       'use strict';
 
       let anchor = `#${window.location.hash.substr(1)}`;
-      if (anchor == '#') {
-        if (getCookie('loggedIn') != 1) {
-          anchor = '#registrationlogin';
-        } else {
+      if (anchor === '#') {
+        if (isLoggedIn) {
           anchor = '#factories';
+        } else {
+          anchor = '#registrationlogin';
         }
       }
 
-      if (anchor == '#leaderboard') {
+      if (anchor === '#leaderboard') {
         rHelper.methods.INSRT_leaderboard();
       }
 
-      if (anchor == '#tradelog') {
+      if (anchor === '#tradelog') {
         rHelper.methods.API_getTradeLog();
       }
 
-      if (anchor == '#techupgrades') {
+      if (anchor === '#techupgrades') {
         rHelper.methods.INSRT_techUpgradeRows();
       }
 
       $('.nav-link').each((i, navLink) => {
         let navEl = $(navLink);
         let target = $(`#${navLink.dataset.target}`);
-        if (navEl.attr('href') == anchor) {
+        if (navEl.attr('href') === anchor) {
           target.css('display', 'block');
           navEl.addClass('active');
         } else {
@@ -696,12 +690,12 @@ const rHelper = {
       $.each([tbody, tfoot], (i, el) => {
         switch (state) {
           case 'show':
-            if (el.css('display') == 'none') {
+            if (el.css('display') === 'none') {
               el.css('display', 'table-row-group');
             }
             break;
           case 'hide':
-            if (el.css('display') != 'none') {
+            if (el.css('display') !== 'none') {
               el.css('display', 'none');
             }
             break;
@@ -721,7 +715,7 @@ const rHelper = {
       'use strict';
 
       $.each(rHelper.data.loot, lootId => {
-        if (lootId == 4 || (lootId >= 10 && lootId <= 13)) {
+        if (lootId === 4 || (lootId >= 10 && lootId <= 13)) {
           return;
         }
 
@@ -807,7 +801,7 @@ const rHelper = {
       'use strict';
 
       let folder = 'foe';
-      if (relation == 'friend') {
+      if (relation === 'friend') {
         folder = 'friend';
       }
 
@@ -837,7 +831,7 @@ const rHelper = {
     },
     SET_mapHqCircle(map, hqCenter, radius, relation) {
       let color = '#FF0000';
-      if (relation == 'friend') {
+      if (relation === 'friend') {
         color = '#00FF00';
       }
 
@@ -871,8 +865,8 @@ const rHelper = {
         icon: rHelper.methods.SET_mapImg(rHelper.methods.SET_mapFolderRelation(subObj.relation), type, 20)
       });
 
-      if (mapType == 'personal') {
-        if (subObj.builddate == rHelper.data.mineMap.mines[0].builddate) {
+      if (mapType === 'personal') {
+        if (subObj.builddate === rHelper.data.mineMap.mines[0].builddate) {
           marker.setAnimation(google.maps.Animation.BOUNCE);
         }
       }
@@ -1177,9 +1171,9 @@ const rHelper = {
       $.each(tables, (index, table) => {
         sorttable.makeSortable(table);
 
-        if (index == 2) {
+        if (index === 2) {
           sorttable.innerSortFunction.apply($('#module-diamond th')[5], []);
-        } else if (index == 4) {
+        } else if (index === 4) {
           // sorting twice for cheapest price first...
           sorttable.innerSortFunction.apply($('#techupgrades-combinations-tbl th')[5], []);
           sorttable.innerSortFunction.apply($('#techupgrades-combinations-tbl th')[5], []);
@@ -1323,13 +1317,13 @@ const rHelper = {
 
         rHelper.methods.SET_globalObject('buildings', buildingId, 'level', value);
 
-        if (buildingId == 9) {
+        if (buildingId === 9) {
           rHelper.methods.SET_transportCost();
-        } else if (buildingId == 5) {
+        } else if (buildingId === 5) {
           rHelper.methods.SET_recyclingPlantLevel();
         }
 
-        if (buildingId == 3 || buildingId == 4 || buildingId == 9) {
+        if (buildingId === 3 || buildingId === 4 || buildingId === 9) {
           $.each(rHelper.data.units, unitId => {
             rHelper.methods.INSRT_unitsPricePerStrength(unitId);
           });
@@ -1483,7 +1477,7 @@ const rHelper = {
             let date = rHelper.methods.CALC_convertDateToIso(rHelper.methods.CALC_toMilliseconds(dataset.ts));
             timestamps.push(date);
 
-            if (dataset.player == 0) {
+            if (dataset.player === 0) {
               dataset.player = null;
             }
             player.push(dataset.player);
@@ -1582,7 +1576,7 @@ const rHelper = {
       let returnPlayerTitle = dataset => {
         let [rank, registeredGame, daysPlaying] = [dataset.general.rank.toLocaleString('en-US'), dataset.general.registeredGame, dataset.general.daysPlaying.toLocaleString('en-US')];
 
-        if (rank == 0) {
+        if (rank === 0) {
           rank = registeredGame = daysPlaying = 'unknown';
         }
 
@@ -1655,23 +1649,23 @@ const rHelper = {
           dataset.tradeData.sumKISell.toLocaleString('en-US')
         ];
 
-        if (name == '') {
+        if (name === '') {
           level = '';
         } else {
           level = `(${level})`;
         }
 
-        if (pointsPerDay == 0) {
+        if (pointsPerDay === 0) {
           pointsPerDay = points = '';
         } else {
           points = `(${points})`;
         }
 
-        if (headquarterMines == 0) {
+        if (headquarterMines === 0) {
           headquarterMines = '';
         }
 
-        if (tradeIncome == 0) {
+        if (tradeIncome === 0) {
           tradeIncome = totalBuy = totalSell = sumKISell = '';
         }
 
@@ -1822,9 +1816,9 @@ const rHelper = {
         const setSkipCount = () => {
           const currentDaysFilter = daysFilterSelect.val();
 
-          if (currentDaysFilter != null) {
+          if (currentDaysFilter !== null) {
             $.each(daysFilterSelect.children('option'), (i, el) => {
-              if ($(el).val() == currentDaysFilter) {
+              if ($(el).val() === currentDaysFilter) {
                 rHelper.data.tradeLog.skipCount = i - 1;
               }
             });
@@ -1844,7 +1838,7 @@ const rHelper = {
 
           let [datasetSum, action, profitClass, trClass] = [dataset.price * dataset.amount, 'Selling to ', 'success', ''];
 
-          if (dataset.event == 0) {
+          if (dataset.event === 0) {
             datasetSum *= -1;
             action = 'Buying from ';
             profitClass = 'danger';
@@ -1852,7 +1846,7 @@ const rHelper = {
 
           sum += datasetSum;
 
-          if (dataset.actor == 'KI') {
+          if (dataset.actor === 'KI') {
             trClass = 'class="ki-sell"';
           }
 
@@ -1943,7 +1937,7 @@ const rHelper = {
                 y: amount
               };
 
-              if (containerMax == amount) {
+              if (containerMax === amount) {
                 obj.sliced = true;
                 obj.selected = true;
               }
@@ -2027,7 +2021,7 @@ const rHelper = {
 
       target.empty();
 
-      if (select[0].children.length == 2) {
+      if (select[0].children.length === 2) {
         $.each(dataContainer.validTargets, (i, target) => {
           select.append(`<option value="${target}">${target}</option>`);
         });
@@ -2056,7 +2050,7 @@ const rHelper = {
 
       target.empty();
 
-      if (type == 'defenseSimple') {
+      if (type === 'defenseSimple') {
         dataTHs[0] = 'Attacking player (last known level)';
         sortableTable = $('#collapse-defenselog-simple table')[0];
         target = $('#defenselog-tbody-simple');
@@ -2080,17 +2074,17 @@ const rHelper = {
               td.text(`${dataset.sumAttacks.toLocaleString('en-US')} (${winPercent}%)`).addClass(textOrientation);
               break;
             case 3:
-              if (type == 'defenseSimple') {
+              if (type === 'defenseSimple') {
                 loss = dataset.sumAttacks - dataset.sumWin;
                 td.text(loss.toLocaleString('en-US')).addClass(textOrientation);
-              } else if (type == 'attackSimple') {
+              } else if (type === 'attackSimple') {
                 td.text(dataset.sumWin.toLocaleString('en-US')).addClass(textOrientation);
               }
               break;
             case 4:
-              if (type == 'defenseSimple') {
+              if (type === 'defenseSimple') {
                 td.text(dataset.sumWin.toLocaleString('en-US')).addClass(textOrientation);
-              } else if (type == 'attackSimple') {
+              } else if (type === 'attackSimple') {
                 loss = dataset.sumAttacks - dataset.sumWin;
                 td.text(loss.toLocaleString('en-US')).addClass(textOrientation);
               }
@@ -2107,7 +2101,7 @@ const rHelper = {
                 let span = $(crEl('span'));
                 span.addClass(`resources-unit-${unitIndices[k]}`);
                 let unitAmount = dataset[`unit${k}`];
-                if (unitAmount == null) {
+                if (unitAmount === null) {
                   unitAmount = 0;
                 }
                 unitsContent += `${span[0].outerHTML} ${unitAmount.toLocaleString('en-US')} `;
@@ -2117,7 +2111,7 @@ const rHelper = {
               break;
             case 7:
               let profit = dataset.profit;
-              if (profit == null) {
+              if (profit === null) {
                 profit = 0;
               }
 
@@ -2216,7 +2210,7 @@ const rHelper = {
         rHelper.methods[fn](index, type);
       });
 
-      if (type == 'products' || type == 'material') {
+      if (type === 'products' || type === 'material') {
         rHelper.methods.INSRT_warehouseRemainingTimeToFull(index, type);
       }
     },
@@ -2407,7 +2401,7 @@ const rHelper = {
     INSRT_gaugeGraph(type) {
       'use strict';
 
-      if (type == 'buildings') {
+      if (type === 'buildings') {
         Highcharts.chart(
           'graph-buildings',
           Highcharts.merge(rHelper.graphs.gaugeOptions, {
@@ -2426,7 +2420,7 @@ const rHelper = {
             ]
           })
         );
-      } else if (type == 'headquarter') {
+      } else if (type === 'headquarter') {
         Highcharts.chart(
           'graph-headquarter',
           Highcharts.merge(rHelper.graphs.gaugeOptions, {
@@ -2473,7 +2467,7 @@ const rHelper = {
       let userInfo = rHelper.data.userInformation;
       $('#security-token').text(userInfo.securityToken);
 
-      if (userInfo.realKey != '' && typeof userInfo.realKey !== undefined) {
+      if (userInfo.realKey !== '' && typeof userInfo.realKey !== undefined) {
         $('#api-key').val(userInfo.realKey);
         rHelper.methods.INSRT_API_remainingCredits(userInfo.remainingCredits);
       }
@@ -2714,7 +2708,7 @@ const rHelper = {
 
       let [target, amortisation] = [`#factories-roi-${factoryId}`, rHelper.methods.CALC_factoryAmortisation(factoryId)];
 
-      if (amortisation < 0 || amortisation == Infinity) {
+      if (amortisation < 0 || amortisation === Infinity) {
         amortisation = '∞';
       } else {
         amortisation = amortisation.toFixed(2);
@@ -2801,12 +2795,12 @@ const rHelper = {
         $.each(rHelper.data.products, (k, factory) => {
           $(column + k).removeClass('text-success text-danger');
           let value = 0;
-          if (typeof subArray == 'object') {
+          if (typeof subArray === 'object') {
             value = factory.diamond.profit;
           } else {
             value = factory[subArray];
           }
-          if (rHelper.data.products[k].turnover > 0 && value != -Infinity && value != Infinity && value > 0) {
+          if (rHelper.data.products[k].turnover > 0 && value !== -Infinity && value !== Infinity && value > 0) {
             valueArray.push(value);
             idArray.push(k);
           }
@@ -2957,7 +2951,7 @@ const rHelper = {
 
       let [target, rate] = [$(`#flow-${type}-rate-${id}`), rHelper.methods.CALC_flowRate(id, type)];
 
-      if (type == 'product') {
+      if (type === 'product') {
         if (rHelper.data.products[id].turnover < 0) {
           rate = 0;
         }
@@ -3023,10 +3017,10 @@ const rHelper = {
           break;
       }
 
-      if (type == 'product') {
+      if (type === 'product') {
         if (rHelper.data.products[id].turnover < 0) {
           remainingAmount *= -1;
-          if (rHelper.data.products[id].dependantFactories == '') {
+          if (rHelper.data.products[id].dependantFactories === '') {
             remainingAmount = 0;
           }
         } else {
@@ -3144,10 +3138,9 @@ const rHelper = {
 
         for (let i = 0; i <= 3; i += 1) {
           if (i === 0) {
-
             let [cashTarget, cash] = [$(`#buildings-cash-${buildingId}`), building.materialAmount0[buildingLevel]];
 
-            if (typeof cash == 'undefined') {
+            if (typeof cash === 'undefined') {
               cash = 0;
             }
             materialWorthSum += cash;
@@ -3190,7 +3183,7 @@ const rHelper = {
 
       const iterateTUData = () => {
         $.each(rHelper.tu, (index, combination) => {
-          if (typeof tu4Trigger == 'undefined' && combination.tu4 != 0) {
+          if (typeof tu4Trigger === 'undefined' && combination.tu4 != 0) {
             return;
           }
           let tr = $(crEl('tr'));
@@ -3237,7 +3230,7 @@ const rHelper = {
         prices.push(rHelper.methods.CALC_returnPriceViaId(i, 0));
       }
 
-      if (rHelper.tu.length == 0) {
+      if (rHelper.tu.length === 0) {
         $.getJSON('api/tu.json', data => {
           rHelper.tu = data;
           iterateTUData();
@@ -3252,7 +3245,7 @@ const rHelper = {
       toggleTechUpgradeInfo('start');
       let table = $('#techupgrades-calc-tbl');
 
-      if (table.css('display') == 'none') {
+      if (table.css('display') === 'none') {
         table.css('display', 'table');
       }
 
@@ -3260,7 +3253,7 @@ const rHelper = {
       target.empty();
 
       let url = `api/getTechCombination.php?factor=${value}`;
-      if (typeof tu4Inclusion == 'string') {
+      if (typeof tu4Inclusion === 'string') {
         url += '&tu4=allowed';
       }
 
@@ -3355,9 +3348,9 @@ const rHelper = {
       let result;
       let color;
 
-      if (type == 'recycling') {
+      if (type === 'recycling') {
         profit = rHelper.methods.CALC_recyclingProfit(id);
-      } else if (type == 'units') {
+      } else if (type === 'units') {
         profit = rHelper.methods.CALC_unitsProfit(id);
       }
 
@@ -3516,7 +3509,7 @@ const rHelper = {
     INSRT_qualityComparator(type, quality) {
       'use strict';
 
-      if (!type || type == null) {
+      if (!type || type === null) {
         type = 0;
       }
       if (!quality) {
@@ -3537,7 +3530,7 @@ const rHelper = {
         let thisResourcesRequiredAmount = worth / thisPrice;
 
         // hide row if identical to current scan or more required than possible
-        if (i == type || thisResourcesRequiredAmount > thisMaxRate) {
+        if (i === type || thisResourcesRequiredAmount > thisMaxRate) {
           parentElement.css('opacity', 0.1);
         } else {
           parentElement.css('opacity', 1);
@@ -3556,7 +3549,7 @@ const rHelper = {
         let calculateMissionCost = (i, mission) => {
           let [uncalculatableMissions, requirementId, materialCost, missionCost] = [[9, 12, 17, 21, 22, 25, 30, 31, 32, 35, 37, 38, 41, 42, 43, 44, 50, 55], 0, 0, 0];
 
-          if (uncalculatableMissions.indexOf(i) == -1) {
+          if (uncalculatableMissions.indexOf(i) === -1) {
             switch (i) {
               case 10:
                 missionCost += rHelper.data.units[5].profit.craftingPrice * mission.goal;
@@ -3566,13 +3559,13 @@ const rHelper = {
               case 28:
               case 31:
               case 39:
-                if (i == 26) {
+                if (i === 26) {
                   requirementId = 29;
-                } else if (i == 28) {
+                } else if (i === 28) {
                   requirementId = 21;
-                } else if (i == 31) {
+                } else if (i === 31) {
                   requirementId = 20;
-                } else if (i == 39) {
+                } else if (i === 39) {
                   requirementId = 25;
                 }
 
@@ -3587,7 +3580,7 @@ const rHelper = {
                   let min = Infinity;
 
                   $.each(rHelper.data.units, (i, unit) => {
-                    if (i == 1 || i == 4 || i == 5) {
+                    if (i === 1 || i === 4 || i === 5) {
                       let [craftingPrice, marketPrice, result] = [unit.profit.craftingPrice, unit.profit.marketPrice * rHelper.data.buildings[9].transportCost, 0];
 
                       if (marketPrice > craftingPrice) {
@@ -3734,7 +3727,7 @@ const rHelper = {
         };
 
         let checkForMissionStatus = (i, mission) => {
-          if (mission.status == 1) {
+          if (mission.status === 1) {
             onActiveMission(i, mission);
           } else {
             onPassiveMission(i, mission);
@@ -3759,14 +3752,14 @@ const rHelper = {
     CALC_attackLogDetailedUnitStringInsertion(type, container) {
       let [content, unitArray] = [''];
 
-      if (type == 'offense') {
+      if (type === 'offense') {
         unitArray = [0, 2, 3];
-      } else if (type == 'defense') {
+      } else if (type === 'defense') {
         unitArray = [5, 4, 1];
       }
 
       $.each(container, (i, unitAmount) => {
-        if (unitAmount != 0) {
+        if (unitAmount !== 0) {
           content += ' <span class="resources-unit-' + unitArray[i] + '"></span> ' + unitAmount.toLocaleString('en-US');
         }
       });
@@ -3839,13 +3832,13 @@ const rHelper = {
     CALC_attackLogDetailedPageButtonToggler(type, dataContainer) {
       let [button, success] = [$(`#attacklog-detailed-${type}`), 'btn-success'];
 
-      if (type == 'last') {
-        if (dataContainer.skipCount == 0) {
+      if (type === 'last') {
+        if (dataContainer.skipCount === 0) {
           button.attr('disabled', true).removeClass(success);
         } else {
           button.attr('disabled', false).addClass(success);
         }
-      } else if (type == 'next') {
+      } else if (type === 'next') {
         if (dataContainer.maxLength > dataContainer.skipCount + 100) {
           button.addClass(success).attr('disabled', false);
         } else {
@@ -3859,7 +3852,7 @@ const rHelper = {
       $.each(lootContainer, (index, iteration) => {
         let [type, icon] = [iteration.type, ''];
 
-        if (type == -1) {
+        if (type === -1) {
           icon = '<img src="assets/img/cash.png" alt="Cash" />';
         } else {
           icon = '<span class="' + rHelper.methods.CALC_convertId(type).icon + '"></span>';
@@ -4025,13 +4018,13 @@ const rHelper = {
 
       let total = 0;
 
-      if (type == 'headquarter') {
+      if (type === 'headquarter') {
         $.each(rHelper.data.headquarter, (i, hqLevel) => {
           $.each(hqLevel.material, (k, material) => {
             total += hqLevel.amount * rHelper.methods.CALC_returnPriceViaId(material);
           });
         });
-      } else if (type == 'buildings') {
+      } else if (type === 'buildings') {
         $.each(rHelper.data.buildings, (i, building) => {
           for (let level = 0; level < 10; level += 1) {
             $.each(building.material, (k, material) => {
@@ -4157,7 +4150,7 @@ const rHelper = {
         transportCostInclusion = rHelper.data.settings[3].value;
       }
 
-      if (transportCostInclusion == 1) {
+      if (transportCostInclusion === 1) {
         worth *= rHelper.data.buildings[9].transportCost;
       }
 
@@ -4234,7 +4227,7 @@ const rHelper = {
         transportCostInclusion = rHelper.data.settings[3].value;
       }
 
-      if (transportCostInclusion == 1) {
+      if (transportCostInclusion === 1) {
         worth *= rHelper.data.buildings[9].transportCost;
       }
 
@@ -4419,15 +4412,15 @@ const rHelper = {
       let remainingCapacity = el.warehouse.contingent - el.warehouse.fillAmount;
       let [remainingTime, divisor] = [0, 1];
 
-      if (type == 'material') {
+      if (type === 'material') {
         divisor = el.perHour;
-      } else if (type == 'products') {
+      } else if (type === 'products') {
         divisor = el.scaling * el.factoryLevel * rHelper.methods.CALC_factoryMinWorkload(id);
       }
 
       remainingTime = remainingCapacity / divisor;
 
-      if (isNaN(remainingTime) || (type == 'products' && el.turnover <= 0) || type == 'loot' || type == 'units' || remainingTime === Infinity) {
+      if (isNaN(remainingTime) || (type === 'products' && el.turnover <= 0) || type === 'loot' || type === 'units' || remainingTime === Infinity) {
         remainingTime = '∞';
       } else {
         if (remainingTime > 24) {
@@ -4478,7 +4471,7 @@ const rHelper = {
         '<svg xmlns="http://www.w3.org/2000/svg" width="15" fill="#fff" viewBox="0 0 31.49 31.49"><path d="M21.205 5.007c-.429-.444-1.143-.444-1.587 0-.429.429-.429 1.143 0 1.571l8.047 8.047H1.111C.492 14.626 0 15.118 0 15.737c0 .619.492 1.127 1.111 1.127h26.554l-8.047 8.032c-.429.444-.429 1.159 0 1.587.444.444 1.159.444 1.587 0l9.952-9.952c.444-.429.444-1.143 0-1.571l-9.952-9.953z"/></svg>'
       ];
 
-      if (type == 'material') {
+      if (type === 'material') {
         dependantIconIndex = dependantFactory - 14;
         dependantObj = rHelper.data.products[dependantIconIndex];
 
@@ -4582,7 +4575,7 @@ const rHelper = {
       }
 
       // check for ideal conditions
-      if (rHelper.data.settings[2].value == 1) {
+      if (rHelper.data.settings[2].value === 1) {
         workload = 1;
       }
 
@@ -4656,7 +4649,7 @@ const rHelper = {
       let outputAmount = factory.factoryLevel * factory.scaling * 5 * 24;
       let productionCost = 5 * 24 * factory.cashPerHour;
 
-      if (factory.factoryLevel == 0) {
+      if (factory.factoryLevel === 0) {
         productionCost = 0;
       }
 
@@ -4672,7 +4665,7 @@ const rHelper = {
     CALC_dependantFactoriesHelper(dependantFactory, type) {
       'use strict';
 
-      if (type == 'material') {
+      if (type === 'material') {
         dependantFactory -= 14;
       }
 
@@ -4750,7 +4743,7 @@ const rHelper = {
       let workload = rHelper.data.products[factoryId].dependencyWorkload.min();
 
       // check for ideal conditions
-      if (rHelper.data.settings[2].value == 1) {
+      if (rHelper.data.settings[2].value === 1) {
         workload = 1;
       }
 
@@ -4783,7 +4776,7 @@ const rHelper = {
       let outputWorth = factory.scaling * factoryLevel * price;
 
       // check for ideal conditions
-      if (rHelper.data.settings[2].value == 1) {
+      if (rHelper.data.settings[2].value === 1) {
         workload = 1;
       }
 
@@ -4859,7 +4852,7 @@ const rHelper = {
       }
 
       // check for ideal conditions
-      if (rHelper.data.settings[2].value == 1) {
+      if (rHelper.data.settings[2].value === 1) {
         workload = 1;
       }
 
@@ -4916,7 +4909,7 @@ const rHelper = {
       'use strict';
 
       let factoryLevel = rHelper.data.products[factoryId].factoryLevel;
-      if (typeof factoryLevel == 'undefined' || !factoryLevel) {
+      if (typeof factoryLevel === 'undefined' || !factoryLevel) {
         factoryLevel = 0;
       }
       let nextLevel = factoryLevel + 1;
@@ -5059,7 +5052,7 @@ const rHelper = {
       let possiblePrices = ['current', '1day', '3days', '7days', '4weeks', '3months', '6months', '1year', 'max'];
 
       let index = 0;
-      if (typeof period == 'undefined') {
+      if (typeof period === 'undefined') {
         let settings = rHelper.data.settings[5];
         let priceAgeSetting = 2;
 
@@ -5236,10 +5229,18 @@ const rHelper = {
   tu: []
 };
 
+let openedWindow;
+let isLoggedIn = false;
+
 (() => {
   $('#loading-text').text('fetching data');
 
-  if (typeof localStorage.rGame != 'undefined' && getCookie('loggedIn') != 1) {
+  const cookieCheck = parseInt(getCookie('loggedIn'));
+  if (cookieCheck === 1) {
+    isLoggedIn = true;
+  }
+
+  if (typeof localStorage.rGame != 'undefined' && !isLoggedIn) {
     // if logged out and data in localStorage
     rHelper.data = JSON.parse(localStorage.getItem('rGame'));
     loadingAnimToggler('hide');
@@ -5253,14 +5254,13 @@ const rHelper = {
         rHelper.data = response;
         localStorage.setItem('rGame', JSON.stringify(response));
         loadingAnimToggler('hide');
-        switch (parseInt(getCookie('loggedIn'))) {
-          case 1:
-            console.log('Returning user - fetched existing data!');
-            break;
-          default:
-            console.log('New user - fetched basic data!');
-            break;
+
+        if (isLoggedIn) {
+          console.log('Returning user - fetched existing data!');
+        } else {
+          console.log('New user - fetched basic data!');
         }
+
         rHelper.init.user();
       },
       error: response => {
@@ -5269,5 +5269,3 @@ const rHelper = {
     });
   }
 })();
-
-let openedWindow;

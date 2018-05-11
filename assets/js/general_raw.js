@@ -36,10 +36,10 @@ const getCookie = cname => {
   let ca = decodedCookie.split(';');
   for (let i = 0; i < ca.length; i++) {
     let c = ca[i];
-    while (c.charAt(0) == ' ') {
+    while (c.charAt(0) === ' ') {
       c = c.substring(1);
     }
-    if (c.indexOf(name) == 0) {
+    if (c.indexOf(name) === 0) {
       return c.substring(name.length, c.length);
     }
   }
@@ -94,7 +94,7 @@ const changeElementClasses = (el, rmvClass, addClass) => {
 const switchActiveNavigationLink = selectedNav => {
   'use strict';
   $('.nav-link').each((i, navLink) => {
-    if (selectedNav == navLink.id) {
+    if (selectedNav === navLink.id) {
       $(navLink).addClass('active');
     } else {
       $(navLink).removeClass('active');
@@ -105,22 +105,22 @@ const switchActiveNavigationLink = selectedNav => {
 const switchActiveModule = targetId => {
   'use strict';
   $('main > div').each((i, moduleEl) => {
-    if (targetId == moduleEl.id) {
+    if (targetId === moduleEl.id) {
       $(moduleEl).css('display', 'block');
     } else {
       $(moduleEl).css('display', 'none');
     }
   });
 
-  if (targetId == 'module-leaderboard') {
+  if (targetId === 'module-leaderboard') {
     rHelper.methods.INSRT_leaderboard();
   }
 
-  if (targetId == 'module-tradelog') {
+  if (targetId === 'module-tradelog') {
     rHelper.methods.API_getTradeLog();
   }
 
-  if (targetId == 'module-techupgrades') {
+  if (targetId === 'module-techupgrades') {
     rHelper.methods.INSRT_techUpgradeRows();
   }
 };
@@ -327,7 +327,7 @@ $('#settings-toggler').on('click', e => {
 
   let settings = $('#module-settings');
 
-  if (settings.css('display') == 'block') {
+  if (settings.css('display') === 'block') {
     settings.css('display', 'none');
   } else {
     settings.css('display', 'block');
@@ -422,7 +422,7 @@ $('#techupgrades-input').on('input', function() {
 $('#personalmap-create').on('click', () => {
   'use strict';
 
-  if (rHelper.data.mineMap.length == 0 && getCookie('loggedIn') == 1) {
+  if (rHelper.data.mineMap.length === 0 && isLoggedIn) {
     rHelper.methods.API_getMineMap();
   }
 });
@@ -459,7 +459,7 @@ $('#attacklog-detailed-selector').on('change', function() {
     skipCount = 0;
   }
 
-  if (parseInt(target) == -1) {
+  if (parseInt(target) === -1) {
     target = 0;
     skipCount = 0;
   }
@@ -511,10 +511,6 @@ $('#tradelog-filter-event').on('change', function() {
   if (filter != currentFilter) {
     rHelper.methods.API_getTradeLog(skipCount, filter, dateFilter);
   }
-});
-
-$('#save-button').on('click', () => {
-  rHelper.methods.SET_save();
 });
 
 $('#tradelog-filter-day').on('change', function() {
