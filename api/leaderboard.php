@@ -3,6 +3,8 @@
 require "class.resourcesGame.php";
 require "db.php";
 
+session_start();
+
 /**
  * Connects to database
  *
@@ -535,6 +537,10 @@ function generateLeaderboardData($conn, $prices)
 
     foreach ($userIds as $userId) {
         $result[$userId] = $template;
+
+        if ($userId === $_SESSION['id']) {
+            $result[$userId]['you'] = true;
+        }
 
         $preparableQueries = [
             "generalDataQuery"     => "general",

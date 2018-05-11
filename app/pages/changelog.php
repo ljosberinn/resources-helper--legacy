@@ -8,8 +8,12 @@
 <?php
 
 $changelogIndex = [
-  4 => [
+  5 => [
     "class" => "active",
+    "title" => "Resources Helper 3.0.3",
+  ],
+  4 => [
+    "class" => "",
     "title" => "Resources Helper 3.0.2",
   ],
   3 => [
@@ -32,8 +36,20 @@ $changelogIndex = [
 
 $changelogContent = [
 
-  4 => [
+  5 => [
     "class" => "show active",
+    "title" => "Resources Helper 3.0.3",
+    "date" => "May 11th 2018",
+    "description" => "
+    <strong>General</strong><br />
+    - NEW: shortening of big numbers in Leaderboard<br />
+    - NEW: highlighting of your row within Leaderboard<br />
+    <br />
+    <strong>Bugfixes</strong><br />
+    - <a href='https://github.com/ljosberinn/resources-helper/issues/14' target='_blank' rel='noreferrer noopener'>Typo within mobile view of Tech upgrade combinations</a><br />",
+  ],
+  4 => [
+    "class" => "",
     "title" => "Resources Helper 3.0.2",
     "date" => "May 7th 2018",
     "description" => "
