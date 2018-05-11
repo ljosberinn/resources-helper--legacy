@@ -136,7 +136,8 @@ var rHelper = {
         'EVNT_sortableTables',
         'EVNT_assignTitleToIcons',
         'EVNT_enableTippy',
-        'INSRT_showNames'
+        'INSRT_showNames',
+        'SET_stickyHeaders'
       ];
 
       $.each(nonParamBoundMethods, function(i, fn) {
@@ -172,6 +173,21 @@ var rHelper = {
         20,
         21 // tertiary order - dependant on products
       ];
+    },
+    SET_stickyHeaders: function SET_stickyHeaders() {
+      var stickyTables = [
+        '#module-leaderboard table',
+        '#module-factories table',
+        '#module-mines table',
+        '#module-diamond table',
+        '#module-warehouses table',
+        '#techupgrades-combinations-tbl',
+        '#module-missions table'
+      ];
+
+      $.each(stickyTables, function(i, el) {
+        $(el).stickyTableHeaders();
+      });
     },
     API_toggleLoadSuccessorHelper: function API_toggleLoadSuccessorHelper(target) {
       'use strict';
@@ -1637,31 +1653,35 @@ var rHelper = {
       };
 
       var numberReducer = function numberReducer(number) {
-        var length = ('' + number).length;
-        var divisor = 1,
-          unit = '';
+        if (number !== 0) {
+          var length = ('' + number).length;
+          var divisor = 1,
+            unit = '';
 
-        if (length >= 4 && length < 7) {
-          divisor = 1000;
-          unit = 'k';
-        } else if (length >= 7 && length < 10) {
-          divisor = 1000000;
-          unit = 'M';
-        } else if (length >= 10 && length < 13) {
-          divisor = 1000000000;
-          unit = 'G';
-        } else if (length >= 13 && length < 16) {
-          divisor = 1000000000000;
-          unit = 'T';
-        } else if (length >= 16 && length < 19) {
-          divisor = 1000000000000000;
-          unit = 'P';
-        } else if (length >= 19 && length < 22) {
-          divisor = 1000000000000000000;
-          unit = 'E';
+          if (length >= 4 && length < 7) {
+            divisor = 1000;
+            unit = 'k';
+          } else if (length >= 7 && length < 10) {
+            divisor = 1000000;
+            unit = 'M';
+          } else if (length >= 10 && length < 13) {
+            divisor = 1000000000;
+            unit = 'G';
+          } else if (length >= 13 && length < 16) {
+            divisor = 1000000000000;
+            unit = 'T';
+          } else if (length >= 16 && length < 19) {
+            divisor = 1000000000000000;
+            unit = 'P';
+          } else if (length >= 19 && length < 22) {
+            divisor = 1000000000000000000;
+            unit = 'E';
+          }
+
+          return parseFloat((number / divisor).toFixed(3)) + ' ' + unit;
+        } else {
+          return '';
         }
-
-        return parseFloat((number / divisor).toFixed(3)) + ' ' + unit;
       };
 
       var returnCompanyWorthTitle = function returnCompanyWorthTitle(dataset) {

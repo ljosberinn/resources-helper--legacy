@@ -18,6 +18,15 @@ $columns = [
   "Company worth (hover for details)" => $textOrientation,
 ];
 
+$unitInformation = [
+  "E" => 18,
+  "P" => 15,
+  "T" => 12,
+  "G" => 9,
+  "M" => 6,
+  "k" => 3,
+];
+
 $arrayKeys = array_keys($columns);
 
 ?>
@@ -26,7 +35,17 @@ $arrayKeys = array_keys($columns);
   <h6><span class="nav-icon-leaderboard"></span> Leaderboard - values based on average of last 3 days</h6>
   <hr class="mb-3">
 
-  <p class="lead text-center">Unit information: E > P > T > G > M > k</p>
+  <p class="lead text-center">Unit information:
+
+    <?php
+
+    foreach ($unitInformation as $unit => $exponent) {
+        echo $unit. ' <span class="small">(10<sup>' .$exponent. '</sup>)</span> ';
+    }
+
+    ?>
+
+  </p>
 
   <div class="row">
     <div class="bg-light mt-3 mb-3 p-4 col-12 rounded">

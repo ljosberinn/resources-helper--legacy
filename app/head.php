@@ -127,6 +127,7 @@ if (isset($_SESSION["id"])) {
 <script src="https://code.highcharts.com/highcharts-more.js"></script>
 <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7JN_jcvNN6DmE87oBDzLluIMZsvrF0zw" async></script>
+<script src="https://unpkg.com/sticky-table-headers"></script>
 
 <!-- JS internal -->
 <?php

@@ -120,12 +120,14 @@ const rHelper = {
         'EVNT_headquarterInput',
         // missions
         'INSRT_missions',
+        // general
         'EVNT_attackLogTrigger',
         'INSRT_companyWorth',
         'EVNT_sortableTables',
         'EVNT_assignTitleToIcons',
         'EVNT_enableTippy',
-        'INSRT_showNames'
+        'INSRT_showNames',
+        'SET_stickyHeaders'
       ];
 
       $.each(nonParamBoundMethods, (i, fn) => {
@@ -161,6 +163,21 @@ const rHelper = {
         20,
         21 // tertiary order - dependant on products
       ];
+    },
+    SET_stickyHeaders() {
+      const stickyTables = [
+        '#module-leaderboard table',
+        '#module-factories table',
+        '#module-mines table',
+        '#module-diamond table',
+        '#module-warehouses table',
+        '#techupgrades-combinations-tbl',
+        '#module-missions table'
+      ];
+
+      $.each(stickyTables, (i, el) => {
+        $(el).stickyTableHeaders();
+      });
     },
     API_toggleLoadSuccessorHelper(target) {
       'use strict';
@@ -1587,30 +1604,34 @@ const rHelper = {
       };
 
       const numberReducer = number => {
-        const length = `${number}`.length;
-        let [divisor, unit] = [1, ''];
+        if (number !== 0) {
+          const length = `${number}`.length;
+          let [divisor, unit] = [1, ''];
 
-        if (length >= 4 && length < 7) {
-          divisor = 1000;
-          unit = 'k';
-        } else if (length >= 7 && length < 10) {
-          divisor = 1000000;
-          unit = 'M';
-        } else if (length >= 10 && length < 13) {
-          divisor = 1000000000;
-          unit = 'G';
-        } else if (length >= 13 && length < 16) {
-          divisor = 1000000000000;
-          unit = 'T';
-        } else if (length >= 16 && length < 19) {
-          divisor = 1000000000000000;
-          unit = 'P';
-        } else if (length >= 19 && length < 22) {
-          divisor = 1000000000000000000;
-          unit = 'E';
+          if (length >= 4 && length < 7) {
+            divisor = 1000;
+            unit = 'k';
+          } else if (length >= 7 && length < 10) {
+            divisor = 1000000;
+            unit = 'M';
+          } else if (length >= 10 && length < 13) {
+            divisor = 1000000000;
+            unit = 'G';
+          } else if (length >= 13 && length < 16) {
+            divisor = 1000000000000;
+            unit = 'T';
+          } else if (length >= 16 && length < 19) {
+            divisor = 1000000000000000;
+            unit = 'P';
+          } else if (length >= 19 && length < 22) {
+            divisor = 1000000000000000000;
+            unit = 'E';
+          }
+
+          return `${parseFloat((number / divisor).toFixed(3))} ${unit}`;
+        } else {
+          return '';
         }
-
-        return `${parseFloat((number / divisor).toFixed(3))} ${unit}`;
       };
 
       const returnCompanyWorthTitle = dataset => {
@@ -1708,7 +1729,7 @@ const rHelper = {
 
         let trClass = '';
 
-        if(dataset.you) {
+        if (dataset.you) {
           trClass = 'style="background-color: rgba(154, 205, 50, 0.1) !important;"';
         }
 
@@ -3374,7 +3395,7 @@ const rHelper = {
     INSRT_unitsRecyclingProfit(type, id) {
       'use strict';
 
-      let [target, profit, result, color] = [$(`#${type}-profit-${id}`), 0, , ];
+      let [target, profit, result, color] = [$(`#${type}-profit-${id}`), 0, ,];
 
       if (type === 'recycling') {
         profit = rHelper.methods.CALC_recyclingProfit(id);

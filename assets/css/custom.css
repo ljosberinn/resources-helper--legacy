@@ -885,6 +885,16 @@ kbd {
   width: 100%;
 }
 
+#module-leaderboard thead,
+#module-factories thead,
+#module-mines thead,
+#module-diamond thead,
+#module-warehouses thead,
+#techupgrades-combinations-tbl thead,
+#module-missions thead {
+  background-color: #342f2d;
+}
+
 .gm-style .gm-style-iw,
 .tippy-content {
   color: black;
