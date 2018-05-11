@@ -602,7 +602,7 @@ const rHelper = {
     SET_save() {
       'use strict';
 
-      if (isLoggedIn) {
+      if (!isLoggedIn) {
         localStorage.setItem('rGame', JSON.stringify(rHelper.data));
       }
     },
