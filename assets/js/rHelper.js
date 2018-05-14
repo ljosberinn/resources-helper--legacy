@@ -15,6 +15,7 @@ var rHelper = {
       'use strict';
 
       rHelper.methods.INSRT_userSettings();
+      rHelper.methods.SET_language();
       rHelper.init.core();
     },
     core: function core() {
@@ -173,21 +174,6 @@ var rHelper = {
         20,
         21 // tertiary order - dependant on products
       ];
-    },
-    SET_stickyHeaders: function SET_stickyHeaders() {
-      var stickyTables = [
-        '#module-leaderboard table',
-        '#module-factories table',
-        '#module-mines table',
-        '#module-diamond table',
-        '#module-warehouses table',
-        '#techupgrades-combinations-tbl',
-        '#module-missions table'
-      ];
-
-      $.each(stickyTables, function(i, el) {
-        $(el).stickyTableHeaders();
-      });
     },
     API_toggleLoadSuccessorHelper: function API_toggleLoadSuccessorHelper(target) {
       'use strict';
@@ -609,6 +595,13 @@ var rHelper = {
         rHelper.methods.EVNT_mapCreation('world');
       });
     },
+    SET_language: function SET_language() {
+      var languageContainer = rHelper.data.locale;
+
+      $.each(languageContainer, function(target, value) {
+        $('#' + target).html(value);
+      });
+    },
     SET_globalObject: function SET_globalObject(selector, index, key, value) {
       'use strict';
 
@@ -626,6 +619,21 @@ var rHelper = {
       if (!isLoggedIn) {
         localStorage.setItem('rGame', JSON.stringify(rHelper.data));
       }
+    },
+    SET_stickyHeaders: function SET_stickyHeaders() {
+      var stickyTables = [
+        '#module-leaderboard table',
+        '#module-factories table',
+        '#module-mines table',
+        '#module-diamond table',
+        '#module-warehouses table',
+        '#techupgrades-combinations-tbl',
+        '#module-missions table'
+      ];
+
+      $.each(stickyTables, function(i, el) {
+        $(el).stickyTableHeaders();
+      });
     },
     SET_tabSwitcherAnchorBased: function SET_tabSwitcherAnchorBased() {
       'use strict';
@@ -2255,13 +2263,13 @@ var rHelper = {
         textOrientation = _ref12[3],
         sortableTable = _ref12[4];
 
-      target.empty();
-
       if (type === 'defenseSimple') {
         dataTHs[0] = 'Attacking player (last known level)';
         sortableTable = $('#collapse-defenselog-simple table')[0];
         target = $('#defenselog-tbody-simple');
       }
+
+      target.empty();
 
       $.each(data, function(i, dataset) {
         var _ref13 = [$(crEl('tr')), 'bg-success-25'],
@@ -2284,7 +2292,12 @@ var rHelper = {
               td.text(rHelper.methods.CALC_convertDateToIso(dataset.lastAttacked));
               break;
             case 2:
-              winPercent = (dataset.sumWin / dataset.sumAttacks * 100).toFixed(2);
+              if (type === 'defenseSimple') {
+                var amountOfWins = dataset.sumAttacks - dataset.sumWin;
+                winPercent = (amountOfWins / dataset.sumAttacks * 100).toFixed(2);
+              } else if (type === 'attackSimple') {
+                winPercent = (dataset.sumWin / dataset.sumAttacks * 100).toFixed(2);
+              }
               td.text(dataset.sumAttacks.toLocaleString('en-US') + ' (' + winPercent + '%)').addClass(textOrientation);
               break;
             case 3:

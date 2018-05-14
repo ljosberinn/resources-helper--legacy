@@ -3218,8 +3218,6 @@ class resourcesGame
             }
         }
 
-        $result["q"] = $stmt;
-
         return $result;
 
     }

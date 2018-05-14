@@ -125,9 +125,9 @@
 
         echo '
         <li class="nav-item">
-        <a class="nav-link ' .$subInfo["class"]. '" id="nav-' .$subInfo["href"]. '" data-target="module-' .$subInfo["href"]. '" href="#' .$subInfo["href"]. '">
-        ' .$img. ' ' .$text. '
-        </a>
+          <a class="nav-link ' .$subInfo["class"]. '" id="nav-' .$subInfo["href"]. '" data-target="module-' .$subInfo["href"]. '" href="#' .$subInfo["href"]. '">
+          ' .$img. ' <span id="nav-' .$subInfo["href"]. '-txt">' .$text. '</span>
+          </a>
         </li>';
 
     }

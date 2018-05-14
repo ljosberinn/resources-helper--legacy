@@ -9,7 +9,7 @@
           </td>
           <td class="text-center">
             <select class="custom-select" id="tradelog-filter-day">
-              <option selected disabled>jump to day X</option>
+              <option selected disabled id="tradelog-filter-txt">jump to day X</option>
             </select>
           </td>
           <td class="sorttable_nosort <?php echo $textOrientation; ?>">
@@ -22,10 +22,10 @@
     <table class="table table-responsive table-break-medium table-striped mb-3">
       <thead>
         <tr class="small">
-          <th>Type</th>
-          <th class="text-md-right text-sm-left">Bought for...</th>
-          <th class="text-md-right text-sm-left">Sold for...</th>
-          <th class="text-md-right text-sm-left">Profit of selected day</th>
+          <th id="tradelog-simple-th-0">Resource</th>
+          <th id="tradelog-simple-th-1" class="text-md-right text-sm-left">Bought for...</th>
+          <th id="tradelog-simple-th-2" class="text-md-right text-sm-left">Sold for...</th>
+          <th id="tradelog-simple-th-3" class="text-md-right text-sm-left">Profit of selected day</th>
         </tr>
       </thead>
       <tbody id="tradelog-simple-tbody"></tbody>

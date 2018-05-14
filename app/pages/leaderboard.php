@@ -32,7 +32,7 @@ $arrayKeys = array_keys($columns);
 ?>
 
 <div class="bg-light mt-3 mb-3 p-4 col-12 rounded" id="module-leaderboard">
-  <h6><span class="nav-icon-leaderboard"></span> Leaderboard - values based on average of last 3 days</h6>
+  <h6><span class="nav-icon-leaderboard"></span> <span id="leaderboard-header">Leaderboard - values based on average of last 3 days</span></h6>
   <hr class="mb-3">
 
   <p class="lead text-center">Unit information:
@@ -53,15 +53,17 @@ $arrayKeys = array_keys($columns);
         <thead>
           <tr class="small">
 
-          <?php
+            <?php
 
-          foreach ($columns as $column => $specialClasses) {
-            echo '
-            <th class="' .$specialClasses. '">
-            ' .$column. '
-            </th>';
-          }
-          ?>
+            $i = 0;
+
+            foreach ($columns as $column => $specialClasses) {
+                echo '
+                <th id="leaderboard-th-' .$i. '" class="' .$specialClasses. '">' .$column. '</th>';
+                $i += 1;
+            }
+
+            ?>
           </tr>
         </thead>
         <tbody>

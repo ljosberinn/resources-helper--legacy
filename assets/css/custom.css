@@ -806,6 +806,7 @@ kbd {
 #modules-recyclingunits table th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort)::after,
 #recycling-tbl th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort)::after,
 #techupgrades-calc-tbl th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort)::after,
+#techupgrades-combinations-tbl th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort)::after,
 #units-tbl th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort)::after {
   content: ' \25B4\25BE';
 }
@@ -931,8 +932,7 @@ kbd {
 .highcharts-credits,
 #module-tos,
 #module-contact,
-#module-donate,
-#registration-language-container {
+#module-donate {
   display: none;
 }
 

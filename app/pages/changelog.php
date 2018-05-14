@@ -2,14 +2,18 @@
 
 <div class="bg-light mt-3 mb-3 p-4 col-12 rounded" id="module-changelog">
 
-<h6>Changelog</h6>
+<h6><span class="nav-icon-changelog"></span> <span id="changelog-header">Changelog</span></h6>
 <hr class="mb-3">
 
 <?php
 
 $changelogIndex = [
-  5 => [
+  6 => [
     "class" => "active",
+    "title" => "Resources Helper 3.0.4",
+  ],
+  5 => [
+    "class" => "",
     "title" => "Resources Helper 3.0.3",
   ],
   4 => [
@@ -36,8 +40,19 @@ $changelogIndex = [
 
 $changelogContent = [
 
-  5 => [
+  6 => [
     "class" => "show active",
+    "title" => "Resources Helper 3.0.4",
+    "date" => "May 14th 2018",
+    "description" => "
+    <strong>General</strong><br />
+    - NEW: languages re-implemented! For now, only German and English are 99% functional, others will follow soon<br />
+    <br />
+    <strong>Bugfixes</strong><br />
+    - Defense Log Win Rate calculating properly now",
+  ],
+  5 => [
+    "class" => "",
     "title" => "Resources Helper 3.0.3",
     "date" => "May 11th 2018",
     "description" => "

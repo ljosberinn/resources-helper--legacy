@@ -18,13 +18,18 @@ $textOrientation = "text-md-right text-sm-left";
 
 <table class="table table-responsive table-break-medium table-striped mb-3" id="units-tbl">
   <thead>
-    <tr class="text-small">
+    <tr class="small">
 
       <?php
 
+      $i = 0;
+
       foreach ($columns as $column => $classes) {
-        echo '
-        <th class="' .$classes. '">' .$column. '</th>';
+
+          echo '
+          <th id="units-th-' .$i. '" class="' .$classes. '">' .$column. '</th>';
+
+          $i += 1;
       }
 
       ?>

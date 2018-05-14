@@ -96,22 +96,22 @@
     $langIterator = 0;
 
     if ($getLanguages->num_rows > 0) {
-      while ($language = $getLanguages->fetch_assoc()) {
+        while ($language = $getLanguages->fetch_assoc()) {
 
-        if ($langIterator == 0) {
-          $selected = 'selected';
-        } else {
-          $selected = '';
+            if ($langIterator == 0) {
+                $selected = 'selected';
+            } else {
+                $selected = '';
+            }
+
+            echo '
+            <option ' .$selected. ' value="' .$language["id"]. '">' .$language["short"]. ' | ' .$language["name"]. '</option>';
         }
-
-        echo '
-        <option ' .$selected. ' value="' .$language["id"]. '">' .$language["short"]. ' | ' .$language["name"]. '</option>';
-      }
     } else {
-      echo '
-      <option value="" disabled>
-      Sorry, server seems to be unavailable. Please try again later! If this issue persists, please write a mail to admin@gerritalex.de
-      </option>';
+        echo '
+        <option value="" disabled>
+        Sorry, server seems to be unavailable. Please try again later! If this issue persists, please write a mail to admin@gerritalex.de
+        </option>';
     }
 
     ?>

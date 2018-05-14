@@ -22,7 +22,7 @@ $arrayKeys = array_keys($columns);
 
 <div class="bg-light mt-3 mb-3 p-4 col-12 rounded" id="module-mines">
 
-  <h6><span class="nav-icon-mines"></span> Mines</h6>
+  <h6><span class="nav-icon-mines"></span> <span id="mines-header">Mines</span></h6>
   <hr class="mb-3">
 
   <div class="row">
