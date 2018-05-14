@@ -9,7 +9,7 @@ require "class.resourcesGame.php";
 
 if (isset($_SESSION["id"])) {
     $userId = $_SESSION["id"];
-} elseif (isset($_GET["id"])) {
+} else if (isset($_GET["id"])) {
     $userId = $_GET["id"];
 } else {
     $userId = 0;
@@ -24,25 +24,17 @@ if (isset($_GET["key"])
 
     $output = $resourcesGame->getAPIData($_GET["query"], $_GET["key"], $userId, $_GET["anonymity"]);
 
-} elseif (isset($_GET["mineMap"])) {
+} else if (isset($_GET["mineMap"])) {
 
     $output = json_encode($resourcesGame->getPersonalMineMap($userId), JSON_NUMERIC_CHECK);
 
-} elseif (isset($_GET["tradeLog"])) {
+} else if (isset($_GET["tradeLog"])) {
 
-    if (isset($_GET["skipCount"])
-        && is_numeric($_GET["skipCount"])
-        && $_GET["skipCount"] >= 0
-        )
-    {
+    if (isset($_GET["skipCount"]) && is_numeric($_GET["skipCount"]) && $_GET["skipCount"] >= 0) {
         $skipCount = $_GET["skipCount"];
     }
 
-    if (isset($_GET["filter"])
-        && is_numeric($_GET["filter"])
-        && $_GET["filter"] >= -1
-        )
-    {
+    if (isset($_GET["filter"]) && is_numeric($_GET["filter"]) && $_GET["filter"] >= -1) {
         $filter = $_GET["filter"];
     }
 
@@ -52,7 +44,7 @@ if (isset($_GET["key"])
 
     $output = json_encode($resourcesGame->getTradeLog($userId, $skipCount, $filter, $dateFilter), JSON_NUMERIC_CHECK);
 
-} elseif (isset($_GET["attackLog"])
+} else if (isset($_GET["attackLog"])
     && isset($_GET["type"])
 ) {
 
@@ -68,15 +60,15 @@ if (isset($_GET["key"])
         break;
     }
 
-} elseif (isset($_GET["missions"])) {
+} else if (isset($_GET["missions"])) {
 
     $output = json_encode($resourcesGame->getMissions($userId), JSON_NUMERIC_CHECK);
 
-} elseif (isset($_GET["userIndex"])) {
+} else if (isset($_GET["userIndex"])) {
 
     $output = json_encode($resourcesGame->getUserIndex(), JSON_NUMERIC_CHECK);
 
-} elseif (isset($_GET["worldMap"])
+} else if (isset($_GET["worldMap"])
     && $_GET["worldMap"] >= 0
     && $_GET["worldmap"] <= 13
 ) {
@@ -100,7 +92,8 @@ if (isset($_GET["key"])
         "attackLog" => [],
         "mineMap" => [],
         "missions" => [],
-        "tradeLog" => []
+        "tradeLog" => [],
+        "locale" => [],
     ];
 
     if ($userId !== 0) {
@@ -115,6 +108,7 @@ if (isset($_GET["key"])
         //$baseData["attackLog"] = $resourcesGame->getAttackLog($userId); // stable
         //$baseData["mineMap"] = $resourcesGame->getPersonalMineMap($userId); // stable
         //$baseData["tradeLog"] = $resourcesGame->getTradeLog($userId); // stable
+        $baseData["locale"] = $resourcesGame->getUserLocale($baseData["settings"][0]["value"]);
     }
 
     $baseData = $resourcesGame->getLanguageVariables($baseData); // stable
