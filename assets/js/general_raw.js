@@ -591,3 +591,33 @@ $('#save-button').on('click', (i, el) => {
     }
   });
 });
+
+const showTimeoutSwal = () => {
+  swal({
+    title: 'Session expiry notice',
+    html: 'You will be logged out in <span id="expiry-timer">30</span> seconds.',
+    timer: 30000,
+    type: 'info',
+    showCancelButton: true,
+    confirmButtonText: 'Logout',
+    cancelButtonText: 'No, I want to stay logged in.',
+    confirmButtonClass: 'btn btn-danger mr-1',
+    cancelButtonClass: 'btn btn-success ml-1',
+    buttonsStyling: false
+  }).then(result => {
+    if (!result.dismiss) {
+      location.replace('?logout');
+    } else {
+      location.reload();
+    }
+  });
+
+  window.setInterval(function() {
+    const expiryTimer = $('#expiry-timer');
+    let currentVal = parseInt(expiryTimer.innerText);
+
+    if (currentVal > 1) {
+      expiryTimer.innerText = currentVal - 1;
+    }
+  }, 1000);
+};

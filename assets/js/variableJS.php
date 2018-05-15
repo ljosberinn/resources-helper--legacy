@@ -25,82 +25,51 @@ if (isset($_GET["changePasswordNoMatch"])) {
     echo $toggleRegistrationLoginForms;
 } elseif (isset($_GET["duplicateRegistrationMail"])) {
     echo '
-		swal({
-			title: "Duplicate mail:<br />' .$_GET["duplicateRegistrationMail"]. '",
-			text: "This mail is already registered.",
-			type: "warning",
-			showCancelButton: true,
-			confirmButtonText: "OK",
-			cancelButtonText: "Reset password",
-			confirmButtonClass: "btn btn-success ml-1",
-			cancelButtonClass: "btn btn-danger mr-1",
-			buttonsStyling: false,
-			reverseButtons: true
-		}).then((result) => {
-			if (result.dismiss) {
-				swal({
-					title: "Security token for ' .$_GET["duplicateRegistrationMail"]. '",
-					input: "text",
-					showCancelButton: true,
-					confirmButtonText: "Validate",
-					showLoaderOnConfirm: true,
-					allowOutsideClick: () => !swal.isLoading(),
-					preConfirm: (token) => {
-						return new Promise((resolve) => {
-							$.post({
-								url: "api/resetPassword.php",
-									data: { mail: "' .$_GET["duplicateRegistrationMail"]. '", token: token },
-								success: function(response) {
-									if(response.invalid) {
-										swal.showValidationError("Invalid security token.");
-									} else if(response.url) {
-										location.replace(response.url);
-									}
-									resolve();
-								}
-							})
-						})
-					}
-				})
-			}
-		})';
+    swal({
+      title: "Duplicate mail:<br />' .$_GET["duplicateRegistrationMail"]. '",
+      text: "This mail is already registered.",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonText: "OK",
+      cancelButtonText: "Reset password",
+      confirmButtonClass: "btn btn-success ml-1",
+      cancelButtonClass: "btn btn-danger mr-1",
+      buttonsStyling: false,
+      reverseButtons: true
+    }).then((result) => {
+      if (result.dismiss) {
+        swal({
+          title: "Security token for ' .$_GET["duplicateRegistrationMail"]. '",
+          input: "text",
+          showCancelButton: true,
+          confirmButtonText: "Validate",
+          showLoaderOnConfirm: true,
+          allowOutsideClick: () => !swal.isLoading(),
+          preConfirm: (token) => {
+            return new Promise((resolve) => {
+              $.post({
+                url: "api/resetPassword.php",
+                  data: { mail: "' .$_GET["duplicateRegistrationMail"]. '", token: token },
+                success: function(response) {
+                  if(response.invalid) {
+                    swal.showValidationError("Invalid security token.");
+                  } else if(response.url) {
+                    location.replace(response.url);
+                  }
+                  resolve();
+                }
+              })
+            })
+          }
+        })
+      }
+    })';
 }
 
 if (isset($_SESSION["id"])) {
     echo '
-function showTimeoutSwal() {
-	swal({
-		title: "Session expiry notice",
-		html: "You will be logged out in <span id=\"expiry-timer\">30</span> seconds.",
-		timer: 30000,
-		type: "info",
-		showCancelButton: true,
-	confirmButtonText: "Logout",
-			cancelButtonText: "No, I want to stay logged in.",
-		confirmButtonClass: "btn btn-danger mr-1",
-		cancelButtonClass: "btn btn-success ml-1",
-		buttonsStyling: false
-	}).then((result) => {
-		if (!result.dismiss) {
-			location.replace("?logout");
-		} else {
-			location.reload();
-		}
-	});
-
-	window.setInterval( function() {
-		var expiryTimer = document.getElementById("expiry-timer"),
-		currentVal = parseInt(expiryTimer.innerText);
-
-		if ( currentVal > 1 ) {
-			expiryTimer.innerText = currentVal - 1;
-			}
-		}
-	,	1000);
-}
-
 $(document).ready(function() {
-	setTimeout(showTimeoutSwal, 1400000);
-	console.log("Session will expire at " + new Date(Date.now() + 1410000) + " - expiry notice fired.");
+  setTimeout(showTimeoutSwal, 1410000);
+  console.log("Session will expire at " + new Date(Date.now() + 1410000) + " - expiry notice fired.");
 })';
 }
