@@ -118,6 +118,23 @@
     </small>
   </div>
 
+  <!-- SETTING MINE VISIBILITY ON MAP -->
+  <div class="form-group">
+    <label class="text-success" for="settings-mine-visibility">
+      <strong><span class="nav-icon-mines"></span> <span id="settings-mine-visibility-txt">Mine visibility on worldmap</span></strong>
+    </label>
+
+   <br />
+
+    <select class="custom-select" id="settings-mine-visibility" name="settings-mine-visibility" aria-describedby="settings-mine-visibility-help">
+      <option selected value="0" id="settings-mine-visiblility-0">invisible (default)</option>
+      <option value="1" id="settings-mine-visiblility-1">visible</option>
+    </select>
+    <small class="form-text text-muted" id="settings-mine-visibility-help">
+      Toggles your mine visibility on the worldmap when Detailed Mine data data via API is imported.
+    </small>
+  </div>
+
   <!-- SETTING BASE PRICE AGE -->
 
   <div class="form-group">

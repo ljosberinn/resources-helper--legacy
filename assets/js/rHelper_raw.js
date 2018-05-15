@@ -10,97 +10,106 @@ const rHelper = {
     core() {
       'use strict';
 
+      const ref = rHelper.methods;
+
       removeLoggedInButtons();
 
-      rHelper.methods.SET_tabSwitcherAnchorBased();
-      rHelper.methods.SET_transportCost('init');
+      ref.SET_tabSwitcherAnchorBased();
+      ref.SET_transportCost('init');
 
       $.each(rHelper.data.material, materialId => {
         // eventListeners
-        rHelper.methods.EVNT_materialInput(materialId);
+        ref.EVNT_materialInput(materialId);
         // general material data insertion
-        rHelper.methods.INSRT_materialData(materialId);
+        ref.INSRT_materialData(materialId);
         // warehouses
-        rHelper.methods.INSRT_warehouseData(materialId, 'material');
+        ref.INSRT_warehouseData(materialId, 'material');
         // price history
-        rHelper.methods.INSRT_priceHistoryName('material', materialId);
+        ref.INSRT_priceHistoryName('material', materialId);
       });
 
-      rHelper.methods.INSRT_totalMineWorth(rHelper.methods.CALC_totalMineWorth());
-      rHelper.methods.INSRT_totalMineCount(rHelper.methods.CALC_totalMineCount());
+      ref.INSRT_totalMineWorth(ref.CALC_totalMineWorth());
+      ref.INSRT_totalMineCount(ref.CALC_totalMineCount());
 
-      let calculationOrder = rHelper.methods.GET_calculationOrder();
+      const calculationOrder = ref.GET_calculationOrder();
 
       $.each(calculationOrder, (index, factoryId) => {
         // eventListeners
-        rHelper.methods.EVNT_factoryInput(factoryId);
+        ref.EVNT_factoryInput(factoryId);
         // general factory data insertion
-        rHelper.methods.INSRT_factoryDiamondData(factoryId, 'product');
+        ref.INSRT_factoryDiamondData(factoryId, 'product');
         // warehouses
-        rHelper.methods.INSRT_warehouseData(factoryId, 'products');
+        ref.INSRT_warehouseData(factoryId, 'products');
         // price history
-        rHelper.methods.INSRT_priceHistoryName('products', factoryId);
+        ref.INSRT_priceHistoryName('products', factoryId);
       });
 
       // loot
       $.each(rHelper.data.loot, index => {
         // warehouses
-        rHelper.methods.INSRT_warehouseData(index, 'loot');
+        ref.INSRT_warehouseData(index, 'loot');
         // price history
-        rHelper.methods.INSRT_priceHistoryName('loot', index);
+        ref.INSRT_priceHistoryName('loot', index);
         // recycling table
         if (index === 4 || (index >= 10 && index <= 13)) {
           return;
         }
-        rHelper.methods.SET_recyclingProfitObj(index);
-        rHelper.methods.INSRT_recycling(index);
+        ref.SET_recyclingProfitObj(index);
+        ref.INSRT_recycling(index);
       });
 
-      let unitsFns = ['SET_UnitProfitObj', 'INSRT_unitsCraftingPrice', 'INSRT_unitsMarketPrice', 'INSRT_unitsPricePerStrength'];
+      const unitsFns = ['SET_UnitProfitObj', 'INSRT_unitsCraftingPrice', 'INSRT_unitsMarketPrice', 'INSRT_unitsPricePerStrength'];
 
       $.each(rHelper.data.units, index => {
         // warehouses
-        rHelper.methods.INSRT_warehouseData(index, 'units');
+        ref.INSRT_warehouseData(index, 'units');
         // units table
         $.each(unitsFns, (i, fn) => {
-          rHelper.methods[fn](index);
+          ref[fn](index);
         });
 
-        rHelper.methods.INSRT_unitsRecyclingProfit('units', index);
+        ref.INSRT_unitsRecyclingProfit('units', index);
         // price history
-        rHelper.methods.INSRT_priceHistoryName('units', index);
+        ref.INSRT_priceHistoryName('units', index);
       });
 
       // buildings
-      let buildingFns = ['INSRT_buildingName', 'SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10', 'EVNT_buildingChange'];
+      const buildingFns = ['INSRT_buildingName', 'SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10', 'EVNT_buildingChange'];
       $.each(rHelper.data.buildings, buildingId => {
         $.each(buildingFns, (i, fn) => {
-          rHelper.methods[fn](buildingId);
+          ref[fn](buildingId);
         });
       });
 
-      let hqFns = ['INSRT_headquarterOvwString', 'INSRT_headquarterOvwRadius', 'INSRT_headquarterOvwCost', 'INSRT_headquarterOvwBoost', 'INSRT_headquarterOvwTransportation', 'EVNT_switchHeadquarter'];
+      const hqFns = [
+        'INSRT_headquarterOvwString',
+        'INSRT_headquarterOvwRadius',
+        'INSRT_headquarterOvwCost',
+        'INSRT_headquarterOvwBoost',
+        'INSRT_headquarterOvwTransportation',
+        'EVNT_switchHeadquarter'
+      ];
 
       // headquarter
       $.each(rHelper.data.headquarter, headquarterLevel => {
         $.each(hqFns, (i, fn) => {
-          rHelper.methods[fn](headquarterLevel);
+          ref[fn](headquarterLevel);
         });
       });
 
       // initiate graphs
-      let pieGraphs = ['material'];
+      const pieGraphs = ['material'];
 
       $.each(pieGraphs, (i, val) => {
-        rHelper.methods.EVNT_buildGraph(val);
+        ref.EVNT_buildGraph(val);
       });
 
-      let gaugeGraphs = ['buildings', 'headquarter'];
+      const gaugeGraphs = ['buildings', 'headquarter'];
       $.each(gaugeGraphs, (i, val) => {
-        rHelper.methods.INSRT_gaugeGraph(val);
+        ref.INSRT_gaugeGraph(val);
       });
 
-      let nonParamBoundMethods = [
+      const nonParamBoundMethods = [
         // mines
         'INSRT_materialMineAmortisation',
         'INSRT_materialHighlightMinePerfectIncome',
@@ -131,7 +140,7 @@ const rHelper = {
       ];
 
       $.each(nonParamBoundMethods, (i, fn) => {
-        rHelper.methods[fn]();
+        ref[fn]();
       });
     }
   },
@@ -205,35 +214,40 @@ const rHelper = {
     API_getFactories(key) {
       'use strict';
 
-      rHelper.methods.API_toggleLoader('factories');
+      const ref = rHelper.methods;
+
+      ref.API_toggleLoader('factories');
 
       $.get(`api/core.php?query=1&key=${key}`, data => {
         $.each(data, (i, value) => {
           rHelper.data.products[i].factoryLevel = value;
         });
 
-        let calculationOrder = rHelper.methods.GET_calculationOrder();
+        const calculationOrder = ref.GET_calculationOrder();
 
         $.each(calculationOrder, (index, factoryId) => {
-          rHelper.methods.INSRT_factoryDiamondData(factoryId, 'product');
+          ref.INSRT_factoryDiamondData(factoryId, 'product');
         });
 
-        rHelper.methods.INSRT_totalFactoryUpgrades();
-        rHelper.methods.INSRT_factoryHighlightColumns();
-        rHelper.methods.INSRT_diamondTop10Profit();
-        rHelper.methods.INSRT_diamondTotalProfit();
-        rHelper.methods.INSRT_flowDistributionGlobal();
-        rHelper.methods.API_toggleLoadSuccessorHelper('factories');
+        const helperFns = ['INSRT_totalFactoryUpgrades', 'INSRT_factoryHighlightColumns', 'INSRT_diamondTop10Profit', 'INSRT_diamondTotalProfit', 'INSRT_flowDistributionGlobal'];
+
+        $.each(helperFns, (i, fn) => {
+          ref[fn]();
+        });
+
+        ref.API_toggleLoadSuccessorHelper('factories');
 
         sorttable.innerSortFunction.apply($('#module-diamond th')[4], []);
         sorttable.innerSortFunction.apply($('#module-diamond th')[5], []);
-        rHelper.methods.SET_save();
+        ref.SET_save();
       });
     },
     API_getWarehouse(key) {
       'use strict';
 
-      rHelper.methods.API_toggleLoader('warehouse');
+      const ref = rHelper.methods;
+
+      ref.API_toggleLoader('warehouse');
 
       $.getJSON(`api/core.php?query=2&key=${key}`, data => {
         $.each(data, function(i, warehouseInfo) {
@@ -251,7 +265,7 @@ const rHelper = {
             targetObj = 'units';
           }
 
-          let contingent = Math.pow(warehouseInfo.level, 2) * 5000;
+          const contingent = Math.pow(warehouseInfo.level, 2) * 5000;
           let fillStatus = warehouseInfo.amount / contingent;
           if (isNaN(fillStatus)) {
             fillStatus = 0;
@@ -262,34 +276,36 @@ const rHelper = {
           rHelper.data[targetObj][iterator].warehouse.contingent = contingent;
           rHelper.data[targetObj][iterator].warehouse.fillStatus = fillStatus;
 
-          rHelper.methods.SET_save();
+          ref.SET_save();
         });
 
         $.each(rHelper.data.material, materialId => {
-          rHelper.methods.INSRT_warehouseData(materialId, 'material');
+          ref.INSRT_warehouseData(materialId, 'material');
         });
 
-        let calculationOrder = rHelper.methods.GET_calculationOrder();
+        const calculationOrder = ref.GET_calculationOrder();
 
         $.each(calculationOrder, index => {
-          rHelper.methods.INSRT_warehouseData(index, 'products');
+          ref.INSRT_warehouseData(index, 'products');
         });
 
         $.each(rHelper.data.loot, index => {
-          rHelper.methods.INSRT_warehouseData(index, 'loot');
+          ref.INSRT_warehouseData(index, 'loot');
         });
 
         $.each(rHelper.data.units, index => {
-          rHelper.methods.INSRT_warehouseData(index, 'units');
+          ref.INSRT_warehouseData(index, 'units');
         });
 
-        rHelper.methods.INSRT_warehouseTotalLevel();
-        rHelper.methods.INSRT_warehouseTotalWorth();
-        rHelper.methods.API_toggleLoadSuccessorHelper('warehouse');
+        ref.INSRT_warehouseTotalLevel();
+        ref.INSRT_warehouseTotalWorth();
+        ref.API_toggleLoadSuccessorHelper('warehouse');
       });
     },
     API_getMineSummary(key) {
-      rHelper.methods.API_toggleLoader('mines-summary');
+      const ref = rHelper.methods;
+
+      ref.API_toggleLoader('mines-summary');
       $.get(`api/core.php?query=51&key=${key}`, data => {
         $.each(data, (i, obj) => {
           rHelper.data.material[i].perHour = obj.perHour;
@@ -297,21 +313,21 @@ const rHelper = {
         });
 
         $.each(rHelper.data.material, materialId => {
-          rHelper.methods.INSRT_materialData(materialId, 'api');
+          ref.INSRT_materialData(materialId, 'api');
         });
 
         const fns = ['INSRT_materialMineAmortisation', 'INSRT_materialHighlightMinePerfectIncome', 'INSRT_flowDistributionGlobal'];
 
         $.each(fns, (i, fn) => {
-          rHelper.methods[fn]();
+          ref[fn]();
         });
 
-        rHelper.methods.INSRT_totalMineWorth(rHelper.methods.CALC_totalMineWorth());
-        rHelper.methods.INSRT_totalMineCount(rHelper.methods.CALC_totalMineCount());
-        rHelper.methods.EVNT_buildGraph('material');
-        rHelper.methods.API_toggleLoadSuccessorHelper('mines-summary');
+        ref.INSRT_totalMineWorth(ref.CALC_totalMineWorth());
+        ref.INSRT_totalMineCount(ref.CALC_totalMineCount());
+        ref.EVNT_buildGraph('material');
+        ref.API_toggleLoadSuccessorHelper('mines-summary');
 
-        rHelper.methods.SET_save();
+        rHelper.SET_save();
       });
     },
     API_getMineMap() {
@@ -319,9 +335,11 @@ const rHelper = {
 
       $.getJSON('api/core.php?mineMap', data => {
         rHelper.data.mineMap = data;
-        rHelper.methods.API_toggleLoadSuccessorHelper('mines-detailed');
-        rHelper.methods.EVNT_mapCreation('personal');
-        rHelper.methods.SET_overTimeGraph();
+
+        const ref = rHelper.methods;
+        ref.API_toggleLoadSuccessorHelper('mines-detailed');
+        ref.EVNT_mapCreation('personal');
+        ref.SET_overTimeGraph();
       });
     },
     API_getMineMapInitiator(key) {
@@ -481,7 +499,9 @@ const rHelper = {
     API_getHeadquarter(key) {
       'use strict';
 
-      rHelper.methods.API_toggleLoader('headquarter');
+      const ref = rHelper.methods;
+
+      ref.API_toggleLoader('headquarter');
 
       $.getJSON(`api/core.php?query=4&key=${key}`, data => {
         rHelper.data.headquarter.user = rHelper.data.headquarter.user || {
@@ -501,11 +521,10 @@ const rHelper = {
           rHelper.data.headquarter.user.paid[i] = paid;
         });
 
-        rHelper.methods.INSRT_gaugeGraph('headquarter');
-        rHelper.methods.SET_hqLevel();
-        rHelper.methods.API_toggleLoadSuccessorHelper('headquarter');
-
-        rHelper.methods.SET_save();
+        ref.INSRT_gaugeGraph('headquarter');
+        ref.SET_hqLevel();
+        ref.API_toggleLoadSuccessorHelper('headquarter');
+        ref.SET_save();
       });
     },
     API_getCreditInformation(key) {
@@ -528,6 +547,8 @@ const rHelper = {
     API_init(key, queries, anonymity) {
       'use strict';
 
+      const ref = rHelper.methods;
+
       if ($.isArray(queries)) {
         $.post({
           url: 'api/updateQueryPreset.php',
@@ -539,37 +560,37 @@ const rHelper = {
         $.each(queries, (i, query) => {
           switch (query) {
             case 1:
-              rHelper.methods.API_getFactories(key); // STABLE
+              ref.API_getFactories(key); // STABLE
               break;
             case 2:
-              rHelper.methods.API_getWarehouse(key); // STABLE
+              ref.API_getWarehouse(key); // STABLE
               break;
             case 3:
-              rHelper.methods.API_getBuildings(key); // STABLE
+              ref.API_getBuildings(key); // STABLE
               break;
             case 4:
-              rHelper.methods.API_getHeadquarter(key); // STABLE
+              ref.API_getHeadquarter(key); // STABLE
               break;
             case 5:
-              rHelper.methods.API_getMineMapInitiator(key); // STABLE
+              ref.API_getMineMapInitiator(key); // STABLE
               break;
             case 51:
-              rHelper.methods.API_getMineSummary(key); // STABLE
+              ref.API_getMineSummary(key); // STABLE
               break;
             case 6:
-              rHelper.methods.API_getTradeLogInitiator(key); // STABLE
+              ref.API_getTradeLogInitiator(key); // STABLE
               break;
             case 7:
-              rHelper.methods.API_getPlayerInfo(key, anonymity); // STABLE
+              ref.API_getPlayerInfo(key, anonymity); // STABLE
               break;
             case 9:
-              rHelper.methods.API_getAttackLogInitiator(key); // STABLE
+              ref.API_getAttackLogInitiator(key); // STABLE
               break;
             case 10:
-              rHelper.methods.API_getMissionsInitiator(key); // STABLE
+              ref.API_getMissionsInitiator(key); // STABLE
               break;
             default:
-              rHelper.methods.API_getCreditInformation(key); // STABLE
+              ref.API_getCreditInformation(key); // STABLE
               break;
           }
         });
@@ -649,8 +670,8 @@ const rHelper = {
       }
 
       $('.nav-link').each((i, navLink) => {
-        let navEl = $(navLink);
-        let target = $(`#${navLink.dataset.target}`);
+        const [navEl, target] = [$(navLink), $(`#${navLink.dataset.target}`)];
+
         if (navEl.attr('href') === anchor) {
           target.css('display', 'block');
           navEl.addClass('active');
@@ -663,6 +684,8 @@ const rHelper = {
     SET_transportCost(init) {
       'use strict';
 
+      const ref = rHelper.methods;
+
       rHelper.data.buildings[9].transportCost = 1 + (15 - rHelper.data.buildings[9].level) / 100;
 
       if (!init) {
@@ -670,22 +693,22 @@ const rHelper = {
           let fns = ['SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10'];
 
           $.each(fns, (i, fn) => {
-            rHelper.methods[fn](buildingId);
+            ref[fn](buildingId);
           });
         });
-        let calculationOrder = rHelper.methods.GET_calculationOrder();
+        let calculationOrder = ref.GET_calculationOrder();
         $.each(calculationOrder, (index, factoryId) => {
           let fns = ['INSRT_factoryUpgradeCost', 'INSRT_factoryROI'];
 
           $.each(fns, (i, fn) => {
-            rHelper.methods[fn](factoryId);
+            ref[fn](factoryId);
           });
 
-          rHelper.methods.INSRT_flowDistributionGlobal();
+          ref.INSRT_flowDistributionGlobal();
         });
 
         $.each(rHelper.data.headquarter, headquarterLevel => {
-          rHelper.methods.INSRT_headquarterOvwTransportation(headquarterLevel);
+          ref.INSRT_headquarterOvwTransportation(headquarterLevel);
         });
       }
     },
@@ -866,21 +889,23 @@ const rHelper = {
       });
     },
     SET_mapMineHandler(now, subObj, map, mapType) {
+      const ref = rHelper.methods;
+
       let type = subObj.type;
       let relObj = rHelper.data.material[type];
-      let buildMilliseconds = rHelper.methods.CALC_toMilliseconds(subObj.builddate);
-      let buildDate = rHelper.methods.CALC_convertDateToIso(buildMilliseconds);
+      let buildMilliseconds = ref.CALC_toMilliseconds(subObj.builddate);
+      let buildDate = ref.CALC_convertDateToIso(buildMilliseconds);
       let age = (now - buildMilliseconds) / 1000 / 86400;
-      let estRevenue = rHelper.methods.CALC_mineEstRevenue(subObj, type, age);
-      let contentString = rHelper.methods.CALC_createMapContentString(relObj, buildDate, age, estRevenue, subObj);
-      let infoWindow = rHelper.methods.SET_mapInfoWindow(contentString);
+      let estRevenue = ref.CALC_mineEstRevenue(subObj, type, age);
+      let contentString = ref.CALC_createMapContentString(relObj, buildDate, age, estRevenue, subObj);
+      let infoWindow = ref.SET_mapInfoWindow(contentString);
       let marker = new google.maps.Marker({
         map: map,
         position: {
           lat: subObj.lat,
           lng: subObj.lon
         },
-        icon: rHelper.methods.SET_mapImg(rHelper.methods.SET_mapFolderRelation(subObj.relation), type, 20)
+        icon: ref.SET_mapImg(ref.SET_mapFolderRelation(subObj.relation), type, 20)
       });
 
       if (mapType === 'personal') {
@@ -983,40 +1008,39 @@ const rHelper = {
         }
       });
 
-      let firstMine = data[0].builddate;
-      let lastMine = data[data.length - 1].builddate;
+      const ref = rHelper.methods;
+
+      let [firstMine, lastMine] = [data[0].builddate, data[data.length - 1].builddate];
       let daysSinceFirstMine = (lastMine - firstMine) / 86400;
 
-      timestamps.push(rHelper.methods.CALC_toMilliseconds(firstMine));
+      timestamps.push(ref.CALC_toMilliseconds(firstMine));
 
       for (let i = 0; i <= daysSinceFirstMine; i += 1) {
-        let date = rHelper.methods.CALC_toMilliseconds(firstMine + 86400 * i);
+        const date = ref.CALC_toMilliseconds(firstMine + 86400 * i);
         timestamps.push(date);
       }
 
       $.each(timestamps, (i, ts) => {
-        let mineCountAtGivenTS = 0;
-        let sum = 0;
-        let totalIncomeAtGivenTS = 0;
+        let [mineCountAtGivenTS, sum, totalIncomeAtGivenTS] = [0, 0, 0];
 
         $.each(data, (index, subObj) => {
-          let builddate = rHelper.methods.CALC_toMilliseconds(subObj.builddate);
+          let builddate = ref.CALC_toMilliseconds(subObj.builddate);
 
           if (builddate <= ts) {
             mineCountAtGivenTS += 1;
-            totalIncomeAtGivenTS += rHelper.methods.CALC_returnPriceViaId(subObj.type) * subObj.fullRate;
+            totalIncomeAtGivenTS += ref.CALC_returnPriceViaId(subObj.type) * subObj.fullRate;
           }
         });
 
         $.each(rHelper.data.material, k => {
-          sum += rHelper.methods.CALC_materialNewMinePrice(mineCountAtGivenTS, k);
+          sum += ref.CALC_materialNewMinePrice(mineCountAtGivenTS, k);
         });
 
         income.push(Math.round(totalIncomeAtGivenTS));
         mineCount.push(mineCountAtGivenTS);
         avgMinePrice.push(Math.round(sum / 14));
 
-        timestamps[i] = rHelper.methods.CALC_convertDateToIso(ts);
+        timestamps[i] = ref.CALC_convertDateToIso(ts);
       });
 
       Highcharts.chart('graph-overtime', {
@@ -1127,7 +1151,7 @@ const rHelper = {
       for (let i = min; i <= max; i += 1) {
         $.each($(`.resources-${subSelector}-${i}`), (k, el) => {
           if (!$(el).attr('title')) {
-            let convertedId = i + incrementor;
+            const convertedId = i + incrementor;
             $(el).attr('title', rHelper.methods.CALC_returnPriceViaId(convertedId).toLocaleString('en-US'));
           }
         });
@@ -1145,7 +1169,7 @@ const rHelper = {
     EVNT_sortableTables() {
       'use strict';
 
-      let tables = [
+      const tables = [
         $('#module-mines table')[0],
         $('#module-factories table')[0],
         $('#module-diamond table')[0],
@@ -1171,11 +1195,10 @@ const rHelper = {
       'use strict';
 
       $(`#factories-level-${factoryId}`).on('input', function() {
-        let factoryId = parseInt(this.id.replace('factories-level-', ''));
-        let factoryLevel = parseInt(this.value);
-        rHelper.methods.SET_globalObject('products', factoryId, 'factoryLevel', factoryLevel);
+        const [ref, factoryId, factoryLevel] = [rHelper.methods, parseInt(this.id.replace('factories-level-', '')), parseInt(this.value)];
+        ref.SET_globalObject('products', factoryId, 'factoryLevel', factoryLevel);
 
-        let fns = [
+        const fns = [
           // factories tab
           'INSRT_factoryOutput',
           'INSRT_factoryUpgradeCost',
@@ -1195,47 +1218,45 @@ const rHelper = {
         ];
 
         $.each(fns, (i, fn) => {
-          rHelper.methods[fn](factoryId);
+          ref[fn](factoryId);
         });
 
-        rHelper.methods.CALC_dependantFactories(factoryId, 'product');
-        rHelper.methods.INSRT_diamondTop10Profit();
-        rHelper.methods.INSRT_diamondTotalProfit();
-        rHelper.methods.INSRT_flowRate(factoryId, 'product');
-        rHelper.methods.INSRT_flowDistributionGlobal();
-        rHelper.methods.INSRT_factoryHighlightColumns();
+        ref.CALC_dependantFactories(factoryId, 'product');
+        ref.INSRT_diamondTop10Profit();
+        ref.INSRT_diamondTotalProfit();
+        ref.INSRT_flowRate(factoryId, 'product');
+        ref.INSRT_flowDistributionGlobal();
+        ref.INSRT_factoryHighlightColumns();
       });
     },
     EVNT_materialInput(materialId) {
       'use strict';
 
       $(`#material-rate-${materialId}`).on('input', function() {
-        let materialId = this.id.replace('material-rate-', '');
-        let materialAmount = parseInt(this.value);
+        const [ref, materialId, materialAmount] = [rHelper.methods, this.id.replace('material-rate-', ''), parseInt(this.value)];
 
-        rHelper.methods.SET_globalObject('material', materialId, 'perHour', materialAmount);
-        rHelper.methods.INSRT_materialRateWorth(materialId);
-        rHelper.methods.INSRT_totalMineWorth(rHelper.methods.CALC_totalMineWorth());
-        rHelper.methods.CALC_dependantFactories(materialId, 'material');
-        rHelper.methods.INSRT_flowRate(materialId, 'material');
-        rHelper.methods.INSRT_flowDistributionGlobal();
-        rHelper.methods.EVNT_buildGraph('material');
+        ref.SET_globalObject('material', materialId, 'perHour', materialAmount);
+        ref.INSRT_materialRateWorth(materialId);
+        ref.INSRT_totalMineWorth(ref.CALC_totalMineWorth());
+        ref.CALC_dependantFactories(materialId, 'material');
+        ref.INSRT_flowRate(materialId, 'material');
+        ref.INSRT_flowDistributionGlobal();
+        ref.EVNT_buildGraph('material');
       });
 
       $(`#material-amount-of-mines-${materialId}`).on('input', function() {
-        let materialId = this.id.replace('material-amount-of-mines-', '');
-        let materialAmountOfMines = parseInt(this.value);
+        const [ref, materialId, materialAmountOfMines] = [rHelper.methods, this.id.replace('material-amount-of-mines-', ''), parseInt(this.value)];
 
-        rHelper.methods.SET_globalObject('material', materialId, 'amountOfMines', materialAmountOfMines);
+        ref.SET_globalObject('material', materialId, 'amountOfMines', materialAmountOfMines);
 
         $.each(rHelper.data.material, materialId => {
-          rHelper.methods.INSRT_materialNewMinePrice(materialId);
+          ref.INSRT_materialNewMinePrice(materialId);
         });
 
-        rHelper.methods.INSRT_warehouseRemainingTimeToFull(materialId, 'material');
-        rHelper.methods.INSRT_materialMineAmortisation();
-        rHelper.methods.INSRT_totalMineCount(rHelper.methods.CALC_totalMineCount());
-        rHelper.methods.EVNT_buildGraph('material');
+        ref.INSRT_warehouseRemainingTimeToFull(materialId, 'material');
+        ref.INSRT_materialMineAmortisation();
+        ref.INSRT_totalMineCount(ref.CALC_totalMineCount());
+        ref.EVNT_buildGraph('material');
       });
     },
     EVNT_warehouseInput(id, type) {
@@ -2551,6 +2572,11 @@ const rHelper = {
           case 'mapVisibleHQ':
             if (setting.value === 1) {
               $('#settings-hq-visibility').val(1);
+            }
+            break;
+          case 'mineVisibilityWorldMap':
+            if (setting.value === 1) {
+              $('#settings-mine-visibility').val(1);
             }
             break;
           case 'priceAge':

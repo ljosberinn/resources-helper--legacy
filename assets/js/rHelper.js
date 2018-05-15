@@ -21,72 +21,74 @@ var rHelper = {
     core: function core() {
       'use strict';
 
+      var ref = rHelper.methods;
+
       removeLoggedInButtons();
 
-      rHelper.methods.SET_tabSwitcherAnchorBased();
-      rHelper.methods.SET_transportCost('init');
+      ref.SET_tabSwitcherAnchorBased();
+      ref.SET_transportCost('init');
 
       $.each(rHelper.data.material, function(materialId) {
         // eventListeners
-        rHelper.methods.EVNT_materialInput(materialId);
+        ref.EVNT_materialInput(materialId);
         // general material data insertion
-        rHelper.methods.INSRT_materialData(materialId);
+        ref.INSRT_materialData(materialId);
         // warehouses
-        rHelper.methods.INSRT_warehouseData(materialId, 'material');
+        ref.INSRT_warehouseData(materialId, 'material');
         // price history
-        rHelper.methods.INSRT_priceHistoryName('material', materialId);
+        ref.INSRT_priceHistoryName('material', materialId);
       });
 
-      rHelper.methods.INSRT_totalMineWorth(rHelper.methods.CALC_totalMineWorth());
-      rHelper.methods.INSRT_totalMineCount(rHelper.methods.CALC_totalMineCount());
+      ref.INSRT_totalMineWorth(ref.CALC_totalMineWorth());
+      ref.INSRT_totalMineCount(ref.CALC_totalMineCount());
 
-      var calculationOrder = rHelper.methods.GET_calculationOrder();
+      var calculationOrder = ref.GET_calculationOrder();
 
       $.each(calculationOrder, function(index, factoryId) {
         // eventListeners
-        rHelper.methods.EVNT_factoryInput(factoryId);
+        ref.EVNT_factoryInput(factoryId);
         // general factory data insertion
-        rHelper.methods.INSRT_factoryDiamondData(factoryId, 'product');
+        ref.INSRT_factoryDiamondData(factoryId, 'product');
         // warehouses
-        rHelper.methods.INSRT_warehouseData(factoryId, 'products');
+        ref.INSRT_warehouseData(factoryId, 'products');
         // price history
-        rHelper.methods.INSRT_priceHistoryName('products', factoryId);
+        ref.INSRT_priceHistoryName('products', factoryId);
       });
 
       // loot
       $.each(rHelper.data.loot, function(index) {
         // warehouses
-        rHelper.methods.INSRT_warehouseData(index, 'loot');
+        ref.INSRT_warehouseData(index, 'loot');
         // price history
-        rHelper.methods.INSRT_priceHistoryName('loot', index);
+        ref.INSRT_priceHistoryName('loot', index);
         // recycling table
         if (index === 4 || (index >= 10 && index <= 13)) {
           return;
         }
-        rHelper.methods.SET_recyclingProfitObj(index);
-        rHelper.methods.INSRT_recycling(index);
+        ref.SET_recyclingProfitObj(index);
+        ref.INSRT_recycling(index);
       });
 
       var unitsFns = ['SET_UnitProfitObj', 'INSRT_unitsCraftingPrice', 'INSRT_unitsMarketPrice', 'INSRT_unitsPricePerStrength'];
 
       $.each(rHelper.data.units, function(index) {
         // warehouses
-        rHelper.methods.INSRT_warehouseData(index, 'units');
+        ref.INSRT_warehouseData(index, 'units');
         // units table
         $.each(unitsFns, function(i, fn) {
-          rHelper.methods[fn](index);
+          ref[fn](index);
         });
 
-        rHelper.methods.INSRT_unitsRecyclingProfit('units', index);
+        ref.INSRT_unitsRecyclingProfit('units', index);
         // price history
-        rHelper.methods.INSRT_priceHistoryName('units', index);
+        ref.INSRT_priceHistoryName('units', index);
       });
 
       // buildings
       var buildingFns = ['INSRT_buildingName', 'SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10', 'EVNT_buildingChange'];
       $.each(rHelper.data.buildings, function(buildingId) {
         $.each(buildingFns, function(i, fn) {
-          rHelper.methods[fn](buildingId);
+          ref[fn](buildingId);
         });
       });
 
@@ -95,7 +97,7 @@ var rHelper = {
       // headquarter
       $.each(rHelper.data.headquarter, function(headquarterLevel) {
         $.each(hqFns, function(i, fn) {
-          rHelper.methods[fn](headquarterLevel);
+          ref[fn](headquarterLevel);
         });
       });
 
@@ -103,12 +105,12 @@ var rHelper = {
       var pieGraphs = ['material'];
 
       $.each(pieGraphs, function(i, val) {
-        rHelper.methods.EVNT_buildGraph(val);
+        ref.EVNT_buildGraph(val);
       });
 
       var gaugeGraphs = ['buildings', 'headquarter'];
       $.each(gaugeGraphs, function(i, val) {
-        rHelper.methods.INSRT_gaugeGraph(val);
+        ref.INSRT_gaugeGraph(val);
       });
 
       var nonParamBoundMethods = [
@@ -142,7 +144,7 @@ var rHelper = {
       ];
 
       $.each(nonParamBoundMethods, function(i, fn) {
-        rHelper.methods[fn]();
+        ref[fn]();
       });
     }
   },
@@ -216,35 +218,40 @@ var rHelper = {
     API_getFactories: function API_getFactories(key) {
       'use strict';
 
-      rHelper.methods.API_toggleLoader('factories');
+      var ref = rHelper.methods;
+
+      ref.API_toggleLoader('factories');
 
       $.get('api/core.php?query=1&key=' + key, function(data) {
         $.each(data, function(i, value) {
           rHelper.data.products[i].factoryLevel = value;
         });
 
-        var calculationOrder = rHelper.methods.GET_calculationOrder();
+        var calculationOrder = ref.GET_calculationOrder();
 
         $.each(calculationOrder, function(index, factoryId) {
-          rHelper.methods.INSRT_factoryDiamondData(factoryId, 'product');
+          ref.INSRT_factoryDiamondData(factoryId, 'product');
         });
 
-        rHelper.methods.INSRT_totalFactoryUpgrades();
-        rHelper.methods.INSRT_factoryHighlightColumns();
-        rHelper.methods.INSRT_diamondTop10Profit();
-        rHelper.methods.INSRT_diamondTotalProfit();
-        rHelper.methods.INSRT_flowDistributionGlobal();
-        rHelper.methods.API_toggleLoadSuccessorHelper('factories');
+        var helperFns = ['INSRT_totalFactoryUpgrades', 'INSRT_factoryHighlightColumns', 'INSRT_diamondTop10Profit', 'INSRT_diamondTotalProfit', 'INSRT_flowDistributionGlobal'];
+
+        $.each(helperFns, function(i, fn) {
+          ref[fn]();
+        });
+
+        ref.API_toggleLoadSuccessorHelper('factories');
 
         sorttable.innerSortFunction.apply($('#module-diamond th')[4], []);
         sorttable.innerSortFunction.apply($('#module-diamond th')[5], []);
-        rHelper.methods.SET_save();
+        ref.SET_save();
       });
     },
     API_getWarehouse: function API_getWarehouse(key) {
       'use strict';
 
-      rHelper.methods.API_toggleLoader('warehouse');
+      var ref = rHelper.methods;
+
+      ref.API_toggleLoader('warehouse');
 
       $.getJSON('api/core.php?query=2&key=' + key, function(data) {
         $.each(data, function(i, warehouseInfo) {
@@ -273,34 +280,36 @@ var rHelper = {
           rHelper.data[targetObj][iterator].warehouse.contingent = contingent;
           rHelper.data[targetObj][iterator].warehouse.fillStatus = fillStatus;
 
-          rHelper.methods.SET_save();
+          ref.SET_save();
         });
 
         $.each(rHelper.data.material, function(materialId) {
-          rHelper.methods.INSRT_warehouseData(materialId, 'material');
+          ref.INSRT_warehouseData(materialId, 'material');
         });
 
-        var calculationOrder = rHelper.methods.GET_calculationOrder();
+        var calculationOrder = ref.GET_calculationOrder();
 
         $.each(calculationOrder, function(index) {
-          rHelper.methods.INSRT_warehouseData(index, 'products');
+          ref.INSRT_warehouseData(index, 'products');
         });
 
         $.each(rHelper.data.loot, function(index) {
-          rHelper.methods.INSRT_warehouseData(index, 'loot');
+          ref.INSRT_warehouseData(index, 'loot');
         });
 
         $.each(rHelper.data.units, function(index) {
-          rHelper.methods.INSRT_warehouseData(index, 'units');
+          ref.INSRT_warehouseData(index, 'units');
         });
 
-        rHelper.methods.INSRT_warehouseTotalLevel();
-        rHelper.methods.INSRT_warehouseTotalWorth();
-        rHelper.methods.API_toggleLoadSuccessorHelper('warehouse');
+        ref.INSRT_warehouseTotalLevel();
+        ref.INSRT_warehouseTotalWorth();
+        ref.API_toggleLoadSuccessorHelper('warehouse');
       });
     },
     API_getMineSummary: function API_getMineSummary(key) {
-      rHelper.methods.API_toggleLoader('mines-summary');
+      var ref = rHelper.methods;
+
+      ref.API_toggleLoader('mines-summary');
       $.get('api/core.php?query=51&key=' + key, function(data) {
         $.each(data, function(i, obj) {
           rHelper.data.material[i].perHour = obj.perHour;
@@ -308,21 +317,21 @@ var rHelper = {
         });
 
         $.each(rHelper.data.material, function(materialId) {
-          rHelper.methods.INSRT_materialData(materialId, 'api');
+          ref.INSRT_materialData(materialId, 'api');
         });
 
         var fns = ['INSRT_materialMineAmortisation', 'INSRT_materialHighlightMinePerfectIncome', 'INSRT_flowDistributionGlobal'];
 
         $.each(fns, function(i, fn) {
-          rHelper.methods[fn]();
+          ref[fn]();
         });
 
-        rHelper.methods.INSRT_totalMineWorth(rHelper.methods.CALC_totalMineWorth());
-        rHelper.methods.INSRT_totalMineCount(rHelper.methods.CALC_totalMineCount());
-        rHelper.methods.EVNT_buildGraph('material');
-        rHelper.methods.API_toggleLoadSuccessorHelper('mines-summary');
+        ref.INSRT_totalMineWorth(ref.CALC_totalMineWorth());
+        ref.INSRT_totalMineCount(ref.CALC_totalMineCount());
+        ref.EVNT_buildGraph('material');
+        ref.API_toggleLoadSuccessorHelper('mines-summary');
 
-        rHelper.methods.SET_save();
+        rHelper.SET_save();
       });
     },
     API_getMineMap: function API_getMineMap() {
@@ -330,9 +339,11 @@ var rHelper = {
 
       $.getJSON('api/core.php?mineMap', function(data) {
         rHelper.data.mineMap = data;
-        rHelper.methods.API_toggleLoadSuccessorHelper('mines-detailed');
-        rHelper.methods.EVNT_mapCreation('personal');
-        rHelper.methods.SET_overTimeGraph();
+
+        var ref = rHelper.methods;
+        ref.API_toggleLoadSuccessorHelper('mines-detailed');
+        ref.EVNT_mapCreation('personal');
+        ref.SET_overTimeGraph();
       });
     },
     API_getMineMapInitiator: function API_getMineMapInitiator(key) {
@@ -492,7 +503,9 @@ var rHelper = {
     API_getHeadquarter: function API_getHeadquarter(key) {
       'use strict';
 
-      rHelper.methods.API_toggleLoader('headquarter');
+      var ref = rHelper.methods;
+
+      ref.API_toggleLoader('headquarter');
 
       $.getJSON('api/core.php?query=4&key=' + key, function(data) {
         rHelper.data.headquarter.user = rHelper.data.headquarter.user || {
@@ -512,11 +525,10 @@ var rHelper = {
           rHelper.data.headquarter.user.paid[i] = paid;
         });
 
-        rHelper.methods.INSRT_gaugeGraph('headquarter');
-        rHelper.methods.SET_hqLevel();
-        rHelper.methods.API_toggleLoadSuccessorHelper('headquarter');
-
-        rHelper.methods.SET_save();
+        ref.INSRT_gaugeGraph('headquarter');
+        ref.SET_hqLevel();
+        ref.API_toggleLoadSuccessorHelper('headquarter');
+        ref.SET_save();
       });
     },
     API_getCreditInformation: function API_getCreditInformation(key) {
@@ -539,6 +551,8 @@ var rHelper = {
     API_init: function API_init(key, queries, anonymity) {
       'use strict';
 
+      var ref = rHelper.methods;
+
       if ($.isArray(queries)) {
         $.post({
           url: 'api/updateQueryPreset.php',
@@ -550,37 +564,37 @@ var rHelper = {
         $.each(queries, function(i, query) {
           switch (query) {
             case 1:
-              rHelper.methods.API_getFactories(key); // STABLE
+              ref.API_getFactories(key); // STABLE
               break;
             case 2:
-              rHelper.methods.API_getWarehouse(key); // STABLE
+              ref.API_getWarehouse(key); // STABLE
               break;
             case 3:
-              rHelper.methods.API_getBuildings(key); // STABLE
+              ref.API_getBuildings(key); // STABLE
               break;
             case 4:
-              rHelper.methods.API_getHeadquarter(key); // STABLE
+              ref.API_getHeadquarter(key); // STABLE
               break;
             case 5:
-              rHelper.methods.API_getMineMapInitiator(key); // STABLE
+              ref.API_getMineMapInitiator(key); // STABLE
               break;
             case 51:
-              rHelper.methods.API_getMineSummary(key); // STABLE
+              ref.API_getMineSummary(key); // STABLE
               break;
             case 6:
-              rHelper.methods.API_getTradeLogInitiator(key); // STABLE
+              ref.API_getTradeLogInitiator(key); // STABLE
               break;
             case 7:
-              rHelper.methods.API_getPlayerInfo(key, anonymity); // STABLE
+              ref.API_getPlayerInfo(key, anonymity); // STABLE
               break;
             case 9:
-              rHelper.methods.API_getAttackLogInitiator(key); // STABLE
+              ref.API_getAttackLogInitiator(key); // STABLE
               break;
             case 10:
-              rHelper.methods.API_getMissionsInitiator(key); // STABLE
+              ref.API_getMissionsInitiator(key); // STABLE
               break;
             default:
-              rHelper.methods.API_getCreditInformation(key); // STABLE
+              ref.API_getCreditInformation(key); // STABLE
               break;
           }
         });
@@ -660,8 +674,10 @@ var rHelper = {
       }
 
       $('.nav-link').each(function(i, navLink) {
-        var navEl = $(navLink);
-        var target = $('#' + navLink.dataset.target);
+        var _ref = [$(navLink), $('#' + navLink.dataset.target)],
+          navEl = _ref[0],
+          target = _ref[1];
+
         if (navEl.attr('href') === anchor) {
           target.css('display', 'block');
           navEl.addClass('active');
@@ -674,6 +690,8 @@ var rHelper = {
     SET_transportCost: function SET_transportCost(init) {
       'use strict';
 
+      var ref = rHelper.methods;
+
       rHelper.data.buildings[9].transportCost = 1 + (15 - rHelper.data.buildings[9].level) / 100;
 
       if (!init) {
@@ -681,22 +699,22 @@ var rHelper = {
           var fns = ['SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10'];
 
           $.each(fns, function(i, fn) {
-            rHelper.methods[fn](buildingId);
+            ref[fn](buildingId);
           });
         });
-        var calculationOrder = rHelper.methods.GET_calculationOrder();
+        var calculationOrder = ref.GET_calculationOrder();
         $.each(calculationOrder, function(index, factoryId) {
           var fns = ['INSRT_factoryUpgradeCost', 'INSRT_factoryROI'];
 
           $.each(fns, function(i, fn) {
-            rHelper.methods[fn](factoryId);
+            ref[fn](factoryId);
           });
 
-          rHelper.methods.INSRT_flowDistributionGlobal();
+          ref.INSRT_flowDistributionGlobal();
         });
 
         $.each(rHelper.data.headquarter, function(headquarterLevel) {
-          rHelper.methods.INSRT_headquarterOvwTransportation(headquarterLevel);
+          ref.INSRT_headquarterOvwTransportation(headquarterLevel);
         });
       }
     },
@@ -714,9 +732,9 @@ var rHelper = {
     SET_buildingTableVisibility: function SET_buildingTableVisibility(buildingId, state) {
       'use strict';
 
-      var _ref = [$('#building-' + buildingId + ' tbody'), $('#building-' + buildingId + ' tfoot')],
-        tbody = _ref[0],
-        tfoot = _ref[1];
+      var _ref2 = [$('#building-' + buildingId + ' tbody'), $('#building-' + buildingId + ' tfoot')],
+        tbody = _ref2[0],
+        tfoot = _ref2[1];
 
       $.each([tbody, tfoot], function(i, el) {
         switch (state) {
@@ -843,7 +861,7 @@ var rHelper = {
 
       var hqLevel = hqObj.level;
 
-      var _ref2 = [
+      var _ref3 = [
           hqLevel * 12.5,
           rHelper.data.headquarter[hqLevel - 1].radius,
           {
@@ -851,9 +869,9 @@ var rHelper = {
             lng: hqObj.lon
           }
         ],
-        hqSize = _ref2[0],
-        radius = _ref2[1],
-        center = _ref2[2];
+        hqSize = _ref3[0],
+        radius = _ref3[1],
+        center = _ref3[2];
 
       rHelper.methods.SET_mapHqCircle(map, center, radius, hqObj.relation);
 
@@ -882,21 +900,23 @@ var rHelper = {
       });
     },
     SET_mapMineHandler: function SET_mapMineHandler(now, subObj, map, mapType) {
+      var ref = rHelper.methods;
+
       var type = subObj.type;
       var relObj = rHelper.data.material[type];
-      var buildMilliseconds = rHelper.methods.CALC_toMilliseconds(subObj.builddate);
-      var buildDate = rHelper.methods.CALC_convertDateToIso(buildMilliseconds);
+      var buildMilliseconds = ref.CALC_toMilliseconds(subObj.builddate);
+      var buildDate = ref.CALC_convertDateToIso(buildMilliseconds);
       var age = (now - buildMilliseconds) / 1000 / 86400;
-      var estRevenue = rHelper.methods.CALC_mineEstRevenue(subObj, type, age);
-      var contentString = rHelper.methods.CALC_createMapContentString(relObj, buildDate, age, estRevenue, subObj);
-      var infoWindow = rHelper.methods.SET_mapInfoWindow(contentString);
+      var estRevenue = ref.CALC_mineEstRevenue(subObj, type, age);
+      var contentString = ref.CALC_createMapContentString(relObj, buildDate, age, estRevenue, subObj);
+      var infoWindow = ref.SET_mapInfoWindow(contentString);
       var marker = new google.maps.Marker({
         map: map,
         position: {
           lat: subObj.lat,
           lng: subObj.lon
         },
-        icon: rHelper.methods.SET_mapImg(rHelper.methods.SET_mapFolderRelation(subObj.relation), type, 20)
+        icon: ref.SET_mapImg(ref.SET_mapFolderRelation(subObj.relation), type, 20)
       });
 
       if (mapType === 'personal') {
@@ -1003,40 +1023,44 @@ var rHelper = {
         }
       });
 
-      var firstMine = data[0].builddate;
-      var lastMine = data[data.length - 1].builddate;
+      var ref = rHelper.methods;
+
+      var _ref4 = [data[0].builddate, data[data.length - 1].builddate],
+        firstMine = _ref4[0],
+        lastMine = _ref4[1];
+
       var daysSinceFirstMine = (lastMine - firstMine) / 86400;
 
-      timestamps.push(rHelper.methods.CALC_toMilliseconds(firstMine));
+      timestamps.push(ref.CALC_toMilliseconds(firstMine));
 
       for (var i = 0; i <= daysSinceFirstMine; i += 1) {
-        var date = rHelper.methods.CALC_toMilliseconds(firstMine + 86400 * i);
+        var date = ref.CALC_toMilliseconds(firstMine + 86400 * i);
         timestamps.push(date);
       }
 
       $.each(timestamps, function(i, ts) {
-        var mineCountAtGivenTS = 0;
-        var sum = 0;
-        var totalIncomeAtGivenTS = 0;
+        var mineCountAtGivenTS = 0,
+          sum = 0,
+          totalIncomeAtGivenTS = 0;
 
         $.each(data, function(index, subObj) {
-          var builddate = rHelper.methods.CALC_toMilliseconds(subObj.builddate);
+          var builddate = ref.CALC_toMilliseconds(subObj.builddate);
 
           if (builddate <= ts) {
             mineCountAtGivenTS += 1;
-            totalIncomeAtGivenTS += rHelper.methods.CALC_returnPriceViaId(subObj.type) * subObj.fullRate;
+            totalIncomeAtGivenTS += ref.CALC_returnPriceViaId(subObj.type) * subObj.fullRate;
           }
         });
 
         $.each(rHelper.data.material, function(k) {
-          sum += rHelper.methods.CALC_materialNewMinePrice(mineCountAtGivenTS, k);
+          sum += ref.CALC_materialNewMinePrice(mineCountAtGivenTS, k);
         });
 
         income.push(Math.round(totalIncomeAtGivenTS));
         mineCount.push(mineCountAtGivenTS);
         avgMinePrice.push(Math.round(sum / 14));
 
-        timestamps[i] = rHelper.methods.CALC_convertDateToIso(ts);
+        timestamps[i] = ref.CALC_convertDateToIso(ts);
       });
 
       Highcharts.chart('graph-overtime', {
@@ -1196,9 +1220,12 @@ var rHelper = {
       'use strict';
 
       $('#factories-level-' + factoryId).on('input', function() {
-        var factoryId = parseInt(this.id.replace('factories-level-', ''));
-        var factoryLevel = parseInt(this.value);
-        rHelper.methods.SET_globalObject('products', factoryId, 'factoryLevel', factoryLevel);
+        var _ref5 = [rHelper.methods, parseInt(this.id.replace('factories-level-', '')), parseInt(this.value)],
+          ref = _ref5[0],
+          factoryId = _ref5[1],
+          factoryLevel = _ref5[2];
+
+        ref.SET_globalObject('products', factoryId, 'factoryLevel', factoryLevel);
 
         var fns = [
           // factories tab
@@ -1220,47 +1247,51 @@ var rHelper = {
         ];
 
         $.each(fns, function(i, fn) {
-          rHelper.methods[fn](factoryId);
+          ref[fn](factoryId);
         });
 
-        rHelper.methods.CALC_dependantFactories(factoryId, 'product');
-        rHelper.methods.INSRT_diamondTop10Profit();
-        rHelper.methods.INSRT_diamondTotalProfit();
-        rHelper.methods.INSRT_flowRate(factoryId, 'product');
-        rHelper.methods.INSRT_flowDistributionGlobal();
-        rHelper.methods.INSRT_factoryHighlightColumns();
+        ref.CALC_dependantFactories(factoryId, 'product');
+        ref.INSRT_diamondTop10Profit();
+        ref.INSRT_diamondTotalProfit();
+        ref.INSRT_flowRate(factoryId, 'product');
+        ref.INSRT_flowDistributionGlobal();
+        ref.INSRT_factoryHighlightColumns();
       });
     },
     EVNT_materialInput: function EVNT_materialInput(materialId) {
       'use strict';
 
       $('#material-rate-' + materialId).on('input', function() {
-        var materialId = this.id.replace('material-rate-', '');
-        var materialAmount = parseInt(this.value);
+        var _ref6 = [rHelper.methods, this.id.replace('material-rate-', ''), parseInt(this.value)],
+          ref = _ref6[0],
+          materialId = _ref6[1],
+          materialAmount = _ref6[2];
 
-        rHelper.methods.SET_globalObject('material', materialId, 'perHour', materialAmount);
-        rHelper.methods.INSRT_materialRateWorth(materialId);
-        rHelper.methods.INSRT_totalMineWorth(rHelper.methods.CALC_totalMineWorth());
-        rHelper.methods.CALC_dependantFactories(materialId, 'material');
-        rHelper.methods.INSRT_flowRate(materialId, 'material');
-        rHelper.methods.INSRT_flowDistributionGlobal();
-        rHelper.methods.EVNT_buildGraph('material');
+        ref.SET_globalObject('material', materialId, 'perHour', materialAmount);
+        ref.INSRT_materialRateWorth(materialId);
+        ref.INSRT_totalMineWorth(ref.CALC_totalMineWorth());
+        ref.CALC_dependantFactories(materialId, 'material');
+        ref.INSRT_flowRate(materialId, 'material');
+        ref.INSRT_flowDistributionGlobal();
+        ref.EVNT_buildGraph('material');
       });
 
       $('#material-amount-of-mines-' + materialId).on('input', function() {
-        var materialId = this.id.replace('material-amount-of-mines-', '');
-        var materialAmountOfMines = parseInt(this.value);
+        var _ref7 = [rHelper.methods, this.id.replace('material-amount-of-mines-', ''), parseInt(this.value)],
+          ref = _ref7[0],
+          materialId = _ref7[1],
+          materialAmountOfMines = _ref7[2];
 
-        rHelper.methods.SET_globalObject('material', materialId, 'amountOfMines', materialAmountOfMines);
+        ref.SET_globalObject('material', materialId, 'amountOfMines', materialAmountOfMines);
 
         $.each(rHelper.data.material, function(materialId) {
-          rHelper.methods.INSRT_materialNewMinePrice(materialId);
+          ref.INSRT_materialNewMinePrice(materialId);
         });
 
-        rHelper.methods.INSRT_warehouseRemainingTimeToFull(materialId, 'material');
-        rHelper.methods.INSRT_materialMineAmortisation();
-        rHelper.methods.INSRT_totalMineCount(rHelper.methods.CALC_totalMineCount());
-        rHelper.methods.EVNT_buildGraph('material');
+        ref.INSRT_warehouseRemainingTimeToFull(materialId, 'material');
+        ref.INSRT_materialMineAmortisation();
+        ref.INSRT_totalMineCount(ref.CALC_totalMineCount());
+        ref.EVNT_buildGraph('material');
       });
     },
     EVNT_warehouseInput: function EVNT_warehouseInput(id, type) {
@@ -1505,9 +1536,9 @@ var rHelper = {
     EVNT_priceHistoryToggler: function EVNT_priceHistoryToggler(state) {
       'use strict';
 
-      var _ref3 = [$('#graph-pricehistory'), $('#pricehistory-selector')],
-        container = _ref3[0],
-        selector = _ref3[1];
+      var _ref8 = [$('#graph-pricehistory'), $('#pricehistory-selector')],
+        container = _ref8[0],
+        selector = _ref8[1];
 
       switch (state) {
         case 'loading':
@@ -1525,11 +1556,11 @@ var rHelper = {
     EVNT_mapCreation: function EVNT_mapCreation(mapType) {
       'use strict';
 
-      var _ref4 = [, , ,],
-        container = _ref4[0],
-        data = _ref4[1],
-        infoNode = _ref4[2],
-        errorText = _ref4[3];
+      var _ref9 = [, , ,],
+        container = _ref9[0],
+        data = _ref9[1],
+        infoNode = _ref9[2],
+        errorText = _ref9[3];
 
       switch (mapType) {
         case 'personal':
@@ -1547,10 +1578,10 @@ var rHelper = {
       }
 
       if (data.length != 0) {
-        var _ref5 = [new Date(), rHelper.methods.SET_newMap(container, 3, 'terrain'), []],
-          now = _ref5[0],
-          map = _ref5[1],
-          markerArr = _ref5[2];
+        var _ref10 = [new Date(), rHelper.methods.SET_newMap(container, 3, 'terrain'), []],
+          now = _ref10[0],
+          map = _ref10[1],
+          markerArr = _ref10[2];
 
         map = rHelper.methods.SET_mapOptions(map, 16, data.mines[0]);
 
@@ -1592,18 +1623,18 @@ var rHelper = {
       });
     },
     INSRT_leaderboardTable: function INSRT_leaderboardTable() {
-      var _ref6 = [rHelper.data.leaderboard, $('#module-leaderboard tbody'), 'text-md-right text-sm-left', "class='text-right'", ''],
-        container = _ref6[0],
-        tbody = _ref6[1],
-        textOrientation = _ref6[2],
-        textClass = _ref6[3],
-        string = _ref6[4];
+      var _ref11 = [rHelper.data.leaderboard, $('#module-leaderboard tbody'), 'text-md-right text-sm-left', "class='text-right'", ''],
+        container = _ref11[0],
+        tbody = _ref11[1],
+        textOrientation = _ref11[2],
+        textClass = _ref11[3],
+        string = _ref11[4];
 
       var returnPlayerTitle = function returnPlayerTitle(dataset) {
-        var _ref7 = [dataset.general.rank.toLocaleString('en-US'), dataset.general.registeredGame, dataset.general.daysPlaying.toLocaleString('en-US')],
-          rank = _ref7[0],
-          registeredGame = _ref7[1],
-          daysPlaying = _ref7[2];
+        var _ref12 = [dataset.general.rank.toLocaleString('en-US'), dataset.general.registeredGame, dataset.general.daysPlaying.toLocaleString('en-US')],
+          rank = _ref12[0],
+          registeredGame = _ref12[1],
+          daysPlaying = _ref12[2];
 
         if (rank === 0) {
           rank = registeredGame = daysPlaying = 'unknown';
@@ -1717,7 +1748,7 @@ var rHelper = {
       };
 
       var returnString = function returnString(dataset) {
-        var _ref8 = [
+        var _ref13 = [
             dataset.general.name,
             dataset.general.level.toLocaleString('en-US'),
             dataset.general.pointsPerDay.toLocaleString('en-US'),
@@ -1728,15 +1759,15 @@ var rHelper = {
             dataset.tradeData.totalSell,
             dataset.tradeData.sumKISell
           ],
-          name = _ref8[0],
-          level = _ref8[1],
-          pointsPerDay = _ref8[2],
-          points = _ref8[3],
-          headquarterMines = _ref8[4],
-          tradeIncome = _ref8[5],
-          totalBuy = _ref8[6],
-          totalSell = _ref8[7],
-          sumKISell = _ref8[8];
+          name = _ref13[0],
+          level = _ref13[1],
+          pointsPerDay = _ref13[2],
+          points = _ref13[3],
+          headquarterMines = _ref13[4],
+          tradeIncome = _ref13[5],
+          totalBuy = _ref13[6],
+          totalSell = _ref13[7],
+          sumKISell = _ref13[8];
 
         if (name === '') {
           level = '';
@@ -2119,9 +2150,9 @@ var rHelper = {
         };
 
         var fillEventArray = function fillEventArray(container) {
-          var _ref9 = [[], container.max()],
-            arr = _ref9[0],
-            containerMax = _ref9[1];
+          var _ref14 = [[], container.max()],
+            arr = _ref14[0],
+            containerMax = _ref14[1];
 
           $.each(container, function(i, amount) {
             var itemObj = rHelper.methods.CALC_convertId(i);
@@ -2182,11 +2213,11 @@ var rHelper = {
         showGraphs('graph-tradelog-buying', fillEventArray(container.buying.valuesById), 'Buy values (total: ' + container.buying.total.toLocaleString('en-US') + ')');
         showGraphs('graph-tradelog-selling', fillEventArray(container.selling.valuesById), 'Sell values (total: ' + container.selling.total.toLocaleString('en-US') + ')');
 
-        var _ref10 = [$('#tradelog-detailed-tbody'), 'text-md-right text-sm-left', $('#tradelog-filter-day'), $('#tradelog-simple-tbody')],
-          _tradeLogDetailedTbody = _ref10[0],
-          _textOrientation = _ref10[1],
-          _daysFilterSelect = _ref10[2],
-          _tradeLogSimpleTbody = _ref10[3];
+        var _ref15 = [$('#tradelog-detailed-tbody'), 'text-md-right text-sm-left', $('#tradelog-filter-day'), $('#tradelog-simple-tbody')],
+          _tradeLogDetailedTbody = _ref15[0],
+          _textOrientation = _ref15[1],
+          _daysFilterSelect = _ref15[2],
+          _tradeLogSimpleTbody = _ref15[3];
 
         _tradeLogDetailedTbody.empty();
         _tradeLogSimpleTbody.empty();
@@ -2218,16 +2249,16 @@ var rHelper = {
       $('#attacklog-detailed-profit-total').text(dataContainer.total.profit.toLocaleString('en-US'));
     },
     INSRT_attackLogDetailed: function INSRT_attackLogDetailed(type, dataContainer) {
-      var _ref11 = [
+      var _ref16 = [
           $('#attacklog-tbody-detailed'),
           $('#attacklog-detailed-selector'),
           $('#collapse-attacklog-detailed table')[1],
           ['Attacked player (level)', 'Timestamp & position', 'Units lost', 'Units destroyed', 'Lootfactor', 'Loot', 'Profit']
         ],
-        target = _ref11[0],
-        select = _ref11[1],
-        sortableTable = _ref11[2],
-        dataTHs = _ref11[3];
+        target = _ref16[0],
+        select = _ref16[1],
+        sortableTable = _ref16[2],
+        dataTHs = _ref16[3];
 
       target.empty();
 
@@ -2250,18 +2281,18 @@ var rHelper = {
       sorttable.makeSortable(sortableTable);
     },
     INSRT_ADLogSimple: function INSRT_ADLogSimple(type, data) {
-      var _ref12 = [
+      var _ref17 = [
           $('#attacklog-tbody-simple'),
           ['Attacked player (last known level)', 'Last attacked', 'Total attacks', 'Win', 'Loss', 'Average loot factor', 'Average amount of units used', 'Profit'],
           [0, 2, 3],
           'text-md-right text-sm-left',
           $('#collapse-attacklog-simple table')[0]
         ],
-        target = _ref12[0],
-        dataTHs = _ref12[1],
-        unitIndices = _ref12[2],
-        textOrientation = _ref12[3],
-        sortableTable = _ref12[4];
+        target = _ref17[0],
+        dataTHs = _ref17[1],
+        unitIndices = _ref17[2],
+        textOrientation = _ref17[3],
+        sortableTable = _ref17[4];
 
       if (type === 'defenseSimple') {
         dataTHs[0] = 'Attacking player (last known level)';
@@ -2272,17 +2303,17 @@ var rHelper = {
       target.empty();
 
       $.each(data, function(i, dataset) {
-        var _ref13 = [$(crEl('tr')), 'bg-success-25'],
-          tr = _ref13[0],
-          factorBgColorClass = _ref13[1];
+        var _ref18 = [$(crEl('tr')), 'bg-success-25'],
+          tr = _ref18[0],
+          factorBgColorClass = _ref18[1];
 
         for (var index = 0; index <= 7; index += 1) {
-          var _ref14 = [$(crEl('td')).attr('data-th', dataTHs[index]), 0, 0, 0, ''],
-            td = _ref14[0],
-            loss = _ref14[1],
-            winPercent = _ref14[2],
-            factor = _ref14[3],
-            unitsContent = _ref14[4];
+          var _ref19 = [$(crEl('td')).attr('data-th', dataTHs[index]), 0, 0, 0, ''],
+            td = _ref19[0],
+            loss = _ref19[1],
+            winPercent = _ref19[2],
+            factor = _ref19[3],
+            unitsContent = _ref19[4];
 
           switch (index) {
             case 0:
@@ -2749,6 +2780,11 @@ var rHelper = {
               $('#settings-hq-visibility').val(1);
             }
             break;
+          case 'mineVisibilityWorldMap':
+            if (setting.value === 1) {
+              $('#settings-mine-visibility').val(1);
+            }
+            break;
           case 'priceAge':
             $('#settings-price-age').val(setting.value);
             break;
@@ -2780,10 +2816,10 @@ var rHelper = {
 
         $.each(iconSelectors, function(i, iconSelector) {
           $.each($('span[class*="resources-' + iconSelector + '-"]'), function(k, el) {
-            var _ref15 = [$(el), new RegExp('resources-' + iconSelector + '-'), iconSelector],
-              _el = _ref15[0],
-              stringToBeReplaced = _ref15[1],
-              targetArray = _ref15[2];
+            var _ref20 = [$(el), new RegExp('resources-' + iconSelector + '-'), iconSelector],
+              _el = _ref20[0],
+              stringToBeReplaced = _ref20[1],
+              targetArray = _ref20[2];
 
             var index = parseInt(_el.attr('class').replace(stringToBeReplaced, ''));
 
@@ -2846,11 +2882,11 @@ var rHelper = {
     INSRT_materialHighlightColumns: function INSRT_materialHighlightColumns(array, target, minClass, maxClass) {
       'use strict';
 
-      var _ref16 = [['min', 'max'], 0, ,],
-        selectors = _ref16[0],
-        value = _ref16[1],
-        addClass = _ref16[2],
-        rmvClass = _ref16[3];
+      var _ref21 = [['min', 'max'], 0, ,],
+        selectors = _ref21[0],
+        value = _ref21[1],
+        addClass = _ref21[2],
+        rmvClass = _ref21[3];
 
       $.each(selectors, function(i, selector) {
         switch (selector) {
@@ -2913,10 +2949,10 @@ var rHelper = {
           var existingAmount = rHelper.methods.CALC_factoryDependencyExistingAmount(dependantObj, dependencyIndex);
           var addClass = rHelper.methods.CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount);
 
-          var _ref17 = [$(crEl('span')), $(crEl('span')), $(crEl('span'))],
-            outerSpan = _ref17[0],
-            imgSpan = _ref17[1],
-            innerSpan = _ref17[2];
+          var _ref22 = [$(crEl('span')), $(crEl('span')), $(crEl('span'))],
+            outerSpan = _ref22[0],
+            imgSpan = _ref22[1],
+            innerSpan = _ref22[2];
 
           imgSpan.addClass(dependantObj.icon).attr('title', price.toLocaleString('en-US'));
           innerSpan.addClass(addClass).text(requiredAmount.toLocaleString('en-US'));
@@ -2931,10 +2967,10 @@ var rHelper = {
         var existingAmount = rHelper.methods.CALC_factoryDependencyExistingAmount(dependantObj, 0);
         var addClass = rHelper.methods.CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount);
 
-        var _ref18 = [$(crEl('span')), $(crEl('span')), $(crEl('span'))],
-          outerSpan = _ref18[0],
-          imgSpan = _ref18[1],
-          innerSpan = _ref18[2];
+        var _ref23 = [$(crEl('span')), $(crEl('span')), $(crEl('span'))],
+          outerSpan = _ref23[0],
+          imgSpan = _ref23[1],
+          innerSpan = _ref23[2];
 
         imgSpan.addClass(dependantObj.icon).attr('title', price.toLocaleString('en-US'));
         innerSpan.addClass(addClass).text(requiredAmount.toLocaleString('en-US'));
@@ -2946,9 +2982,9 @@ var rHelper = {
     INSRT_factoryAmortisation: function INSRT_factoryAmortisation(factoryId) {
       'use strict';
 
-      var _ref19 = ['#factories-roi-' + factoryId, rHelper.methods.CALC_factoryAmortisation(factoryId)],
-        target = _ref19[0],
-        amortisation = _ref19[1];
+      var _ref24 = ['#factories-roi-' + factoryId, rHelper.methods.CALC_factoryAmortisation(factoryId)],
+        target = _ref24[0],
+        amortisation = _ref24[1];
 
       if (amortisation < 0 || amortisation === Infinity) {
         amortisation = '∞';
@@ -2961,9 +2997,9 @@ var rHelper = {
     INSRT_factoryWorkload: function INSRT_factoryWorkload(factoryId) {
       'use strict';
 
-      var _ref20 = [$('#factories-workload-' + factoryId), rHelper.data.products[factoryId].dependencies],
-        target = _ref20[0],
-        dependencies = _ref20[1];
+      var _ref25 = [$('#factories-workload-' + factoryId), rHelper.data.products[factoryId].dependencies],
+        target = _ref25[0],
+        dependencies = _ref25[1];
 
       rHelper.data.products[factoryId].dependencyWorkload = [];
 
@@ -2977,10 +3013,10 @@ var rHelper = {
         rHelper.data.products[factoryId].dependencyWorkload.push(dependencyWorkload);
       }
 
-      var _ref21 = [rHelper.methods.CALC_factoryWorkloadMinNonSanitized(factoryId), ,],
-        workload = _ref21[0],
-        removeClass = _ref21[1],
-        addClass = _ref21[2];
+      var _ref26 = [rHelper.methods.CALC_factoryWorkloadMinNonSanitized(factoryId), ,],
+        workload = _ref26[0],
+        removeClass = _ref26[1],
+        addClass = _ref26[2];
 
       if (workload >= 1) {
         removeClass = 'text-danger';
@@ -3001,11 +3037,11 @@ var rHelper = {
     INSRT_factoryTurnover: function INSRT_factoryTurnover(factoryId) {
       'use strict';
 
-      var _ref22 = [$('#factories-turnover-' + factoryId), rHelper.methods.CALC_factoryTurnover(factoryId), ,],
-        target = _ref22[0],
-        turnover = _ref22[1],
-        removeClass = _ref22[2],
-        addClass = _ref22[3];
+      var _ref27 = [$('#factories-turnover-' + factoryId), rHelper.methods.CALC_factoryTurnover(factoryId), ,],
+        target = _ref27[0],
+        turnover = _ref27[1],
+        removeClass = _ref27[2],
+        addClass = _ref27[3];
 
       if (turnover <= 0) {
         removeClass = 'text-success';
@@ -3063,9 +3099,9 @@ var rHelper = {
         arrayMin/Max = search within idArray for the same index thats min/max of the value array
         */
 
-        var _ref23 = [idArray[valueArray.indexOf(valueArray.min())], idArray[valueArray.indexOf(valueArray.max())]],
-          arrayMin = _ref23[0],
-          arrayMax = _ref23[1];
+        var _ref28 = [idArray[valueArray.indexOf(valueArray.min())], idArray[valueArray.indexOf(valueArray.max())]],
+          arrayMin = _ref28[0],
+          arrayMax = _ref28[1];
 
         switch (i) {
           case 0:
@@ -3088,9 +3124,9 @@ var rHelper = {
     INSRT_factoryROI: function INSRT_factoryROI(factoryId) {
       'use strict';
 
-      var _ref24 = [$('#factories-roi-' + factoryId), rHelper.methods.CALC_factoryROI(factoryId)],
-        target = _ref24[0],
-        roi = _ref24[1];
+      var _ref29 = [$('#factories-roi-' + factoryId), rHelper.methods.CALC_factoryROI(factoryId)],
+        target = _ref29[0],
+        roi = _ref29[1];
 
       rHelper.data.products[factoryId].roi = roi;
 
@@ -3105,9 +3141,9 @@ var rHelper = {
     INSRT_factoryTurnoverPerUpgrade: function INSRT_factoryTurnoverPerUpgrade(factoryId) {
       'use strict';
 
-      var _ref25 = [$('#factories-increase-per-upgrade-' + factoryId), rHelper.methods.CALC_factoryTurnoverPerUpgrade(factoryId)],
-        target = _ref25[0],
-        turnoverPerUpgrade = _ref25[1];
+      var _ref30 = [$('#factories-increase-per-upgrade-' + factoryId), rHelper.methods.CALC_factoryTurnoverPerUpgrade(factoryId)],
+        target = _ref30[0],
+        turnoverPerUpgrade = _ref30[1];
 
       rHelper.data.products[factoryId].turnoverIncrease = turnoverPerUpgrade;
       target.text(turnoverPerUpgrade.toLocaleString('en-US'));
@@ -3154,29 +3190,29 @@ var rHelper = {
 
       var product = rHelper.data.products[factoryId];
 
-      var _ref26 = [product.dependencies, '', $(crEl('span')).addClass('nav-icon-warehouses')],
-        dependencies = _ref26[0],
-        dependencyString = _ref26[1],
-        warehouseIconSpan = _ref26[2];
+      var _ref31 = [product.dependencies, '', $(crEl('span')).addClass('nav-icon-warehouses')],
+        dependencies = _ref31[0],
+        dependencyString = _ref31[1],
+        warehouseIconSpan = _ref31[2];
 
       if ($.isArray(dependencies)) {
         $.each(dependencies, function(dependencyIndex, dependency) {
-          var _ref27 = [
+          var _ref32 = [
               rHelper.methods.CALC_convertId(dependency),
               rHelper.methods.CALC_returnPriceViaId(dependency),
               rHelper.methods.CALC_factoryDependencyRequiredAmount(factoryId, dependencyIndex) * 5 * 24
             ],
-            dependantObj = _ref27[0],
-            price = _ref27[1],
-            requiredAmount = _ref27[2];
+            dependantObj = _ref32[0],
+            price = _ref32[1],
+            requiredAmount = _ref32[2];
 
           dependencyString += rHelper.methods.INSRT_diamondDependenciesHelper(dependantObj, price, requiredAmount, factoryId, warehouseIconSpan);
         });
       } else {
-        var _ref28 = [rHelper.methods.CALC_convertId(dependencies), rHelper.methods.CALC_returnPriceViaId(dependencies), rHelper.methods.CALC_factoryDependencyRequiredAmount(factoryId, 0) * 5 * 24],
-          dependantObj = _ref28[0],
-          price = _ref28[1],
-          requiredAmount = _ref28[2];
+        var _ref33 = [rHelper.methods.CALC_convertId(dependencies), rHelper.methods.CALC_returnPriceViaId(dependencies), rHelper.methods.CALC_factoryDependencyRequiredAmount(factoryId, 0) * 5 * 24],
+          dependantObj = _ref33[0],
+          price = _ref33[1],
+          requiredAmount = _ref33[2];
 
         dependencyString += rHelper.methods.INSRT_diamondDependenciesHelper(dependantObj, price, requiredAmount, factoryId, warehouseIconSpan);
       }
@@ -3213,9 +3249,9 @@ var rHelper = {
     INSRT_flowRate: function INSRT_flowRate(id, type) {
       'use strict';
 
-      var _ref29 = [$('#flow-' + type + '-rate-' + id), rHelper.methods.CALC_flowRate(id, type)],
-        target = _ref29[0],
-        rate = _ref29[1];
+      var _ref34 = [$('#flow-' + type + '-rate-' + id), rHelper.methods.CALC_flowRate(id, type)],
+        target = _ref34[0],
+        rate = _ref34[1];
 
       if (type === 'product') {
         if (rHelper.data.products[id].turnover < 0) {
@@ -3275,13 +3311,13 @@ var rHelper = {
     INSRT_flowDistributionSingle: function INSRT_flowDistributionSingle(id, type) {
       'use strict';
 
-      var _ref30 = [$('#flow-' + type + '-worth-' + id), 0, 0, 'yellowgreen', 0, rHelper.methods.CALC_flowDistribution(id, type)],
-        worthTarget = _ref30[0],
-        price = _ref30[1],
-        worth = _ref30[2],
-        color = _ref30[3],
-        productionCost = _ref30[4],
-        remainingAmount = _ref30[5];
+      var _ref35 = [$('#flow-' + type + '-worth-' + id), 0, 0, 'yellowgreen', 0, rHelper.methods.CALC_flowDistribution(id, type)],
+        worthTarget = _ref35[0],
+        price = _ref35[1],
+        worth = _ref35[2],
+        color = _ref35[3],
+        productionCost = _ref35[4],
+        remainingAmount = _ref35[5];
 
       switch (type) {
         case 'material':
@@ -3413,9 +3449,9 @@ var rHelper = {
 
         for (var i = 0; i <= 3; i += 1) {
           if (i === 0) {
-            var _ref31 = [$('#buildings-cash-' + buildingId), building.materialAmount0[buildingLevel]],
-              cashTarget = _ref31[0],
-              cash = _ref31[1];
+            var _ref36 = [$('#buildings-cash-' + buildingId), building.materialAmount0[buildingLevel]],
+              cashTarget = _ref36[0],
+              cash = _ref36[1];
 
             if (typeof cash === 'undefined') {
               cash = 0;
@@ -3423,9 +3459,9 @@ var rHelper = {
             materialWorthSum += cash;
             cashTarget.text(cash.toLocaleString('en-US'));
           } else {
-            var _ref32 = ['materialAmount' + i, rHelper.methods.CALC_convertId(building.material[i])],
-              selector = _ref32[0],
-              material = _ref32[1];
+            var _ref37 = ['materialAmount' + i, rHelper.methods.CALC_convertId(building.material[i])],
+              selector = _ref37[0],
+              material = _ref37[1];
 
             $('#buildings-mat-' + i + '-' + buildingId).addClass(material.icon);
             var materialAmount = building[selector][buildingLevel];
@@ -3622,11 +3658,11 @@ var rHelper = {
     INSRT_unitsRecyclingProfit: function INSRT_unitsRecyclingProfit(type, id) {
       'use strict';
 
-      var _ref33 = [$('#' + type + '-profit-' + id), 0, ,],
-        target = _ref33[0],
-        profit = _ref33[1],
-        result = _ref33[2],
-        color = _ref33[3];
+      var _ref38 = [$('#' + type + '-profit-' + id), 0, ,],
+        target = _ref38[0],
+        profit = _ref38[1],
+        result = _ref38[2],
+        color = _ref38[3];
 
       if (type === 'recycling') {
         profit = rHelper.methods.CALC_recyclingProfit(id);
@@ -3864,10 +3900,10 @@ var rHelper = {
 
                   $.each(rHelper.data.units, function(i, unit) {
                     if (i === 1 || i === 4 || i === 5) {
-                      var _ref34 = [unit.profit.craftingPrice, unit.profit.marketPrice * rHelper.data.buildings[9].transportCost, 0],
-                        craftingPrice = _ref34[0],
-                        marketPrice = _ref34[1],
-                        result = _ref34[2];
+                      var _ref39 = [unit.profit.craftingPrice, unit.profit.marketPrice * rHelper.data.buildings[9].transportCost, 0],
+                        craftingPrice = _ref39[0],
+                        marketPrice = _ref39[1],
+                        result = _ref39[2];
 
                       if (marketPrice > craftingPrice) {
                         result = craftingPrice;
@@ -3897,9 +3933,9 @@ var rHelper = {
         };
 
         var calculateMissionReward = function calculateMissionReward(i, mission) {
-          var _ref35 = [mission.rewardId, 0],
-            rewardId = _ref35[0],
-            rewardWorth = _ref35[1];
+          var _ref40 = [mission.rewardId, 0],
+            rewardId = _ref40[0],
+            rewardWorth = _ref40[1];
 
           if (rewardId != -1) {
             $('#mission-reward-' + i).addClass(rHelper.methods.CALC_convertId(rewardId).icon);
@@ -4037,9 +4073,9 @@ var rHelper = {
       }
     },
     CALC_attackLogDetailedUnitStringInsertion: function CALC_attackLogDetailedUnitStringInsertion(type, container) {
-      var _ref36 = [''],
-        content = _ref36[0],
-        unitArray = _ref36[1];
+      var _ref41 = [''],
+        content = _ref41[0],
+        unitArray = _ref41[1];
 
       if (type === 'offense') {
         unitArray = [0, 2, 3];
@@ -4056,10 +4092,10 @@ var rHelper = {
       return content;
     },
     CALC_attackLogDetailedDatasetIteration: function CALC_attackLogDetailedDatasetIteration(i, dataset, dataTHs) {
-      var _ref37 = [$(crEl('tr')).addClass(rHelper.methods.CALC_attackLogSetTRColor(dataset.result)), 'text-md-right text-sm-left', 'bg-success-25'],
-        tr = _ref37[0],
-        textOrientation = _ref37[1],
-        factorBgColorClass = _ref37[2];
+      var _ref42 = [$(crEl('tr')).addClass(rHelper.methods.CALC_attackLogSetTRColor(dataset.result)), 'text-md-right text-sm-left', 'bg-success-25'],
+        tr = _ref42[0],
+        textOrientation = _ref42[1],
+        factorBgColorClass = _ref42[2];
 
       for (var index = 0; index <= 6; index += 1) {
         var td = $(crEl('td')).attr('data-th', dataTHs[index]);
@@ -4088,10 +4124,10 @@ var rHelper = {
             td.html(rHelper.methods.CALC_attackLogDetailedLootString(dataset.loot));
             break;
           case 6:
-            var _ref38 = [dataset.profit, dataset.result, '#dedede'],
-              profit = _ref38[0],
-              result = _ref38[1],
-              profitColor = _ref38[2];
+            var _ref43 = [dataset.profit, dataset.result, '#dedede'],
+              profit = _ref43[0],
+              result = _ref43[1],
+              profitColor = _ref43[2];
 
             if ((profit < 0 && result) || !result) {
               profitColor = 'coral';
@@ -4119,18 +4155,18 @@ var rHelper = {
       return colorClass;
     },
     CALC_attackLogDetailedCoordsTimestampString: function CALC_attackLogDetailedCoordsTimestampString(dataset) {
-      var _ref39 = [dataset.coordinates.lat + ', ' + dataset.coordinates.lon, rHelper.methods.CALC_convertDateToIso(dataset.attackedAt)],
-        coords = _ref39[0],
-        timestamp = _ref39[1];
+      var _ref44 = [dataset.coordinates.lat + ', ' + dataset.coordinates.lon, rHelper.methods.CALC_convertDateToIso(dataset.attackedAt)],
+        coords = _ref44[0],
+        timestamp = _ref44[1];
 
       var a = '<a href="https://www.google.com/maps/search/' + coords + '" target="_blank" rel="noopener nofollow noreferrer">' + coords + '</a>';
 
       return timestamp + ' | ' + a;
     },
     CALC_attackLogDetailedPageButtonToggler: function CALC_attackLogDetailedPageButtonToggler(type, dataContainer) {
-      var _ref40 = [$('#attacklog-detailed-' + type), 'btn-success'],
-        button = _ref40[0],
-        success = _ref40[1];
+      var _ref45 = [$('#attacklog-detailed-' + type), 'btn-success'],
+        button = _ref45[0],
+        success = _ref45[1];
 
       if (type === 'last') {
         if (dataContainer.skipCount === 0) {
@@ -4150,9 +4186,9 @@ var rHelper = {
       var lootString = '';
 
       $.each(lootContainer, function(index, iteration) {
-        var _ref41 = [iteration.type, ''],
-          type = _ref41[0],
-          icon = _ref41[1];
+        var _ref46 = [iteration.type, ''],
+          type = _ref46[0],
+          icon = _ref46[1];
 
         if (type === -1) {
           icon = '<img src="assets/img/cash.png" alt="Cash" />';
@@ -4178,9 +4214,9 @@ var rHelper = {
       return date[1] + ' ' + date[2];
     },
     CALC_currentScanCost: function CALC_currentScanCost() {
-      var _ref42 = [rHelper.data.buildings[0].level, rHelper.methods.CALC_totalMineCount()],
-        techCenterLevel = _ref42[0],
-        mineCount = _ref42[1];
+      var _ref47 = [rHelper.data.buildings[0].level, rHelper.methods.CALC_totalMineCount()],
+        techCenterLevel = _ref47[0],
+        mineCount = _ref47[1];
 
       return Math.round(10000 * Math.pow(2.4, techCenterLevel) * (1 + mineCount / 1000) / 5000) * 5000;
     },
@@ -4224,9 +4260,9 @@ var rHelper = {
     CALC_headquarterRemainingCost: function CALC_headquarterRemainingCost(i, material, userHqLevel) {
       'use strict';
 
-      var _ref43 = [rHelper.methods.CALC_returnPriceViaId(material), rHelper.data.headquarter[userHqLevel].amount - rHelper.data.headquarter.user.paid[i]],
-        price = _ref43[0],
-        missing = _ref43[1];
+      var _ref48 = [rHelper.methods.CALC_returnPriceViaId(material), rHelper.data.headquarter[userHqLevel].amount - rHelper.data.headquarter.user.paid[i]],
+        price = _ref48[0],
+        missing = _ref48[1];
 
       if (missing < 0) {
         missing = 0;
@@ -4255,9 +4291,9 @@ var rHelper = {
     CALC_headquarterLevelCost: function CALC_headquarterLevelCost(level) {
       'use strict';
 
-      var _ref44 = [0, rHelper.data.headquarter[level]],
-        cost = _ref44[0],
-        hqLevel = _ref44[1];
+      var _ref49 = [0, rHelper.data.headquarter[level]],
+        cost = _ref49[0],
+        hqLevel = _ref49[1];
 
       if ($.isArray(hqLevel.material)) {
         $.each(hqLevel.material, function(k, material) {
@@ -4270,9 +4306,9 @@ var rHelper = {
     CALC_headquarterOvwMaterial: function CALC_headquarterOvwMaterial(level) {
       'use strict';
 
-      var _ref45 = [rHelper.data.headquarter[level], ''],
-        hqLevel = _ref45[0],
-        string = _ref45[1];
+      var _ref50 = [rHelper.data.headquarter[level], ''],
+        hqLevel = _ref50[0],
+        string = _ref50[1];
 
       if ($.isArray(hqLevel.material)) {
         $.each(hqLevel.material, function(k, material) {
@@ -5145,11 +5181,11 @@ var rHelper = {
       var factory = rHelper.data.products[factoryId];
       var factoryLevel = factory.factoryLevel;
 
-      var _ref46 = [0, 0, ,],
-        workload = _ref46[0],
-        existingAmount = _ref46[1],
-        thisDependency = _ref46[2],
-        baseAmountRequirement = _ref46[3];
+      var _ref51 = [0, 0, ,],
+        workload = _ref51[0],
+        existingAmount = _ref51[1],
+        thisDependency = _ref51[2],
+        baseAmountRequirement = _ref51[3];
 
       if (nextLevel) {
         factoryLevel += 1;
@@ -5244,18 +5280,18 @@ var rHelper = {
       }
       var nextLevel = factoryLevel + 1;
 
-      var _ref47 = [0, 0, , , $(crEl('table')), $(crEl('tbody'))],
-        sum = _ref47[0],
-        sumTransportation = _ref47[1],
-        td = _ref47[2],
-        small = _ref47[3],
-        table = _ref47[4],
-        tbody = _ref47[5];
+      var _ref52 = [0, 0, , , $(crEl('table')), $(crEl('tbody'))],
+        sum = _ref52[0],
+        sumTransportation = _ref52[1],
+        td = _ref52[2],
+        small = _ref52[3],
+        table = _ref52[4],
+        tbody = _ref52[5];
 
       $.each(rHelper.data.products[factoryId].upgradeMaterialAmount, function(i, amount) {
-        var _ref48 = [$(crEl('tr')), 0],
-          tr = _ref48[0],
-          k = _ref48[1];
+        var _ref53 = [$(crEl('tr')), 0],
+          tr = _ref53[0],
+          k = _ref53[1];
 
         if (i === 0) {
           sum += amount * Math.pow(nextLevel, 2);

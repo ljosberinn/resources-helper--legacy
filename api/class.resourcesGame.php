@@ -953,6 +953,9 @@ class resourcesGame
                 $baseData[7]["setting"] = "queryPreset";
                 $baseData[7]["value"]   = $this->_convertArrayStringToArray($data["queryPreset"]);
 
+                $baseData[8]["setting"] = "mineVisibilityWorldMap";
+                $baseData[8]["value"]   = $data["mineVisibilityWorldMap"];
+
             }
         }
 
@@ -1648,7 +1651,11 @@ class resourcesGame
             }
         }
 
-        return $hqVisibility;
+        if ($hqVisibility == 1) {
+            return true;
+        } else {
+           return false;
+        }
     }
 
     /**
@@ -1662,7 +1669,7 @@ class resourcesGame
     {
         $userIds = [];
 
-        $queryUserIds = "SELECT `id` FROM `userOverview`";
+        $queryUserIds = "SELECT userSettings.id, userSettings.mineVisibilityWorldMap FROM `userOverview` LEFT JOIN `userSettings` ON userOverview.id = userSettings.id WHERE userSettings.mineVisibilityWorldMap = 1";
         $getUserIds = $this->_conn->query($queryUserIds);
 
         if ($getUserIds->num_rows > 0) {
@@ -1714,6 +1721,7 @@ class resourcesGame
      *
      * @method public getWorldMap($type)
      * @param  int $type [resource type, 0-13]
+     *
      * @return array [returns worldMap]
      */
     public function getWorldMap($type)
@@ -1726,16 +1734,14 @@ class resourcesGame
 
         $userIds = $this->_extractUserIds();
 
-        array_push($userIds, 0);
-
         foreach ($userIds as $userId) {
 
             // check whether this mine will be friendly or not
             $relation = $this->_setRelationship($userId);
 
             // check setting for hq visibility
-            if ($this->_checkHQVisibility($userId) === 1) {
-                  $result["hqs"] = array_merge($result["hqs"], $this->_extractHQInformation($userId, $relation));
+            if ($this->_checkHQVisibility($userId)) {
+                $result["hqs"] = array_merge($result["hqs"], $this->_extractHQInformation($userId, $relation));
             }
 
             $result["mines"] = array_merge($result["mines"], $this->_extractMineInformation($userId, $relation, $type));
@@ -2907,37 +2913,38 @@ class resourcesGame
      */
     private function _insertAPIMineMap($url, $userId)
     {
-        $tableBuilder = $this->createTable("mineMap", $userId);
-        $buildTable = $this->_conn->query($tableBuilder);
 
         if ($userId != 0) {
-            $killFormerContentQuery = "DELETE FROM `userMineMap_" .$userId. "`";
-            $killFormerContent = $this->_conn->query($killFormerContentQuery);
-        }
 
-        include 'JsonStreamingParser/Listener.php';
-        include 'JsonStreamingParser/Parser.php';
-        include 'JsonStreamingParser/Listener/IdleListener.php';
-        include 'JsonStreamingParser/Listener/InMemoryListener.php';
+            $tableBuilder = $this->createTable("mineMap", $userId);
+            $buildTable = $this->_conn->query($tableBuilder);
 
-        $listener = new \JsonStreamingParser\Listener\InMemoryListener();
-        $stream = fopen($url, 'r');
-        try {
-            $parser = new \JsonStreamingParser\Parser($stream, $listener);
-            $parser->parse($this->_conn, $userId);
-            fclose($stream);
-        } catch (Exception $e) {
-            fclose($stream);
-            throw $e;
-        }
+            if ($userId != 0) {
+                $killFormerContentQuery = "DELETE FROM `userMineMap_" .$userId. "`";
+                $killFormerContent = $this->_conn->query($killFormerContentQuery);
+            }
 
-        /*
-        rearrange table by builddate
-        */
-        $orderTableQuery = "ALTER TABLE `userMineMap_" .$userId. "` ORDER BY  `builddate`";
-        $sortTable = $this->_conn->query($orderTableQuery);
+            include 'JsonStreamingParser/Listener.php';
+            include 'JsonStreamingParser/Parser.php';
+            include 'JsonStreamingParser/Listener/IdleListener.php';
+            include 'JsonStreamingParser/Listener/InMemoryListener.php';
 
-        if ($userId != 0) {
+            $listener = new \JsonStreamingParser\Listener\InMemoryListener();
+            $stream = fopen($url, 'r');
+            try {
+                $parser = new \JsonStreamingParser\Parser($stream, $listener);
+                $parser->parse($this->_conn, $userId);
+                fclose($stream);
+            } catch (Exception $e) {
+                fclose($stream);
+                throw $e;
+            }
+
+            /*
+            rearrange table by builddate
+            */
+            $orderTableQuery = "ALTER TABLE `userMineMap_" .$userId. "` ORDER BY  `builddate`";
+            $sortTable = $this->_conn->query($orderTableQuery);
 
             /*
             count mines within HQ by counting HQBoosted mines
