@@ -8,8 +8,12 @@
 <?php
 
 $changelogIndex = [
-  6 => [
+  7 => [
     "class" => "active",
+    "title" => "Resources Helper 3.0.5",
+  ],
+  6 => [
+    "class" => "",
     "title" => "Resources Helper 3.0.4",
   ],
   5 => [
@@ -40,8 +44,16 @@ $changelogIndex = [
 
 $changelogContent = [
 
-  6 => [
+  7 => [
     "class" => "show active",
+    "title" => "Resources Helper 3.0.5",
+    "date" => "May 15th 2018",
+    "description" => "
+    <strong>General</strong><br />
+    - NEW: setting to hide/show your mines if imported via detailed API - default hidden",
+  ],
+  6 => [
+    "class" => "",
     "title" => "Resources Helper 3.0.4",
     "date" => "May 14th 2018",
     "description" => "
