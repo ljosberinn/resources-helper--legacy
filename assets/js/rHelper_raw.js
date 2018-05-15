@@ -4,7 +4,6 @@ const rHelper = {
       'use strict';
 
       rHelper.methods.INSRT_userSettings();
-      rHelper.methods.SET_language();
       rHelper.init.core();
     },
     core() {
@@ -132,11 +131,12 @@ const rHelper = {
         // general
         'EVNT_attackLogTrigger',
         'INSRT_companyWorth',
-        'EVNT_sortableTables',
         'EVNT_assignTitleToIcons',
         'EVNT_enableTippy',
         'INSRT_showNames',
-        'SET_stickyHeaders'
+        'SET_stickyHeaders',
+        'SET_language',
+        'EVNT_sortableTables'
       ];
 
       $.each(nonParamBoundMethods, (i, fn) => {
@@ -176,7 +176,7 @@ const rHelper = {
     API_toggleLoadSuccessorHelper(target) {
       'use strict';
 
-      let fns = ['API_toggleLoader', 'API_toggleSuccessor', 'API_toggleSuccessorHelper'];
+      const fns = ['API_toggleLoader', 'API_toggleSuccessor', 'API_toggleSuccessorHelper'];
 
       $.each(fns, (i, fn) => {
         rHelper.methods[fn](target);
@@ -480,7 +480,7 @@ const rHelper = {
       rHelper.methods.API_toggleLoader('buildings');
 
       $.getJSON(`api/core.php?query=3&key=${key}`, data => {
-        let fns = ['INSRT_buildingName', 'SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10'];
+        const fns = ['INSRT_buildingName', 'SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10'];
 
         $.each(data, (i, buildingLevel) => {
           rHelper.data.buildings[i].level = buildingLevel;
@@ -690,7 +690,7 @@ const rHelper = {
 
       if (!init) {
         $.each(rHelper.data.buildings, buildingId => {
-          let fns = ['SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10'];
+          const fns = ['SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10'];
 
           $.each(fns, (i, fn) => {
             ref[fn](buildingId);
@@ -698,7 +698,7 @@ const rHelper = {
         });
         let calculationOrder = ref.GET_calculationOrder();
         $.each(calculationOrder, (index, factoryId) => {
-          let fns = ['INSRT_factoryUpgradeCost', 'INSRT_factoryROI'];
+          const fns = ['INSRT_factoryUpgradeCost', 'INSRT_factoryROI'];
 
           $.each(fns, (i, fn) => {
             ref[fn](factoryId);
@@ -760,7 +760,7 @@ const rHelper = {
           return;
         }
 
-        let fns = ['INSRT_recyclingProducts', 'INSRT_recyclingOutputWorth', 'INSRT_recyclingInputWorth'];
+        const fns = ['INSRT_recyclingProducts', 'INSRT_recyclingOutputWorth', 'INSRT_recyclingInputWorth'];
 
         $.each(fns, (i, fn) => {
           rHelper.methods[fn](lootId);
@@ -788,7 +788,7 @@ const rHelper = {
         rHelper.methods.SET_hqSelectorClass(userHqLevel - 1);
         rHelper.methods.INSRT_headquarterPaid();
 
-        let fns = ['INSRT_headquarterContentRequiredAmount', 'INSRT_headquarterMissing', 'INSRT_headquarterRemainingCost'];
+        const fns = ['INSRT_headquarterContentRequiredAmount', 'INSRT_headquarterMissing', 'INSRT_headquarterRemainingCost'];
 
         $.each(fns, (i, fn) => {
           rHelper.methods[fn](userHqLevel);
@@ -1173,21 +1173,23 @@ const rHelper = {
         $('#module-mines table')[0],
         $('#module-factories table')[0],
         $('#module-diamond table')[0],
+        $('#module-missions table')[0],
         $('#techupgrades-combinations-tbl')[0],
         $('#recycling-tbl')[0],
-        $('#units-tbl')[0],
-        $('#module-missions table')[0]
+        $('#units-tbl')[0]
       ];
 
       $.each(tables, (index, table) => {
-        sorttable.makeSortable(table);
+        if (typeof table !== undefined) {
+          sorttable.makeSortable(table);
 
-        if (index === 2) {
-          sorttable.innerSortFunction.apply($('#module-diamond th')[5], []);
-        } else if (index === 4) {
-          // sorting twice for cheapest price first...
-          sorttable.innerSortFunction.apply($('#techupgrades-combinations-tbl th')[5], []);
-          sorttable.innerSortFunction.apply($('#techupgrades-combinations-tbl th')[5], []);
+          if (index === 2) {
+            sorttable.innerSortFunction.apply($('#module-diamond th')[5], []);
+          } else if (index === 4) {
+            // sorting twice for cheapest price first...
+            sorttable.innerSortFunction.apply($('#techupgrades-combinations-tbl th')[5], []);
+            sorttable.innerSortFunction.apply($('#techupgrades-combinations-tbl th')[5], []);
+          }
         }
       });
     },
@@ -1283,12 +1285,12 @@ const rHelper = {
         if (isNaN(value)) {
           value = 0;
         }
-        let newFillStatus = value / rHelper.data[type][id].warehouse.contingent;
+        const newFillStatus = value / rHelper.data[type][id].warehouse.contingent;
 
         rHelper.methods.SET_globalObject(type, id, ['warehouse', 'fillAmount'], value);
         rHelper.methods.SET_globalObject(type, id, ['warehouse', 'fillStatus'], newFillStatus);
 
-        let fns = ['INSRT_warehouseWorth', 'INSRT_warehouseFillStatus', 'INSRT_warehouseRemainingTimeToFull'];
+        const fns = ['INSRT_warehouseWorth', 'INSRT_warehouseFillStatus', 'INSRT_warehouseRemainingTimeToFull'];
 
         $.each(fns, (i, fn) => {
           rHelper.methods[fn](id, type);
@@ -1298,62 +1300,63 @@ const rHelper = {
       });
       // on increase of warehouse level
       $(`#warehouse-${type}-level-${id}`).on('input', function() {
-        let value = parseInt(this.value);
+        let [value, el] = [parseInt(this.value), rHelper.data[type][id].warehouse];
+        const ref = rHelper.methods;
+
         if (isNaN(value)) {
           value = 0;
         }
-        let el = rHelper.data[type][id].warehouse;
 
-        rHelper.methods.SET_globalObject(type, id, ['warehouse', 'level'], value);
-        rHelper.methods.SET_globalObject(type, id, ['warehouse', 'contingent'], rHelper.methods.CALC_warehouseContingent(value));
-        rHelper.methods.SET_globalObject(type, id, ['warehouse', 'fillStatus'], el.fillAmount / el.contingent);
+        ref.SET_globalObject(type, id, ['warehouse', 'level'], value);
+        ref.SET_globalObject(type, id, ['warehouse', 'contingent'], ref.CALC_warehouseContingent(value));
+        ref.SET_globalObject(type, id, ['warehouse', 'fillStatus'], el.fillAmount / el.contingent);
 
-        let fns = ['INSRT_warehouseCapacity', 'INSRT_warehouseFillStatus', 'INSRT_warehouseRemainingTimeToFull'];
+        const fns = ['INSRT_warehouseCapacity', 'INSRT_warehouseFillStatus', 'INSRT_warehouseRemainingTimeToFull'];
 
         $.each(fns, (i, fn) => {
-          rHelper.methods[fn](id, type);
+          ref[fn](id, type);
         });
 
-        rHelper.methods.INSRT_warehouseTotalLevel();
+        ref.INSRT_warehouseTotalLevel();
       });
     },
     EVNT_buildingChange(buildingId) {
       'use strict';
 
       $(`#buildings-level-${buildingId}`).on('change', function() {
-        let value = parseInt(this.value);
+        const [ref, value, recalculateUnitStrength, fns] = [rHelper.methods, parseInt(this.value), [3, 4, 9], ['INSRT_buildingData', 'INSRT_buildingToLevel10', 'SET_buildingBackgroundColor']];
 
-        rHelper.methods.SET_globalObject('buildings', buildingId, 'level', value);
+        ref.SET_globalObject('buildings', buildingId, 'level', value);
 
         if (buildingId === 9) {
-          rHelper.methods.SET_transportCost();
+          ref.SET_transportCost();
         } else if (buildingId === 5) {
-          rHelper.methods.SET_recyclingPlantLevel();
+          ref.SET_recyclingPlantLevel();
         }
 
-        if (buildingId === 3 || buildingId === 4 || buildingId === 9) {
+        if ($.inArray(buildingId, recalculateUnitStrength)) {
           $.each(rHelper.data.units, unitId => {
-            rHelper.methods.INSRT_unitsPricePerStrength(unitId);
+            ref.INSRT_unitsPricePerStrength(unitId);
           });
         }
 
-        let fns = ['INSRT_buildingData', 'INSRT_buildingToLevel10', 'SET_buildingBackgroundColor'];
-
         $.each(fns, (i, fn) => {
-          rHelper.methods[fn](buildingId);
+          ref[fn](buildingId);
         });
 
-        rHelper.methods.INSRT_gaugeGraph('buildings');
+        ref.INSRT_gaugeGraph('buildings');
       });
     },
     EVNT_buildGraph(type) {
       'use strict';
 
+      const ref = rHelper.methods;
+
       rHelper.graphs = rHelper.graphs || {};
 
       let parentGraphObj = rHelper.graphs.material;
-      rHelper.graphs.material.reference.mineCount = rHelper.methods.CALC_totalMineCount();
-      rHelper.graphs.material.reference.mineIncome = rHelper.methods.CALC_totalMineWorth();
+      rHelper.graphs.material.reference.mineCount = ref.CALC_totalMineCount();
+      rHelper.graphs.material.reference.mineIncome = ref.CALC_totalMineWorth();
 
       $.each(rHelper.data.material, (i, material) => {
         let iteration = {
@@ -1367,7 +1370,7 @@ const rHelper = {
         };
 
         let mineAmountPercent = parseFloat((material.amountOfMines / rHelper.graphs.material.reference.mineCount * 100).toFixed(2));
-        let mineIncomePercent = parseFloat((rHelper.methods.CALC_materialRateWorth(i) / rHelper.graphs.material.reference.mineIncome * 100).toFixed(2));
+        let mineIncomePercent = parseFloat((ref.CALC_materialRateWorth(i) / rHelper.graphs.material.reference.mineIncome * 100).toFixed(2));
         let materialName = material.name;
 
         if (!isNaN(mineAmountPercent)) {
@@ -1415,30 +1418,30 @@ const rHelper = {
         }
       });
 
-      rHelper.methods.INSRT_polygonGraph(parentGraphObj.target, parentGraphObj.titleText, parentGraphObj.seriesNames, parentGraphObj.responsiveId, type);
+      ref.INSRT_polygonGraph(parentGraphObj.target, parentGraphObj.titleText, parentGraphObj.seriesNames, parentGraphObj.responsiveId, type);
     },
     EVNT_switchHeadquarter(clickedHq) {
       'use strict';
 
       $(`.hq-thumb-${clickedHq}`).on('click', () => {
-        let actualLevel = parseInt(clickedHq) + 1;
+        const [ref, actualLevel] = [rHelper.methods, parseInt(clickedHq) + 1];
 
         rHelper.data.headquarter.user = rHelper.data.headquarter.user || {};
         rHelper.data.headquarter.user.paid = rHelper.data.headquarter.user.paid || [0, 0, 0, 0];
         rHelper.data.headquarter.user.level = rHelper.data.headquarter.user.level || actualLevel;
 
-        rHelper.methods.SET_globalObject('headquarter', 'user', 'level', actualLevel);
-        rHelper.methods.SET_hqSelectorClass(clickedHq);
-        rHelper.methods.INSRT_gaugeGraph('headquarter');
-        rHelper.methods.INSRT_headquarterContentRequiredAmount(actualLevel);
-        rHelper.methods.INSRT_headquarterPaid();
+        ref.SET_globalObject('headquarter', 'user', 'level', actualLevel);
+        ref.SET_hqSelectorClass(clickedHq);
+        ref.INSRT_gaugeGraph('headquarter');
+        ref.INSRT_headquarterContentRequiredAmount(actualLevel);
+        ref.INSRT_headquarterPaid();
 
         for (let i = 0; i <= 3; i += 1) {
-          rHelper.methods.INSRT_headquarterMissing(i);
+          ref.INSRT_headquarterMissing(i);
         }
 
-        rHelper.methods.INSRT_headquarterRemainingCost(actualLevel);
-        rHelper.methods.INSRT_companyWorth();
+        ref.INSRT_headquarterRemainingCost(actualLevel);
+        ref.INSRT_companyWorth();
       });
     },
     EVNT_headquarterInput() {
@@ -1446,7 +1449,8 @@ const rHelper = {
 
       $.each($("[id*='hq-content-input-']"), (i, el) => {
         $(el).on('input', function() {
-          let thisId = parseInt(this.id.replace(/hq-content-input-/, ''));
+          const [ref, thisId] = [rHelper.methods, parseInt(this.id.replace(/hq-content-input-/, ''))];
+
           let thisValue = parseInt(this.value);
 
           if (isNaN(thisValue)) {
@@ -1455,11 +1459,11 @@ const rHelper = {
             thisValue = 50000000;
           }
 
-          rHelper.methods.SET_globalObject('headquarter', 'user', ['paid', thisId], thisValue);
-          rHelper.methods.INSRT_headquarterMissing(i);
-          rHelper.methods.INSRT_headquarterRemainingCost(rHelper.data.headquarter.user.level);
-          rHelper.methods.INSRT_gaugeGraph('headquarter');
-          rHelper.methods.INSRT_companyWorth();
+          ref.SET_globalObject('headquarter', 'user', ['paid', thisId], thisValue);
+          ref.INSRT_headquarterMissing(i);
+          ref.INSRT_headquarterRemainingCost(rHelper.data.headquarter.user.level);
+          ref.INSRT_gaugeGraph('headquarter');
+          ref.INSRT_companyWorth();
         });
       });
     },
@@ -1467,22 +1471,17 @@ const rHelper = {
       'use strict';
 
       $('#pricehistory-selector').on('change', function() {
-        let thisVal = parseInt(this.value);
-        let url = `api/getPriceHistory.php?id=${thisVal}`;
-        let resource = rHelper.methods.CALC_convertId(thisVal);
-        let materialName = `<span style="height: 25px; width: 25px;" class="${resource.icon}"></span> ${resource.name}`;
+        const [ref, thisVal] = [rHelper.methods, parseInt(this.value)];
+        const [url, resource] = [`api/getPriceHistory.php?id=${thisVal}`, ref.CALC_convertId(thisVal)];
+        const materialName = `<span style="height: 25px; width: 25px;" class="${resource.icon}"></span> ${resource.name}`;
 
-        rHelper.methods.EVNT_priceHistoryToggler('loading');
+        ref.EVNT_priceHistoryToggler('loading');
 
         $.getJSON(url, response => {
-          let averageKI = response.avg.ki;
-          let averagePlayer = response.avg.player;
-          let timestamps = [];
-          let player = [];
-          let ki = [];
+          const [averageKI, averagePlayer, timestamps, player, ki] = [response.avg.ki, response.avg.player, [], [], []];
 
           $.each(response.data, (i, dataset) => {
-            let date = rHelper.methods.CALC_convertDateToIso(rHelper.methods.CALC_toMilliseconds(dataset.ts));
+            let date = ref.CALC_convertDateToIso(ref.CALC_toMilliseconds(dataset.ts));
             timestamps.push(date);
 
             if (dataset.player === 0) {
@@ -1492,15 +1491,15 @@ const rHelper = {
             ki.push(dataset.ki);
           });
 
-          rHelper.methods.EVNT_priceHistoryToggler('finished');
-          rHelper.methods.INSRT_priceHistoryGraph(materialName, averageKI, averagePlayer, timestamps, player, ki);
+          ref.EVNT_priceHistoryToggler('finished');
+          ref.INSRT_priceHistoryGraph(materialName, averageKI, averagePlayer, timestamps, player, ki);
         });
       });
     },
     EVNT_priceHistoryToggler(state) {
       'use strict';
 
-      let [container, selector] = [$('#graph-pricehistory'), $('#pricehistory-selector')];
+      const [container, selector] = [$('#graph-pricehistory'), $('#pricehistory-selector')];
 
       switch (state) {
         case 'loading':
@@ -2185,8 +2184,7 @@ const rHelper = {
       sorttable.makeSortable(sortableTable);
     },
     INSRT_attackLog(type) {
-      let data = rHelper.data.attackLog;
-      let fn;
+      let [data, fn] = [rHelper.data.attackLog, fn];
 
       switch (type) {
         case 'attackSimple':
@@ -2203,7 +2201,7 @@ const rHelper = {
     INSRT_materialData(materialId, api) {
       'use strict';
 
-      let fns = ['INSRT_materialRate', 'INSRT_materialAmountOfMines', 'INSRT_materialNewMinePrice', 'INSRT_materialRateWorth', 'INSRT_materialNewMinePerfectIncome'];
+      const fns = ['INSRT_materialRate', 'INSRT_materialAmountOfMines', 'INSRT_materialNewMinePrice', 'INSRT_materialRateWorth', 'INSRT_materialNewMinePerfectIncome'];
 
       $.each(fns, (i, fn) => {
         rHelper.methods[fn](materialId);
@@ -2218,7 +2216,7 @@ const rHelper = {
     INSRT_factoryDiamondData(factoryId, type) {
       'use strict';
 
-      let fns = [
+      const fns = [
         // factories tab
         'INSRT_factoryLevel',
         'INSRT_factoryOutput',
@@ -2245,7 +2243,7 @@ const rHelper = {
     INSRT_recycling(index) {
       'use strict';
 
-      let fns = ['INSRT_recyclingRequirement', 'INSRT_recyclingProducts', 'INSRT_recyclingOutputWorth', 'INSRT_recyclingInputWorth'];
+      const fns = ['INSRT_recyclingRequirement', 'INSRT_recyclingProducts', 'INSRT_recyclingOutputWorth', 'INSRT_recyclingInputWorth'];
 
       $.each(fns, (i, fn) => {
         rHelper.methods[fn](index);
@@ -2256,7 +2254,7 @@ const rHelper = {
     INSRT_warehouseData(index, type) {
       'use strict';
 
-      let fns = ['INSRT_warehouseFillAmount', 'INSRT_warehouseLevel', 'INSRT_warehouseFillStatus', 'INSRT_warehouseCapacity', 'INSRT_warehouseWorth', 'EVNT_warehouseInput'];
+      const fns = ['INSRT_warehouseFillAmount', 'INSRT_warehouseLevel', 'INSRT_warehouseFillStatus', 'INSRT_warehouseCapacity', 'INSRT_warehouseWorth', 'EVNT_warehouseInput'];
 
       $.each(fns, (i, fn) => {
         rHelper.methods[fn](index, type);
@@ -2606,13 +2604,13 @@ const rHelper = {
     },
     INSRT_showNames() {
       if (rHelper.data.settings[6] && rHelper.data.settings[6].value === 1) {
-        let iconSelectors = ['material', 'factories', 'product', 'loot', 'units'];
+        const iconSelectors = ['material', 'factories', 'product', 'loot', 'units'];
 
         $.each(iconSelectors, (i, iconSelector) => {
           $.each($(`span[class*="resources-${iconSelector}-"]`), (k, el) => {
             let [_el, stringToBeReplaced, targetArray] = [$(el), new RegExp(`resources-${iconSelector}-`), iconSelector];
 
-            let index = parseInt(_el.attr('class').replace(stringToBeReplaced, ''));
+            const index = parseInt(_el.attr('class').replace(stringToBeReplaced, ''));
 
             if (iconSelector === 'factories' || iconSelector === 'product') {
               targetArray = 'products';
@@ -2635,10 +2633,9 @@ const rHelper = {
     },
     INSRT_materialMineAmortisation() {
       'use strict';
+      const ref = rHelper.methods;
 
-      let roi100Array = rHelper.methods.CALC_materialMineROI('100');
-      let roi500Array = rHelper.methods.CALC_materialMineROI('505');
-      let roiXArray = rHelper.methods.CALC_materialMineROI('505hq');
+      const [roi100Array, roi500Array, roiXArray] = [ref.CALC_materialMineROI('100'), ref.CALC_materialMineROI('505'), ref.CALC_materialMineROI('505hq')];
 
       $.each(roi100Array, (i, value) => {
         $(`#material-roi-100-${i}`).text(value.toFixed(2).toLocaleString('en-US'));
@@ -2650,9 +2647,9 @@ const rHelper = {
         $(`#material-roi-x-${i}`).text(value.toFixed(2).toLocaleString('en-US'));
       });
 
-      rHelper.methods.INSRT_materialHighlightColumns(roi100Array, '#material-roi-100-', 'text-success', 'text-danger');
-      rHelper.methods.INSRT_materialHighlightColumns(roi500Array, '#material-roi-500-', 'text-success', 'text-danger');
-      rHelper.methods.INSRT_materialHighlightColumns(roiXArray, '#material-roi-x-', 'text-success', 'text-danger');
+      ref.INSRT_materialHighlightColumns(roi100Array, '#material-roi-100-', 'text-success', 'text-danger');
+      ref.INSRT_materialHighlightColumns(roi500Array, '#material-roi-500-', 'text-success', 'text-danger');
+      ref.INSRT_materialHighlightColumns(roiXArray, '#material-roi-x-', 'text-success', 'text-danger');
     },
     INSRT_materialNewMinePerfectIncome(materialId) {
       'use strict';
@@ -2689,7 +2686,7 @@ const rHelper = {
             break;
         }
 
-        let el = $(target + array.indexOf(value));
+        const el = $(target + array.indexOf(value));
         el.removeClass(rmvClass).addClass(addClass);
       });
     },
@@ -2708,8 +2705,8 @@ const rHelper = {
     INSRT_factoryUpgradeCost(factoryId) {
       'use strict';
 
-      let target = $(`#factories-upgrade-cost-${factoryId}`);
-      let calculateFactoryUpgradeCostObj = rHelper.methods.CALC_factoryUpgradeCost(factoryId);
+      const target = $(`#factories-upgrade-cost-${factoryId}`);
+      const calculateFactoryUpgradeCostObj = rHelper.methods.CALC_factoryUpgradeCost(factoryId);
 
       target.text(calculateFactoryUpgradeCostObj.sum.toLocaleString('en-US'));
       target.attr('title', calculateFactoryUpgradeCostObj.title);
@@ -2723,20 +2720,25 @@ const rHelper = {
     INSRT_factoryDependencies(factoryId) {
       'use strict';
 
+      const ref = rHelper.methods;
+
       let product = rHelper.data.products[factoryId];
       let dependencies = product.dependencies;
       let dependencyString = '';
 
       if ($.isArray(dependencies)) {
         $.each(dependencies, (dependencyIndex, dependency) => {
-          const dependantObj = rHelper.methods.CALC_convertId(dependency);
+          const [dependantObj, outerSpan, imgSpan, innerSpan, price, requiredAmount] = [
+            ref.CALC_convertId(dependency),
+            $(crEl('span')),
+            $(crEl('span')),
+            $(crEl('span')),
+            ref.CALC_returnPriceViaId(dependency).toLocaleString('en-US'),
+            ref.CALC_factoryDependencyRequiredAmount(factoryId, dependencyIndex)
+          ];
 
-          const price = rHelper.methods.CALC_returnPriceViaId(dependency).toLocaleString('en-US');
-          const requiredAmount = rHelper.methods.CALC_factoryDependencyRequiredAmount(factoryId, dependencyIndex);
-          const existingAmount = rHelper.methods.CALC_factoryDependencyExistingAmount(dependantObj, dependencyIndex);
-          const addClass = rHelper.methods.CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount);
-
-          let [outerSpan, imgSpan, innerSpan] = [$(crEl('span')), $(crEl('span')), $(crEl('span'))];
+          const existingAmount = ref.CALC_factoryDependencyExistingAmount(dependantObj, dependencyIndex);
+          const addClass = ref.CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount);
 
           imgSpan.addClass(dependantObj.icon).attr('title', price.toLocaleString('en-US'));
           innerSpan.addClass(addClass).text(requiredAmount.toLocaleString('en-US'));
@@ -2744,14 +2746,17 @@ const rHelper = {
           dependencyString += outerSpan[0].outerHTML;
         });
       } else {
-        const dependantObj = rHelper.methods.CALC_convertId(dependencies);
+        const [dependantObj, outerSpan, imgSpan, innerSpan, price, requiredAmount] = [
+          ref.CALC_convertId(dependencies),
+          $(crEl('span')),
+          $(crEl('span')),
+          $(crEl('span')),
+          ref.CALC_returnPriceViaId(dependencies).toLocaleString('en-US'),
+          ref.CALC_factoryDependencyRequiredAmount(factoryId, 0)
+        ];
 
-        const price = rHelper.methods.CALC_returnPriceViaId(dependencies).toLocaleString('en-US');
-        const requiredAmount = rHelper.methods.CALC_factoryDependencyRequiredAmount(factoryId, 0);
-        const existingAmount = rHelper.methods.CALC_factoryDependencyExistingAmount(dependantObj, 0);
-        const addClass = rHelper.methods.CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount);
-
-        let [outerSpan, imgSpan, innerSpan] = [$(crEl('span')), $(crEl('span')), $(crEl('span'))];
+        const existingAmount = ref.CALC_factoryDependencyExistingAmount(dependantObj, 0);
+        const addClass = ref.CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount);
 
         imgSpan.addClass(dependantObj.icon).attr('title', price.toLocaleString('en-US'));
         innerSpan.addClass(addClass).text(requiredAmount.toLocaleString('en-US'));
@@ -4101,7 +4106,7 @@ const rHelper = {
 
       let companyWorth = 0;
 
-      let fns = ['CALC_totalHeadquarterErectionSum', 'CALC_totalBuildingErectionSum', 'CALC_totalFactoryErectionWorth', 'CALC_totalWarehouseErectionWorth', 'CALC_totalMineErectionSum'];
+      const fns = ['CALC_totalHeadquarterErectionSum', 'CALC_totalBuildingErectionSum', 'CALC_totalFactoryErectionWorth', 'CALC_totalWarehouseErectionWorth', 'CALC_totalMineErectionSum'];
 
       $.each(fns, (i, fn) => {
         companyWorth += rHelper.methods[fn]();
@@ -4723,7 +4728,7 @@ const rHelper = {
         dependantFactory -= 14;
       }
 
-      let fns = ['INSRT_factoryDependencies', 'INSRT_factoryWorkload', 'INSRT_factoryTurnover', 'INSRT_factoryTurnoverPerUpgrade', 'INSRT_factoryROI'];
+      const fns = ['INSRT_factoryDependencies', 'INSRT_factoryWorkload', 'INSRT_factoryTurnover', 'INSRT_factoryTurnoverPerUpgrade', 'INSRT_factoryROI'];
 
       $.each(fns, (i, fn) => {
         rHelper.methods[fn](dependantFactory);
