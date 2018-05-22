@@ -116,7 +116,7 @@ function shoveDataToArray($result, $query, $target, $userId)
 function getValidUserIds($conn)
 {
     $userIds = [];
-    $getUsersQuery = "SELECT `id` FROM `userOverview` WHERE `hashedKey` != ''";
+    $getUsersQuery = "SELECT userOverview.id, userSettings.mayOverwriteAPI FROM `userOverview` LEFT JOIN `userSettings` ON userOverview.id = userSettings.id WHERE userSettings.mayOverWriteAPI = 0 AND userOverview.hashedKey != ''";
     $getUsers = $conn->query($getUsersQuery);
 
     if ($getUsers->num_rows > 0) {

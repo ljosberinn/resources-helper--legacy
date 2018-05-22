@@ -8,8 +8,12 @@
 <?php
 
 $changelogIndex = [
-  7 => [
+  8 => [
     "class" => "active",
+    "title" => "Resources Helper 3.0.6",
+  ],
+  7 => [
+    "class" => "",
     "title" => "Resources Helper 3.0.5",
   ],
   6 => [
@@ -44,8 +48,16 @@ $changelogIndex = [
 
 $changelogContent = [
 
-  7 => [
+  8 => [
     "class" => "show active",
+    "title" => "Resources Helper 3.0.6",
+    "date" => "May 22th 2018",
+    "description" => "
+    <strong>General</strong><br />
+    - NEW: setting to manually overwrite your API data - default deactivated",
+  ],
+  7 => [
+    "class" => "",
     "title" => "Resources Helper 3.0.5",
     "date" => "May 15th 2018",
     "description" => "

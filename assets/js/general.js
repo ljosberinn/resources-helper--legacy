@@ -310,7 +310,6 @@ var removeLoggedInButtons = function removeLoggedInButtons() {
   'use strict';
 
   if (rHelper.data.userInformation.realKey !== false) {
-    $('#save-button').remove();
     $('#save-api-container').remove();
   }
 };

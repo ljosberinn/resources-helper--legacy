@@ -74,7 +74,7 @@
   </div>
 
 
-<!-- SETTING IDEAL CONDITION -->
+  <!-- SETTING IDEAL CONDITION -->
   <div class="form-group">
     <label class="custom-control custom-checkbox">
     <input class="custom-control-input" id="settings-ideal-conditions" name="settings-ideal-conditions" type="checkbox" />
@@ -97,11 +97,20 @@
     <label class="custom-control custom-checkbox">
       <input class="custom-control-input" id="settings-show-names" name="settings-show-names" type="checkbox"/>
       <span class="custom-control-indicator"></span>
-      <span class="custom-control-description" id="settings-show-names-txt">toggles automatical <mark>visibility of factory names</mark> when loading page <span class="text-warning">warning: page layout may suffer</span></span>
+      <span class="custom-control-description" id="settings-show-names-txt">toggles automatical <mark>visibility of factory names</mark> when loading page <span class="text-danger">warning: page layout may suffer</span></span>
     </label>
   </div>
 
-<!-- SETTING HQ VISIBILITY ON MAP -->
+  <!-- SETTING IDEAL CONDITION -->
+  <div class="form-group" id="settings-overwrite-api-container">
+    <label class="custom-control custom-checkbox">
+    <input class="custom-control-input" id="settings-overwrite-api" name="settings-overwrite-api" type="checkbox" />
+    <span class="custom-control-indicator"></span>
+    <span class="custom-control-description" id="settings-overwrite-api-txt">only for API users: if this option is checked, you will <span class="text-danger">NO LONGER</span> appear within the leaderboard, <span class="text-success">but you will be able to save your manually added changes</span>, overwriting API data. <span class="text-danger">This change is permanent!</span></span>
+    </label>
+  </div>
+
+  <!-- SETTING HQ VISIBILITY ON MAP -->
   <div class="form-group">
     <label class="text-success" for="settings-hq-visibility">
       <strong><img src="assets/img/icons/hidehq.png" alt="" /> <span id="settings-hq-visibility-txt">Headquarter visibility on worldmap</span> <img src="assets/img/icons/showhq.png" alt="" /></strong>

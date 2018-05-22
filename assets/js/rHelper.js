@@ -331,7 +331,7 @@ var rHelper = {
         ref.EVNT_buildGraph('material');
         ref.API_toggleLoadSuccessorHelper('mines-summary');
 
-        rHelper.SET_save();
+        rHelper.methods.SET_save();
       });
     },
     API_getMineMap: function API_getMineMap() {
@@ -2827,6 +2827,13 @@ var rHelper = {
 
               input.prop('checked', state);
             });
+            break;
+          case 'mayOverwriteAPI':
+            if (setting.value === 1) {
+              $('#settings-overwrite-api-container').remove();
+            } else {
+              $('#save-button').remove();
+            }
             break;
         }
       });

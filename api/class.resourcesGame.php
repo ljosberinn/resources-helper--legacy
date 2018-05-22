@@ -151,6 +151,8 @@ class resourcesGame
       "mapVisibleHQ" => 0,
       "showNames" => 0,
       "queryPreset" => [1,2,3,4,5,51,6,7,9,10],
+      "mineVisibilityWorldMap" => 0,
+      "mayOverwriteAPI" => 0,
     ];
 
 
@@ -955,6 +957,9 @@ class resourcesGame
 
                 $baseData[8]["setting"] = "mineVisibilityWorldMap";
                 $baseData[8]["value"]   = $data["mineVisibilityWorldMap"];
+
+                $baseData[9]["setting"] = "mayOverwriteAPI";
+                $baseData[9]["value"]   = $data["mayOverwriteAPI"];
 
             }
         }

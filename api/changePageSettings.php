@@ -17,6 +17,7 @@ if (!isset($_SESSION["id"])) {
       "settings-price-age",
       "settings-show-names",
       "settings-mine-visibility",
+      "settings-overwrite-api",
     ];
 
     $query = "UPDATE `userSettings` SET ";
@@ -38,7 +39,7 @@ if (!isset($_SESSION["id"])) {
             for ($i = 1; $i <= 4; $i += 1) {
                 $tu = $_POST["settings-custom-tu-" .$i. ""];
 
-                if ($tu == "") {
+                if ($tu === "") {
                     $tu = 0;
                 }
                 $customTU .= $tu. ", ";
@@ -53,14 +54,14 @@ if (!isset($_SESSION["id"])) {
 
         case "settings-ideal-conditions":
             $query .= "`idealCondition` = ";
-            if ($value == "on") {
+            if ($value === "on") {
                 $query .= "1, ";
             }
             break;
 
         case "settings-toggle-transport-cost-inclusion":
             $query .= "`transportCostInclusion` = ";
-            if ($value == "on") {
+            if ($value === "on") {
                 $query .= "1, ";
             }
             break;
@@ -94,22 +95,30 @@ if (!isset($_SESSION["id"])) {
 
         case "settings-show-names":
             $query .= "`showNames` = ";
-            if ($value == "on") {
+            if ($value === "on") {
+                $query .= "1, ";
+            }
+            break;
+        case "settings-overwrite-api":
+            $query .= "`mayOverWriteAPI` = ";
+            if ($value === "on") {
                 $query .= "1, ";
             }
             break;
         }
     }
 
-    if (!in_array("settings-ideal-conditions", array_keys($_POST))) {
+    $postArrayKeys = array_keys($_POST);
+
+    if (!in_array("settings-ideal-conditions", $postArrayKeys)) {
         $query .= "`idealCondition` = 0, ";
     }
 
-    if (!in_array("settings-toggle-transport-cost-inclusion", array_keys($_POST))) {
+    if (!in_array("settings-toggle-transport-cost-inclusion", $postArrayKeys)) {
         $query .= "`transportCostInclusion` = 0, ";
     }
 
-    if (!in_array("settings-show-names", array_keys($_POST))) {
+    if (!in_array("settings-show-names", $postArrayKeys)) {
         $query .= "`showNames` = 0, ";
     }
 
