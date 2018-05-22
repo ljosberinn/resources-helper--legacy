@@ -2890,9 +2890,105 @@ var rHelper = {
         $('#material-roi-x-' + i).text(value.toFixed(2).toLocaleString('en-US'));
       });
 
+      rHelper.methods.INSRT_graphMineAmortisation(roi100Array, roi500Array, roiXArray);
+
       ref.INSRT_materialHighlightColumns(roi100Array, '#material-roi-100-', 'text-success', 'text-danger');
       ref.INSRT_materialHighlightColumns(roi500Array, '#material-roi-500-', 'text-success', 'text-danger');
       ref.INSRT_materialHighlightColumns(roiXArray, '#material-roi-x-', 'text-success', 'text-danger');
+    },
+    INSRT_graphMineAmortisation: function INSRT_graphMineAmortisation(roi100Array, roi500Array, roiXArray) {
+      var categories = [];
+
+      $.each(rHelper.data.material, function(i, el) {
+        categories.push(el.name);
+      });
+
+      var arrs = [roi100Array, roi500Array, roiXArray];
+
+      $.each(arrs, function(i, arr) {
+        $.each(arr, function(k, val) {
+          arrs[i][k] = Math.round(val);
+        });
+      });
+
+      Highcharts.chart('graph-mine-amortisation', {
+        chart: {
+          type: 'bar',
+          backgroundColor: 'transparent'
+        },
+        title: {
+          text: 'Mine amortisation',
+          style: {
+            color: '#fff'
+          }
+        },
+        xAxis: {
+          categories: categories,
+          title: {
+            text: null
+          },
+          labels: {
+            style: {
+              color: '#fff'
+            }
+          }
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: 'Return on investment (days)',
+            align: 'high'
+          },
+          labels: {
+            overflow: 'justify',
+            style: {
+              color: '#fff'
+            }
+          }
+        },
+        tooltip: {
+          valueSuffix: ' days'
+        },
+        plotOptions: {
+          bar: {
+            dataLabels: {
+              enabled: true
+            }
+          }
+        },
+        legend: {
+          layout: 'vertical',
+          align: 'right',
+          verticalAlign: 'top',
+          x: -40,
+          y: 80,
+          floating: true,
+          borderWidth: 1,
+          backgroundColor: '#FFFFFF'
+        },
+        series: [
+          {
+            name: '100%',
+            data: roi100Array,
+            visible: false,
+            color: '#ff0000',
+            pointFormat: '{point.y:.2f}'
+          },
+          {
+            name: '505%',
+            data: roi500Array,
+            color: '#ff7f50',
+            pointFormat: '{point.y:.2f}'
+          },
+          {
+            name: '505% + your HQ level',
+            data: roiXArray,
+            visible: false,
+            color: '#9acd32',
+            pointFormat: '{point.y:.2f}'
+          }
+        ]
+      });
     },
     INSRT_materialNewMinePerfectIncome: function INSRT_materialNewMinePerfectIncome(materialId) {
       'use strict';
