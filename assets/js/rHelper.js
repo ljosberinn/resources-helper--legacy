@@ -4625,7 +4625,7 @@ var rHelper = {
         if (userHqLevel != 10) {
           $.each(userHq.paid, function(i, paid) {
             if (paid != 0) {
-              var material = rHelper.data.headquarter[userHqLevel - 1].material[i];
+              var material = rHelper.data.headquarter[userHqLevel].material[i];
               total += paid * rHelper.methods.CALC_returnPriceViaId(material);
             }
           });
@@ -4637,8 +4637,9 @@ var rHelper = {
     CALC_totalMineErectionSum: function CALC_totalMineErectionSum() {
       'use strict';
 
-      var total = 0;
-      var totalMines = rHelper.methods.CALC_totalMineCount();
+      var _ref60 = [0, rHelper.methods.CALC_totalMineCount()],
+        total = _ref60[0],
+        totalMines = _ref60[1];
 
       $.each(rHelper.data.material, function(i, material) {
         total += material.basePrice * (1 + 0.01 * totalMines) * material.amountOfMines;
@@ -5379,11 +5380,11 @@ var rHelper = {
       var factory = rHelper.data.products[factoryId];
       var factoryLevel = factory.factoryLevel;
 
-      var _ref60 = [0, 0, ,],
-        workload = _ref60[0],
-        existingAmount = _ref60[1],
-        thisDependency = _ref60[2],
-        baseAmountRequirement = _ref60[3];
+      var _ref61 = [0, 0, ,],
+        workload = _ref61[0],
+        existingAmount = _ref61[1],
+        thisDependency = _ref61[2],
+        baseAmountRequirement = _ref61[3];
 
       if (nextLevel) {
         factoryLevel += 1;
@@ -5478,18 +5479,18 @@ var rHelper = {
       }
       var nextLevel = factoryLevel + 1;
 
-      var _ref61 = [0, 0, , , $(crEl('table')), $(crEl('tbody'))],
-        sum = _ref61[0],
-        sumTransportation = _ref61[1],
-        td = _ref61[2],
-        small = _ref61[3],
-        table = _ref61[4],
-        tbody = _ref61[5];
+      var _ref62 = [0, 0, , , $(crEl('table')), $(crEl('tbody'))],
+        sum = _ref62[0],
+        sumTransportation = _ref62[1],
+        td = _ref62[2],
+        small = _ref62[3],
+        table = _ref62[4],
+        tbody = _ref62[5];
 
       $.each(rHelper.data.products[factoryId].upgradeMaterialAmount, function(i, amount) {
-        var _ref62 = [$(crEl('tr')), 0],
-          tr = _ref62[0],
-          k = _ref62[1];
+        var _ref63 = [$(crEl('tr')), 0],
+          tr = _ref63[0],
+          k = _ref63[1];
 
         if (i === 0) {
           sum += amount * Math.pow(nextLevel, 2);

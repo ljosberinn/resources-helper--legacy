@@ -4291,7 +4291,7 @@ const rHelper = {
         if (userHqLevel != 10) {
           $.each(userHq.paid, (i, paid) => {
             if (paid != 0) {
-              let material = rHelper.data.headquarter[userHqLevel - 1].material[i];
+              let material = rHelper.data.headquarter[userHqLevel].material[i];
               total += paid * rHelper.methods.CALC_returnPriceViaId(material);
             }
           });
@@ -4303,8 +4303,7 @@ const rHelper = {
     CALC_totalMineErectionSum() {
       'use strict';
 
-      let total = 0;
-      let totalMines = rHelper.methods.CALC_totalMineCount();
+      let [total, totalMines] = [0, rHelper.methods.CALC_totalMineCount()];
 
       $.each(rHelper.data.material, (i, material) => {
         total += material.basePrice * (1 + 0.01 * totalMines) * material.amountOfMines;
