@@ -118,6 +118,7 @@ const rHelper = {
         'INSRT_diamondTop10Profit',
         'INSRT_diamondTotalProfit',
         'INSRT_flowDistributionGlobal',
+        'INSRT_graphFactoryAmortisation',
         // warehouse
         'INSRT_warehouseTotalLevel',
         'INSRT_warehouseTotalWorth',
@@ -2933,6 +2934,61 @@ const rHelper = {
         .removeClass(removeClass)
         .addClass(addClass)
         .text(turnover.toLocaleString('en-US'));
+    },
+    INSRT_graphFactoryAmortisation() {
+      const [roiArr, names] = [[], []];
+
+      $.each(rHelper.data.products, (i, factory) => {
+        names.push(factory.name);
+        roiArr.push(factory.roi);
+      });
+
+      Highcharts.chart('graph-factories-amortisation', {
+        chart: {
+          type: 'bar',
+          backgroundColor: 'transparent'
+        },
+        title: {
+          text: 'Factory amortisation',
+          style: {
+            color: '#fff'
+          }
+        },
+        xAxis: {
+          categories: names,
+          title: {
+            text: null
+          },
+          labels: {
+            style: {
+              color: '#fff'
+            }
+          }
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: 'Return on investment (days)',
+            align: 'high'
+          },
+          labels: {
+            overflow: 'justify',
+            style: {
+              color: '#fff'
+            }
+          }
+        },
+        tooltip: {
+          valueSuffix: ' days'
+        },
+        series: [
+          {
+            name: 'ROI',
+            data: roiArr,
+            pointFormat: '{point.y:.2f}'
+          }
+        ]
+      });
     },
     INSRT_factoryHighlightColumns() {
       'use strict';

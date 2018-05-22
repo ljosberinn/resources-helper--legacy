@@ -54,7 +54,8 @@ $changelogContent = [
     "date" => "May 22th 2018",
     "description" => "
     <strong>General</strong><br />
-    - NEW: setting to manually overwrite your API data - default deactivated",
+    - NEW: <a href='https://github.com/ljosberinn/resources-helper/issues/19' rel='noopener noreferrer' target='_blank'>setting to manually overwrite your API data - default deactivated</a><br/>
+    - NEW: <a href='https://github.com/ljosberinn/resources-helper/issues/20' rel='noopener noreferrer' target='_blank'>two additional graphs - mine and factory ROI</a>",
   ],
   7 => [
     "class" => "",

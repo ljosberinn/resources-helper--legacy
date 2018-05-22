@@ -82,4 +82,6 @@ $arrayKeys = array_keys($columns);
       </table>
     </div>
   </div>
+
+  <div class="col-md-12" id="graph-factories-amortisation"></div>
 </div>
