@@ -1,116 +1,116 @@
-'use strict';
+'use strict'
 
 var _typeof =
   typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol'
     ? function(obj) {
-        return typeof obj;
+        return typeof obj
       }
     : function(obj) {
-        return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj;
-      };
+        return obj && typeof Symbol === 'function' && obj.constructor === Symbol && obj !== Symbol.prototype ? 'symbol' : typeof obj
+      }
 
 var rHelper = {
   init: {
     user: function user() {
-      'use strict';
+      'use strict'
 
-      rHelper.methods.INSRT_userSettings();
-      rHelper.init.core();
+      rHelper.methods.INSRT_userSettings()
+      rHelper.init.core()
     },
     core: function core() {
-      'use strict';
+      'use strict'
 
-      var ref = rHelper.methods;
+      var ref = rHelper.methods
 
-      removeLoggedInButtons();
+      removeLoggedInButtons()
 
-      ref.SET_tabSwitcherAnchorBased();
-      ref.SET_transportCost('init');
+      ref.SET_tabSwitcherAnchorBased()
+      ref.SET_transportCost('init')
 
       $.each(rHelper.data.material, function(materialId) {
         // eventListeners
-        ref.EVNT_materialInput(materialId);
+        ref.EVNT_materialInput(materialId)
         // general material data insertion
-        ref.INSRT_materialData(materialId);
+        ref.INSRT_materialData(materialId)
         // warehouses
-        ref.INSRT_warehouseData(materialId, 'material');
+        ref.INSRT_warehouseData(materialId, 'material')
         // price history
-        ref.INSRT_priceHistoryName('material', materialId);
-      });
+        ref.INSRT_priceHistoryName('material', materialId)
+      })
 
-      ref.INSRT_totalMineWorth(ref.CALC_totalMineWorth());
-      ref.INSRT_totalMineCount(ref.CALC_totalMineCount());
+      ref.INSRT_totalMineWorth(ref.CALC_totalMineWorth())
+      ref.INSRT_totalMineCount(ref.CALC_totalMineCount())
 
-      var calculationOrder = ref.GET_calculationOrder();
+      var calculationOrder = ref.GET_calculationOrder()
 
       $.each(calculationOrder, function(index, factoryId) {
         // eventListeners
-        ref.EVNT_factoryInput(factoryId);
+        ref.EVNT_factoryInput(factoryId)
         // general factory data insertion
-        ref.INSRT_factoryDiamondData(factoryId, 'product');
+        ref.INSRT_factoryDiamondData(factoryId, 'product')
         // warehouses
-        ref.INSRT_warehouseData(factoryId, 'products');
+        ref.INSRT_warehouseData(factoryId, 'products')
         // price history
-        ref.INSRT_priceHistoryName('products', factoryId);
-      });
+        ref.INSRT_priceHistoryName('products', factoryId)
+      })
 
       // loot
       $.each(rHelper.data.loot, function(index) {
         // warehouses
-        ref.INSRT_warehouseData(index, 'loot');
+        ref.INSRT_warehouseData(index, 'loot')
         // price history
-        ref.INSRT_priceHistoryName('loot', index);
+        ref.INSRT_priceHistoryName('loot', index)
         // recycling table
         if (index === 4 || (index >= 10 && index <= 13)) {
-          return;
+          return
         }
-        ref.SET_recyclingProfitObj(index);
-        ref.INSRT_recycling(index);
-      });
+        ref.SET_recyclingProfitObj(index)
+        ref.INSRT_recycling(index)
+      })
 
-      var unitsFns = ['SET_UnitProfitObj', 'INSRT_unitsCraftingPrice', 'INSRT_unitsMarketPrice', 'INSRT_unitsPricePerStrength'];
+      var unitsFns = ['SET_UnitProfitObj', 'INSRT_unitsCraftingPrice', 'INSRT_unitsMarketPrice', 'INSRT_unitsPricePerStrength']
 
       $.each(rHelper.data.units, function(index) {
         // warehouses
-        ref.INSRT_warehouseData(index, 'units');
+        ref.INSRT_warehouseData(index, 'units')
         // units table
         $.each(unitsFns, function(i, fn) {
-          ref[fn](index);
-        });
+          ref[fn](index)
+        })
 
-        ref.INSRT_unitsRecyclingProfit('units', index);
+        ref.INSRT_unitsRecyclingProfit('units', index)
         // price history
-        ref.INSRT_priceHistoryName('units', index);
-      });
+        ref.INSRT_priceHistoryName('units', index)
+      })
 
       // buildings
-      var buildingFns = ['INSRT_buildingName', 'SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10', 'EVNT_buildingChange'];
+      var buildingFns = ['INSRT_buildingName', 'SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10', 'EVNT_buildingChange']
       $.each(rHelper.data.buildings, function(buildingId) {
         $.each(buildingFns, function(i, fn) {
-          ref[fn](buildingId);
-        });
-      });
+          ref[fn](buildingId)
+        })
+      })
 
-      var hqFns = ['INSRT_headquarterOvwString', 'INSRT_headquarterOvwRadius', 'INSRT_headquarterOvwCost', 'INSRT_headquarterOvwBoost', 'INSRT_headquarterOvwTransportation', 'EVNT_switchHeadquarter'];
+      var hqFns = ['INSRT_headquarterOvwString', 'INSRT_headquarterOvwRadius', 'INSRT_headquarterOvwCost', 'INSRT_headquarterOvwBoost', 'INSRT_headquarterOvwTransportation', 'EVNT_switchHeadquarter']
 
       // headquarter
       $.each(rHelper.data.headquarter, function(headquarterLevel) {
         $.each(hqFns, function(i, fn) {
-          ref[fn](headquarterLevel);
-        });
-      });
+          ref[fn](headquarterLevel)
+        })
+      })
 
       // initiate graphs
-      var pieGraphs = ['material'];
+      var pieGraphs = ['material']
 
       $.each(pieGraphs, function(i, val) {
-        ref.EVNT_buildGraph(val);
-      });
+        ref.EVNT_buildGraph(val)
+      })
 
-      var gaugeGraphs = ['buildings', 'headquarter'];
+      var gaugeGraphs = ['buildings', 'headquarter']
       $.each(gaugeGraphs, function(i, val) {
-        ref.INSRT_gaugeGraph(val);
-      });
+        ref.INSRT_gaugeGraph(val)
+      })
 
       var nonParamBoundMethods = [
         // mines
@@ -142,16 +142,16 @@ var rHelper = {
         'SET_stickyHeaders',
         'SET_language',
         'EVNT_sortableTables'
-      ];
+      ]
 
       $.each(nonParamBoundMethods, function(i, fn) {
-        ref[fn]();
-      });
+        ref[fn]()
+      })
     }
   },
   methods: {
     GET_calculationOrder: function GET_calculationOrder() {
-      'use strict';
+      'use strict'
 
       return [
         0,
@@ -176,337 +176,337 @@ var rHelper = {
         16,
         20,
         21 // tertiary order - dependant on products
-      ];
+      ]
     },
     API_toggleLoadSuccessorHelper: function API_toggleLoadSuccessorHelper(target) {
-      'use strict';
+      'use strict'
 
-      var fns = ['API_toggleLoader', 'API_toggleSuccessor', 'API_toggleSuccessorHelper'];
+      var fns = ['API_toggleLoader', 'API_toggleSuccessor', 'API_toggleSuccessorHelper']
 
       $.each(fns, function(i, fn) {
-        rHelper.methods[fn](target);
-      });
+        rHelper.methods[fn](target)
+      })
     },
     API_toggleLoader: function API_toggleLoader(selector) {
-      'use strict';
+      'use strict'
 
-      var el = $('#api-' + selector + '-loading');
+      var el = $('#api-' + selector + '-loading')
 
       if (el.css('display') === 'none') {
-        el.fadeIn('fast').css('display', 'flex');
+        el.fadeIn('fast').css('display', 'flex')
       } else {
-        el.fadeOut('fast');
+        el.fadeOut('fast')
       }
     },
     API_toggleSuccessor: function API_toggleSuccessor(selector) {
-      'use strict';
+      'use strict'
 
-      var el = $('#api-' + selector + '-finished');
+      var el = $('#api-' + selector + '-finished')
 
       if (el.css('display') === 'none') {
-        el.fadeIn('fast');
+        el.fadeIn('fast')
       } else {
-        el.fadeOut('fast');
+        el.fadeOut('fast')
       }
     },
     API_toggleSuccessorHelper: function API_toggleSuccessorHelper(selector) {
-      'use strict';
+      'use strict'
 
       setTimeout(function() {
-        rHelper.methods.API_toggleSuccessor(selector);
-      }, 15000);
+        rHelper.methods.API_toggleSuccessor(selector)
+      }, 15000)
     },
     API_getFactories: function API_getFactories(key) {
-      'use strict';
+      'use strict'
 
-      var ref = rHelper.methods;
+      var ref = rHelper.methods
 
-      ref.API_toggleLoader('factories');
+      ref.API_toggleLoader('factories')
 
       $.get('api/core.php?query=1&key=' + key, function(data) {
         $.each(data, function(i, value) {
-          rHelper.data.products[i].factoryLevel = value;
-        });
+          rHelper.data.products[i].factoryLevel = value
+        })
 
-        var calculationOrder = ref.GET_calculationOrder();
+        var calculationOrder = ref.GET_calculationOrder()
 
         $.each(calculationOrder, function(index, factoryId) {
-          ref.INSRT_factoryDiamondData(factoryId, 'product');
-        });
+          ref.INSRT_factoryDiamondData(factoryId, 'product')
+        })
 
-        var helperFns = ['INSRT_totalFactoryUpgrades', 'INSRT_factoryHighlightColumns', 'INSRT_diamondTop10Profit', 'INSRT_diamondTotalProfit', 'INSRT_flowDistributionGlobal'];
+        var helperFns = ['INSRT_totalFactoryUpgrades', 'INSRT_factoryHighlightColumns', 'INSRT_diamondTop10Profit', 'INSRT_diamondTotalProfit', 'INSRT_flowDistributionGlobal']
 
         $.each(helperFns, function(i, fn) {
-          ref[fn]();
-        });
+          ref[fn]()
+        })
 
-        ref.API_toggleLoadSuccessorHelper('factories');
+        ref.API_toggleLoadSuccessorHelper('factories')
 
-        sorttable.innerSortFunction.apply($('#module-diamond th')[4], []);
-        sorttable.innerSortFunction.apply($('#module-diamond th')[5], []);
-        ref.SET_save();
-      });
+        sorttable.innerSortFunction.apply($('#module-diamond th')[4], [])
+        sorttable.innerSortFunction.apply($('#module-diamond th')[5], [])
+        ref.SET_save()
+      })
     },
     API_getWarehouse: function API_getWarehouse(key) {
-      'use strict';
+      'use strict'
 
-      var ref = rHelper.methods;
+      var ref = rHelper.methods
 
-      ref.API_toggleLoader('warehouse');
+      ref.API_toggleLoader('warehouse')
 
       $.getJSON('api/core.php?query=2&key=' + key, function(data) {
         $.each(data, function(i, warehouseInfo) {
-          var iterator = i;
-          var targetObj = 'material';
+          var iterator = i
+          var targetObj = 'material'
 
           if (i >= 14 && i < 36) {
-            iterator -= 14;
-            targetObj = 'products';
+            iterator -= 14
+            targetObj = 'products'
           } else if (i >= 36 && i < 52) {
-            iterator -= 36;
-            targetObj = 'loot';
+            iterator -= 36
+            targetObj = 'loot'
           } else if (i >= 52) {
-            iterator -= 52;
-            targetObj = 'units';
+            iterator -= 52
+            targetObj = 'units'
           }
 
-          var contingent = Math.pow(warehouseInfo.level, 2) * 5000;
-          var fillStatus = warehouseInfo.amount / contingent;
+          var contingent = Math.pow(warehouseInfo.level, 2) * 5000
+          var fillStatus = warehouseInfo.amount / contingent
           if (isNaN(fillStatus)) {
-            fillStatus = 0;
+            fillStatus = 0
           }
 
-          rHelper.data[targetObj][iterator].warehouse.level = warehouseInfo.level;
-          rHelper.data[targetObj][iterator].warehouse.fillAmount = warehouseInfo.amount;
-          rHelper.data[targetObj][iterator].warehouse.contingent = contingent;
-          rHelper.data[targetObj][iterator].warehouse.fillStatus = fillStatus;
+          rHelper.data[targetObj][iterator].warehouse.level = warehouseInfo.level
+          rHelper.data[targetObj][iterator].warehouse.fillAmount = warehouseInfo.amount
+          rHelper.data[targetObj][iterator].warehouse.contingent = contingent
+          rHelper.data[targetObj][iterator].warehouse.fillStatus = fillStatus
 
-          ref.SET_save();
-        });
+          ref.SET_save()
+        })
 
         $.each(rHelper.data.material, function(materialId) {
-          ref.INSRT_warehouseData(materialId, 'material');
-        });
+          ref.INSRT_warehouseData(materialId, 'material')
+        })
 
-        var calculationOrder = ref.GET_calculationOrder();
+        var calculationOrder = ref.GET_calculationOrder()
 
         $.each(calculationOrder, function(index) {
-          ref.INSRT_warehouseData(index, 'products');
-        });
+          ref.INSRT_warehouseData(index, 'products')
+        })
 
         $.each(rHelper.data.loot, function(index) {
-          ref.INSRT_warehouseData(index, 'loot');
-        });
+          ref.INSRT_warehouseData(index, 'loot')
+        })
 
         $.each(rHelper.data.units, function(index) {
-          ref.INSRT_warehouseData(index, 'units');
-        });
+          ref.INSRT_warehouseData(index, 'units')
+        })
 
-        ref.INSRT_warehouseTotalLevel();
-        ref.INSRT_warehouseTotalWorth();
-        ref.API_toggleLoadSuccessorHelper('warehouse');
-      });
+        ref.INSRT_warehouseTotalLevel()
+        ref.INSRT_warehouseTotalWorth()
+        ref.API_toggleLoadSuccessorHelper('warehouse')
+      })
     },
     API_getMineSummary: function API_getMineSummary(key) {
-      var ref = rHelper.methods;
+      var ref = rHelper.methods
 
-      ref.API_toggleLoader('mines-summary');
+      ref.API_toggleLoader('mines-summary')
       $.get('api/core.php?query=51&key=' + key, function(data) {
         $.each(data, function(i, obj) {
-          rHelper.data.material[i].perHour = obj.perHour;
-          rHelper.data.material[i].amountOfMines = obj.amountOfMines;
-        });
+          rHelper.data.material[i].perHour = obj.perHour
+          rHelper.data.material[i].amountOfMines = obj.amountOfMines
+        })
 
         $.each(rHelper.data.material, function(materialId) {
-          ref.INSRT_materialData(materialId, 'api');
-        });
+          ref.INSRT_materialData(materialId, 'api')
+        })
 
-        var fns = ['INSRT_materialMineAmortisation', 'INSRT_materialHighlightMinePerfectIncome', 'INSRT_flowDistributionGlobal'];
+        var fns = ['INSRT_materialMineAmortisation', 'INSRT_materialHighlightMinePerfectIncome', 'INSRT_flowDistributionGlobal']
 
         $.each(fns, function(i, fn) {
-          ref[fn]();
-        });
+          ref[fn]()
+        })
 
-        ref.INSRT_totalMineWorth(ref.CALC_totalMineWorth());
-        ref.INSRT_totalMineCount(ref.CALC_totalMineCount());
-        ref.EVNT_buildGraph('material');
-        ref.API_toggleLoadSuccessorHelper('mines-summary');
+        ref.INSRT_totalMineWorth(ref.CALC_totalMineWorth())
+        ref.INSRT_totalMineCount(ref.CALC_totalMineCount())
+        ref.EVNT_buildGraph('material')
+        ref.API_toggleLoadSuccessorHelper('mines-summary')
 
-        rHelper.methods.SET_save();
-      });
+        rHelper.methods.SET_save()
+      })
     },
     API_getMineMap: function API_getMineMap() {
-      'use strict';
+      'use strict'
 
       $.getJSON('api/core.php?mineMap', function(data) {
-        rHelper.data.mineMap = data;
+        rHelper.data.mineMap = data
 
-        var ref = rHelper.methods;
-        ref.API_toggleLoadSuccessorHelper('mines-detailed');
-        ref.EVNT_mapCreation('personal');
-        ref.SET_overTimeGraph();
-      });
+        var ref = rHelper.methods
+        ref.API_toggleLoadSuccessorHelper('mines-detailed')
+        ref.EVNT_mapCreation('personal')
+        ref.SET_overTimeGraph()
+      })
     },
     API_getMineMapInitiator: function API_getMineMapInitiator(key) {
-      'use strict';
+      'use strict'
 
-      rHelper.methods.API_toggleLoader('mines-detailed');
+      rHelper.methods.API_toggleLoader('mines-detailed')
       $.getJSON('api/core.php?query=5&key=' + key, function(data) {
         if (data.callback === 'rHelper.methods.API_getMineMap()') {
-          rHelper.methods.API_getMineMap();
+          rHelper.methods.API_getMineMap()
         } else {
-          swal('Error', "Couldn't fetch mine details - API potentially unavailable!", 'error');
+          swal('Error', "Couldn't fetch mine details - API potentially unavailable!", 'error')
         }
-      });
+      })
     },
     API_getPlayerInfo: function API_getPlayerInfo(key, anonymity) {
-      'use strict';
+      'use strict'
 
-      rHelper.methods.API_toggleLoader('player');
-      var url = 'api/core.php?query=7&key=' + key;
+      rHelper.methods.API_toggleLoader('player')
+      var url = 'api/core.php?query=7&key=' + key
       if (anonymity) {
-        url += '&anonymity=true';
+        url += '&anonymity=true'
       }
       $.getJSON(url, function(data) {
-        rHelper.data.userInformation.level = data.lvl;
-        rHelper.data.userInformation.points = data.points;
-        rHelper.data.userInformation.rank = data.worldrank;
+        rHelper.data.userInformation.level = data.lvl
+        rHelper.data.userInformation.points = data.points
+        rHelper.data.userInformation.rank = data.worldrank
         if (data.name) {
-          rHelper.data.userInformation.name = data.name;
+          rHelper.data.userInformation.name = data.name
         }
 
-        rHelper.data.userInformation.registeredGame = rHelper.methods.CALC_convertDateToIso(data.registerdate);
-        rHelper.methods.API_toggleLoadSuccessorHelper('player');
-      });
+        rHelper.data.userInformation.registeredGame = rHelper.methods.CALC_convertDateToIso(data.registerdate)
+        rHelper.methods.API_toggleLoadSuccessorHelper('player')
+      })
     },
     API_getAttackLog: function API_getAttackLog(type, target, skipCount) {
-      'use strict';
+      'use strict'
 
       if (typeof type === 'undefined') {
-        type = 'attackSimple';
+        type = 'attackSimple'
       }
 
-      var url = 'api/core.php?attackLog&type=' + type;
+      var url = 'api/core.php?attackLog&type=' + type
 
       if (target) {
-        url += '&target=' + target;
+        url += '&target=' + target
       }
 
       if (skipCount) {
-        url += '&skip=' + skipCount;
+        url += '&skip=' + skipCount
       }
 
       $.getJSON(url, function(data) {
-        rHelper.data.attackLog = data;
-        rHelper.methods.API_toggleLoadSuccessorHelper('attack-log');
+        rHelper.data.attackLog = data
+        rHelper.methods.API_toggleLoadSuccessorHelper('attack-log')
 
-        rHelper.methods.INSRT_attackLog(type);
-      });
+        rHelper.methods.INSRT_attackLog(type)
+      })
     },
     API_getAttackLogInitiator: function API_getAttackLogInitiator(key) {
-      'use strict';
+      'use strict'
 
-      rHelper.methods.API_toggleLoader('attack-log');
+      rHelper.methods.API_toggleLoader('attack-log')
 
       $.getJSON('api/core.php?query=9&key=' + key, function(data) {
         if (data.callback != 'rHelper.methods.API_getAttackLog("attackSimple")') {
-          swal('Error', "Couldn't fetch attack log - API potentially unavailable!", 'error');
+          swal('Error', "Couldn't fetch attack log - API potentially unavailable!", 'error')
         } else {
-          rHelper.methods.API_toggleLoadSuccessorHelper('attack-log');
+          rHelper.methods.API_toggleLoadSuccessorHelper('attack-log')
         }
-      });
+      })
     },
     API_getTradeLog: function API_getTradeLog(skipCount, filter, dateFilter) {
-      'use strict';
+      'use strict'
 
-      var url = 'api/core.php?tradeLog';
+      var url = 'api/core.php?tradeLog'
 
       if (skipCount) {
-        url += '&skipCount=' + skipCount;
+        url += '&skipCount=' + skipCount
       }
 
       if (filter) {
-        url += '&filter=' + filter;
+        url += '&filter=' + filter
       }
 
       if (dateFilter) {
-        url += '&day=' + dateFilter;
+        url += '&day=' + dateFilter
       }
 
-      var buttons = [$('#tradelog-next'), $('#tradelog-previous')];
+      var buttons = [$('#tradelog-next'), $('#tradelog-previous')]
 
       $.each(buttons, function(i, btn) {
-        btn.attr('disabled', true);
-      });
+        btn.attr('disabled', true)
+      })
 
       $.getJSON(url, function(data) {
-        rHelper.data.tradeLog = data;
-        rHelper.methods.INSRT_tradeLog();
+        rHelper.data.tradeLog = data
+        rHelper.methods.INSRT_tradeLog()
 
         $.each(buttons, function(i, btn) {
-          btn.attr('disabled', false);
-        });
-      });
+          btn.attr('disabled', false)
+        })
+      })
     },
     API_getTradeLogInitiator: function API_getTradeLogInitiator(key) {
-      'use strict';
+      'use strict'
 
-      rHelper.methods.API_toggleLoader('trade-log');
+      rHelper.methods.API_toggleLoader('trade-log')
 
       $.getJSON('api/core.php?query=6&key=' + key, function(data) {
         if (data.callback !== 'rHelper.methods.API_getTradeLog()') {
-          swal('Error', "Couldn't fetch trade log - API potentially unavailable!", 'error');
+          swal('Error', "Couldn't fetch trade log - API potentially unavailable!", 'error')
         }
-        rHelper.methods.API_toggleLoadSuccessorHelper('trade-log');
-      });
+        rHelper.methods.API_toggleLoadSuccessorHelper('trade-log')
+      })
     },
     API_getMissions: function API_getMissions() {
-      'use strict';
+      'use strict'
 
       $.getJSON('api/core.php?missions', function(data) {
-        rHelper.data.missions = data;
-        rHelper.methods.API_toggleLoadSuccessorHelper('missions');
-        rHelper.methods.INSRT_missions();
-      });
+        rHelper.data.missions = data
+        rHelper.methods.API_toggleLoadSuccessorHelper('missions')
+        rHelper.methods.INSRT_missions()
+      })
     },
     API_getMissionsInitiator: function API_getMissionsInitiator(key) {
-      'use strict';
+      'use strict'
 
-      rHelper.methods.API_toggleLoader('missions');
+      rHelper.methods.API_toggleLoader('missions')
       $.getJSON('api/core.php?query=10&key=' + key, function(data) {
         if (data.callback === 'rHelper.methods.API_getMissions()') {
-          rHelper.methods.API_getMissions();
+          rHelper.methods.API_getMissions()
         }
-      });
+      })
     },
     API_getBuildings: function API_getBuildings(key) {
-      'use strict';
+      'use strict'
 
-      rHelper.methods.API_toggleLoader('buildings');
+      rHelper.methods.API_toggleLoader('buildings')
 
       $.getJSON('api/core.php?query=3&key=' + key, function(data) {
-        var fns = ['INSRT_buildingName', 'SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10'];
+        var fns = ['INSRT_buildingName', 'SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10']
 
         $.each(data, function(i, buildingLevel) {
-          rHelper.data.buildings[i].level = buildingLevel;
+          rHelper.data.buildings[i].level = buildingLevel
 
           $.each(fns, function(k, fn) {
-            rHelper.methods[fn](i);
-          });
-        });
+            rHelper.methods[fn](i)
+          })
+        })
 
-        rHelper.methods.INSRT_gaugeGraph('buildings');
-        rHelper.methods.API_toggleLoadSuccessorHelper('buildings');
+        rHelper.methods.INSRT_gaugeGraph('buildings')
+        rHelper.methods.API_toggleLoadSuccessorHelper('buildings')
 
-        rHelper.methods.SET_save();
-      });
+        rHelper.methods.SET_save()
+      })
     },
     API_getHeadquarter: function API_getHeadquarter(key) {
-      'use strict';
+      'use strict'
 
-      var ref = rHelper.methods;
+      var ref = rHelper.methods
 
-      ref.API_toggleLoader('headquarter');
+      ref.API_toggleLoader('headquarter')
 
       $.getJSON('api/core.php?query=4&key=' + key, function(data) {
         rHelper.data.headquarter.user = rHelper.data.headquarter.user || {
@@ -516,43 +516,43 @@ var rHelper = {
           },
           level: 0,
           paid: [0, 0, 0, 0]
-        };
+        }
 
-        rHelper.data.headquarter.user.hqPosition.lat = data.lat;
-        rHelper.data.headquarter.user.hqPosition.lon = data.lon;
-        rHelper.data.headquarter.user.level = data.level;
+        rHelper.data.headquarter.user.hqPosition.lat = data.lat
+        rHelper.data.headquarter.user.hqPosition.lon = data.lon
+        rHelper.data.headquarter.user.level = data.level
 
         $.each(data.paid, function(i, paid) {
-          rHelper.data.headquarter.user.paid[i] = paid;
-        });
+          rHelper.data.headquarter.user.paid[i] = paid
+        })
 
-        ref.INSRT_gaugeGraph('headquarter');
-        ref.SET_hqLevel();
-        ref.API_toggleLoadSuccessorHelper('headquarter');
-        ref.SET_save();
-      });
+        ref.INSRT_gaugeGraph('headquarter')
+        ref.SET_hqLevel()
+        ref.API_toggleLoadSuccessorHelper('headquarter')
+        ref.SET_save()
+      })
     },
     API_getCreditInformation: function API_getCreditInformation(key) {
-      'use strict';
+      'use strict'
 
       $('#api-credits').html(
         '<span id="api-credits-loading" class="circles-to-rhombuses-spinner"><span class="rhombuses-circle"></span><span class="rhombuses-circle"></span><span class="rhombuses-circle"></span></span>'
-      );
-      $('#api-credits-loading').css('display', 'flex');
+      )
+      $('#api-credits-loading').css('display', 'flex')
 
       $.get('api/core.php?query=0&key=' + key, function(data) {
-        var remainingCredits = parseInt(data[0].creditsleft);
-        rHelper.data.userInformation.remainingCredits = remainingCredits;
-        rHelper.methods.INSRT_API_remainingCredits(remainingCredits);
+        var remainingCredits = parseInt(data[0].creditsleft)
+        rHelper.data.userInformation.remainingCredits = remainingCredits
+        rHelper.methods.INSRT_API_remainingCredits(remainingCredits)
 
-        $('#api-submit').attr('disabled', false);
-        $('#api-credits-loading').css('display', 'none');
-      });
+        $('#api-submit').attr('disabled', false)
+        $('#api-credits-loading').css('display', 'none')
+      })
     },
     API_init: function API_init(key, queries, anonymity) {
-      'use strict';
+      'use strict'
 
-      var ref = rHelper.methods;
+      var ref = rHelper.methods
 
       if ($.isArray(queries)) {
         $.post({
@@ -560,79 +560,79 @@ var rHelper = {
           data: {
             queries: JSON.stringify(queries)
           }
-        });
+        })
 
         $.each(queries, function(i, query) {
           switch (query) {
             case 1:
-              ref.API_getFactories(key); // STABLE
-              break;
+              ref.API_getFactories(key) // STABLE
+              break
             case 2:
-              ref.API_getWarehouse(key); // STABLE
-              break;
+              ref.API_getWarehouse(key) // STABLE
+              break
             case 3:
-              ref.API_getBuildings(key); // STABLE
-              break;
+              ref.API_getBuildings(key) // STABLE
+              break
             case 4:
-              ref.API_getHeadquarter(key); // STABLE
-              break;
+              ref.API_getHeadquarter(key) // STABLE
+              break
             case 5:
-              ref.API_getMineMapInitiator(key); // STABLE
-              break;
+              ref.API_getMineMapInitiator(key) // STABLE
+              break
             case 51:
-              ref.API_getMineSummary(key); // STABLE
-              break;
+              ref.API_getMineSummary(key) // STABLE
+              break
             case 6:
-              ref.API_getTradeLogInitiator(key); // STABLE
-              break;
+              ref.API_getTradeLogInitiator(key) // STABLE
+              break
             case 7:
-              ref.API_getPlayerInfo(key, anonymity); // STABLE
-              break;
+              ref.API_getPlayerInfo(key, anonymity) // STABLE
+              break
             case 9:
-              ref.API_getAttackLogInitiator(key); // STABLE
-              break;
+              ref.API_getAttackLogInitiator(key) // STABLE
+              break
             case 10:
-              ref.API_getMissionsInitiator(key); // STABLE
-              break;
+              ref.API_getMissionsInitiator(key) // STABLE
+              break
             default:
-              ref.API_getCreditInformation(key); // STABLE
-              break;
+              ref.API_getCreditInformation(key) // STABLE
+              break
           }
-        });
+        })
       }
     },
     API_getWorldMap: function API_getWorldMap(type) {
-      'use strict';
+      'use strict'
 
       $.getJSON('api/core.php?worldMap=' + type, function(data) {
-        rHelper.data.worldMap = rHelper.data.worldMap || {};
-        rHelper.data.worldMap = data;
-        rHelper.methods.EVNT_mapCreation('world');
-      });
+        rHelper.data.worldMap = rHelper.data.worldMap || {}
+        rHelper.data.worldMap = data
+        rHelper.methods.EVNT_mapCreation('world')
+      })
     },
     SET_language: function SET_language() {
-      var languageContainer = rHelper.data.locale;
+      var languageContainer = rHelper.data.locale
 
       $.each(languageContainer, function(target, value) {
-        $('#' + target).html(value);
-      });
+        $('#' + target).html(value)
+      })
     },
     SET_globalObject: function SET_globalObject(selector, index, key, value) {
-      'use strict';
+      'use strict'
 
       if ($.isArray(key)) {
-        rHelper.data[selector][index][key[0]][key[1]] = value;
+        rHelper.data[selector][index][key[0]][key[1]] = value
       } else {
-        rHelper.data[selector][index][key] = value;
+        rHelper.data[selector][index][key] = value
       }
 
-      rHelper.methods.SET_save();
+      rHelper.methods.SET_save()
     },
     SET_save: function SET_save() {
-      'use strict';
+      'use strict'
 
       if (!isLoggedIn) {
-        localStorage.setItem('rGame', JSON.stringify(rHelper.data));
+        localStorage.setItem('rGame', JSON.stringify(rHelper.data))
       }
     },
     SET_stickyHeaders: function SET_stickyHeaders() {
@@ -644,223 +644,223 @@ var rHelper = {
         '#module-warehouses table',
         '#techupgrades-combinations-tbl',
         '#module-missions table'
-      ];
+      ]
 
       $.each(stickyTables, function(i, el) {
-        $(el).stickyTableHeaders();
-      });
+        $(el).stickyTableHeaders()
+      })
     },
     SET_tabSwitcherAnchorBased: function SET_tabSwitcherAnchorBased() {
-      'use strict';
+      'use strict'
 
-      var anchor = '#' + window.location.hash.substr(1);
+      var anchor = '#' + window.location.hash.substr(1)
       if (anchor === '#') {
         if (isLoggedIn) {
-          anchor = '#factories';
+          anchor = '#factories'
         } else {
-          anchor = '#registrationlogin';
+          anchor = '#registrationlogin'
         }
       }
 
       if (anchor === '#leaderboard') {
-        rHelper.methods.INSRT_leaderboard();
+        rHelper.methods.INSRT_leaderboard()
       }
 
       if (anchor === '#tradelog') {
-        rHelper.methods.API_getTradeLog();
+        rHelper.methods.API_getTradeLog()
       }
 
       if (anchor === '#techupgrades') {
-        rHelper.methods.INSRT_techUpgradeRows();
+        rHelper.methods.INSRT_techUpgradeRows()
       }
 
       $('.nav-link').each(function(i, navLink) {
         var _ref = [$(navLink), $('#' + navLink.dataset.target)],
           navEl = _ref[0],
-          target = _ref[1];
+          target = _ref[1]
 
         if (navEl.attr('href') === anchor) {
-          target.css('display', 'block');
-          navEl.addClass('active');
+          target.css('display', 'block')
+          navEl.addClass('active')
         } else {
-          target.css('display', 'none');
-          navEl.removeClass('active');
+          target.css('display', 'none')
+          navEl.removeClass('active')
         }
-      });
+      })
     },
     SET_transportCost: function SET_transportCost(init) {
-      'use strict';
+      'use strict'
 
-      var ref = rHelper.methods;
+      var ref = rHelper.methods
 
-      rHelper.data.buildings[9].transportCost = 1 + (15 - rHelper.data.buildings[9].level) / 100;
+      rHelper.data.buildings[9].transportCost = 1 + (15 - rHelper.data.buildings[9].level) / 100
 
       if (!init) {
         $.each(rHelper.data.buildings, function(buildingId) {
-          var fns = ['SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10'];
+          var fns = ['SET_buildingBackgroundColor', 'INSRT_buildingData', 'INSRT_buildingToLevel10']
 
           $.each(fns, function(i, fn) {
-            ref[fn](buildingId);
-          });
-        });
-        var calculationOrder = ref.GET_calculationOrder();
+            ref[fn](buildingId)
+          })
+        })
+        var calculationOrder = ref.GET_calculationOrder()
         $.each(calculationOrder, function(index, factoryId) {
-          var fns = ['INSRT_factoryUpgradeCost', 'INSRT_factoryROI'];
+          var fns = ['INSRT_factoryUpgradeCost', 'INSRT_factoryROI']
 
           $.each(fns, function(i, fn) {
-            ref[fn](factoryId);
-          });
+            ref[fn](factoryId)
+          })
 
-          ref.INSRT_flowDistributionGlobal();
-        });
+          ref.INSRT_flowDistributionGlobal()
+        })
 
         $.each(rHelper.data.headquarter, function(headquarterLevel) {
-          ref.INSRT_headquarterOvwTransportation(headquarterLevel);
-        });
+          ref.INSRT_headquarterOvwTransportation(headquarterLevel)
+        })
       }
     },
     SET_buildingBackgroundColor: function SET_buildingBackgroundColor(buildingId) {
-      'use strict';
+      'use strict'
 
-      var buildingLevel = rHelper.data.buildings[buildingId].level;
+      var buildingLevel = rHelper.data.buildings[buildingId].level
 
-      var r = 255 - buildingLevel * 10;
-      var g = 127 + buildingLevel * 7;
-      var b = 80 - buildingLevel * 3;
+      var r = 255 - buildingLevel * 10
+      var g = 127 + buildingLevel * 7
+      var b = 80 - buildingLevel * 3
 
-      $('#building-' + buildingId).css('background-color', 'rgba(' + r + ',' + g + ',' + b + ', 0.25)');
+      $('#building-' + buildingId).css('background-color', 'rgba(' + r + ',' + g + ',' + b + ', 0.25)')
     },
     SET_buildingTableVisibility: function SET_buildingTableVisibility(buildingId, state) {
-      'use strict';
+      'use strict'
 
       var _ref2 = [$('#building-' + buildingId + ' tbody'), $('#building-' + buildingId + ' tfoot')],
         tbody = _ref2[0],
-        tfoot = _ref2[1];
+        tfoot = _ref2[1]
 
       $.each([tbody, tfoot], function(i, el) {
         switch (state) {
           case 'show':
             if (el.css('display') === 'none') {
-              el.css('display', 'table-row-group');
+              el.css('display', 'table-row-group')
             }
-            break;
+            break
           case 'hide':
             if (el.css('display') !== 'none') {
-              el.css('display', 'none');
+              el.css('display', 'none')
             }
-            break;
+            break
         }
-      });
+      })
     },
     SET_recyclingProfitObj: function SET_recyclingProfitObj(lootId) {
-      'use strict';
+      'use strict'
 
       rHelper.data.loot[lootId].profit = {
         outputWorth: 0,
         inputWorth: 0,
         profit: 0
-      };
+      }
     },
     SET_recyclingPlantLevel: function SET_recyclingPlantLevel() {
-      'use strict';
+      'use strict'
 
       $.each(rHelper.data.loot, function(lootId) {
         if (lootId === 4 || (lootId >= 10 && lootId <= 13)) {
-          return;
+          return
         }
 
-        var fns = ['INSRT_recyclingProducts', 'INSRT_recyclingOutputWorth', 'INSRT_recyclingInputWorth'];
+        var fns = ['INSRT_recyclingProducts', 'INSRT_recyclingOutputWorth', 'INSRT_recyclingInputWorth']
 
         $.each(fns, function(i, fn) {
-          rHelper.methods[fn](lootId);
-        });
+          rHelper.methods[fn](lootId)
+        })
 
-        rHelper.methods.INSRT_unitsRecyclingProfit('recycling', lootId);
-      });
+        rHelper.methods.INSRT_unitsRecyclingProfit('recycling', lootId)
+      })
     },
     SET_UnitProfitObj: function SET_UnitProfitObj(unitId) {
-      'use strict';
+      'use strict'
 
       rHelper.data.units[unitId].profit = {
         craftingPrice: 0,
         marketPrice: 0,
         profit: 0
-      };
+      }
     },
     SET_hqLevel: function SET_hqLevel() {
-      'use strict';
+      'use strict'
 
-      var headquarter = rHelper.data.headquarter;
+      var headquarter = rHelper.data.headquarter
 
       if (headquarter.user) {
-        var userHqLevel = headquarter.user.level;
-        rHelper.methods.SET_hqSelectorClass(userHqLevel - 1);
-        rHelper.methods.INSRT_headquarterPaid();
+        var userHqLevel = headquarter.user.level
+        rHelper.methods.SET_hqSelectorClass(userHqLevel - 1)
+        rHelper.methods.INSRT_headquarterPaid()
 
-        var fns = ['INSRT_headquarterContentRequiredAmount', 'INSRT_headquarterMissing', 'INSRT_headquarterRemainingCost'];
+        var fns = ['INSRT_headquarterContentRequiredAmount', 'INSRT_headquarterMissing', 'INSRT_headquarterRemainingCost']
 
         $.each(fns, function(i, fn) {
-          rHelper.methods[fn](userHqLevel);
-        });
+          rHelper.methods[fn](userHqLevel)
+        })
       }
     },
     SET_hqSelectorClass: function SET_hqSelectorClass(userHqLevel) {
-      'use strict';
+      'use strict'
 
       for (var i = 0; i <= 9; i += 1) {
         if (userHqLevel != i) {
-          $('.hq-thumb-' + i).addClass('disabled-hq');
+          $('.hq-thumb-' + i).addClass('disabled-hq')
         } else {
-          $('.hq-thumb-' + i).removeClass('disabled-hq');
+          $('.hq-thumb-' + i).removeClass('disabled-hq')
         }
       }
     },
     SET_newMap: function SET_newMap(container, zoom, type) {
-      'use strict';
+      'use strict'
 
       return new google.maps.Map(container[0], {
         zoom: zoom,
         mapTypeId: type
-      });
+      })
     },
     SET_mapOptions: function SET_mapOptions(map, maxZoom, primaryMine) {
-      'use strict';
+      'use strict'
 
       map.setOptions({
         maxZoom: maxZoom,
         center: new google.maps.LatLng(primaryMine.lat, primaryMine.lon)
-      });
-      return map;
+      })
+      return map
     },
     SET_mapImg: function SET_mapImg(folder, icon, size) {
-      'use strict';
+      'use strict'
 
       return {
         url: 'assets/img/maps/' + folder + '/' + icon + '.png',
         scaledSize: new google.maps.Size(size, size)
-      };
+      }
     },
     SET_mapInfoWindow: function SET_mapInfoWindow(contentString) {
-      'use strict';
+      'use strict'
 
       return new google.maps.InfoWindow({
         content: contentString
-      });
+      })
     },
     SET_mapFolderRelation: function SET_mapFolderRelation(relation) {
-      'use strict';
+      'use strict'
 
-      var folder = 'foe';
+      var folder = 'foe'
       if (relation === 'friend') {
-        folder = 'friend';
+        folder = 'friend'
       }
 
-      return folder;
+      return folder
     },
     SET_mapHQHandler: function SET_mapHQHandler(map, hqObj) {
-      'use strict';
+      'use strict'
 
-      var hqLevel = hqObj.level;
+      var hqLevel = hqObj.level
 
       var _ref3 = [
           hqLevel * 12.5,
@@ -872,20 +872,20 @@ var rHelper = {
         ],
         hqSize = _ref3[0],
         radius = _ref3[1],
-        center = _ref3[2];
+        center = _ref3[2]
 
-      rHelper.methods.SET_mapHqCircle(map, center, radius, hqObj.relation);
+      rHelper.methods.SET_mapHqCircle(map, center, radius, hqObj.relation)
 
       new google.maps.Marker({
         map: map,
         position: center,
         icon: rHelper.methods.SET_mapImg('hq', hqLevel, hqSize)
-      });
+      })
     },
     SET_mapHqCircle: function SET_mapHqCircle(map, hqCenter, radius, relation) {
-      var color = '#FF0000';
+      var color = '#FF0000'
       if (relation === 'friend') {
-        color = '#00FF00';
+        color = '#00FF00'
       }
 
       return new google.maps.Circle({
@@ -898,19 +898,19 @@ var rHelper = {
         center: hqCenter,
         radius: radius,
         draggable: true
-      });
+      })
     },
     SET_mapMineHandler: function SET_mapMineHandler(now, subObj, map, mapType) {
-      var ref = rHelper.methods;
+      var ref = rHelper.methods
 
-      var type = subObj.type;
-      var relObj = rHelper.data.material[type];
-      var buildMilliseconds = ref.CALC_toMilliseconds(subObj.builddate);
-      var buildDate = ref.CALC_convertDateToIso(buildMilliseconds);
-      var age = (now - buildMilliseconds) / 1000 / 86400;
-      var estRevenue = ref.CALC_mineEstRevenue(subObj, type, age);
-      var contentString = ref.CALC_createMapContentString(relObj, buildDate, age, estRevenue, subObj);
-      var infoWindow = ref.SET_mapInfoWindow(contentString);
+      var type = subObj.type
+      var relObj = rHelper.data.material[type]
+      var buildMilliseconds = ref.CALC_toMilliseconds(subObj.builddate)
+      var buildDate = ref.CALC_convertDateToIso(buildMilliseconds)
+      var age = (now - buildMilliseconds) / 1000 / 86400
+      var estRevenue = ref.CALC_mineEstRevenue(subObj, type, age)
+      var contentString = ref.CALC_createMapContentString(relObj, buildDate, age, estRevenue, subObj)
+      var infoWindow = ref.SET_mapInfoWindow(contentString)
       var marker = new google.maps.Marker({
         map: map,
         position: {
@@ -918,42 +918,42 @@ var rHelper = {
           lng: subObj.lon
         },
         icon: ref.SET_mapImg(ref.SET_mapFolderRelation(subObj.relation), type, 20)
-      });
+      })
 
       if (mapType === 'personal') {
         if (subObj.builddate === rHelper.data.mineMap.mines[0].builddate) {
-          marker.setAnimation(google.maps.Animation.BOUNCE);
+          marker.setAnimation(google.maps.Animation.BOUNCE)
         }
       }
       google.maps.event.addListener(marker, 'click', function() {
         if (openedWindow) {
-          openedWindow.close();
+          openedWindow.close()
         }
-        openedWindow = infoWindow;
-        infoWindow.open(map, marker);
-      });
+        openedWindow = infoWindow
+        infoWindow.open(map, marker)
+      })
 
-      return marker;
+      return marker
     },
     SET_overTimeGraph: function SET_overTimeGraph() {
-      'use strict';
+      'use strict'
 
-      var data = rHelper.data.mineMap.mines;
+      var data = rHelper.data.mineMap.mines
 
       var timestamps = [],
         mineCount = [],
         avgMinePrice = [],
         income = [],
-        hours = [];
+        hours = []
 
       for (var hour = 0; hour <= 23; hour += 1) {
-        hours.push([hour + ' to ' + (hour + 1), 0]);
+        hours.push([hour + ' to ' + (hour + 1), 0])
       }
 
       $.each(data, function(index, subObj) {
-        var buildHour = new Date(rHelper.methods.CALC_toMilliseconds(subObj.builddate)).getHours();
-        hours[buildHour][1] += 1;
-      });
+        var buildHour = new Date(rHelper.methods.CALC_toMilliseconds(subObj.builddate)).getHours()
+        hours[buildHour][1] += 1
+      })
 
       Highcharts.chart('graph-buildinghabits', {
         chart: {
@@ -1022,47 +1022,47 @@ var rHelper = {
             }
           }
         }
-      });
+      })
 
-      var ref = rHelper.methods;
+      var ref = rHelper.methods
 
       var _ref4 = [data[0].builddate, data[data.length - 1].builddate],
         firstMine = _ref4[0],
-        lastMine = _ref4[1];
+        lastMine = _ref4[1]
 
-      var daysSinceFirstMine = (lastMine - firstMine) / 86400;
+      var daysSinceFirstMine = (lastMine - firstMine) / 86400
 
-      timestamps.push(ref.CALC_toMilliseconds(firstMine));
+      timestamps.push(ref.CALC_toMilliseconds(firstMine))
 
       for (var i = 0; i <= daysSinceFirstMine; i += 1) {
-        var date = ref.CALC_toMilliseconds(firstMine + 86400 * i);
-        timestamps.push(date);
+        var date = ref.CALC_toMilliseconds(firstMine + 86400 * i)
+        timestamps.push(date)
       }
 
       $.each(timestamps, function(i, ts) {
         var mineCountAtGivenTS = 0,
           sum = 0,
-          totalIncomeAtGivenTS = 0;
+          totalIncomeAtGivenTS = 0
 
         $.each(data, function(index, subObj) {
-          var builddate = ref.CALC_toMilliseconds(subObj.builddate);
+          var builddate = ref.CALC_toMilliseconds(subObj.builddate)
 
           if (builddate <= ts) {
-            mineCountAtGivenTS += 1;
-            totalIncomeAtGivenTS += ref.CALC_returnPriceViaId(subObj.type) * subObj.fullRate;
+            mineCountAtGivenTS += 1
+            totalIncomeAtGivenTS += ref.CALC_returnPriceViaId(subObj.type) * subObj.fullRate
           }
-        });
+        })
 
         $.each(rHelper.data.material, function(k) {
-          sum += ref.CALC_materialNewMinePrice(mineCountAtGivenTS, k);
-        });
+          sum += ref.CALC_materialNewMinePrice(mineCountAtGivenTS, k)
+        })
 
-        income.push(Math.round(totalIncomeAtGivenTS));
-        mineCount.push(mineCountAtGivenTS);
-        avgMinePrice.push(Math.round(sum / 14));
+        income.push(Math.round(totalIncomeAtGivenTS))
+        mineCount.push(mineCountAtGivenTS)
+        avgMinePrice.push(Math.round(sum / 14))
 
-        timestamps[i] = ref.CALC_convertDateToIso(ts);
-      });
+        timestamps[i] = ref.CALC_convertDateToIso(ts)
+      })
 
       Highcharts.chart('graph-overtime', {
         chart: {
@@ -1094,7 +1094,7 @@ var rHelper = {
           },
           labels: {
             formatter: function formatter() {
-              return this.value.toLocaleString('en-US');
+              return this.value.toLocaleString('en-US')
             },
             style: {
               color: '#dedede'
@@ -1151,49 +1151,49 @@ var rHelper = {
             }
           }
         }
-      });
+      })
     },
     EVNT_enableTippy: function EVNT_enableTippy() {
-      'use strict';
+      'use strict'
 
       $.each($('[title]'), function(i, el) {
         if (!el._tippy) {
           tippy(el, {
             dynamicTitle: true
-          });
+          })
         }
-        $(el).attr('tippied', true);
-      });
+        $(el).attr('tippied', true)
+      })
     },
     EVNT_assignTitleToIconsHelper: function EVNT_assignTitleToIconsHelper(min, max, subSelector, incrementor) {
-      'use strict';
+      'use strict'
 
       var _loop = function _loop(i) {
         $.each($('.resources-' + subSelector + '-' + i), function(k, el) {
           if (!$(el).attr('title')) {
-            var convertedId = i + incrementor;
-            $(el).attr('title', rHelper.methods.CALC_returnPriceViaId(convertedId).toLocaleString('en-US'));
+            var convertedId = i + incrementor
+            $(el).attr('title', rHelper.methods.CALC_returnPriceViaId(convertedId).toLocaleString('en-US'))
           }
-        });
-      };
+        })
+      }
 
       for (var i = min; i <= max; i += 1) {
-        _loop(i);
+        _loop(i)
       }
     },
     EVNT_assignTitleToIcons: function EVNT_assignTitleToIcons() {
-      'use strict';
+      'use strict'
 
       var maxIndices = [13, 21, 16, 5],
         subObjs = ['material', 'product', 'loot', 'unit'],
-        length = [0, 14, 36, 52];
+        length = [0, 14, 36, 52]
 
       $.each(maxIndices, function(i, val) {
-        rHelper.methods.EVNT_assignTitleToIconsHelper(0, val, subObjs[i], length[i]);
-      });
+        rHelper.methods.EVNT_assignTitleToIconsHelper(0, val, subObjs[i], length[i])
+      })
     },
     EVNT_sortableTables: function EVNT_sortableTables() {
-      'use strict';
+      'use strict'
 
       var tables = [
         $('#module-mines table')[0],
@@ -1203,32 +1203,32 @@ var rHelper = {
         $('#techupgrades-combinations-tbl')[0],
         $('#recycling-tbl')[0],
         $('#units-tbl')[0]
-      ];
+      ]
 
       $.each(tables, function(index, table) {
         if ((typeof table === 'undefined' ? 'undefined' : _typeof(table)) !== undefined) {
-          sorttable.makeSortable(table);
+          sorttable.makeSortable(table)
 
           if (index === 2) {
-            sorttable.innerSortFunction.apply($('#module-diamond th')[5], []);
+            sorttable.innerSortFunction.apply($('#module-diamond th')[5], [])
           } else if (index === 4) {
             // sorting twice for cheapest price first...
-            sorttable.innerSortFunction.apply($('#techupgrades-combinations-tbl th')[5], []);
-            sorttable.innerSortFunction.apply($('#techupgrades-combinations-tbl th')[5], []);
+            sorttable.innerSortFunction.apply($('#techupgrades-combinations-tbl th')[5], [])
+            sorttable.innerSortFunction.apply($('#techupgrades-combinations-tbl th')[5], [])
           }
         }
-      });
+      })
     },
     EVNT_factoryInput: function EVNT_factoryInput(factoryId) {
-      'use strict';
+      'use strict'
 
       $('#factories-level-' + factoryId).on('input', function() {
         var _ref5 = [rHelper.methods, parseInt(this.id.replace('factories-level-', '')), parseInt(this.value)],
           ref = _ref5[0],
           factoryId = _ref5[1],
-          factoryLevel = _ref5[2];
+          factoryLevel = _ref5[2]
 
-        ref.SET_globalObject('products', factoryId, 'factoryLevel', factoryLevel);
+        ref.SET_globalObject('products', factoryId, 'factoryLevel', factoryLevel)
 
         var fns = [
           // factories tab
@@ -1247,160 +1247,160 @@ var rHelper = {
           'INSRT_diamondEfficiency',
           'INSRT_diamondProfit',
           'INSRT_totalFactoryUpgrades'
-        ];
+        ]
 
         $.each(fns, function(i, fn) {
-          ref[fn](factoryId);
-        });
+          ref[fn](factoryId)
+        })
 
-        ref.CALC_dependantFactories(factoryId, 'product');
-        ref.INSRT_diamondTop10Profit();
-        ref.INSRT_diamondTotalProfit();
-        ref.INSRT_flowRate(factoryId, 'product');
-        ref.INSRT_flowDistributionGlobal();
-        ref.INSRT_factoryHighlightColumns();
-      });
+        ref.CALC_dependantFactories(factoryId, 'product')
+        ref.INSRT_diamondTop10Profit()
+        ref.INSRT_diamondTotalProfit()
+        ref.INSRT_flowRate(factoryId, 'product')
+        ref.INSRT_flowDistributionGlobal()
+        ref.INSRT_factoryHighlightColumns()
+      })
     },
     EVNT_materialInput: function EVNT_materialInput(materialId) {
-      'use strict';
+      'use strict'
 
       $('#material-rate-' + materialId).on('input', function() {
         var _ref6 = [rHelper.methods, this.id.replace('material-rate-', ''), parseInt(this.value)],
           ref = _ref6[0],
           materialId = _ref6[1],
-          materialAmount = _ref6[2];
+          materialAmount = _ref6[2]
 
-        ref.SET_globalObject('material', materialId, 'perHour', materialAmount);
-        ref.INSRT_materialRateWorth(materialId);
-        ref.INSRT_totalMineWorth(ref.CALC_totalMineWorth());
-        ref.CALC_dependantFactories(materialId, 'material');
-        ref.INSRT_flowRate(materialId, 'material');
-        ref.INSRT_flowDistributionGlobal();
-        ref.EVNT_buildGraph('material');
-      });
+        ref.SET_globalObject('material', materialId, 'perHour', materialAmount)
+        ref.INSRT_materialRateWorth(materialId)
+        ref.INSRT_totalMineWorth(ref.CALC_totalMineWorth())
+        ref.CALC_dependantFactories(materialId, 'material')
+        ref.INSRT_flowRate(materialId, 'material')
+        ref.INSRT_flowDistributionGlobal()
+        ref.EVNT_buildGraph('material')
+      })
 
       $('#material-amount-of-mines-' + materialId).on('input', function() {
         var _ref7 = [rHelper.methods, this.id.replace('material-amount-of-mines-', ''), parseInt(this.value)],
           ref = _ref7[0],
           materialId = _ref7[1],
-          materialAmountOfMines = _ref7[2];
+          materialAmountOfMines = _ref7[2]
 
-        ref.SET_globalObject('material', materialId, 'amountOfMines', materialAmountOfMines);
+        ref.SET_globalObject('material', materialId, 'amountOfMines', materialAmountOfMines)
 
         $.each(rHelper.data.material, function(materialId) {
-          ref.INSRT_materialNewMinePrice(materialId);
-        });
+          ref.INSRT_materialNewMinePrice(materialId)
+        })
 
-        ref.INSRT_warehouseRemainingTimeToFull(materialId, 'material');
-        ref.INSRT_materialMineAmortisation();
-        ref.INSRT_totalMineCount(ref.CALC_totalMineCount());
-        ref.EVNT_buildGraph('material');
-      });
+        ref.INSRT_warehouseRemainingTimeToFull(materialId, 'material')
+        ref.INSRT_materialMineAmortisation()
+        ref.INSRT_totalMineCount(ref.CALC_totalMineCount())
+        ref.EVNT_buildGraph('material')
+      })
     },
     EVNT_warehouseInput: function EVNT_warehouseInput(id, type) {
-      'use strict';
+      'use strict'
 
       // on upgrade calculator input
 
       $('#warehouse-' + type + '-calc-2-' + id).on('input', function() {
-        var value = parseInt(this.value);
+        var value = parseInt(this.value)
         if (isNaN(value)) {
-          value = 0;
+          value = 0
         }
-        rHelper.methods.INSRT_warehouseUpgradeCost(id, type, value);
-      });
+        rHelper.methods.INSRT_warehouseUpgradeCost(id, type, value)
+      })
 
       // reset upgrade cost on select swap
       $('#warehouse-' + type + '-calc-1-' + id).on('change', function() {
-        $('#warehouse-' + type + '-upgrade-cost-' + id).empty();
-        $('#warehouse-' + type + '-calc-2-' + id).val(0);
-      });
+        $('#warehouse-' + type + '-upgrade-cost-' + id).empty()
+        $('#warehouse-' + type + '-calc-2-' + id).val(0)
+      })
 
       // on increase of current stock
       $('#warehouse-' + type + '-stock-current-' + id).on('input', function() {
-        var value = parseInt(this.value);
+        var value = parseInt(this.value)
         if (isNaN(value)) {
-          value = 0;
+          value = 0
         }
-        var newFillStatus = value / rHelper.data[type][id].warehouse.contingent;
+        var newFillStatus = value / rHelper.data[type][id].warehouse.contingent
 
-        rHelper.methods.SET_globalObject(type, id, ['warehouse', 'fillAmount'], value);
-        rHelper.methods.SET_globalObject(type, id, ['warehouse', 'fillStatus'], newFillStatus);
+        rHelper.methods.SET_globalObject(type, id, ['warehouse', 'fillAmount'], value)
+        rHelper.methods.SET_globalObject(type, id, ['warehouse', 'fillStatus'], newFillStatus)
 
-        var fns = ['INSRT_warehouseWorth', 'INSRT_warehouseFillStatus', 'INSRT_warehouseRemainingTimeToFull'];
+        var fns = ['INSRT_warehouseWorth', 'INSRT_warehouseFillStatus', 'INSRT_warehouseRemainingTimeToFull']
 
         $.each(fns, function(i, fn) {
-          rHelper.methods[fn](id, type);
-        });
+          rHelper.methods[fn](id, type)
+        })
 
-        rHelper.methods.INSRT_warehouseTotalWorth();
-      });
+        rHelper.methods.INSRT_warehouseTotalWorth()
+      })
       // on increase of warehouse level
       $('#warehouse-' + type + '-level-' + id).on('input', function() {
         var _ref8 = [parseInt(this.value), rHelper.data[type][id].warehouse],
           value = _ref8[0],
-          el = _ref8[1];
+          el = _ref8[1]
 
-        var ref = rHelper.methods;
+        var ref = rHelper.methods
 
         if (isNaN(value)) {
-          value = 0;
+          value = 0
         }
 
-        ref.SET_globalObject(type, id, ['warehouse', 'level'], value);
-        ref.SET_globalObject(type, id, ['warehouse', 'contingent'], ref.CALC_warehouseContingent(value));
-        ref.SET_globalObject(type, id, ['warehouse', 'fillStatus'], el.fillAmount / el.contingent);
+        ref.SET_globalObject(type, id, ['warehouse', 'level'], value)
+        ref.SET_globalObject(type, id, ['warehouse', 'contingent'], ref.CALC_warehouseContingent(value))
+        ref.SET_globalObject(type, id, ['warehouse', 'fillStatus'], el.fillAmount / el.contingent)
 
-        var fns = ['INSRT_warehouseCapacity', 'INSRT_warehouseFillStatus', 'INSRT_warehouseRemainingTimeToFull'];
+        var fns = ['INSRT_warehouseCapacity', 'INSRT_warehouseFillStatus', 'INSRT_warehouseRemainingTimeToFull']
 
         $.each(fns, function(i, fn) {
-          ref[fn](id, type);
-        });
+          ref[fn](id, type)
+        })
 
-        ref.INSRT_warehouseTotalLevel();
-      });
+        ref.INSRT_warehouseTotalLevel()
+      })
     },
     EVNT_buildingChange: function EVNT_buildingChange(buildingId) {
-      'use strict';
+      'use strict'
 
       $('#buildings-level-' + buildingId).on('change', function() {
         var _ref9 = [rHelper.methods, parseInt(this.value), [3, 4, 9], ['INSRT_buildingData', 'INSRT_buildingToLevel10', 'SET_buildingBackgroundColor']],
           ref = _ref9[0],
           value = _ref9[1],
           recalculateUnitStrength = _ref9[2],
-          fns = _ref9[3];
+          fns = _ref9[3]
 
-        ref.SET_globalObject('buildings', buildingId, 'level', value);
+        ref.SET_globalObject('buildings', buildingId, 'level', value)
 
         if (buildingId === 9) {
-          ref.SET_transportCost();
+          ref.SET_transportCost()
         } else if (buildingId === 5) {
-          ref.SET_recyclingPlantLevel();
+          ref.SET_recyclingPlantLevel()
         }
 
         if ($.inArray(buildingId, recalculateUnitStrength)) {
           $.each(rHelper.data.units, function(unitId) {
-            ref.INSRT_unitsPricePerStrength(unitId);
-          });
+            ref.INSRT_unitsPricePerStrength(unitId)
+          })
         }
 
         $.each(fns, function(i, fn) {
-          ref[fn](buildingId);
-        });
+          ref[fn](buildingId)
+        })
 
-        ref.INSRT_gaugeGraph('buildings');
-      });
+        ref.INSRT_gaugeGraph('buildings')
+      })
     },
     EVNT_buildGraph: function EVNT_buildGraph(type) {
-      'use strict';
+      'use strict'
 
-      var ref = rHelper.methods;
+      var ref = rHelper.methods
 
-      rHelper.graphs = rHelper.graphs || {};
+      rHelper.graphs = rHelper.graphs || {}
 
-      var parentGraphObj = rHelper.graphs.material;
-      rHelper.graphs.material.reference.mineCount = ref.CALC_totalMineCount();
-      rHelper.graphs.material.reference.mineIncome = ref.CALC_totalMineWorth();
+      var parentGraphObj = rHelper.graphs.material
+      rHelper.graphs.material.reference.mineCount = ref.CALC_totalMineCount()
+      rHelper.graphs.material.reference.mineIncome = ref.CALC_totalMineWorth()
 
       $.each(rHelper.data.material, function(i, material) {
         var iteration = {
@@ -1411,124 +1411,124 @@ var rHelper = {
             data: [],
             color: ''
           }
-        };
+        }
 
-        var mineAmountPercent = parseFloat((material.amountOfMines / rHelper.graphs.material.reference.mineCount * 100).toFixed(2));
-        var mineIncomePercent = parseFloat((ref.CALC_materialRateWorth(i) / rHelper.graphs.material.reference.mineIncome * 100).toFixed(2));
-        var materialName = material.name;
+        var mineAmountPercent = parseFloat((material.amountOfMines / rHelper.graphs.material.reference.mineCount * 100).toFixed(2))
+        var mineIncomePercent = parseFloat((ref.CALC_materialRateWorth(i) / rHelper.graphs.material.reference.mineIncome * 100).toFixed(2))
+        var materialName = material.name
 
         if (!isNaN(mineAmountPercent)) {
-          iteration.y = mineAmountPercent;
+          iteration.y = mineAmountPercent
         } else {
-          iteration.y = 0;
+          iteration.y = 0
         }
 
         var mineDataObj = {
           name: materialName,
           y: iteration.y,
           color: iteration.color
-        };
+        }
 
-        iteration.color = rHelper.graphs.material.colors[i];
-        iteration.drilldown.color = rHelper.graphs.material.colors[i];
-        iteration.drilldown.categories[i] = materialName;
-        iteration.drilldown.name = materialName;
+        iteration.color = rHelper.graphs.material.colors[i]
+        iteration.drilldown.color = rHelper.graphs.material.colors[i]
+        iteration.drilldown.categories[i] = materialName
+        iteration.drilldown.name = materialName
 
         if (!isNaN(mineIncomePercent)) {
-          iteration.drilldown.data[i] = mineIncomePercent;
+          iteration.drilldown.data[i] = mineIncomePercent
         } else {
-          iteration.drilldown.data[i] = 0;
+          iteration.drilldown.data[i] = 0
         }
 
         if (JSON.stringify(rHelper.graphs.material.mineData[i]) !== JSON.stringify(mineDataObj)) {
-          rHelper.graphs.material.mineData[i] = mineDataObj;
+          rHelper.graphs.material.mineData[i] = mineDataObj
         }
 
-        var drillDataLen = iteration.drilldown.data.length;
-        var brightness = 0;
+        var drillDataLen = iteration.drilldown.data.length
+        var brightness = 0
 
         for (var j = 0; j < drillDataLen; j += 1) {
-          brightness = 0.2 - j / drillDataLen / 5;
+          brightness = 0.2 - j / drillDataLen / 5
           rHelper.graphs.material.incomeData[i] = {
             name: iteration.drilldown.categories[j],
             y: iteration.drilldown.data[j],
             color: Highcharts.Color(iteration.color)
               .brighten(brightness)
               .get()
-          };
+          }
         }
         if (JSON.stringify(rHelper.graphs.material.data[i]) !== JSON.stringify(iteration)) {
-          rHelper.graphs.material.data[i] = iteration;
+          rHelper.graphs.material.data[i] = iteration
         }
-      });
+      })
 
-      ref.INSRT_polygonGraph(parentGraphObj.target, parentGraphObj.titleText, parentGraphObj.seriesNames, parentGraphObj.responsiveId, type);
+      ref.INSRT_polygonGraph(parentGraphObj.target, parentGraphObj.titleText, parentGraphObj.seriesNames, parentGraphObj.responsiveId, type)
     },
     EVNT_switchHeadquarter: function EVNT_switchHeadquarter(clickedHq) {
-      'use strict';
+      'use strict'
 
       $('.hq-thumb-' + clickedHq).on('click', function() {
         var _ref10 = [rHelper.methods, parseInt(clickedHq) + 1],
           ref = _ref10[0],
-          actualLevel = _ref10[1];
+          actualLevel = _ref10[1]
 
-        rHelper.data.headquarter.user = rHelper.data.headquarter.user || {};
-        rHelper.data.headquarter.user.paid = rHelper.data.headquarter.user.paid || [0, 0, 0, 0];
-        rHelper.data.headquarter.user.level = rHelper.data.headquarter.user.level || actualLevel;
+        rHelper.data.headquarter.user = rHelper.data.headquarter.user || {}
+        rHelper.data.headquarter.user.paid = rHelper.data.headquarter.user.paid || [0, 0, 0, 0]
+        rHelper.data.headquarter.user.level = rHelper.data.headquarter.user.level || actualLevel
 
-        ref.SET_globalObject('headquarter', 'user', 'level', actualLevel);
-        ref.SET_hqSelectorClass(clickedHq);
-        ref.INSRT_gaugeGraph('headquarter');
-        ref.INSRT_headquarterContentRequiredAmount(actualLevel);
-        ref.INSRT_headquarterPaid();
+        ref.SET_globalObject('headquarter', 'user', 'level', actualLevel)
+        ref.SET_hqSelectorClass(clickedHq)
+        ref.INSRT_gaugeGraph('headquarter')
+        ref.INSRT_headquarterContentRequiredAmount(actualLevel)
+        ref.INSRT_headquarterPaid()
 
         for (var i = 0; i <= 3; i += 1) {
-          ref.INSRT_headquarterMissing(i);
+          ref.INSRT_headquarterMissing(i)
         }
 
-        ref.INSRT_headquarterRemainingCost(actualLevel);
-        ref.INSRT_companyWorth();
-      });
+        ref.INSRT_headquarterRemainingCost(actualLevel)
+        ref.INSRT_companyWorth()
+      })
     },
     EVNT_headquarterInput: function EVNT_headquarterInput() {
-      'use strict';
+      'use strict'
 
       $.each($("[id*='hq-content-input-']"), function(i, el) {
         $(el).on('input', function() {
           var _ref11 = [rHelper.methods, parseInt(this.id.replace(/hq-content-input-/, ''))],
             ref = _ref11[0],
-            thisId = _ref11[1];
+            thisId = _ref11[1]
 
-          var thisValue = parseInt(this.value);
+          var thisValue = parseInt(this.value)
 
           if (isNaN(thisValue)) {
-            thisValue = 0;
+            thisValue = 0
           } else if (thisValue > 50000000) {
-            thisValue = 50000000;
+            thisValue = 50000000
           }
 
-          ref.SET_globalObject('headquarter', 'user', ['paid', thisId], thisValue);
-          ref.INSRT_headquarterMissing(i);
-          ref.INSRT_headquarterRemainingCost(rHelper.data.headquarter.user.level);
-          ref.INSRT_gaugeGraph('headquarter');
-          ref.INSRT_companyWorth();
-        });
-      });
+          ref.SET_globalObject('headquarter', 'user', ['paid', thisId], thisValue)
+          ref.INSRT_headquarterMissing(i)
+          ref.INSRT_headquarterRemainingCost(rHelper.data.headquarter.user.level)
+          ref.INSRT_gaugeGraph('headquarter')
+          ref.INSRT_companyWorth()
+        })
+      })
     },
     EVNT_priceHistoryOnChange: function EVNT_priceHistoryOnChange() {
-      'use strict';
+      'use strict'
 
       $('#pricehistory-selector').on('change', function() {
         var _ref12 = [rHelper.methods, parseInt(this.value)],
           ref = _ref12[0],
-          thisVal = _ref12[1];
+          thisVal = _ref12[1]
         var _ref13 = ['api/getPriceHistory.php?id=' + thisVal, ref.CALC_convertId(thisVal)],
           url = _ref13[0],
-          resource = _ref13[1];
+          resource = _ref13[1]
 
-        var materialName = '<span style="height: 25px; width: 25px;" class="' + resource.icon + '"></span> ' + resource.name;
+        var materialName = '<span style="height: 25px; width: 25px;" class="' + resource.icon + '"></span> ' + resource.name
 
-        ref.EVNT_priceHistoryToggler('loading');
+        ref.EVNT_priceHistoryToggler('loading')
 
         $.getJSON(url, function(response) {
           var _ref14 = [response.avg.ki, response.avg.player, [], [], []],
@@ -1536,112 +1536,112 @@ var rHelper = {
             averagePlayer = _ref14[1],
             timestamps = _ref14[2],
             player = _ref14[3],
-            ki = _ref14[4];
+            ki = _ref14[4]
 
           $.each(response.data, function(i, dataset) {
-            var date = ref.CALC_convertDateToIso(ref.CALC_toMilliseconds(dataset.ts));
-            timestamps.push(date);
+            var date = ref.CALC_convertDateToIso(ref.CALC_toMilliseconds(dataset.ts))
+            timestamps.push(date)
 
             if (dataset.player === 0) {
-              dataset.player = null;
+              dataset.player = null
             }
-            player.push(dataset.player);
-            ki.push(dataset.ki);
-          });
+            player.push(dataset.player)
+            ki.push(dataset.ki)
+          })
 
-          ref.EVNT_priceHistoryToggler('finished');
-          ref.INSRT_priceHistoryGraph(materialName, averageKI, averagePlayer, timestamps, player, ki);
-        });
-      });
+          ref.EVNT_priceHistoryToggler('finished')
+          ref.INSRT_priceHistoryGraph(materialName, averageKI, averagePlayer, timestamps, player, ki)
+        })
+      })
     },
     EVNT_priceHistoryToggler: function EVNT_priceHistoryToggler(state) {
-      'use strict';
+      'use strict'
 
       var _ref15 = [$('#graph-pricehistory'), $('#pricehistory-selector')],
         container = _ref15[0],
-        selector = _ref15[1];
+        selector = _ref15[1]
 
       switch (state) {
         case 'loading':
           var svg =
-            '<svg id="pricehistory-svg" xmlns="http://www.w3.org/2000/svg" style="background:0 0" preserveAspectRatio="xMidYMid" viewBox="0 0 100 100"><g transform="translate(50 50)"><g transform="matrix(.6 0 0 .6 -19 -19)"><g transform="rotate(242)"><animateTransform attributeName="transform" begin="0s" dur="3s" keyTimes="0;1" repeatCount="indefinite" type="rotate" values="0;360"/><path fill="#9acd32" d="M37.3496988-7h10V7h-10a38 38 0 0 1-1.50391082 5.61267157l8.66025404 5-7 12.12435565-8.66025404-5a38 38 0 0 1-4.10876076 4.10876076l5 8.66025404-12.12435565 7-5-8.66025404A38 38 0 0 1 7 37.34969879v10H-7v-10a38 38 0 0 1-5.61267157-1.50391081l-5 8.66025404-12.12435565-7 5-8.66025404a38 38 0 0 1-4.10876076-4.10876076l-8.66025404 5-7-12.12435565 8.66025404-5A38 38 0 0 1-37.34969879 7h-10V-7h10a38 38 0 0 1 1.50391081-5.61267157l-8.66025404-5 7-12.12435565 8.66025404 5a38 38 0 0 1 4.10876076-4.10876076l-5-8.66025404 12.12435565-7 5 8.66025404A38 38 0 0 1-7-37.34969879v-10H7v10a38 38 0 0 1 5.61267157 1.50391081l5-8.66025404 12.12435565 7-5 8.66025404a38 38 0 0 1 4.10876076 4.10876076l8.66025404-5 7 12.12435565-8.66025404 5A38 38 0 0 1 37.34969879-7M0-30a30 30 0 1 0 0 60 30 30 0 1 0 0-60"/></g></g><g transform="matrix(.6 0 0 .6 19 19)"><g transform="rotate(103)"><animateTransform attributeName="transform" begin="-0.125s" dur="3s" keyTimes="0;1" repeatCount="indefinite" type="rotate" values="360;0"/><path fill="coral" d="M37.3496988-7h10V7h-10a38 38 0 0 1-1.50391082 5.61267157l8.66025404 5-7 12.12435565-8.66025404-5a38 38 0 0 1-4.10876076 4.10876076l5 8.66025404-12.12435565 7-5-8.66025404A38 38 0 0 1 7 37.34969879v10H-7v-10a38 38 0 0 1-5.61267157-1.50391081l-5 8.66025404-12.12435565-7 5-8.66025404a38 38 0 0 1-4.10876076-4.10876076l-8.66025404 5-7-12.12435565 8.66025404-5A38 38 0 0 1-37.34969879 7h-10V-7h10a38 38 0 0 1 1.50391081-5.61267157l-8.66025404-5 7-12.12435565 8.66025404 5a38 38 0 0 1 4.10876076-4.10876076l-5-8.66025404 12.12435565-7 5 8.66025404A38 38 0 0 1-7-37.34969879v-10H7v10a38 38 0 0 1 5.61267157 1.50391081l5-8.66025404 12.12435565 7-5 8.66025404a38 38 0 0 1 4.10876076 4.10876076l8.66025404-5 7 12.12435565-8.66025404 5A38 38 0 0 1 37.34969879-7M0-30a30 30 0 1 0 0 60 30 30 0 1 0 0-60"/></g></g></g></svg>';
-          container.html(svg);
-          selector.attr('disabled', true);
-          break;
+            '<svg id="pricehistory-svg" xmlns="http://www.w3.org/2000/svg" style="background:0 0" preserveAspectRatio="xMidYMid" viewBox="0 0 100 100"><g transform="translate(50 50)"><g transform="matrix(.6 0 0 .6 -19 -19)"><g transform="rotate(242)"><animateTransform attributeName="transform" begin="0s" dur="3s" keyTimes="0;1" repeatCount="indefinite" type="rotate" values="0;360"/><path fill="#9acd32" d="M37.3496988-7h10V7h-10a38 38 0 0 1-1.50391082 5.61267157l8.66025404 5-7 12.12435565-8.66025404-5a38 38 0 0 1-4.10876076 4.10876076l5 8.66025404-12.12435565 7-5-8.66025404A38 38 0 0 1 7 37.34969879v10H-7v-10a38 38 0 0 1-5.61267157-1.50391081l-5 8.66025404-12.12435565-7 5-8.66025404a38 38 0 0 1-4.10876076-4.10876076l-8.66025404 5-7-12.12435565 8.66025404-5A38 38 0 0 1-37.34969879 7h-10V-7h10a38 38 0 0 1 1.50391081-5.61267157l-8.66025404-5 7-12.12435565 8.66025404 5a38 38 0 0 1 4.10876076-4.10876076l-5-8.66025404 12.12435565-7 5 8.66025404A38 38 0 0 1-7-37.34969879v-10H7v10a38 38 0 0 1 5.61267157 1.50391081l5-8.66025404 12.12435565 7-5 8.66025404a38 38 0 0 1 4.10876076 4.10876076l8.66025404-5 7 12.12435565-8.66025404 5A38 38 0 0 1 37.34969879-7M0-30a30 30 0 1 0 0 60 30 30 0 1 0 0-60"/></g></g><g transform="matrix(.6 0 0 .6 19 19)"><g transform="rotate(103)"><animateTransform attributeName="transform" begin="-0.125s" dur="3s" keyTimes="0;1" repeatCount="indefinite" type="rotate" values="360;0"/><path fill="coral" d="M37.3496988-7h10V7h-10a38 38 0 0 1-1.50391082 5.61267157l8.66025404 5-7 12.12435565-8.66025404-5a38 38 0 0 1-4.10876076 4.10876076l5 8.66025404-12.12435565 7-5-8.66025404A38 38 0 0 1 7 37.34969879v10H-7v-10a38 38 0 0 1-5.61267157-1.50391081l-5 8.66025404-12.12435565-7 5-8.66025404a38 38 0 0 1-4.10876076-4.10876076l-8.66025404 5-7-12.12435565 8.66025404-5A38 38 0 0 1-37.34969879 7h-10V-7h10a38 38 0 0 1 1.50391081-5.61267157l-8.66025404-5 7-12.12435565 8.66025404 5a38 38 0 0 1 4.10876076-4.10876076l-5-8.66025404 12.12435565-7 5 8.66025404A38 38 0 0 1-7-37.34969879v-10H7v10a38 38 0 0 1 5.61267157 1.50391081l5-8.66025404 12.12435565 7-5 8.66025404a38 38 0 0 1 4.10876076 4.10876076l8.66025404-5 7 12.12435565-8.66025404 5A38 38 0 0 1 37.34969879-7M0-30a30 30 0 1 0 0 60 30 30 0 1 0 0-60"/></g></g></g></svg>'
+          container.html(svg)
+          selector.attr('disabled', true)
+          break
         case 'finished':
-          container.empty();
-          selector.attr('disabled', false);
-          break;
+          container.empty()
+          selector.attr('disabled', false)
+          break
       }
     },
     EVNT_mapCreation: function EVNT_mapCreation(mapType) {
-      'use strict';
+      'use strict'
 
       var _ref16 = [, , ,],
         container = _ref16[0],
         data = _ref16[1],
         infoNode = _ref16[2],
-        errorText = _ref16[3];
+        errorText = _ref16[3]
 
       switch (mapType) {
         case 'personal':
-          container = $('#personalmap');
-          data = rHelper.data.mineMap;
-          infoNode = $('#personalmap-info');
-          errorText = 'Your mine map is empty! Please import "Mines - detailed" via API first.';
-          break;
+          container = $('#personalmap')
+          data = rHelper.data.mineMap
+          infoNode = $('#personalmap-info')
+          errorText = 'Your mine map is empty! Please import "Mines - detailed" via API first.'
+          break
         case 'world':
-          container = $('#worldmap');
-          data = rHelper.data.worldMap;
-          infoNode = $('#worldmap-info');
-          errorText = 'An error occured. If this problem persists, please report this issue via Discord or mail.';
-          break;
+          container = $('#worldmap')
+          data = rHelper.data.worldMap
+          infoNode = $('#worldmap-info')
+          errorText = 'An error occured. If this problem persists, please report this issue via Discord or mail.'
+          break
       }
 
       if (data.length != 0) {
         var _ref17 = [new Date(), rHelper.methods.SET_newMap(container, 3, 'terrain'), []],
           now = _ref17[0],
           map = _ref17[1],
-          markerArr = _ref17[2];
+          markerArr = _ref17[2]
 
-        map = rHelper.methods.SET_mapOptions(map, 16, data.mines[0]);
+        map = rHelper.methods.SET_mapOptions(map, 16, data.mines[0])
 
         switch (mapType) {
           case 'personal':
-            rHelper.methods.SET_mapHQHandler(map, data.hq[0]);
-            break;
+            rHelper.methods.SET_mapHQHandler(map, data.hq[0])
+            break
           case 'world':
             $.each(data.hqs, function(i, hqObj) {
-              rHelper.methods.SET_mapHQHandler(map, hqObj);
-            });
-            break;
+              rHelper.methods.SET_mapHQHandler(map, hqObj)
+            })
+            break
         }
 
         $.each(data.mines, function(i, subObj) {
-          rHelper.methods.SET_mapMineHandler(now, subObj, map, mapType);
-          markerArr.push(rHelper.methods.SET_mapMineHandler(now, subObj, map, mapType));
-        });
+          rHelper.methods.SET_mapMineHandler(now, subObj, map, mapType)
+          markerArr.push(rHelper.methods.SET_mapMineHandler(now, subObj, map, mapType))
+        })
 
-        new MarkerClusterer(map, markerArr, { imagePath: 'assets/img/maps/cluster/m', maxZoom: 15 });
+        new MarkerClusterer(map, markerArr, { imagePath: 'assets/img/maps/cluster/m', maxZoom: 15 })
       } else {
-        infoNode.text(errorText);
+        infoNode.text(errorText)
       }
     },
     EVNT_attackLogTrigger: function EVNT_attackLogTrigger() {
       $('#heading-defenselog a').on('click', function(e) {
-        e.preventDefault();
-        rHelper.methods.API_getAttackLog('defenseSimple');
-      });
+        e.preventDefault()
+        rHelper.methods.API_getAttackLog('defenseSimple')
+      })
 
       $('#heading-attacklog-1 a').on('click', function(e) {
-        e.preventDefault();
-        rHelper.methods.API_getAttackLog('attackSimple');
-      });
+        e.preventDefault()
+        rHelper.methods.API_getAttackLog('attackSimple')
+      })
 
       $('#heading-attacklog-2 a').on('click', function(e) {
-        e.preventDefault();
-        rHelper.methods.API_getAttackLog('attackDetailed');
-      });
+        e.preventDefault()
+        rHelper.methods.API_getAttackLog('attackDetailed')
+      })
     },
     INSRT_leaderboardTable: function INSRT_leaderboardTable() {
       var _ref18 = [rHelper.data.leaderboard, $('#module-leaderboard tbody'), 'text-md-right text-sm-left', "class='text-right'", ''],
@@ -1649,16 +1649,16 @@ var rHelper = {
         tbody = _ref18[1],
         textOrientation = _ref18[2],
         textClass = _ref18[3],
-        string = _ref18[4];
+        string = _ref18[4]
 
       var returnPlayerTitle = function returnPlayerTitle(dataset) {
         var _ref19 = [dataset.general.rank.toLocaleString('en-US'), dataset.general.registeredGame, dataset.general.daysPlaying.toLocaleString('en-US')],
           rank = _ref19[0],
           registeredGame = _ref19[1],
-          daysPlaying = _ref19[2];
+          daysPlaying = _ref19[2]
 
         if (rank === 0) {
-          rank = registeredGame = daysPlaying = 'unknown';
+          rank = registeredGame = daysPlaying = 'unknown'
         }
 
         return (
@@ -1675,40 +1675,40 @@ var rHelper = {
           '>' +
           daysPlaying +
           '</td></tr>\n          </tbody>\n        </table>'
-        );
-      };
+        )
+      }
 
       var numberReducer = function numberReducer(number) {
         if (number !== 0) {
-          var length = ('' + number).length;
+          var length = ('' + number).length
           var divisor = 1,
-            unit = '';
+            unit = ''
 
           if (length >= 4 && length < 7) {
-            divisor = 1000;
-            unit = 'k';
+            divisor = 1000
+            unit = 'k'
           } else if (length >= 7 && length < 10) {
-            divisor = 1000000;
-            unit = 'M';
+            divisor = 1000000
+            unit = 'M'
           } else if (length >= 10 && length < 13) {
-            divisor = 1000000000;
-            unit = 'G';
+            divisor = 1000000000
+            unit = 'G'
           } else if (length >= 13 && length < 16) {
-            divisor = 1000000000000;
-            unit = 'T';
+            divisor = 1000000000000
+            unit = 'T'
           } else if (length >= 16 && length < 19) {
-            divisor = 1000000000000000;
-            unit = 'P';
+            divisor = 1000000000000000
+            unit = 'P'
           } else if (length >= 19 && length < 22) {
-            divisor = 1000000000000000000;
-            unit = 'E';
+            divisor = 1000000000000000000
+            unit = 'E'
           }
 
-          return parseFloat((number / divisor).toFixed(3)) + ' ' + unit;
+          return parseFloat((number / divisor).toFixed(3)) + ' ' + unit
         } else {
-          return '';
+          return ''
         }
-      };
+      }
 
       var returnCompanyWorthTitle = function returnCompanyWorthTitle(dataset) {
         return (
@@ -1733,40 +1733,40 @@ var rHelper = {
           '>' +
           dataset.warehouseErectionSum.toLocaleString('en-US') +
           '</td></tr>\n          </tbody>\n        </table>'
-        );
-      };
+        )
+      }
 
       var fillHighlightingObj = function fillHighlightingObj(container, highlightingObj) {
         $.each(container, function(i, dataset) {
           if (dataset.mineIncome > highlightingObj.mineIncome) {
-            highlightingObj.mineIncome = dataset.mineIncome;
+            highlightingObj.mineIncome = dataset.mineIncome
           }
           if (dataset.tradeData.tradeIncomePerDay > highlightingObj.tradeIncomePerDay) {
-            highlightingObj.tradeIncomePerDay = dataset.tradeData.tradeIncomePerDay;
+            highlightingObj.tradeIncomePerDay = dataset.tradeData.tradeIncomePerDay
           }
           if (dataset.factoryTotalUpgrades > highlightingObj.factoryUpgrades) {
-            highlightingObj.factoryUpgrades = dataset.factoryTotalUpgrades;
+            highlightingObj.factoryUpgrades = dataset.factoryTotalUpgrades
           }
           if (dataset.totalMineCount > highlightingObj.amountOfMines) {
-            highlightingObj.amountOfMines = dataset.totalMineCount;
+            highlightingObj.amountOfMines = dataset.totalMineCount
           }
           if (dataset.headquarter.mineCount > highlightingObj.minesWithinHQRadius) {
-            highlightingObj.minesWithinHQRadius = dataset.headquarter.mineCount;
+            highlightingObj.minesWithinHQRadius = dataset.headquarter.mineCount
           }
           if (dataset.tradeData.totalBuy > highlightingObj.totalBuy) {
-            highlightingObj.totalBuy = dataset.tradeData.totalBuy;
+            highlightingObj.totalBuy = dataset.tradeData.totalBuy
           }
           if (dataset.tradeData.totalSell > highlightingObj.totalSell) {
-            highlightingObj.totalSell = dataset.tradeData.totalSell;
+            highlightingObj.totalSell = dataset.tradeData.totalSell
           }
           if (dataset.tradeData.sumKISell > highlightingObj.sumKISell) {
-            highlightingObj.sumKISell = dataset.tradeData.sumKISell;
+            highlightingObj.sumKISell = dataset.tradeData.sumKISell
           }
           if (dataset.general.pointsPerDay > highlightingObj.pointsPerDay) {
-            highlightingObj.pointsPerDay = dataset.general.pointsPerDay;
+            highlightingObj.pointsPerDay = dataset.general.pointsPerDay
           }
-        });
-      };
+        })
+      }
 
       var returnString = function returnString(dataset) {
         var _ref20 = [
@@ -1788,26 +1788,26 @@ var rHelper = {
           tradeIncome = _ref20[5],
           totalBuy = _ref20[6],
           totalSell = _ref20[7],
-          sumKISell = _ref20[8];
+          sumKISell = _ref20[8]
 
         if (name === '') {
-          level = '';
+          level = ''
         } else {
-          level = '(' + level + ')';
+          level = '(' + level + ')'
         }
 
         if (pointsPerDay === 0) {
-          pointsPerDay = points = '';
+          pointsPerDay = points = ''
         } else {
-          points = '(' + points + ')';
+          points = '(' + points + ')'
         }
 
         if (headquarterMines === 0) {
-          headquarterMines = '';
+          headquarterMines = ''
         }
 
         if (tradeIncome === 0) {
-          tradeIncome = totalBuy = totalSell = sumKISell = '';
+          tradeIncome = totalBuy = totalSell = sumKISell = ''
         }
 
         var classes = {
@@ -1820,12 +1820,12 @@ var rHelper = {
           totalSellClass: dataset.tradeData.totalSell === highlightingObj.totalSell ? 'text-success' : '',
           totalKISellClass: dataset.tradeData.sumKISell === highlightingObj.sumKISell ? 'text-success' : '',
           mineIncomeClass: dataset.mineIncome === highlightingObj.mineIncome ? 'text-success' : ''
-        };
+        }
 
-        var trClass = '';
+        var trClass = ''
 
         if (dataset.you) {
-          trClass = 'style="background-color: rgba(154, 205, 50, 0.1) !important;"';
+          trClass = 'style="background-color: rgba(154, 205, 50, 0.1) !important;"'
         }
 
         return (
@@ -1914,8 +1914,8 @@ var rHelper = {
           '">' +
           numberReducer(dataset.companyWorth) +
           '</td>\n        </tr>\n        '
-        );
-      };
+        )
+      }
 
       var highlightingObj = {
         mineIncome: 0,
@@ -1927,37 +1927,37 @@ var rHelper = {
         totalSell: 0,
         sumKISell: 0,
         pointsPerDay: 0
-      };
+      }
 
-      fillHighlightingObj(container, highlightingObj);
+      fillHighlightingObj(container, highlightingObj)
 
       $.each(container, function(i, dataset) {
         if (dataset.companyWorth != 0) {
-          string += returnString(dataset);
+          string += returnString(dataset)
         }
-      });
+      })
 
-      tbody.empty().html(string);
+      tbody.empty().html(string)
 
-      sorttable.makeSortable($('#module-leaderboard table')[0]);
-      sorttable.innerSortFunction.apply($('#module-leaderboard th')[10], []);
+      sorttable.makeSortable($('#module-leaderboard table')[0])
+      sorttable.innerSortFunction.apply($('#module-leaderboard th')[10], [])
 
       $.each($('#module-leaderboard td[title]'), function(i, el) {
-        applyTippyOnNewElement($(el));
-      });
+        applyTippyOnNewElement($(el))
+      })
     },
     INSRT_leaderboard: function INSRT_leaderboard() {
-      rHelper.data.leaderboard = rHelper.data.leaderboard || {};
+      rHelper.data.leaderboard = rHelper.data.leaderboard || {}
 
       if ($.isEmptyObject(rHelper.data.leaderboard)) {
         $.getJSON('api/leaderboard.php', function(result) {
-          rHelper.data.leaderboard = result;
-          rHelper.methods.INSRT_leaderboardTable();
-        });
+          rHelper.data.leaderboard = result
+          rHelper.methods.INSRT_leaderboardTable()
+        })
       }
     },
     INSRT_tradeLog: function INSRT_tradeLog() {
-      var container = rHelper.data.tradeLog;
+      var container = rHelper.data.tradeLog
 
       if (container.length != 0) {
         var showTradeLogHabits = function showTradeLogHabits(hours) {
@@ -2029,47 +2029,47 @@ var rHelper = {
                 }
               }
             }
-          });
-        };
+          })
+        }
 
         var setSkipCount = function setSkipCount() {
-          var currentDaysFilter = _daysFilterSelect.val();
+          var currentDaysFilter = _daysFilterSelect.val()
 
           if (currentDaysFilter !== null) {
             $.each(_daysFilterSelect.children('option'), function(i, el) {
               if ($(el).val() === currentDaysFilter) {
-                rHelper.data.tradeLog.skipCount = i - 1;
+                rHelper.data.tradeLog.skipCount = i - 1
               }
-            });
+            })
           }
-        };
+        }
 
         var appendOptions = function appendOptions() {
-          _daysFilterSelect.empty().prepend('<option selected disabled>jump to day X</option>');
+          _daysFilterSelect.empty().prepend('<option selected disabled>jump to day X</option>')
 
           $.each(container.days, function(i, dataset) {
-            _daysFilterSelect.append('<option value="' + dataset.date + '">' + dataset.date + ' (' + dataset.entries.toLocaleString('en-US') + ' entries)</option>');
-          });
-        };
+            _daysFilterSelect.append('<option value="' + dataset.date + '">' + dataset.date + ' (' + dataset.entries.toLocaleString('en-US') + ' entries)</option>')
+          })
+        }
 
         var appendDetailedTR = function appendDetailedTR(dataset) {
-          var obj = rHelper.methods.CALC_convertId(dataset.itemId);
+          var obj = rHelper.methods.CALC_convertId(dataset.itemId)
 
           var datasetSum = dataset.price * dataset.amount,
             action = 'Selling to ',
             profitClass = 'success',
-            trClass = '';
+            trClass = ''
 
           if (dataset.event === 0) {
-            datasetSum *= -1;
-            action = 'Buying from ';
-            profitClass = 'danger';
+            datasetSum *= -1
+            action = 'Buying from '
+            profitClass = 'danger'
           }
 
-          _sum += datasetSum;
+          _sum += datasetSum
 
           if (dataset.actor === 'KI') {
-            trClass = 'class="ki-sell"';
+            trClass = 'class="ki-sell"'
           }
 
           var template =
@@ -2103,26 +2103,26 @@ var rHelper = {
             profitClass +
             '">' +
             datasetSum.toLocaleString('en-US') +
-            '</td>\n          </tr>\n          ';
+            '</td>\n          </tr>\n          '
 
-          _tradeLogDetailedTbody.append(template);
-        };
+          _tradeLogDetailedTbody.append(template)
+        }
 
         var appendTFoot = function appendTFoot() {
-          var profitClass = 'success';
+          var profitClass = 'success'
 
           if (_sum < 0) {
-            profitClass = 'danger';
+            profitClass = 'danger'
           }
 
           $('#tradelog-detailed-tfoot')
             .empty()
-            .append('<tr><td data-th="daily profit" colspan="5" class="' + _textOrientation + ' text-' + profitClass + '">' + _sum.toLocaleString('en-US') + ' <a href="#">back to top</a></td></tr>');
+            .append('<tr><td data-th="daily profit" colspan="5" class="' + _textOrientation + ' text-' + profitClass + '">' + _sum.toLocaleString('en-US') + ' <a href="#">back to top</a></td></tr>')
 
           $('#tradelog-simple-tfoot')
             .empty()
-            .append('<tr><td data-th="daily profit" colspan="5" class="' + _textOrientation + ' text-' + profitClass + '">' + _sum.toLocaleString('en-US') + ' <a href="#">back to top</a></td></tr>');
-        };
+            .append('<tr><td data-th="daily profit" colspan="5" class="' + _textOrientation + ' text-' + profitClass + '">' + _sum.toLocaleString('en-US') + ' <a href="#">back to top</a></td></tr>')
+        }
 
         var showGraphs = function showGraphs(target, data, title) {
           Highcharts.chart(target, {
@@ -2167,42 +2167,42 @@ var rHelper = {
                 }
               }
             }
-          });
-        };
+          })
+        }
 
         var fillEventArray = function fillEventArray(container) {
           var _ref21 = [[], container.max()],
             arr = _ref21[0],
-            containerMax = _ref21[1];
+            containerMax = _ref21[1]
 
           $.each(container, function(i, amount) {
-            var itemObj = rHelper.methods.CALC_convertId(i);
+            var itemObj = rHelper.methods.CALC_convertId(i)
 
             if (amount != null) {
               var obj = {
                 name: itemObj.name,
                 y: amount
-              };
-
-              if (containerMax === amount) {
-                obj.sliced = true;
-                obj.selected = true;
               }
 
-              arr.push(obj);
-            }
-          });
+              if (containerMax === amount) {
+                obj.sliced = true
+                obj.selected = true
+              }
 
-          return arr;
-        };
+              arr.push(obj)
+            }
+          })
+
+          return arr
+        }
 
         var appendSimpleTR = function appendSimpleTR(dataset) {
-          var obj = rHelper.methods.CALC_convertId(dataset.itemId);
+          var obj = rHelper.methods.CALC_convertId(dataset.itemId)
 
-          var profitClass = 'success';
+          var profitClass = 'success'
 
           if (dataset.sum < 0) {
-            profitClass = 'danger';
+            profitClass = 'danger'
           }
 
           var template =
@@ -2224,50 +2224,50 @@ var rHelper = {
             profitClass +
             '">' +
             dataset.sum.toLocaleString('en-US') +
-            '</td>\n          </tr>\n          ';
+            '</td>\n          </tr>\n          '
 
-          _tradeLogSimpleTbody.append(template);
-        };
+          _tradeLogSimpleTbody.append(template)
+        }
 
-        showTradeLogHabits(container.timestamps);
+        showTradeLogHabits(container.timestamps)
 
-        showGraphs('graph-tradelog-buying', fillEventArray(container.buying.valuesById), 'Buy values (total: ' + container.buying.total.toLocaleString('en-US') + ')');
-        showGraphs('graph-tradelog-selling', fillEventArray(container.selling.valuesById), 'Sell values (total: ' + container.selling.total.toLocaleString('en-US') + ')');
+        showGraphs('graph-tradelog-buying', fillEventArray(container.buying.valuesById), 'Buy values (total: ' + container.buying.total.toLocaleString('en-US') + ')')
+        showGraphs('graph-tradelog-selling', fillEventArray(container.selling.valuesById), 'Sell values (total: ' + container.selling.total.toLocaleString('en-US') + ')')
 
         var _ref22 = [$('#tradelog-detailed-tbody'), 'text-md-right text-sm-left', $('#tradelog-filter-day'), $('#tradelog-simple-tbody')],
           _tradeLogDetailedTbody = _ref22[0],
           _textOrientation = _ref22[1],
           _daysFilterSelect = _ref22[2],
-          _tradeLogSimpleTbody = _ref22[3];
+          _tradeLogSimpleTbody = _ref22[3]
 
-        _tradeLogDetailedTbody.empty();
-        _tradeLogSimpleTbody.empty();
+        _tradeLogDetailedTbody.empty()
+        _tradeLogSimpleTbody.empty()
 
-        var _sum = 0;
+        var _sum = 0
 
-        setSkipCount();
+        setSkipCount()
 
-        appendOptions();
+        appendOptions()
 
         $.each(container.log, function(i, dataset) {
-          appendDetailedTR(dataset);
-        });
+          appendDetailedTR(dataset)
+        })
 
         $.each(container.overview, function(i, dataset) {
-          appendSimpleTR(dataset);
-        });
+          appendSimpleTR(dataset)
+        })
 
-        appendTFoot();
+        appendTFoot()
       }
     },
     INSRT_attackLogDetailedGeneralInformation: function INSRT_attackLogDetailedGeneralInformation(dataContainer) {
-      $('#attacklog-detailed-units-lost-avg').html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion('offense', dataContainer.avg.unitsLost));
-      $('#attacklog-detailed-units-lost-total').html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion('offense', dataContainer.total.unitsLost));
+      $('#attacklog-detailed-units-lost-avg').html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion('offense', dataContainer.avg.unitsLost))
+      $('#attacklog-detailed-units-lost-total').html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion('offense', dataContainer.total.unitsLost))
 
-      $('#attacklog-detailed-factor-avg').text(dataContainer.avg.factor + '%');
+      $('#attacklog-detailed-factor-avg').text(dataContainer.avg.factor + '%')
 
-      $('#attacklog-detailed-profit-avg').text(dataContainer.avg.profit.toLocaleString('en-US'));
-      $('#attacklog-detailed-profit-total').text(dataContainer.total.profit.toLocaleString('en-US'));
+      $('#attacklog-detailed-profit-avg').text(dataContainer.avg.profit.toLocaleString('en-US'))
+      $('#attacklog-detailed-profit-total').text(dataContainer.total.profit.toLocaleString('en-US'))
     },
     INSRT_attackLogDetailed: function INSRT_attackLogDetailed(type, dataContainer) {
       var _ref23 = [
@@ -2279,27 +2279,27 @@ var rHelper = {
         target = _ref23[0],
         select = _ref23[1],
         sortableTable = _ref23[2],
-        dataTHs = _ref23[3];
+        dataTHs = _ref23[3]
 
-      target.empty();
+      target.empty()
 
       if (select[0].children.length === 2) {
         $.each(dataContainer.validTargets, function(i, target) {
-          select.append('<option value="' + target + '">' + target + '</option>');
-        });
+          select.append('<option value="' + target + '">' + target + '</option>')
+        })
       }
 
       $.each(dataContainer.data, function(i, dataset) {
-        target.append(rHelper.methods.CALC_attackLogDetailedDatasetIteration(i, dataset, dataTHs));
-      });
+        target.append(rHelper.methods.CALC_attackLogDetailedDatasetIteration(i, dataset, dataTHs))
+      })
 
-      rHelper.methods.INSRT_attackLogDetailedGeneralInformation(dataContainer);
+      rHelper.methods.INSRT_attackLogDetailedGeneralInformation(dataContainer)
 
-      ['last', 'next'].forEach(function(type) {
-        rHelper.methods.CALC_attackLogDetailedPageButtonToggler(type, dataContainer);
-      });
+      ;['last', 'next'].forEach(function(type) {
+        rHelper.methods.CALC_attackLogDetailedPageButtonToggler(type, dataContainer)
+      })
 
-      sorttable.makeSortable(sortableTable);
+      sorttable.makeSortable(sortableTable)
     },
     INSRT_ADLogSimple: function INSRT_ADLogSimple(type, data) {
       var _ref24 = [
@@ -2313,20 +2313,20 @@ var rHelper = {
         dataTHs = _ref24[1],
         unitIndices = _ref24[2],
         textOrientation = _ref24[3],
-        sortableTable = _ref24[4];
+        sortableTable = _ref24[4]
 
       if (type === 'defenseSimple') {
-        dataTHs[0] = 'Attacking player (last known level)';
-        sortableTable = $('#collapse-defenselog-simple table')[0];
-        target = $('#defenselog-tbody-simple');
+        dataTHs[0] = 'Attacking player (last known level)'
+        sortableTable = $('#collapse-defenselog-simple table')[0]
+        target = $('#defenselog-tbody-simple')
       }
 
-      target.empty();
+      target.empty()
 
       $.each(data, function(i, dataset) {
         var _ref25 = [$(crEl('tr')), 'bg-success-25'],
           tr = _ref25[0],
-          factorBgColorClass = _ref25[1];
+          factorBgColorClass = _ref25[1]
 
         for (var index = 0; index <= 7; index += 1) {
           var _ref26 = [$(crEl('td')).attr('data-th', dataTHs[index]), 0, 0, 0, ''],
@@ -2334,117 +2334,117 @@ var rHelper = {
             loss = _ref26[1],
             winPercent = _ref26[2],
             factor = _ref26[3],
-            unitsContent = _ref26[4];
+            unitsContent = _ref26[4]
 
           switch (index) {
             case 0:
-              td.text(dataset.targetName + ' (' + dataset.targetLevel + ')');
-              break;
+              td.text(dataset.targetName + ' (' + dataset.targetLevel + ')')
+              break
             case 1:
-              td.text(rHelper.methods.CALC_convertDateToIso(dataset.lastAttacked));
-              break;
+              td.text(rHelper.methods.CALC_convertDateToIso(dataset.lastAttacked))
+              break
             case 2:
               if (type === 'defenseSimple') {
-                var amountOfWins = dataset.sumAttacks - dataset.sumWin;
-                winPercent = (amountOfWins / dataset.sumAttacks * 100).toFixed(2);
+                var amountOfWins = dataset.sumAttacks - dataset.sumWin
+                winPercent = (amountOfWins / dataset.sumAttacks * 100).toFixed(2)
               } else if (type === 'attackSimple') {
-                winPercent = (dataset.sumWin / dataset.sumAttacks * 100).toFixed(2);
+                winPercent = (dataset.sumWin / dataset.sumAttacks * 100).toFixed(2)
               }
-              td.text(dataset.sumAttacks.toLocaleString('en-US') + ' (' + winPercent + '%)').addClass(textOrientation);
-              break;
+              td.text(dataset.sumAttacks.toLocaleString('en-US') + ' (' + winPercent + '%)').addClass(textOrientation)
+              break
             case 3:
               if (type === 'defenseSimple') {
-                loss = dataset.sumAttacks - dataset.sumWin;
-                td.text(loss.toLocaleString('en-US')).addClass(textOrientation);
+                loss = dataset.sumAttacks - dataset.sumWin
+                td.text(loss.toLocaleString('en-US')).addClass(textOrientation)
               } else if (type === 'attackSimple') {
-                td.text(dataset.sumWin.toLocaleString('en-US')).addClass(textOrientation);
+                td.text(dataset.sumWin.toLocaleString('en-US')).addClass(textOrientation)
               }
-              break;
+              break
             case 4:
               if (type === 'defenseSimple') {
-                td.text(dataset.sumWin.toLocaleString('en-US')).addClass(textOrientation);
+                td.text(dataset.sumWin.toLocaleString('en-US')).addClass(textOrientation)
               } else if (type === 'attackSimple') {
-                loss = dataset.sumAttacks - dataset.sumWin;
-                td.text(loss.toLocaleString('en-US')).addClass(textOrientation);
+                loss = dataset.sumAttacks - dataset.sumWin
+                td.text(loss.toLocaleString('en-US')).addClass(textOrientation)
               }
-              break;
+              break
             case 5:
               if (dataset.factor < 1) {
-                factorBgColorClass = 'bg-warning-25';
+                factorBgColorClass = 'bg-warning-25'
               }
-              factor = (dataset.factor * 100).toFixed(2);
-              td.text(factor + '%').addClass(textOrientation + ' ' + factorBgColorClass);
-              break;
+              factor = (dataset.factor * 100).toFixed(2)
+              td.text(factor + '%').addClass(textOrientation + ' ' + factorBgColorClass)
+              break
             case 6:
               for (var k = 0; k <= 2; k += 1) {
-                var span = $(crEl('span'));
-                span.addClass('resources-unit-' + unitIndices[k]);
-                var unitAmount = dataset['unit' + k];
+                var span = $(crEl('span'))
+                span.addClass('resources-unit-' + unitIndices[k])
+                var unitAmount = dataset['unit' + k]
                 if (unitAmount === null) {
-                  unitAmount = 0;
+                  unitAmount = 0
                 }
-                unitsContent += span[0].outerHTML + ' ' + unitAmount.toLocaleString('en-US') + ' ';
+                unitsContent += span[0].outerHTML + ' ' + unitAmount.toLocaleString('en-US') + ' '
               }
 
-              td.html(unitsContent);
-              break;
+              td.html(unitsContent)
+              break
             case 7:
-              var profit = dataset.profit;
+              var profit = dataset.profit
               if (profit === null) {
-                profit = 0;
+                profit = 0
               }
 
-              var unitLossValue = dataset.unitLossValue;
+              var unitLossValue = dataset.unitLossValue
               if (unitLossValue != null) {
-                profit -= unitLossValue;
+                profit -= unitLossValue
               }
 
-              td.text(profit.toLocaleString('en-US')).addClass(textOrientation);
-              break;
+              td.text(profit.toLocaleString('en-US')).addClass(textOrientation)
+              break
           }
 
-          tr.addClass(rHelper.methods.CALC_attackLogSetTRColor(dataset.profit)).append(td);
+          tr.addClass(rHelper.methods.CALC_attackLogSetTRColor(dataset.profit)).append(td)
         }
 
-        target.append(tr);
-      });
+        target.append(tr)
+      })
 
-      sorttable.makeSortable(sortableTable);
+      sorttable.makeSortable(sortableTable)
     },
     INSRT_attackLog: function INSRT_attackLog(type) {
       var _ref27 = [rHelper.data.attackLog, fn],
         data = _ref27[0],
-        fn = _ref27[1];
+        fn = _ref27[1]
 
       switch (type) {
         case 'attackSimple':
         case 'defenseSimple':
-          fn = 'INSRT_ADLogSimple';
-          break;
+          fn = 'INSRT_ADLogSimple'
+          break
         case 'attackDetailed':
-          fn = 'INSRT_attackLogDetailed';
-          break;
+          fn = 'INSRT_attackLogDetailed'
+          break
       }
 
-      rHelper.methods[fn](type, data);
+      rHelper.methods[fn](type, data)
     },
     INSRT_materialData: function INSRT_materialData(materialId, api) {
-      'use strict';
+      'use strict'
 
-      var fns = ['INSRT_materialRate', 'INSRT_materialAmountOfMines', 'INSRT_materialNewMinePrice', 'INSRT_materialRateWorth', 'INSRT_materialNewMinePerfectIncome'];
+      var fns = ['INSRT_materialRate', 'INSRT_materialAmountOfMines', 'INSRT_materialNewMinePrice', 'INSRT_materialRateWorth', 'INSRT_materialNewMinePerfectIncome']
 
       $.each(fns, function(i, fn) {
-        rHelper.methods[fn](materialId);
-      });
+        rHelper.methods[fn](materialId)
+      })
 
       if (api) {
-        rHelper.methods.CALC_dependantFactories(materialId, 'material');
+        rHelper.methods.CALC_dependantFactories(materialId, 'material')
       }
 
-      rHelper.methods.INSRT_flowRate(materialId, 'material');
+      rHelper.methods.INSRT_flowRate(materialId, 'material')
     },
     INSRT_factoryDiamondData: function INSRT_factoryDiamondData(factoryId, type) {
-      'use strict';
+      'use strict'
 
       var fns = [
         // factories tab
@@ -2462,40 +2462,40 @@ var rHelper = {
         'INSRT_diamondDependencies',
         'INSRT_diamondEfficiency',
         'INSRT_diamondProfit'
-      ];
+      ]
 
       $.each(fns, function(i, fn) {
-        rHelper.methods[fn](factoryId);
-      });
+        rHelper.methods[fn](factoryId)
+      })
 
-      rHelper.methods.INSRT_flowRate(factoryId, type);
+      rHelper.methods.INSRT_flowRate(factoryId, type)
     },
     INSRT_recycling: function INSRT_recycling(index) {
-      'use strict';
+      'use strict'
 
-      var fns = ['INSRT_recyclingRequirement', 'INSRT_recyclingProducts', 'INSRT_recyclingOutputWorth', 'INSRT_recyclingInputWorth'];
+      var fns = ['INSRT_recyclingRequirement', 'INSRT_recyclingProducts', 'INSRT_recyclingOutputWorth', 'INSRT_recyclingInputWorth']
 
       $.each(fns, function(i, fn) {
-        rHelper.methods[fn](index);
-      });
+        rHelper.methods[fn](index)
+      })
 
-      rHelper.methods.INSRT_unitsRecyclingProfit('recycling', index);
+      rHelper.methods.INSRT_unitsRecyclingProfit('recycling', index)
     },
     INSRT_warehouseData: function INSRT_warehouseData(index, type) {
-      'use strict';
+      'use strict'
 
-      var fns = ['INSRT_warehouseFillAmount', 'INSRT_warehouseLevel', 'INSRT_warehouseFillStatus', 'INSRT_warehouseCapacity', 'INSRT_warehouseWorth', 'EVNT_warehouseInput'];
+      var fns = ['INSRT_warehouseFillAmount', 'INSRT_warehouseLevel', 'INSRT_warehouseFillStatus', 'INSRT_warehouseCapacity', 'INSRT_warehouseWorth', 'EVNT_warehouseInput']
 
       $.each(fns, function(i, fn) {
-        rHelper.methods[fn](index, type);
-      });
+        rHelper.methods[fn](index, type)
+      })
 
       if (type === 'products' || type === 'material') {
-        rHelper.methods.INSRT_warehouseRemainingTimeToFull(index, type);
+        rHelper.methods.INSRT_warehouseRemainingTimeToFull(index, type)
       }
     },
     INSRT_priceHistoryGraph: function INSRT_priceHistoryGraph(materialName, averageKI, averagePlayer, timestamps, player, ki) {
-      'use strict';
+      'use strict'
 
       Highcharts.chart('graph-pricehistory', {
         chart: {
@@ -2518,7 +2518,7 @@ var rHelper = {
           },
           labels: {
             formatter: function formatter() {
-              return this.value.toLocaleString('en-US');
+              return this.value.toLocaleString('en-US')
             }
           },
           plotLines: [
@@ -2591,12 +2591,12 @@ var rHelper = {
             }
           }
         }
-      });
+      })
     },
     INSRT_polygonGraph: function INSRT_polygonGraph(target, titleText, seriesNames, responsiveId, targetObj) {
-      'use strict';
+      'use strict'
 
-      var dataObj = rHelper.graphs[targetObj];
+      var dataObj = rHelper.graphs[targetObj]
 
       Highcharts.chart(target, {
         chart: {
@@ -2626,7 +2626,7 @@ var rHelper = {
             size: '60%',
             dataLabels: {
               formatter: function formatter() {
-                return this.y > 5 ? this.point.name : null;
+                return this.y > 5 ? this.point.name : null
               },
               color: '#dedede',
               distance: -30
@@ -2640,7 +2640,7 @@ var rHelper = {
             innerSize: '60%',
             dataLabels: {
               formatter: function formatter() {
-                return this.y > 1 ? '<b> ' + this.point.name + ' :</b> ' + this.y + ' %' : null;
+                return this.y > 1 ? '<b> ' + this.point.name + ' :</b> ' + this.y + ' %' : null
               },
               style: {
                 color: 'white',
@@ -2676,10 +2676,10 @@ var rHelper = {
             }
           }
         }
-      });
+      })
     },
     INSRT_gaugeGraph: function INSRT_gaugeGraph(type) {
-      'use strict';
+      'use strict'
 
       if (type === 'buildings') {
         Highcharts.chart(
@@ -2699,7 +2699,7 @@ var rHelper = {
               }
             ]
           })
-        );
+        )
       } else if (type === 'headquarter') {
         Highcharts.chart(
           'graph-headquarter',
@@ -2718,199 +2718,201 @@ var rHelper = {
               }
             ]
           })
-        );
+        )
       }
     },
     INSRT_totalMineWorth: function INSRT_totalMineWorth(totalMineWorth) {
-      'use strict';
+      'use strict'
 
-      $('#material-total-worth').text(totalMineWorth.toLocaleString('en-US'));
+      $('#material-total-worth').text(totalMineWorth.toLocaleString('en-US'))
     },
     INSRT_totalMineCount: function INSRT_totalMineCount(totalMineCount) {
-      'use strict';
+      'use strict'
 
-      $('#material-total-mine-count').text(totalMineCount.toLocaleString('en-US'));
+      $('#material-total-mine-count').text(totalMineCount.toLocaleString('en-US'))
     },
     INSRT_materialRate: function INSRT_materialRate(materialId) {
-      'use strict';
+      'use strict'
 
-      $('#material-rate-' + materialId).val(rHelper.data.material[materialId].perHour);
+      $('#material-rate-' + materialId).val(rHelper.data.material[materialId].perHour)
     },
     INSRT_materialAmountOfMines: function INSRT_materialAmountOfMines(materialId) {
-      'use strict';
+      'use strict'
 
-      $('#material-amount-of-mines-' + materialId).val(rHelper.data.material[materialId].amountOfMines);
+      $('#material-amount-of-mines-' + materialId).val(rHelper.data.material[materialId].amountOfMines)
     },
     INSRT_userSettings: function INSRT_userSettings() {
-      'use strict';
+      'use strict'
 
-      var userInfo = rHelper.data.userInformation;
-      $('#security-token').text(userInfo.securityToken);
+      var userInfo = rHelper.data.userInformation
+      $('#security-token').text(userInfo.securityToken)
 
       if (userInfo.realKey !== '' && _typeof(userInfo.realKey) !== undefined) {
-        $('#api-key').val(userInfo.realKey);
-        rHelper.methods.INSRT_API_remainingCredits(userInfo.remainingCredits);
+        $('#api-key').val(userInfo.realKey)
+        rHelper.methods.INSRT_API_remainingCredits(userInfo.remainingCredits)
       }
 
       if (userInfo.name != '') {
-        $('#api-player-anonymity')[0].parentNode.remove();
+        $('#api-player-anonymity')[0].parentNode.remove()
       }
 
       $.each(rHelper.data.settings, function(index, setting) {
-        var value = 0;
+        var value = 0
         switch (setting.setting) {
           case 'lang':
             switch (setting.value) {
               case 'de':
-                value = 0;
-                break;
+                value = 0
+                break
               case 'en':
-                value = 1;
-                break;
+                value = 1
+                break
               case 'fr':
-                value = 2;
-                break;
+                value = 2
+                break
               case 'in':
-                value = 3;
-                break;
+                value = 3
+                break
               case 'jp':
-                value = 4;
-                break;
+                value = 4
+                break
               case 'ru':
-                value = 5;
-                break;
+                value = 5
+                break
             }
-            $('#settings-language').val(value);
-            break;
+            $('#settings-language').val(value)
+            break
           case 'customTU':
             for (var i = 0; i <= 3; i += 1) {
-              $('#settings-custom-tu-' + (i + 1)).val(setting.value[i]);
+              $('#settings-custom-tu-' + (i + 1)).val(setting.value[i])
             }
-            break;
+            break
           case 'idealCondition':
             if (setting.value === 1) {
-              $('#settings-ideal-conditions').prop('checked', true);
+              $('#settings-ideal-conditions').prop('checked', true)
             }
-            break;
+            break
           case 'transportCostInclusion':
             if (setting.value === 1) {
-              $('#settings-toggle-transport-cost-inclusion').prop('checked', true);
+              $('#settings-toggle-transport-cost-inclusion').prop('checked', true)
             }
-            break;
+            break
           case 'mapVisibleHQ':
             if (setting.value === 1) {
-              $('#settings-hq-visibility').val(1);
+              $('#settings-hq-visibility').val(1)
             }
-            break;
+            break
           case 'mineVisibilityWorldMap':
             if (setting.value === 1) {
-              $('#settings-mine-visibility').val(1);
+              $('#settings-mine-visibility').val(1)
             }
-            break;
+            break
           case 'priceAge':
-            $('#settings-price-age').val(setting.value);
-            break;
+            $('#settings-price-age').val(setting.value)
+            break
           case 'showNames':
             if (setting.value === 1) {
-              $('#settings-show-names').prop('checked', true);
+              $('#settings-show-names').prop('checked', true)
             }
-            break;
+            break
           case 'queryPreset':
-            var possibleSelectors = [1, 2, 3, 4, 5, 51, 6, 7, 9, 10];
+            var possibleSelectors = [1, 2, 3, 4, 5, 51, 6, 7, 9, 10]
 
             $.each(possibleSelectors, function(i, selector) {
-              var input = $("input[data-query='" + selector + "']");
-              var state = false;
+              var input = $("input[data-query='" + selector + "']")
+              var state = false
 
               if (setting.value.indexOf(selector) !== -1) {
-                state = true;
+                state = true
               }
 
-              input.prop('checked', state);
-            });
-            break;
+              input.prop('checked', state)
+            })
+            break
           case 'mayOverwriteAPI':
             if (setting.value === 1) {
-              $('#settings-overwrite-api-container').remove();
+              $('#settings-overwrite-api-container').remove()
             } else {
-              $('#save-button').remove();
+              if (rHelper.data.userInformation.realKey !== false) {
+                $('#save-button').remove()
+              }
             }
-            break;
+            break
         }
-      });
+      })
     },
     INSRT_showNames: function INSRT_showNames() {
       if (rHelper.data.settings[6] && rHelper.data.settings[6].value === 1) {
-        var iconSelectors = ['material', 'factories', 'product', 'loot', 'units'];
+        var iconSelectors = ['material', 'factories', 'product', 'loot', 'units']
 
         $.each(iconSelectors, function(i, iconSelector) {
           $.each($('span[class*="resources-' + iconSelector + '-"]'), function(k, el) {
             var _ref28 = [$(el), new RegExp('resources-' + iconSelector + '-'), iconSelector],
               _el = _ref28[0],
               stringToBeReplaced = _ref28[1],
-              targetArray = _ref28[2];
+              targetArray = _ref28[2]
 
-            var index = parseInt(_el.attr('class').replace(stringToBeReplaced, ''));
+            var index = parseInt(_el.attr('class').replace(stringToBeReplaced, ''))
 
             if (iconSelector === 'factories' || iconSelector === 'product') {
-              targetArray = 'products';
+              targetArray = 'products'
             }
 
-            _el.after(' <strong class="text-muted">' + rHelper.data[targetArray][index].name + '</strong>');
-          });
-        });
+            _el.after(' <strong class="text-muted">' + rHelper.data[targetArray][index].name + '</strong>')
+          })
+        })
       }
     },
     INSRT_materialNewMinePrice: function INSRT_materialNewMinePrice(materialId) {
-      'use strict';
+      'use strict'
 
-      $('#material-new-price-' + materialId).text(rHelper.methods.CALC_materialNewMinePrice(rHelper.methods.CALC_totalMineCount(), materialId).toLocaleString('en-US'));
+      $('#material-new-price-' + materialId).text(rHelper.methods.CALC_materialNewMinePrice(rHelper.methods.CALC_totalMineCount(), materialId).toLocaleString('en-US'))
     },
     INSRT_materialRateWorth: function INSRT_materialRateWorth(materialId) {
-      'use strict';
+      'use strict'
 
-      $('#material-worth-' + materialId).text(rHelper.methods.CALC_materialRateWorth(materialId).toLocaleString('en-US'));
+      $('#material-worth-' + materialId).text(rHelper.methods.CALC_materialRateWorth(materialId).toLocaleString('en-US'))
     },
     INSRT_materialMineAmortisation: function INSRT_materialMineAmortisation() {
-      'use strict';
+      'use strict'
 
-      var ref = rHelper.methods;
+      var ref = rHelper.methods
 
       var _ref29 = [ref.CALC_materialMineROI('100'), ref.CALC_materialMineROI('505'), ref.CALC_materialMineROI('505hq')],
         roi100Array = _ref29[0],
         roi500Array = _ref29[1],
-        roiXArray = _ref29[2];
+        roiXArray = _ref29[2]
 
       $.each(roi100Array, function(i, value) {
-        $('#material-roi-100-' + i).text(value.toFixed(2).toLocaleString('en-US'));
-      });
+        $('#material-roi-100-' + i).text(value.toFixed(2).toLocaleString('en-US'))
+      })
       $.each(roi500Array, function(i, value) {
-        $('#material-roi-500-' + i).text(value.toFixed(2).toLocaleString('en-US'));
-      });
+        $('#material-roi-500-' + i).text(value.toFixed(2).toLocaleString('en-US'))
+      })
       $.each(roiXArray, function(i, value) {
-        $('#material-roi-x-' + i).text(value.toFixed(2).toLocaleString('en-US'));
-      });
+        $('#material-roi-x-' + i).text(value.toFixed(2).toLocaleString('en-US'))
+      })
 
-      rHelper.methods.INSRT_graphMineAmortisation(roi100Array, roi500Array, roiXArray);
+      rHelper.methods.INSRT_graphMineAmortisation(roi100Array, roi500Array, roiXArray)
 
-      ref.INSRT_materialHighlightColumns(roi100Array, '#material-roi-100-', 'text-success', 'text-danger');
-      ref.INSRT_materialHighlightColumns(roi500Array, '#material-roi-500-', 'text-success', 'text-danger');
-      ref.INSRT_materialHighlightColumns(roiXArray, '#material-roi-x-', 'text-success', 'text-danger');
+      ref.INSRT_materialHighlightColumns(roi100Array, '#material-roi-100-', 'text-success', 'text-danger')
+      ref.INSRT_materialHighlightColumns(roi500Array, '#material-roi-500-', 'text-success', 'text-danger')
+      ref.INSRT_materialHighlightColumns(roiXArray, '#material-roi-x-', 'text-success', 'text-danger')
     },
     INSRT_graphMineAmortisation: function INSRT_graphMineAmortisation(roi100Array, roi500Array, roiXArray) {
-      var categories = [];
+      var categories = []
 
       $.each(rHelper.data.material, function(i, el) {
-        categories.push(el.name);
-      });
+        categories.push(el.name)
+      })
 
-      var arrs = [roi100Array, roi500Array, roiXArray];
+      var arrs = [roi100Array, roi500Array, roiXArray]
 
       $.each(arrs, function(i, arr) {
         $.each(arr, function(k, val) {
-          arrs[i][k] = Math.round(val);
-        });
-      });
+          arrs[i][k] = Math.round(val)
+        })
+      })
 
       Highcharts.chart('graph-mine-amortisation', {
         chart: {
@@ -2989,86 +2991,86 @@ var rHelper = {
             pointFormat: '{point.y:.2f}'
           }
         ]
-      });
+      })
     },
     INSRT_materialNewMinePerfectIncome: function INSRT_materialNewMinePerfectIncome(materialId) {
-      'use strict';
+      'use strict'
 
-      $('#material-perfect-income-' + materialId).text(rHelper.methods.CALC_materialMinePerfectIncome(materialId).toLocaleString('en-US'));
+      $('#material-perfect-income-' + materialId).text(rHelper.methods.CALC_materialMinePerfectIncome(materialId).toLocaleString('en-US'))
     },
     INSRT_materialHighlightMinePerfectIncome: function INSRT_materialHighlightMinePerfectIncome() {
-      'use strict';
+      'use strict'
 
-      var array = [];
+      var array = []
 
       $.each(rHelper.data.material, function(materialId) {
-        array.push(rHelper.methods.CALC_materialMinePerfectIncome(materialId));
-      });
+        array.push(rHelper.methods.CALC_materialMinePerfectIncome(materialId))
+      })
 
-      rHelper.methods.INSRT_materialHighlightColumns(array, '#material-perfect-income-', 'text-danger', 'text-success');
+      rHelper.methods.INSRT_materialHighlightColumns(array, '#material-perfect-income-', 'text-danger', 'text-success')
     },
     INSRT_materialHighlightColumns: function INSRT_materialHighlightColumns(array, target, minClass, maxClass) {
-      'use strict';
+      'use strict'
 
       var _ref30 = [['min', 'max'], 0, ,],
         selectors = _ref30[0],
         value = _ref30[1],
         addClass = _ref30[2],
-        rmvClass = _ref30[3];
+        rmvClass = _ref30[3]
 
       $.each(selectors, function(i, selector) {
         switch (selector) {
           case 'min':
-            value = array.min();
-            addClass = minClass;
-            rmvClass = maxClass;
-            break;
+            value = array.min()
+            addClass = minClass
+            rmvClass = maxClass
+            break
           case 'max':
-            value = array.max();
-            addClass = maxClass;
-            rmvClass = minClass;
-            break;
+            value = array.max()
+            addClass = maxClass
+            rmvClass = minClass
+            break
         }
 
-        var el = $(target + array.indexOf(value));
-        el.removeClass(rmvClass).addClass(addClass);
-      });
+        var el = $(target + array.indexOf(value))
+        el.removeClass(rmvClass).addClass(addClass)
+      })
     },
     INSRT_factoryLevel: function INSRT_factoryLevel(factoryId) {
-      'use strict';
+      'use strict'
 
-      var factoryLevel = rHelper.data.products[factoryId].factoryLevel;
-      $('#factories-level-' + factoryId).val(factoryLevel);
-      $('#diamond-level-' + factoryId).text(factoryLevel);
+      var factoryLevel = rHelper.data.products[factoryId].factoryLevel
+      $('#factories-level-' + factoryId).val(factoryLevel)
+      $('#diamond-level-' + factoryId).text(factoryLevel)
     },
     INSRT_factoryOutput: function INSRT_factoryOutput(factoryId) {
-      'use strict';
+      'use strict'
 
-      $('#factories-product-' + factoryId).text(rHelper.methods.CALC_factoryOutput(factoryId).toLocaleString('en-US'));
+      $('#factories-product-' + factoryId).text(rHelper.methods.CALC_factoryOutput(factoryId).toLocaleString('en-US'))
     },
     INSRT_factoryUpgradeCost: function INSRT_factoryUpgradeCost(factoryId) {
-      'use strict';
+      'use strict'
 
-      var target = $('#factories-upgrade-cost-' + factoryId);
-      var calculateFactoryUpgradeCostObj = rHelper.methods.CALC_factoryUpgradeCost(factoryId);
+      var target = $('#factories-upgrade-cost-' + factoryId)
+      var calculateFactoryUpgradeCostObj = rHelper.methods.CALC_factoryUpgradeCost(factoryId)
 
-      target.text(calculateFactoryUpgradeCostObj.sum.toLocaleString('en-US'));
-      target.attr('title', calculateFactoryUpgradeCostObj.title);
-      applyTippyOnNewElement(target);
+      target.text(calculateFactoryUpgradeCostObj.sum.toLocaleString('en-US'))
+      target.attr('title', calculateFactoryUpgradeCostObj.title)
+      applyTippyOnNewElement(target)
     },
     INSRT_totalFactoryUpgrades: function INSRT_totalFactoryUpgrades() {
-      'use strict';
+      'use strict'
 
-      $('#factories-total-upgrades').text(rHelper.methods.CALC_totalFactoryUpgrades().toLocaleString('en-US'));
+      $('#factories-total-upgrades').text(rHelper.methods.CALC_totalFactoryUpgrades().toLocaleString('en-US'))
     },
     INSRT_factoryDependencies: function INSRT_factoryDependencies(factoryId) {
-      'use strict';
+      'use strict'
 
-      var ref = rHelper.methods;
+      var ref = rHelper.methods
 
-      var product = rHelper.data.products[factoryId];
-      var dependencies = product.dependencies;
-      var dependencyString = '';
+      var product = rHelper.data.products[factoryId]
+      var dependencies = product.dependencies
+      var dependencyString = ''
 
       if ($.isArray(dependencies)) {
         $.each(dependencies, function(dependencyIndex, dependency) {
@@ -3085,16 +3087,16 @@ var rHelper = {
             imgSpan = _ref31[2],
             innerSpan = _ref31[3],
             price = _ref31[4],
-            requiredAmount = _ref31[5];
+            requiredAmount = _ref31[5]
 
-          var existingAmount = ref.CALC_factoryDependencyExistingAmount(dependantObj, dependencyIndex);
-          var addClass = ref.CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount);
+          var existingAmount = ref.CALC_factoryDependencyExistingAmount(dependantObj, dependencyIndex)
+          var addClass = ref.CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount)
 
-          imgSpan.addClass(dependantObj.icon).attr('title', price.toLocaleString('en-US'));
-          innerSpan.addClass(addClass).text(requiredAmount.toLocaleString('en-US'));
-          outerSpan.append(imgSpan[0].outerHTML + ' ' + innerSpan[0].outerHTML + ' ');
-          dependencyString += outerSpan[0].outerHTML;
-        });
+          imgSpan.addClass(dependantObj.icon).attr('title', price.toLocaleString('en-US'))
+          innerSpan.addClass(addClass).text(requiredAmount.toLocaleString('en-US'))
+          outerSpan.append(imgSpan[0].outerHTML + ' ' + innerSpan[0].outerHTML + ' ')
+          dependencyString += outerSpan[0].outerHTML
+        })
       } else {
         var _ref32 = [
             ref.CALC_convertId(dependencies),
@@ -3109,103 +3111,103 @@ var rHelper = {
           imgSpan = _ref32[2],
           innerSpan = _ref32[3],
           price = _ref32[4],
-          requiredAmount = _ref32[5];
+          requiredAmount = _ref32[5]
 
-        var existingAmount = ref.CALC_factoryDependencyExistingAmount(dependantObj, 0);
-        var addClass = ref.CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount);
+        var existingAmount = ref.CALC_factoryDependencyExistingAmount(dependantObj, 0)
+        var addClass = ref.CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount)
 
-        imgSpan.addClass(dependantObj.icon).attr('title', price.toLocaleString('en-US'));
-        innerSpan.addClass(addClass).text(requiredAmount.toLocaleString('en-US'));
-        outerSpan.append(imgSpan[0].outerHTML + ' ' + innerSpan[0].outerHTML + ' ');
-        dependencyString += outerSpan[0].outerHTML;
+        imgSpan.addClass(dependantObj.icon).attr('title', price.toLocaleString('en-US'))
+        innerSpan.addClass(addClass).text(requiredAmount.toLocaleString('en-US'))
+        outerSpan.append(imgSpan[0].outerHTML + ' ' + innerSpan[0].outerHTML + ' ')
+        dependencyString += outerSpan[0].outerHTML
       }
-      $('#factories-dependencies-' + factoryId).html(dependencyString);
+      $('#factories-dependencies-' + factoryId).html(dependencyString)
     },
     INSRT_factoryAmortisation: function INSRT_factoryAmortisation(factoryId) {
-      'use strict';
+      'use strict'
 
       var _ref33 = ['#factories-roi-' + factoryId, rHelper.methods.CALC_factoryAmortisation(factoryId)],
         target = _ref33[0],
-        amortisation = _ref33[1];
+        amortisation = _ref33[1]
 
       if (amortisation < 0 || amortisation === Infinity) {
-        amortisation = '∞';
+        amortisation = '∞'
       } else {
-        amortisation = amortisation.toFixed(2);
+        amortisation = amortisation.toFixed(2)
       }
 
-      $(target).text(amortisation);
+      $(target).text(amortisation)
     },
     INSRT_factoryWorkload: function INSRT_factoryWorkload(factoryId) {
-      'use strict';
+      'use strict'
 
       var _ref34 = [$('#factories-workload-' + factoryId), rHelper.data.products[factoryId].dependencies],
         target = _ref34[0],
-        dependencies = _ref34[1];
+        dependencies = _ref34[1]
 
-      rHelper.data.products[factoryId].dependencyWorkload = [];
+      rHelper.data.products[factoryId].dependencyWorkload = []
 
       if ($.isArray(dependencies)) {
         $.each(dependencies, function(dependencyIndex) {
-          var dependencyWorkload = rHelper.methods.CALC_factoryDepedencyWorkload(factoryId, dependencyIndex);
-          rHelper.data.products[factoryId].dependencyWorkload.push(dependencyWorkload);
-        });
+          var dependencyWorkload = rHelper.methods.CALC_factoryDepedencyWorkload(factoryId, dependencyIndex)
+          rHelper.data.products[factoryId].dependencyWorkload.push(dependencyWorkload)
+        })
       } else {
-        var dependencyWorkload = rHelper.methods.CALC_factoryDepedencyWorkload(factoryId, 0);
-        rHelper.data.products[factoryId].dependencyWorkload.push(dependencyWorkload);
+        var dependencyWorkload = rHelper.methods.CALC_factoryDepedencyWorkload(factoryId, 0)
+        rHelper.data.products[factoryId].dependencyWorkload.push(dependencyWorkload)
       }
 
       var _ref35 = [rHelper.methods.CALC_factoryWorkloadMinNonSanitized(factoryId), ,],
         workload = _ref35[0],
         removeClass = _ref35[1],
-        addClass = _ref35[2];
+        addClass = _ref35[2]
 
       if (workload >= 1) {
-        removeClass = 'text-danger';
-        addClass = 'text-success';
+        removeClass = 'text-danger'
+        addClass = 'text-success'
       } else {
-        removeClass = 'text-success';
-        addClass = 'text-danger';
+        removeClass = 'text-success'
+        addClass = 'text-danger'
       }
 
-      var theoreticalFactoryLevelCap = rHelper.methods.CALC_theoreticalFactoryLevelCap(factoryId, workload);
+      var theoreticalFactoryLevelCap = rHelper.methods.CALC_theoreticalFactoryLevelCap(factoryId, workload)
 
       target
         .removeClass(removeClass)
         .addClass(addClass)
         .text((workload * 100).toFixed(2) + ' %')
-        .prop('title', 'Can be upgraded up to level <strong>' + theoreticalFactoryLevelCap.toLocaleString('en-US') + '</strong>');
+        .prop('title', 'Can be upgraded up to level <strong>' + theoreticalFactoryLevelCap.toLocaleString('en-US') + '</strong>')
     },
     INSRT_factoryTurnover: function INSRT_factoryTurnover(factoryId) {
-      'use strict';
+      'use strict'
 
       var _ref36 = [$('#factories-turnover-' + factoryId), rHelper.methods.CALC_factoryTurnover(factoryId), ,],
         target = _ref36[0],
         turnover = _ref36[1],
         removeClass = _ref36[2],
-        addClass = _ref36[3];
+        addClass = _ref36[3]
 
       if (turnover <= 0) {
-        removeClass = 'text-success';
-        addClass = 'text-danger';
+        removeClass = 'text-success'
+        addClass = 'text-danger'
       } else {
-        removeClass = 'text-danger';
-        addClass = 'text-success';
+        removeClass = 'text-danger'
+        addClass = 'text-success'
       }
-      rHelper.data.products[factoryId].turnover = turnover;
+      rHelper.data.products[factoryId].turnover = turnover
       target
         .removeClass(removeClass)
         .addClass(addClass)
-        .text(turnover.toLocaleString('en-US'));
+        .text(turnover.toLocaleString('en-US'))
     },
     INSRT_graphFactoryAmortisation: function INSRT_graphFactoryAmortisation() {
       var roiArr = [],
-        names = [];
+        names = []
 
       $.each(rHelper.data.products, function(i, factory) {
-        names.push(factory.name);
-        roiArr.push(factory.roi);
-      });
+        names.push(factory.name)
+        roiArr.push(factory.roi)
+      })
 
       Highcharts.chart('graph-factories-amortisation', {
         chart: {
@@ -3252,46 +3254,46 @@ var rHelper = {
             pointFormat: '{point.y:.2f}'
           }
         ]
-      });
+      })
     },
     INSRT_factoryHighlightColumns: function INSRT_factoryHighlightColumns() {
-      'use strict';
+      'use strict'
 
       var subArray,
-        columns = ['#factories-upgrade-cost-', '#factories-increase-per-upgrade-', '#factories-roi-', '#diamond-profit-'];
+        columns = ['#factories-upgrade-cost-', '#factories-increase-per-upgrade-', '#factories-roi-', '#diamond-profit-']
 
       $.each(columns, function(i, column) {
         switch (i) {
           case 0:
-            subArray = 'upgradeCost';
-            break;
+            subArray = 'upgradeCost'
+            break
           case 1:
-            subArray = 'turnoverIncrease';
-            break;
+            subArray = 'turnoverIncrease'
+            break
           case 2:
-            subArray = 'roi';
-            break;
+            subArray = 'roi'
+            break
           case 3:
-            subArray = [];
-            break;
+            subArray = []
+            break
         }
 
         var valueArray = [],
-          idArray = [];
+          idArray = []
 
         $.each(rHelper.data.products, function(k, factory) {
-          $(column + k).removeClass('text-success text-danger');
-          var value = 0;
+          $(column + k).removeClass('text-success text-danger')
+          var value = 0
           if ((typeof subArray === 'undefined' ? 'undefined' : _typeof(subArray)) === 'object') {
-            value = factory.diamond.profit;
+            value = factory.diamond.profit
           } else {
-            value = factory[subArray];
+            value = factory[subArray]
           }
           if (rHelper.data.products[k].turnover > 0 && value !== -Infinity && value !== Infinity && value > 0) {
-            valueArray.push(value);
-            idArray.push(k);
+            valueArray.push(value)
+            idArray.push(k)
           }
-        });
+        })
 
         /*
         arrayMin/Max = search within idArray for the same index thats min/max of the value array
@@ -3299,99 +3301,99 @@ var rHelper = {
 
         var _ref37 = [idArray[valueArray.indexOf(valueArray.min())], idArray[valueArray.indexOf(valueArray.max())]],
           arrayMin = _ref37[0],
-          arrayMax = _ref37[1];
+          arrayMax = _ref37[1]
 
         switch (i) {
           case 0:
           case 2:
-            $(column + arrayMin).addClass('text-success');
+            $(column + arrayMin).addClass('text-success')
             if (arrayMin != arrayMax) {
-              $(column + arrayMax).addClass('text-danger');
+              $(column + arrayMax).addClass('text-danger')
             }
-            break;
+            break
           case 1:
           case 3:
-            $(column + arrayMax).addClass('text-success');
+            $(column + arrayMax).addClass('text-success')
             if (arrayMin != arrayMax) {
-              $(column + arrayMin).addClass('text-danger');
+              $(column + arrayMin).addClass('text-danger')
             }
-            break;
+            break
         }
-      });
+      })
     },
     INSRT_factoryROI: function INSRT_factoryROI(factoryId) {
-      'use strict';
+      'use strict'
 
       var _ref38 = [$('#factories-roi-' + factoryId), rHelper.methods.CALC_factoryROI(factoryId)],
         target = _ref38[0],
-        roi = _ref38[1];
+        roi = _ref38[1]
 
-      rHelper.data.products[factoryId].roi = roi;
+      rHelper.data.products[factoryId].roi = roi
 
       if (roi < 0 || roi === Infinity) {
-        roi = '∞';
+        roi = '∞'
       } else {
-        roi = roi.toFixed(2);
+        roi = roi.toFixed(2)
       }
 
-      target.text(roi.toLocaleString('en-US'));
+      target.text(roi.toLocaleString('en-US'))
     },
     INSRT_factoryTurnoverPerUpgrade: function INSRT_factoryTurnoverPerUpgrade(factoryId) {
-      'use strict';
+      'use strict'
 
       var _ref39 = [$('#factories-increase-per-upgrade-' + factoryId), rHelper.methods.CALC_factoryTurnoverPerUpgrade(factoryId)],
         target = _ref39[0],
-        turnoverPerUpgrade = _ref39[1];
+        turnoverPerUpgrade = _ref39[1]
 
-      rHelper.data.products[factoryId].turnoverIncrease = turnoverPerUpgrade;
-      target.text(turnoverPerUpgrade.toLocaleString('en-US'));
+      rHelper.data.products[factoryId].turnoverIncrease = turnoverPerUpgrade
+      target.text(turnoverPerUpgrade.toLocaleString('en-US'))
     },
     INSRT_API_remainingCredits: function INSRT_API_remainingCredits(value) {
-      'use strict';
+      'use strict'
 
       if (value) {
-        $('#api-credits').text(value.toLocaleString('en-US') + ' Credits left');
+        $('#api-credits').text(value.toLocaleString('en-US') + ' Credits left')
       }
     },
     INSRT_diamondFactoryOutput: function INSRT_diamondFactoryOutput(factoryId) {
-      'use strict';
+      'use strict'
 
-      $('#diamond-product-' + factoryId).text(rHelper.methods.CALC_diamondFactoryOutput(factoryId).toLocaleString('en-US'));
+      $('#diamond-product-' + factoryId).text(rHelper.methods.CALC_diamondFactoryOutput(factoryId).toLocaleString('en-US'))
     },
     INSRT_diamondFactoryOutputWarehouse: function INSRT_diamondFactoryOutputWarehouse(factoryId) {
-      'use strict';
+      'use strict'
 
-      var diamondFactoryOutput = rHelper.methods.CALC_diamondFactoryOutput(factoryId);
-      var requiredWarehouseLevel = rHelper.methods.CALC_nextGreaterWarehouseLevel(diamondFactoryOutput);
+      var diamondFactoryOutput = rHelper.methods.CALC_diamondFactoryOutput(factoryId)
+      var requiredWarehouseLevel = rHelper.methods.CALC_nextGreaterWarehouseLevel(diamondFactoryOutput)
 
-      $('#diamond-product-warehouse-' + factoryId).text(requiredWarehouseLevel.toLocaleString('en-US'));
+      $('#diamond-product-warehouse-' + factoryId).text(requiredWarehouseLevel.toLocaleString('en-US'))
     },
     INSRT_diamondDependenciesHelper: function INSRT_diamondDependenciesHelper(dependantObj, price, requiredAmount, factoryId, warehouseIconSpan) {
-      'use strict';
+      'use strict'
 
-      var requiredWarehouseLevel = rHelper.methods.CALC_nextGreaterWarehouseLevel(requiredAmount);
-      rHelper.data.products[factoryId].diamond.dependenciesWorth += price * requiredAmount;
+      var requiredWarehouseLevel = rHelper.methods.CALC_nextGreaterWarehouseLevel(requiredAmount)
+      rHelper.data.products[factoryId].diamond.dependenciesWorth += price * requiredAmount
 
       var imgSpan = $(crEl('span'))
         .addClass(dependantObj.icon)
-        .attr('title', price.toLocaleString('en-US'));
-      var innerSpan = $(crEl('span')).text(requiredAmount.toLocaleString('en-US'));
-      var warehouseSamp = $(crEl('span')).text(requiredWarehouseLevel);
-      var kbd = $(crEl('kbd')).append(warehouseIconSpan[0].outerHTML + ' ' + warehouseSamp[0].outerHTML);
+        .attr('title', price.toLocaleString('en-US'))
+      var innerSpan = $(crEl('span')).text(requiredAmount.toLocaleString('en-US'))
+      var warehouseSamp = $(crEl('span')).text(requiredWarehouseLevel)
+      var kbd = $(crEl('kbd')).append(warehouseIconSpan[0].outerHTML + ' ' + warehouseSamp[0].outerHTML)
 
-      var outerSpan = $(crEl('span')).append(imgSpan[0].outerHTML + ' ' + innerSpan[0].outerHTML + ' ' + kbd[0].outerHTML + ' ');
+      var outerSpan = $(crEl('span')).append(imgSpan[0].outerHTML + ' ' + innerSpan[0].outerHTML + ' ' + kbd[0].outerHTML + ' ')
 
-      return outerSpan[0].outerHTML;
+      return outerSpan[0].outerHTML
     },
     INSRT_diamondDependencies: function INSRT_diamondDependencies(factoryId) {
-      'use strict';
+      'use strict'
 
-      var product = rHelper.data.products[factoryId];
+      var product = rHelper.data.products[factoryId]
 
       var _ref40 = [product.dependencies, '', $(crEl('span')).addClass('nav-icon-warehouses')],
         dependencies = _ref40[0],
         dependencyString = _ref40[1],
-        warehouseIconSpan = _ref40[2];
+        warehouseIconSpan = _ref40[2]
 
       if ($.isArray(dependencies)) {
         $.each(dependencies, function(dependencyIndex, dependency) {
@@ -3402,112 +3404,112 @@ var rHelper = {
             ],
             dependantObj = _ref41[0],
             price = _ref41[1],
-            requiredAmount = _ref41[2];
+            requiredAmount = _ref41[2]
 
-          dependencyString += rHelper.methods.INSRT_diamondDependenciesHelper(dependantObj, price, requiredAmount, factoryId, warehouseIconSpan);
-        });
+          dependencyString += rHelper.methods.INSRT_diamondDependenciesHelper(dependantObj, price, requiredAmount, factoryId, warehouseIconSpan)
+        })
       } else {
         var _ref42 = [rHelper.methods.CALC_convertId(dependencies), rHelper.methods.CALC_returnPriceViaId(dependencies), rHelper.methods.CALC_factoryDependencyRequiredAmount(factoryId, 0) * 5 * 24],
           dependantObj = _ref42[0],
           price = _ref42[1],
-          requiredAmount = _ref42[2];
+          requiredAmount = _ref42[2]
 
-        dependencyString += rHelper.methods.INSRT_diamondDependenciesHelper(dependantObj, price, requiredAmount, factoryId, warehouseIconSpan);
+        dependencyString += rHelper.methods.INSRT_diamondDependenciesHelper(dependantObj, price, requiredAmount, factoryId, warehouseIconSpan)
       }
 
-      $('#diamond-dependencies-' + factoryId).html(dependencyString);
+      $('#diamond-dependencies-' + factoryId).html(dependencyString)
     },
     INSRT_diamondEfficiency: function INSRT_diamondEfficiency(factoryId) {
-      'use strict';
+      'use strict'
 
-      $('#diamond-efficiency-' + factoryId).text((rHelper.methods.CALC_diamondEfficiency(factoryId) * 100).toFixed(2).toLocaleString('en-US') + '%');
+      $('#diamond-efficiency-' + factoryId).text((rHelper.methods.CALC_diamondEfficiency(factoryId) * 100).toFixed(2).toLocaleString('en-US') + '%')
     },
     INSRT_diamondProfit: function INSRT_diamondProfit(factoryId) {
-      'use strict';
+      'use strict'
 
-      $('#diamond-profit-' + factoryId).text(rHelper.methods.CALC_diamondProfit(factoryId).toLocaleString('en-US'));
+      $('#diamond-profit-' + factoryId).text(rHelper.methods.CALC_diamondProfit(factoryId).toLocaleString('en-US'))
     },
     INSRT_diamondFactoryLevel: function INSRT_diamondFactoryLevel(factoryId) {
-      'use strict';
+      'use strict'
 
-      $('#diamond-level-' + factoryId).text(rHelper.data.products[factoryId].factoryLevel);
+      $('#diamond-level-' + factoryId).text(rHelper.data.products[factoryId].factoryLevel)
     },
     INSRT_diamondTop10Profit: function INSRT_diamondTop10Profit() {
-      'use strict';
+      'use strict'
 
-      var top10Profit = rHelper.methods.CALC_diamondTop10Profit().toLocaleString('en-US');
-      $('#diamond-top-10').text(top10Profit);
+      var top10Profit = rHelper.methods.CALC_diamondTop10Profit().toLocaleString('en-US')
+      $('#diamond-top-10').text(top10Profit)
     },
     INSRT_diamondTotalProfit: function INSRT_diamondTotalProfit() {
-      'use strict';
+      'use strict'
 
-      var totalProfit = rHelper.methods.CALC_diamondTotalProfit().toLocaleString('en-US');
-      $('#diamond-total').text(totalProfit);
+      var totalProfit = rHelper.methods.CALC_diamondTotalProfit().toLocaleString('en-US')
+      $('#diamond-total').text(totalProfit)
     },
     INSRT_flowRate: function INSRT_flowRate(id, type) {
-      'use strict';
+      'use strict'
 
       var _ref43 = [$('#flow-' + type + '-rate-' + id), rHelper.methods.CALC_flowRate(id, type)],
         target = _ref43[0],
-        rate = _ref43[1];
+        rate = _ref43[1]
 
       if (type === 'product') {
         if (rHelper.data.products[id].turnover < 0) {
-          rate = 0;
+          rate = 0
         }
       }
 
-      target.text(rate.toLocaleString('en-US'));
+      target.text(rate.toLocaleString('en-US'))
     },
     INSRT_flowDistributionGlobal: function INSRT_flowDistributionGlobal() {
-      'use strict';
+      'use strict'
 
       var materialTotal = 0,
         productsTotal = 0,
         materialColor = 'yellowgreen',
-        productColor = 'yellowgreen';
+        productColor = 'yellowgreen'
 
       $.each(rHelper.data.material, function(materialId) {
-        materialTotal += rHelper.methods.INSRT_flowDistributionSingle(materialId, 'material');
-      });
+        materialTotal += rHelper.methods.INSRT_flowDistributionSingle(materialId, 'material')
+      })
 
-      var calculationOrder = rHelper.methods.GET_calculationOrder();
+      var calculationOrder = rHelper.methods.GET_calculationOrder()
 
       $.each(calculationOrder, function(index, factoryId) {
-        productsTotal += rHelper.methods.INSRT_flowDistributionSingle(factoryId, 'product');
-      });
+        productsTotal += rHelper.methods.INSRT_flowDistributionSingle(factoryId, 'product')
+      })
 
       if (materialTotal < 0) {
-        materialColor = 'coral';
+        materialColor = 'coral'
       }
       if (productsTotal < 0) {
-        productColor = 'coral';
+        productColor = 'coral'
       }
 
-      rHelper.data.material.totalIncomePerHour = materialTotal;
-      rHelper.data.products.totalIncomePerHour = productsTotal;
+      rHelper.data.material.totalIncomePerHour = materialTotal
+      rHelper.data.products.totalIncomePerHour = productsTotal
 
       $('#flow-material-total')
         .text(materialTotal.toLocaleString('en-US'))
-        .css('color', materialColor);
+        .css('color', materialColor)
       $('#flow-products-total')
         .text(productsTotal.toLocaleString('en-US'))
-        .css('color', productColor);
-      $('#effective-hourly-income').text((materialTotal + productsTotal).toLocaleString('en-US'));
+        .css('color', productColor)
+      $('#effective-hourly-income').text((materialTotal + productsTotal).toLocaleString('en-US'))
     },
     INSRT_flowSurplus: function INSRT_flowSurplus(id, type, remainingAmount) {
-      'use strict';
+      'use strict'
 
-      var surplusTarget = $('#flow-' + type + '-surplus-' + id);
-      var color = '#dedede';
+      var surplusTarget = $('#flow-' + type + '-surplus-' + id)
+      var color = '#dedede'
       if (remainingAmount <= 0) {
-        color = 'coral';
+        color = 'coral'
       }
-      surplusTarget.css('color', color);
-      surplusTarget.html('<span class="resources-' + type + '-' + id + '"></span> ' + remainingAmount.toLocaleString('en-US'));
+      surplusTarget.css('color', color)
+      surplusTarget.html('<span class="resources-' + type + '-' + id + '"></span> ' + remainingAmount.toLocaleString('en-US'))
     },
     INSRT_flowDistributionSingle: function INSRT_flowDistributionSingle(id, type) {
-      'use strict';
+      'use strict'
 
       var _ref44 = [$('#flow-' + type + '-worth-' + id), 0, 0, 'yellowgreen', 0, rHelper.methods.CALC_flowDistribution(id, type)],
         worthTarget = _ref44[0],
@@ -3515,924 +3517,924 @@ var rHelper = {
         worth = _ref44[2],
         color = _ref44[3],
         productionCost = _ref44[4],
-        remainingAmount = _ref44[5];
+        remainingAmount = _ref44[5]
 
       switch (type) {
         case 'material':
-          price = rHelper.methods.CALC_returnPriceViaId(id);
-          break;
+          price = rHelper.methods.CALC_returnPriceViaId(id)
+          break
         case 'product':
-          price = rHelper.methods.CALC_returnPriceViaId(id + 14);
-          break;
+          price = rHelper.methods.CALC_returnPriceViaId(id + 14)
+          break
       }
 
       if (type === 'product') {
         if (rHelper.data.products[id].turnover < 0) {
-          remainingAmount *= -1;
+          remainingAmount *= -1
           if (rHelper.data.products[id].dependantFactories === '') {
-            remainingAmount = 0;
+            remainingAmount = 0
           }
         } else {
-          productionCost = rHelper.methods.CALC_factoryCashCostPerHour(id);
+          productionCost = rHelper.methods.CALC_factoryCashCostPerHour(id)
         }
       }
 
-      worth = remainingAmount * price;
+      worth = remainingAmount * price
       if (remainingAmount < 0) {
-        worth *= rHelper.data.buildings[9].transportCost;
-        color = 'coral';
+        worth *= rHelper.data.buildings[9].transportCost
+        color = 'coral'
       }
 
-      worth = Math.round(worth - productionCost);
+      worth = Math.round(worth - productionCost)
       switch (type) {
         case 'material':
-          rHelper.data.material[id].effectiveTurnover = worth;
-          break;
+          rHelper.data.material[id].effectiveTurnover = worth
+          break
         case 'product':
-          rHelper.data.products[id].effectiveTurnover = worth;
-          break;
+          rHelper.data.products[id].effectiveTurnover = worth
+          break
       }
 
-      worthTarget.css('color', color).text(worth.toLocaleString('en-US'));
-      rHelper.methods.INSRT_flowSurplus(id, type, remainingAmount);
-      return worth;
+      worthTarget.css('color', color).text(worth.toLocaleString('en-US'))
+      rHelper.methods.INSRT_flowSurplus(id, type, remainingAmount)
+      return worth
     },
     INSRT_warehouseFillAmount: function INSRT_warehouseFillAmount(id, type) {
-      'use strict';
+      'use strict'
 
-      $('#warehouse-' + type + '-stock-current-' + id).val(rHelper.data[type][id].warehouse.fillAmount);
+      $('#warehouse-' + type + '-stock-current-' + id).val(rHelper.data[type][id].warehouse.fillAmount)
     },
     INSRT_warehouseLevel: function INSRT_warehouseLevel(id, type) {
-      'use strict';
+      'use strict'
 
-      var warehouseLevel = rHelper.data[type][id].warehouse.level;
-      $('#warehouse-' + type + '-level-' + id).val(warehouseLevel);
-      $('#warehouse-' + type + '-stock-current-' + id).attr('max', rHelper.methods.CALC_warehouseContingent(warehouseLevel));
+      var warehouseLevel = rHelper.data[type][id].warehouse.level
+      $('#warehouse-' + type + '-level-' + id).val(warehouseLevel)
+      $('#warehouse-' + type + '-stock-current-' + id).attr('max', rHelper.methods.CALC_warehouseContingent(warehouseLevel))
     },
     INSRT_warehouseFillStatus: function INSRT_warehouseFillStatus(id, type) {
-      'use strict';
+      'use strict'
 
-      var target = $('#warehouse-' + type + '-fill-percent-' + id);
-      var percent = (rHelper.data[type][id].warehouse.fillStatus * 100).toFixed(2);
-      var color = 'rgb(255, 38, 41)';
+      var target = $('#warehouse-' + type + '-fill-percent-' + id)
+      var percent = (rHelper.data[type][id].warehouse.fillStatus * 100).toFixed(2)
+      var color = 'rgb(255, 38, 41)'
 
       if (percent < 75) {
-        color = 'rgb(70, 252, 6)';
+        color = 'rgb(70, 252, 6)'
       } else if (percent >= 75 && percent < 90) {
-        color = 'rgb(255, 252, 38)';
+        color = 'rgb(255, 252, 38)'
       } else if (percent >= 90 && percent < 95) {
-        color = 'rgb(255, 155, 38)';
+        color = 'rgb(255, 155, 38)'
       }
 
-      target.text(percent).css('color', color);
+      target.text(percent).css('color', color)
     },
     INSRT_warehouseCapacity: function INSRT_warehouseCapacity(id, type) {
-      'use strict';
+      'use strict'
 
-      $('#warehouse-' + type + '-stock-cap-' + id).text(rHelper.data[type][id].warehouse.contingent.toLocaleString('en-US'));
+      $('#warehouse-' + type + '-stock-cap-' + id).text(rHelper.data[type][id].warehouse.contingent.toLocaleString('en-US'))
     },
     INSRT_warehouseWorth: function INSRT_warehouseWorth(id, type) {
-      'use strict';
+      'use strict'
 
-      var price = rHelper.methods.CALC_warehouseWorth(id, type);
-      var worth = price * rHelper.data[type][id].warehouse.fillAmount;
-      $('#warehouse-' + type + '-worth-' + id).text(worth.toLocaleString('en-US'));
+      var price = rHelper.methods.CALC_warehouseWorth(id, type)
+      var worth = price * rHelper.data[type][id].warehouse.fillAmount
+      $('#warehouse-' + type + '-worth-' + id).text(worth.toLocaleString('en-US'))
     },
     INSRT_warehouseTotalWorth: function INSRT_warehouseTotalWorth() {
-      'use strict';
+      'use strict'
 
-      var warehouseTotalWorth = rHelper.methods.CALC_warehouseTotalWorth();
-      $('#warehouse-total-worth').text(warehouseTotalWorth.toLocaleString('en-US'));
+      var warehouseTotalWorth = rHelper.methods.CALC_warehouseTotalWorth()
+      $('#warehouse-total-worth').text(warehouseTotalWorth.toLocaleString('en-US'))
     },
     INSRT_warehouseTotalLevel: function INSRT_warehouseTotalLevel() {
-      'use strict';
+      'use strict'
 
-      var warehouseTotalLevel = rHelper.methods.CALC_warehouseTotalLevel();
-      $('#warehouse-total-level').text(warehouseTotalLevel.toLocaleString('en-US'));
+      var warehouseTotalLevel = rHelper.methods.CALC_warehouseTotalLevel()
+      $('#warehouse-total-level').text(warehouseTotalLevel.toLocaleString('en-US'))
     },
     INSRT_warehouseRemainingTimeToFull: function INSRT_warehouseRemainingTimeToFull(id, type) {
-      'use strict';
+      'use strict'
 
-      var remainingTime = rHelper.methods.CALC_warehouseRemainingTimeToFull(id, type);
-      $('#warehouse-' + type + '-remaining-' + id).text(remainingTime);
+      var remainingTime = rHelper.methods.CALC_warehouseRemainingTimeToFull(id, type)
+      $('#warehouse-' + type + '-remaining-' + id).text(remainingTime)
     },
     INSRT_warehouseUpgradeCost: function INSRT_warehouseUpgradeCost(id, type, value) {
-      'use strict';
+      'use strict'
 
-      var target = $('#warehouse-' + type + '-upgrade-cost-' + id);
-      var upgradeCost = rHelper.methods.CALC_warehouseUpgradeCostOnInput(id, type, value);
-      target.text(upgradeCost.toLocaleString('en-US'));
+      var target = $('#warehouse-' + type + '-upgrade-cost-' + id)
+      var upgradeCost = rHelper.methods.CALC_warehouseUpgradeCostOnInput(id, type, value)
+      target.text(upgradeCost.toLocaleString('en-US'))
     },
     INSRT_buildingName: function INSRT_buildingName(buildingId) {
-      'use strict';
+      'use strict'
 
-      $('#buildings-name-' + buildingId).text(rHelper.data.buildings[buildingId].name);
+      $('#buildings-name-' + buildingId).text(rHelper.data.buildings[buildingId].name)
     },
     INSRT_buildingData: function INSRT_buildingData(buildingId) {
-      'use strict';
+      'use strict'
 
-      var building = rHelper.data.buildings[buildingId];
-      var buildingLevel = building.level;
-      var dropdown = $('#buildings-level-' + buildingId);
+      var building = rHelper.data.buildings[buildingId]
+      var buildingLevel = building.level
+      var dropdown = $('#buildings-level-' + buildingId)
 
       if (parseInt(dropdown.val()) != buildingLevel) {
-        $(dropdown[0][buildingLevel]).attr('selected', 'true');
+        $(dropdown[0][buildingLevel]).attr('selected', 'true')
       }
 
-      var materialWorthSum = 0;
-      var materialTransportationSum = 0;
+      var materialWorthSum = 0
+      var materialTransportationSum = 0
 
       if (buildingLevel != 10) {
-        rHelper.methods.SET_buildingTableVisibility(buildingId, 'show');
+        rHelper.methods.SET_buildingTableVisibility(buildingId, 'show')
 
         for (var i = 0; i <= 3; i += 1) {
           if (i === 0) {
             var _ref45 = [$('#buildings-cash-' + buildingId), building.materialAmount0[buildingLevel]],
               cashTarget = _ref45[0],
-              cash = _ref45[1];
+              cash = _ref45[1]
 
             if (typeof cash === 'undefined') {
-              cash = 0;
+              cash = 0
             }
-            materialWorthSum += cash;
-            cashTarget.text(cash.toLocaleString('en-US'));
+            materialWorthSum += cash
+            cashTarget.text(cash.toLocaleString('en-US'))
           } else {
             var _ref46 = ['materialAmount' + i, rHelper.methods.CALC_convertId(building.material[i])],
               selector = _ref46[0],
-              material = _ref46[1];
+              material = _ref46[1]
 
-            $('#buildings-mat-' + i + '-' + buildingId).addClass(material.icon);
-            var materialAmount = building[selector][buildingLevel];
+            $('#buildings-mat-' + i + '-' + buildingId).addClass(material.icon)
+            var materialAmount = building[selector][buildingLevel]
 
             if (typeof materialAmount === 'number') {
-              $('#buildings-amount-' + i + '-' + buildingId).text(materialAmount.toLocaleString('en-US'));
-              var materialPrice = rHelper.methods.CALC_returnPriceViaId(building.material[i]);
-              var materialWorth = materialPrice * materialAmount;
-              var transportation = (rHelper.data.buildings[9].transportCost - 1) * materialWorth;
+              $('#buildings-amount-' + i + '-' + buildingId).text(materialAmount.toLocaleString('en-US'))
+              var materialPrice = rHelper.methods.CALC_returnPriceViaId(building.material[i])
+              var materialWorth = materialPrice * materialAmount
+              var transportation = (rHelper.data.buildings[9].transportCost - 1) * materialWorth
 
-              materialWorthSum += materialWorth;
-              materialTransportationSum += transportation;
-              $('#buildings-worth-' + i + '-' + buildingId).text(materialWorth.toLocaleString('en-US'));
-              $('#buildings-transportation-' + i + '-' + buildingId).text(transportation.toLocaleString('en-US'));
+              materialWorthSum += materialWorth
+              materialTransportationSum += transportation
+              $('#buildings-worth-' + i + '-' + buildingId).text(materialWorth.toLocaleString('en-US'))
+              $('#buildings-transportation-' + i + '-' + buildingId).text(transportation.toLocaleString('en-US'))
             }
           }
         }
       } else {
-        rHelper.methods.SET_buildingTableVisibility(buildingId, 'hide');
+        rHelper.methods.SET_buildingTableVisibility(buildingId, 'hide')
       }
 
-      $('#buildings-sum-' + buildingId).text(materialWorthSum.toLocaleString('en-US'));
-      $('#buildings-transportation-sum-' + buildingId).text(Math.round(materialTransportationSum).toLocaleString('en-US'));
+      $('#buildings-sum-' + buildingId).text(materialWorthSum.toLocaleString('en-US'))
+      $('#buildings-transportation-sum-' + buildingId).text(Math.round(materialTransportationSum).toLocaleString('en-US'))
     },
     INSRT_buildingToLevel10: function INSRT_buildingToLevel10(buildingId) {
-      'use strict';
+      'use strict'
 
-      var buildingToLevel10 = rHelper.methods.CALC_buildingToLevel10(buildingId);
-      $('#buildings-cap-' + buildingId).text(buildingToLevel10.level10Cost.toLocaleString('en-US'));
-      $('#buildings-transportation-cap-' + buildingId).text(buildingToLevel10.level10Transportation.toLocaleString('en-US'));
+      var buildingToLevel10 = rHelper.methods.CALC_buildingToLevel10(buildingId)
+      $('#buildings-cap-' + buildingId).text(buildingToLevel10.level10Cost.toLocaleString('en-US'))
+      $('#buildings-transportation-cap-' + buildingId).text(buildingToLevel10.level10Transportation.toLocaleString('en-US'))
     },
     INSRT_techUpgradeRows: function INSRT_techUpgradeRows(tu4Trigger) {
-      'use strict';
+      'use strict'
 
       var iterateTUData = function iterateTUData() {
         $.each(rHelper.tu, function(index, combination) {
           if (typeof tu4Trigger === 'undefined' && combination.tu4 != 0) {
-            return;
+            return
           }
-          var tr = $(crEl('tr'));
+          var tr = $(crEl('tr'))
           for (var i = 0; i <= 6; i += 1) {
-            var td = $(crEl('td'));
-            td.addClass('text-md-right text-sm-left');
-            var tus = [combination.tu1, combination.tu2, combination.tu3, combination.tu4];
+            var td = $(crEl('td'))
+            td.addClass('text-md-right text-sm-left')
+            var tus = [combination.tu1, combination.tu2, combination.tu3, combination.tu4]
             switch (i) {
               case 0:
               case 1:
               case 2:
               case 3:
-                td.text(tus[i]).attr('data-th', 'Tech-Upgrade ' + (i + 1));
-                break;
+                td.text(tus[i]).attr('data-th', 'Tech-Upgrade ' + (i + 1))
+                break
               case 4:
-                td.text(combination.factor).attr('data-th', 'Boost');
-                break;
+                td.text(combination.factor).attr('data-th', 'Boost')
+                break
               case 5:
-                var price = 0;
+                var price = 0
                 for (var k = 0; k < tus.length; k += 1) {
-                  price += tus[k] * prices[k];
+                  price += tus[k] * prices[k]
                 }
-                td.text(price.toLocaleString('en-US')).attr('data-th', 'Price');
-                break;
+                td.text(price.toLocaleString('en-US')).attr('data-th', 'Price')
+                break
               case 6:
-                var count = tus[0] * 1 + tus[1] * 2 + tus[2] * 3 + tus[3] * 5;
-                td.text(count).attr('data-th', 'Pimp my mine count');
-                break;
+                var count = tus[0] * 1 + tus[1] * 2 + tus[2] * 3 + tus[3] * 5
+                td.text(count).attr('data-th', 'Pimp my mine count')
+                break
             }
-            tr.append(td[0]);
+            tr.append(td[0])
           }
-          techUpgradeTbody.append(tr[0]);
-        });
-      };
-
-      var techUpgradeTbody = $('#techupgrades-combinations-tbl tbody');
-      if (techUpgradeTbody[0].childNodes.length > 0) {
-        techUpgradeTbody.empty();
+          techUpgradeTbody.append(tr[0])
+        })
       }
 
-      var prices = [];
+      var techUpgradeTbody = $('#techupgrades-combinations-tbl tbody')
+      if (techUpgradeTbody[0].childNodes.length > 0) {
+        techUpgradeTbody.empty()
+      }
+
+      var prices = []
 
       for (var i = 46; i <= 49; i += 1) {
-        prices.push(rHelper.methods.CALC_returnPriceViaId(i, 0));
+        prices.push(rHelper.methods.CALC_returnPriceViaId(i, 0))
       }
 
       if (rHelper.tu.length === 0) {
         $.getJSON('api/tu.json', function(data) {
-          rHelper.tu = data;
-          iterateTUData();
-        });
+          rHelper.tu = data
+          iterateTUData()
+        })
       } else {
-        iterateTUData();
+        iterateTUData()
       }
     },
     INSRT_techUpgradeCalculator: function INSRT_techUpgradeCalculator(value, tu4Inclusion) {
-      'use strict';
+      'use strict'
 
-      toggleTechUpgradeInfo('start');
-      var table = $('#techupgrades-calc-tbl');
+      toggleTechUpgradeInfo('start')
+      var table = $('#techupgrades-calc-tbl')
 
       if (table.css('display') === 'none') {
-        table.css('display', 'table');
+        table.css('display', 'table')
       }
 
-      var target = $('#techupgrades-calc-tbl tbody');
-      target.empty();
+      var target = $('#techupgrades-calc-tbl tbody')
+      target.empty()
 
-      var url = 'api/getTechCombination.php?factor=' + value;
+      var url = 'api/getTechCombination.php?factor=' + value
       if (typeof tu4Inclusion === 'string') {
-        url += '&tu4=allowed';
+        url += '&tu4=allowed'
       }
 
       $.getJSON(url, function(data) {
-        var prices = [];
+        var prices = []
         for (var i = 46; i <= 49; i += 1) {
-          prices.push(rHelper.methods.CALC_returnPriceViaId(i, 0));
+          prices.push(rHelper.methods.CALC_returnPriceViaId(i, 0))
         }
 
         $.each(data, function(i, combination) {
-          var tr = $(crEl('tr'));
+          var tr = $(crEl('tr'))
           for (var k = 0; k <= 6; k += 1) {
-            var td = $(crEl('td'));
+            var td = $(crEl('td'))
 
-            td.addClass('text-md-right text-sm-left');
-            td.attr('data-th', 'missing Tech-Upgrade ' + (k + 1));
+            td.addClass('text-md-right text-sm-left')
+            td.attr('data-th', 'missing Tech-Upgrade ' + (k + 1))
 
-            var tus = [combination.tu1, combination.tu2, combination.tu3, combination.tu4];
+            var tus = [combination.tu1, combination.tu2, combination.tu3, combination.tu4]
 
             switch (k) {
               case 0:
               case 1:
               case 2:
               case 3:
-                td.text(tus[k]);
-                break;
+                td.text(tus[k])
+                break
               case 4:
-                td.text(combination.factor).attr('data-th', 'resulting Boost');
-                break;
+                td.text(combination.factor).attr('data-th', 'resulting Boost')
+                break
               case 5:
-                var price = 0;
+                var price = 0
                 for (var l = 0; l < tus.length; l += 1) {
-                  price += tus[l] * prices[l];
+                  price += tus[l] * prices[l]
                 }
-                td.text(price.toLocaleString('en-US')).attr('data-th', 'Price');
-                break;
+                td.text(price.toLocaleString('en-US')).attr('data-th', 'Price')
+                break
               case 6:
-                var count = tus[0] * 1 + tus[1] * 2 + tus[2] * 3 + tus[3] * 5;
-                td.text(count).attr('data-th', 'remaining Pimp my mine count');
-                break;
+                var count = tus[0] * 1 + tus[1] * 2 + tus[2] * 3 + tus[3] * 5
+                td.text(count).attr('data-th', 'remaining Pimp my mine count')
+                break
             }
-            tr.append(td);
+            tr.append(td)
           }
-          target.append(tr);
-        });
+          target.append(tr)
+        })
 
-        sorttable.makeSortable(table[0]);
-        sorttable.innerSortFunction.apply($('#techupgrades-calc-tbl th')[5], []);
-        sorttable.innerSortFunction.apply($('#techupgrades-calc-tbl th')[5], []);
-        toggleTechUpgradeInfo('end');
+        sorttable.makeSortable(table[0])
+        sorttable.innerSortFunction.apply($('#techupgrades-calc-tbl th')[5], [])
+        sorttable.innerSortFunction.apply($('#techupgrades-calc-tbl th')[5], [])
+        toggleTechUpgradeInfo('end')
       }).fail(function() {
-        var tr = $(crEl('tr'));
-        var td = $(crEl('td'));
+        var tr = $(crEl('tr'))
+        var td = $(crEl('td'))
         td
           .addClass('text-warning text-center')
           .attr('data-th', 'Attention')
           .attr('colspan', 7)
-          .text('No entries found or invalid value. Try to lower the value a bit – up to 5 decimals are allowed (e.g. 3.00005).');
-        tr.append(td);
-        target.append(tr);
-        toggleTechUpgradeInfo('end');
-      });
+          .text('No entries found or invalid value. Try to lower the value a bit – up to 5 decimals are allowed (e.g. 3.00005).')
+        tr.append(td)
+        target.append(tr)
+        toggleTechUpgradeInfo('end')
+      })
     },
     INSRT_recyclingRequirement: function INSRT_recyclingRequirement(lootId) {
-      'use strict';
+      'use strict'
 
-      $('#recycling-requirement-' + lootId).text(rHelper.methods.CALC_recyclingRequirement(lootId).toLocaleString('en-US'));
+      $('#recycling-requirement-' + lootId).text(rHelper.methods.CALC_recyclingRequirement(lootId).toLocaleString('en-US'))
     },
     INSRT_recyclingProducts: function INSRT_recyclingProducts(lootId) {
-      'use strict';
+      'use strict'
 
-      var recyclingPlantLevel = rHelper.data.buildings[5].level;
-      var recyclingProducts = rHelper.methods.CALC_recyclingProducts(lootId, recyclingPlantLevel);
-      $('#recycling-products-' + lootId).html(recyclingProducts);
+      var recyclingPlantLevel = rHelper.data.buildings[5].level
+      var recyclingProducts = rHelper.methods.CALC_recyclingProducts(lootId, recyclingPlantLevel)
+      $('#recycling-products-' + lootId).html(recyclingProducts)
     },
     INSRT_recyclingOutputWorth: function INSRT_recyclingOutputWorth(lootId) {
-      'use strict';
+      'use strict'
 
-      var recyclingPlantLevel = rHelper.data.buildings[5].level;
-      $('#recycling-output-' + lootId).text(rHelper.methods.CALC_recyclingOutputWorth(lootId, recyclingPlantLevel).toLocaleString('en-US'));
+      var recyclingPlantLevel = rHelper.data.buildings[5].level
+      $('#recycling-output-' + lootId).text(rHelper.methods.CALC_recyclingOutputWorth(lootId, recyclingPlantLevel).toLocaleString('en-US'))
     },
     INSRT_recyclingInputWorth: function INSRT_recyclingInputWorth(lootId) {
-      'use strict';
+      'use strict'
 
-      $('#recycling-input-' + lootId).text(rHelper.methods.CALC_recyclingInputWorth(lootId).toLocaleString('en-US'));
+      $('#recycling-input-' + lootId).text(rHelper.methods.CALC_recyclingInputWorth(lootId).toLocaleString('en-US'))
     },
     INSRT_unitsRecyclingProfit: function INSRT_unitsRecyclingProfit(type, id) {
-      'use strict';
+      'use strict'
 
       var _ref47 = [$('#' + type + '-profit-' + id), 0, ,],
         target = _ref47[0],
         profit = _ref47[1],
         result = _ref47[2],
-        color = _ref47[3];
+        color = _ref47[3]
 
       if (type === 'recycling') {
-        profit = rHelper.methods.CALC_recyclingProfit(id);
+        profit = rHelper.methods.CALC_recyclingProfit(id)
       } else if (type === 'units') {
-        profit = rHelper.methods.CALC_unitsProfit(id);
+        profit = rHelper.methods.CALC_unitsProfit(id)
       }
 
       if (profit > 0) {
-        color = '#9acd3225';
+        color = '#9acd3225'
       } else {
-        color = '#ff7f5025';
+        color = '#ff7f5025'
       }
 
-      $(target[0].parentNode).css('background-color', color);
+      $(target[0].parentNode).css('background-color', color)
 
-      result = profit.toFixed(2).toLocaleString('en-US') + '%';
-      target.text(result);
+      result = profit.toFixed(2).toLocaleString('en-US') + '%'
+      target.text(result)
     },
     INSRT_unitsCraftingPrice: function INSRT_unitsCraftingPrice(unitId) {
-      'use strict';
+      'use strict'
 
-      $('#units-crafting-' + unitId).text(rHelper.methods.CALC_unitsCraftingPrice(unitId).toLocaleString('en-US'));
+      $('#units-crafting-' + unitId).text(rHelper.methods.CALC_unitsCraftingPrice(unitId).toLocaleString('en-US'))
     },
     INSRT_unitsPricePerStrength: function INSRT_unitsPricePerStrength(unitId) {
-      'use strict';
+      'use strict'
 
-      $('#units-pps-' + unitId).text(rHelper.methods.CALC_unitsPricePerStrength(unitId).toLocaleString('en-US'));
+      $('#units-pps-' + unitId).text(rHelper.methods.CALC_unitsPricePerStrength(unitId).toLocaleString('en-US'))
     },
     INSRT_unitsMarketPrice: function INSRT_unitsMarketPrice(unitId) {
-      'use strict';
+      'use strict'
 
-      var convertedId = unitId + 52;
-      var marketPrice = rHelper.methods.CALC_returnPriceViaId(convertedId);
-      rHelper.data.units[unitId].profit.marketPrice = marketPrice;
+      var convertedId = unitId + 52
+      var marketPrice = rHelper.methods.CALC_returnPriceViaId(convertedId)
+      rHelper.data.units[unitId].profit.marketPrice = marketPrice
 
-      $('#units-market-' + unitId).text(marketPrice.toLocaleString('en-US'));
+      $('#units-market-' + unitId).text(marketPrice.toLocaleString('en-US'))
     },
     INSRT_companyWorth: function INSRT_companyWorth() {
-      'use strict';
+      'use strict'
 
-      var companyWorth = rHelper.methods.CALC_companyWorth();
-      $('#company-worth').text(companyWorth.toLocaleString('en-US'));
+      var companyWorth = rHelper.methods.CALC_companyWorth()
+      $('#company-worth').text(companyWorth.toLocaleString('en-US'))
     },
     INSRT_headquarterOvwTransportation: function INSRT_headquarterOvwTransportation(level) {
-      'use strict';
+      'use strict'
 
-      var hqLevel = rHelper.data.headquarter[level];
+      var hqLevel = rHelper.data.headquarter[level]
       if ($.isArray(hqLevel.material)) {
-        var hqCost = rHelper.methods.CALC_headquarterLevelCost(level);
-        var transportation = Math.round(hqCost * (rHelper.data.buildings[9].transportCost - 1));
-        $('#hq-ovw-transportation-' + level).text(transportation.toLocaleString('en-US'));
+        var hqCost = rHelper.methods.CALC_headquarterLevelCost(level)
+        var transportation = Math.round(hqCost * (rHelper.data.buildings[9].transportCost - 1))
+        $('#hq-ovw-transportation-' + level).text(transportation.toLocaleString('en-US'))
       }
     },
     INSRT_headquarterOvwCost: function INSRT_headquarterOvwCost(level) {
-      'use strict';
+      'use strict'
 
-      var hqCost = rHelper.methods.CALC_headquarterLevelCost(level);
-      $('#hq-ovw-sum-' + level).text(hqCost.toLocaleString('en-US'));
+      var hqCost = rHelper.methods.CALC_headquarterLevelCost(level)
+      $('#hq-ovw-sum-' + level).text(hqCost.toLocaleString('en-US'))
     },
     INSRT_headquarterOvwRadius: function INSRT_headquarterOvwRadius(level) {
-      'use strict';
+      'use strict'
 
-      var hqLevel = rHelper.data.headquarter[level];
-      $('#hq-ovw-radius-' + level).text(hqLevel.radius + ' m | ' + rHelper.methods.CALC_convertMeterToYards(hqLevel.radius) + ' yards');
+      var hqLevel = rHelper.data.headquarter[level]
+      $('#hq-ovw-radius-' + level).text(hqLevel.radius + ' m | ' + rHelper.methods.CALC_convertMeterToYards(hqLevel.radius) + ' yards')
     },
     INSRT_headquarterOvwBoost: function INSRT_headquarterOvwBoost(level) {
-      'use strict';
+      'use strict'
 
-      var hqLevel = rHelper.data.headquarter[level];
-      $('#hq-ovw-boost-' + level).text(hqLevel.boost);
+      var hqLevel = rHelper.data.headquarter[level]
+      $('#hq-ovw-boost-' + level).text(hqLevel.boost)
     },
     INSRT_headquarterOvwString: function INSRT_headquarterOvwString(level) {
-      'use strict';
+      'use strict'
 
-      var hqLevel = rHelper.data.headquarter[level];
+      var hqLevel = rHelper.data.headquarter[level]
 
       if ($.isArray(hqLevel.material)) {
-        var string = rHelper.methods.CALC_headquarterOvwMaterial(level) + ' x ' + hqLevel.amount.toLocaleString('en-US');
-        $('#hq-ovw-mat-' + level).html(string);
+        var string = rHelper.methods.CALC_headquarterOvwMaterial(level) + ' x ' + hqLevel.amount.toLocaleString('en-US')
+        $('#hq-ovw-mat-' + level).html(string)
       }
     },
     INSRT_headquarterContentRequiredAmount: function INSRT_headquarterContentRequiredAmount(level) {
-      'use strict';
+      'use strict'
 
-      var hqContent = $('#hq-content');
+      var hqContent = $('#hq-content')
       if (level != 10) {
-        hqContent.css('display', 'block');
-        var headquarter = rHelper.data.headquarter[level];
-        var amount = headquarter.amount;
+        hqContent.css('display', 'block')
+        var headquarter = rHelper.data.headquarter[level]
+        var amount = headquarter.amount
 
         $.each(headquarter.material, function(i, material) {
-          var icon = rHelper.methods.CALC_headquarterContentIcon(material);
-          var span = rHelper.methods.CALC_headquarterContentRequiredAmount(amount);
+          var icon = rHelper.methods.CALC_headquarterContentIcon(material)
+          var span = rHelper.methods.CALC_headquarterContentRequiredAmount(amount)
 
-          $('#hq-content-icon-' + i).html(icon);
-          $('#hq-content-requirement-' + i).html(span);
-        });
+          $('#hq-content-icon-' + i).html(icon)
+          $('#hq-content-requirement-' + i).html(span)
+        })
       } else {
-        hqContent.css('display', 'none');
+        hqContent.css('display', 'none')
       }
     },
     INSRT_headquarterPaid: function INSRT_headquarterPaid() {
-      'use strict';
+      'use strict'
 
-      var paid = rHelper.data.headquarter.user.paid;
+      var paid = rHelper.data.headquarter.user.paid
       $.each(paid, function(i, amount) {
-        $('#hq-content-input-' + i).val(amount);
-      });
+        $('#hq-content-input-' + i).val(amount)
+      })
     },
     INSRT_headquarterMissing: function INSRT_headquarterMissing(i) {
-      'use strict';
+      'use strict'
 
-      var userHqLevel = rHelper.data.headquarter.user.level;
+      var userHqLevel = rHelper.data.headquarter.user.level
       if (userHqLevel != 10) {
-        var requiredAmount = rHelper.data.headquarter[userHqLevel].amount;
-        var paid = rHelper.data.headquarter.user.paid[i];
-        var missing = requiredAmount - paid;
+        var requiredAmount = rHelper.data.headquarter[userHqLevel].amount
+        var paid = rHelper.data.headquarter.user.paid[i]
+        var missing = requiredAmount - paid
         if (missing < 0) {
-          missing = 0;
+          missing = 0
         }
-        $('#hq-content-missing-' + i).text(missing.toLocaleString('en-US'));
+        $('#hq-content-missing-' + i).text(missing.toLocaleString('en-US'))
       }
     },
     INSRT_headquarterRemainingCost: function INSRT_headquarterRemainingCost(userHqLevel) {
-      'use strict';
+      'use strict'
 
       if (userHqLevel != 10) {
-        var headquarter = rHelper.data.headquarter[userHqLevel];
-        var totalCost = 0;
-        var totalTransportation = 0;
+        var headquarter = rHelper.data.headquarter[userHqLevel]
+        var totalCost = 0
+        var totalTransportation = 0
 
         $.each(headquarter.material, function(i, material) {
-          var worth = rHelper.methods.CALC_headquarterRemainingCost(i, material, userHqLevel);
-          totalCost += worth;
-          var transportation = Math.round(worth * (rHelper.data.buildings[9].transportCost - 1));
-          totalTransportation += transportation;
-          $('#hq-content-cost-' + i).text(worth.toLocaleString('en-US'));
-          $('#hq-content-transportation-' + i).text(transportation.toLocaleString('en-US'));
-        });
+          var worth = rHelper.methods.CALC_headquarterRemainingCost(i, material, userHqLevel)
+          totalCost += worth
+          var transportation = Math.round(worth * (rHelper.data.buildings[9].transportCost - 1))
+          totalTransportation += transportation
+          $('#hq-content-cost-' + i).text(worth.toLocaleString('en-US'))
+          $('#hq-content-transportation-' + i).text(transportation.toLocaleString('en-US'))
+        })
 
-        rHelper.methods.INSRT_headquarterTotalCost(totalCost);
-        rHelper.methods.INSRT_headquarterTotalTransportation(totalTransportation);
+        rHelper.methods.INSRT_headquarterTotalCost(totalCost)
+        rHelper.methods.INSRT_headquarterTotalTransportation(totalTransportation)
       }
     },
     INSRT_headquarterTotalCost: function INSRT_headquarterTotalCost(sum) {
-      'use strict';
+      'use strict'
 
-      $('#hq-content-cost-sum').text(sum.toLocaleString('en-US'));
+      $('#hq-content-cost-sum').text(sum.toLocaleString('en-US'))
     },
     INSRT_headquarterTotalTransportation: function INSRT_headquarterTotalTransportation(sum) {
-      'use strict';
+      'use strict'
 
-      $('#hq-content-transportation-sum').text(sum.toLocaleString('en-US'));
+      $('#hq-content-transportation-sum').text(sum.toLocaleString('en-US'))
     },
     INSRT_priceHistoryName: function INSRT_priceHistoryName(type, id) {
-      'use strict';
+      'use strict'
 
-      $('#pricehistory-' + type + '-' + id).text(rHelper.data[type][id].name);
+      $('#pricehistory-' + type + '-' + id).text(rHelper.data[type][id].name)
     },
     INSRT_qualityComparator: function INSRT_qualityComparator(type, quality) {
-      'use strict';
+      'use strict'
 
       if (!type || type === null) {
-        type = 0;
+        type = 0
       }
       if (!quality) {
-        quality = 1;
+        quality = 1
       } else {
-        quality /= 100;
+        quality /= 100
       }
 
-      var price = rHelper.methods.CALC_returnPriceViaId(type);
-      var worth = price * rHelper.data.material[type].maxRate * quality;
-      $('#qualitycomparator-income').text(worth.toLocaleString('en-US'));
+      var price = rHelper.methods.CALC_returnPriceViaId(type)
+      var worth = price * rHelper.data.material[type].maxRate * quality
+      $('#qualitycomparator-income').text(worth.toLocaleString('en-US'))
 
       $.each(rHelper.data.material, function(i, material) {
-        var qualityTarget = $('#qualitycomparator-' + i);
-        var parentElement = $(qualityTarget[0].parentNode.parentNode);
-        var thisPrice = rHelper.methods.CALC_returnPriceViaId(i);
-        var thisMaxRate = material.maxRate;
-        var thisResourcesRequiredAmount = worth / thisPrice;
+        var qualityTarget = $('#qualitycomparator-' + i)
+        var parentElement = $(qualityTarget[0].parentNode.parentNode)
+        var thisPrice = rHelper.methods.CALC_returnPriceViaId(i)
+        var thisMaxRate = material.maxRate
+        var thisResourcesRequiredAmount = worth / thisPrice
 
         // hide row if identical to current scan or more required than possible
         if (i === type || thisResourcesRequiredAmount > thisMaxRate) {
-          parentElement.css('opacity', 0.1);
+          parentElement.css('opacity', 0.1)
         } else {
-          parentElement.css('opacity', 1);
-          var percent = (thisResourcesRequiredAmount / thisMaxRate * 100).toFixed(2);
-          qualityTarget.text(percent + ' %');
+          parentElement.css('opacity', 1)
+          var percent = (thisResourcesRequiredAmount / thisMaxRate * 100).toFixed(2)
+          qualityTarget.text(percent + ' %')
         }
-      });
+      })
     },
     INSRT_missions: function INSRT_missions() {
-      'use strict';
+      'use strict'
 
-      var missionContainer = rHelper.data.missions;
+      var missionContainer = rHelper.data.missions
       if (missionContainer.length != 0) {
-        var now = Math.round(Date.now() / 1000);
+        var now = Math.round(Date.now() / 1000)
 
         var calculateMissionCost = function calculateMissionCost(i, mission) {
           var uncalculatableMissions = [9, 12, 17, 21, 22, 25, 30, 31, 32, 35, 37, 38, 41, 42, 43, 44, 50, 55],
             requirementId = 0,
             materialCost = 0,
-            missionCost = 0;
+            missionCost = 0
 
           if (uncalculatableMissions.indexOf(i) === -1) {
             switch (i) {
               case 10:
-                missionCost += rHelper.data.units[5].profit.craftingPrice * mission.goal;
-                break;
+                missionCost += rHelper.data.units[5].profit.craftingPrice * mission.goal
+                break
               case 11:
               case 26:
               case 28:
               case 31:
               case 39:
                 if (i === 26) {
-                  requirementId = 29;
+                  requirementId = 29
                 } else if (i === 28) {
-                  requirementId = 21;
+                  requirementId = 21
                 } else if (i === 31) {
-                  requirementId = 20;
+                  requirementId = 20
                 } else if (i === 39) {
-                  requirementId = 25;
+                  requirementId = 25
                 }
 
-                materialCost = rHelper.methods.CALC_returnPriceViaId(requirementId) * mission.goal;
-                missionCost += materialCost * rHelper.data.buildings[9].transportCost - materialCost;
-                break;
+                materialCost = rHelper.methods.CALC_returnPriceViaId(requirementId) * mission.goal
+                missionCost += materialCost * rHelper.data.buildings[9].transportCost - materialCost
+                break
               case 14:
-                missionCost += rHelper.methods.CALC_currentScanCost() * mission.goal;
-                break;
+                missionCost += rHelper.methods.CALC_currentScanCost() * mission.goal
+                break
               case 33:
                 var calcSmallestUnitPrice = function calcSmallestUnitPrice() {
-                  var min = Infinity;
+                  var min = Infinity
 
                   $.each(rHelper.data.units, function(i, unit) {
                     if (i === 1 || i === 4 || i === 5) {
                       var _ref48 = [unit.profit.craftingPrice, unit.profit.marketPrice * rHelper.data.buildings[9].transportCost, 0],
                         craftingPrice = _ref48[0],
                         marketPrice = _ref48[1],
-                        result = _ref48[2];
+                        result = _ref48[2]
 
                       if (marketPrice > craftingPrice) {
-                        result = craftingPrice;
+                        result = craftingPrice
                       } else {
-                        result = marketPrice;
+                        result = marketPrice
                       }
 
                       if (result < min) {
-                        min = result;
+                        min = result
                       }
                     }
-                  });
+                  })
 
-                  return min;
-                };
+                  return min
+                }
 
-                missionCost += calcSmallestUnitPrice() * mission.goal;
+                missionCost += calcSmallestUnitPrice() * mission.goal
 
-                break;
+                break
               case 45:
-                missionCost += mission.goal / 5 * 100;
-                break;
+                missionCost += mission.goal / 5 * 100
+                break
             }
           }
 
-          return missionCost;
-        };
+          return missionCost
+        }
 
         var calculateMissionReward = function calculateMissionReward(i, mission) {
           var _ref49 = [mission.rewardId, 0],
             rewardId = _ref49[0],
-            rewardWorth = _ref49[1];
+            rewardWorth = _ref49[1]
 
           if (rewardId != -1) {
-            $('#mission-reward-' + i).addClass(rHelper.methods.CALC_convertId(rewardId).icon);
-            var price = rHelper.methods.CALC_returnPriceViaId(rewardId);
-            rewardWorth += mission.rewardAmount * price;
+            $('#mission-reward-' + i).addClass(rHelper.methods.CALC_convertId(rewardId).icon)
+            var price = rHelper.methods.CALC_returnPriceViaId(rewardId)
+            rewardWorth += mission.rewardAmount * price
           } else {
-            $('#mission-reward-' + i).html('<img src="assets/img/cash.png" alt="Cash" />');
-            rewardWorth += mission.rewardAmount;
+            $('#mission-reward-' + i).html('<img src="assets/img/cash.png" alt="Cash" />')
+            rewardWorth += mission.rewardAmount
           }
 
-          return rewardWorth;
-        };
+          return rewardWorth
+        }
 
         var returnWorthColor = function returnWorthColor(missionWorth) {
-          var color = 'coral';
+          var color = 'coral'
 
           if (missionWorth > 0) {
-            color = 'yellowgreen';
+            color = 'yellowgreen'
           }
 
-          return color;
-        };
+          return color
+        }
 
         var insertMissionReward = function insertMissionReward(i, mission) {
-          var parsedI = parseInt(i);
+          var parsedI = parseInt(i)
 
-          var rewardWorth = calculateMissionReward(i, mission);
-          var missionCost = calculateMissionCost(parsedI, mission);
+          var rewardWorth = calculateMissionReward(i, mission)
+          var missionCost = calculateMissionCost(parsedI, mission)
 
-          var missionWorth = rewardWorth - missionCost;
-          var color = returnWorthColor(missionWorth);
+          var missionWorth = rewardWorth - missionCost
+          var color = returnWorthColor(missionWorth)
 
           if (isNaN(missionWorth)) {
-            missionWorth = 0;
+            missionWorth = 0
           }
 
           if (parsedI != 50 && parsedI != 55 && parsedI != 31) {
             $('#mission-profit-' + i)
               .text(missionWorth.toLocaleString('en-US'))
-              .css('color', color);
+              .css('color', color)
           }
-        };
+        }
 
         var colorProgress = function colorProgress(progressPercent) {
-          var color = 'coral';
+          var color = 'coral'
 
           if (progressPercent > 33 && progressPercent < 66) {
-            color = 'orange';
+            color = 'orange'
           } else if (progressPercent >= 66) {
-            color = 'yellowgreen';
+            color = 'yellowgreen'
           }
-          return color;
-        };
+          return color
+        }
 
         var returnMissionProgress = function returnMissionProgress(progress, goal) {
-          return progress / goal * 100;
-        };
+          return progress / goal * 100
+        }
 
         var calculateRemainingDuration = function calculateRemainingDuration(now, finish) {
-          var remainingDuration = finish - now;
+          var remainingDuration = finish - now
 
           if (remainingDuration < 60) {
-            return remainingDuration + 's';
+            return remainingDuration + 's'
           } else if (remainingDuration >= 60 && remainingDuration < 3600) {
-            return (remainingDuration / 60).toFixed(2) + 'm';
+            return (remainingDuration / 60).toFixed(2) + 'm'
           } else if (remainingDuration >= 3600 && remainingDuration < 86400) {
-            return (remainingDuration / 3600).toFixed(2) + 'h';
+            return (remainingDuration / 3600).toFixed(2) + 'h'
           } else {
-            return (remainingDuration / 86400).toFixed(2) + 'd';
+            return (remainingDuration / 86400).toFixed(2) + 'd'
           }
-        };
+        }
 
         var fadeOutMission = function fadeOutMission(i, mission) {
-          var cooldown = calculateRemainingDuration(now, mission.cooldown);
+          var cooldown = calculateRemainingDuration(now, mission.cooldown)
 
           $('#mission-progress-' + i)
             .attr('colspan', 3)
             .html('Mission on cooldown for <span style="color: orange;">' + cooldown + '</span>')
-            .css('text-align', 'center');
-          $('#mission-start-' + i).remove();
-          $('#mission-end-' + i).remove();
-          $('#mission-' + i).addClass('faded-mission');
-        };
+            .css('text-align', 'center')
+          $('#mission-start-' + i).remove()
+          $('#mission-end-' + i).remove()
+          $('#mission-' + i).addClass('faded-mission')
+        }
 
         var highlightAvailableMission = function highlightAvailableMission(i) {
-          $('#mission-' + i).addClass('yellowgreen-10');
-        };
+          $('#mission-' + i).addClass('yellowgreen-10')
+        }
 
         var insertMissionConstants = function insertMissionConstants(i, mission) {
-          $('#mission-duration-' + i).text(mission.duration / 24);
-          $('#mission-interval-' + i).text(mission.intervalDays);
+          $('#mission-duration-' + i).text(mission.duration / 24)
+          $('#mission-interval-' + i).text(mission.intervalDays)
 
           if (mission.goal) {
-            $('#mission-goal-' + i).text(mission.goal.toLocaleString('en-US'));
-            $('#mission-penalty-' + i).text(mission.penalty.toLocaleString('en-US'));
-            $('#mission-reward-amount-' + i).text(mission.rewardAmount.toLocaleString('en-US'));
+            $('#mission-goal-' + i).text(mission.goal.toLocaleString('en-US'))
+            $('#mission-penalty-' + i).text(mission.penalty.toLocaleString('en-US'))
+            $('#mission-reward-amount-' + i).text(mission.rewardAmount.toLocaleString('en-US'))
           }
-        };
+        }
 
         var onActiveMission = function onActiveMission(i, mission) {
-          var progressPercent = returnMissionProgress(mission.progress, mission.goal);
+          var progressPercent = returnMissionProgress(mission.progress, mission.goal)
           $('#mission-progress-bar-' + i).css({
             width: progressPercent + '%',
             'background-color': colorProgress(progressPercent)
-          });
+          })
 
-          $('#mission-start-' + i).text(rHelper.methods.CALC_convertDateToIso(rHelper.methods.CALC_toMilliseconds(mission.startTimestamp)));
-          $('#mission-end-' + i).text(calculateRemainingDuration(now, mission.endTimestamp));
-        };
+          $('#mission-start-' + i).text(rHelper.methods.CALC_convertDateToIso(rHelper.methods.CALC_toMilliseconds(mission.startTimestamp)))
+          $('#mission-end-' + i).text(calculateRemainingDuration(now, mission.endTimestamp))
+        }
 
         var onPassiveMission = function onPassiveMission(i) {
-          $('#mission-progress-wrap-' + i).css('display', 'none');
-        };
+          $('#mission-progress-wrap-' + i).css('display', 'none')
+        }
 
         var checkForMissionStatus = function checkForMissionStatus(i, mission) {
           if (mission.status === 1) {
-            onActiveMission(i, mission);
+            onActiveMission(i, mission)
           } else {
-            onPassiveMission(i, mission);
+            onPassiveMission(i, mission)
           }
-        };
+        }
 
         $.each(missionContainer, function(i, mission) {
-          insertMissionReward(i, mission);
-          insertMissionConstants(i, mission);
+          insertMissionReward(i, mission)
+          insertMissionConstants(i, mission)
 
           if (mission.cooldown > now) {
-            fadeOutMission(i, mission);
+            fadeOutMission(i, mission)
           } else {
-            highlightAvailableMission(i);
+            highlightAvailableMission(i)
           }
 
-          checkForMissionStatus(i, mission);
-        });
+          checkForMissionStatus(i, mission)
+        })
       }
     },
     CALC_attackLogDetailedUnitStringInsertion: function CALC_attackLogDetailedUnitStringInsertion(type, container) {
       var _ref50 = [''],
         content = _ref50[0],
-        unitArray = _ref50[1];
+        unitArray = _ref50[1]
 
       if (type === 'offense') {
-        unitArray = [0, 2, 3];
+        unitArray = [0, 2, 3]
       } else if (type === 'defense') {
-        unitArray = [5, 4, 1];
+        unitArray = [5, 4, 1]
       }
 
       $.each(container, function(i, unitAmount) {
         if (unitAmount !== 0) {
-          content += ' <span class="resources-unit-' + unitArray[i] + '"></span> ' + unitAmount.toLocaleString('en-US');
+          content += ' <span class="resources-unit-' + unitArray[i] + '"></span> ' + unitAmount.toLocaleString('en-US')
         }
-      });
+      })
 
-      return content;
+      return content
     },
     CALC_attackLogDetailedDatasetIteration: function CALC_attackLogDetailedDatasetIteration(i, dataset, dataTHs) {
       var _ref51 = [$(crEl('tr')).addClass(rHelper.methods.CALC_attackLogSetTRColor(dataset.result)), 'text-md-right text-sm-left', 'bg-success-25'],
         tr = _ref51[0],
         textOrientation = _ref51[1],
-        factorBgColorClass = _ref51[2];
+        factorBgColorClass = _ref51[2]
 
       for (var index = 0; index <= 6; index += 1) {
-        var td = $(crEl('td')).attr('data-th', dataTHs[index]);
+        var td = $(crEl('td')).attr('data-th', dataTHs[index])
 
         switch (index) {
           case 0:
-            td.text(dataset.target + ' (' + dataset.targetLevel + ')');
-            break;
+            td.text(dataset.target + ' (' + dataset.targetLevel + ')')
+            break
           case 1:
-            td.html(rHelper.methods.CALC_attackLogDetailedCoordsTimestampString(dataset));
-            break;
+            td.html(rHelper.methods.CALC_attackLogDetailedCoordsTimestampString(dataset))
+            break
           case 2:
-            td.html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion('offense', dataset.offense.units)).addClass('text-sm-left text-md-center');
-            break;
+            td.html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion('offense', dataset.offense.units)).addClass('text-sm-left text-md-center')
+            break
           case 3:
-            td.html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion('defense', dataset.defense.units)).addClass('text-sm-left text-md-center');
-            break;
+            td.html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion('defense', dataset.defense.units)).addClass('text-sm-left text-md-center')
+            break
           case 4:
             if (dataset.factor < 100) {
-              factorBgColorClass = 'bg-warning-25';
+              factorBgColorClass = 'bg-warning-25'
             }
 
-            td.text(dataset.factor.toLocaleString('en-US') + '%').addClass(textOrientation + ' ' + factorBgColorClass);
-            break;
+            td.text(dataset.factor.toLocaleString('en-US') + '%').addClass(textOrientation + ' ' + factorBgColorClass)
+            break
           case 5:
-            td.html(rHelper.methods.CALC_attackLogDetailedLootString(dataset.loot));
-            break;
+            td.html(rHelper.methods.CALC_attackLogDetailedLootString(dataset.loot))
+            break
           case 6:
             var _ref52 = [dataset.profit, dataset.result, '#dedede'],
               profit = _ref52[0],
               result = _ref52[1],
-              profitColor = _ref52[2];
+              profitColor = _ref52[2]
 
             if ((profit < 0 && result) || !result) {
-              profitColor = 'coral';
+              profitColor = 'coral'
             }
 
             td
               .text(profit.toLocaleString('en-US'))
               .addClass(textOrientation)
-              .css('color', profitColor);
-            break;
+              .css('color', profitColor)
+            break
         }
 
-        tr.append(td);
+        tr.append(td)
       }
 
-      return tr;
+      return tr
     },
     CALC_attackLogSetTRColor: function CALC_attackLogSetTRColor(result) {
-      var colorClass = 'bg-success-25';
+      var colorClass = 'bg-success-25'
 
       if (!result || result < 0) {
-        colorClass = 'bg-warning-25';
+        colorClass = 'bg-warning-25'
       }
 
-      return colorClass;
+      return colorClass
     },
     CALC_attackLogDetailedCoordsTimestampString: function CALC_attackLogDetailedCoordsTimestampString(dataset) {
       var _ref53 = [dataset.coordinates.lat + ', ' + dataset.coordinates.lon, rHelper.methods.CALC_convertDateToIso(dataset.attackedAt)],
         coords = _ref53[0],
-        timestamp = _ref53[1];
+        timestamp = _ref53[1]
 
-      var a = '<a href="https://www.google.com/maps/search/' + coords + '" target="_blank" rel="noopener nofollow noreferrer">' + coords + '</a>';
+      var a = '<a href="https://www.google.com/maps/search/' + coords + '" target="_blank" rel="noopener nofollow noreferrer">' + coords + '</a>'
 
-      return timestamp + ' | ' + a;
+      return timestamp + ' | ' + a
     },
     CALC_attackLogDetailedPageButtonToggler: function CALC_attackLogDetailedPageButtonToggler(type, dataContainer) {
       var _ref54 = [$('#attacklog-detailed-' + type), 'btn-success'],
         button = _ref54[0],
-        success = _ref54[1];
+        success = _ref54[1]
 
       if (type === 'last') {
         if (dataContainer.skipCount === 0) {
-          button.attr('disabled', true).removeClass(success);
+          button.attr('disabled', true).removeClass(success)
         } else {
-          button.attr('disabled', false).addClass(success);
+          button.attr('disabled', false).addClass(success)
         }
       } else if (type === 'next') {
         if (dataContainer.maxLength > dataContainer.skipCount + 100) {
-          button.addClass(success).attr('disabled', false);
+          button.addClass(success).attr('disabled', false)
         } else {
-          button.removeClass(success).attr('disabled', true);
+          button.removeClass(success).attr('disabled', true)
         }
       }
     },
     CALC_attackLogDetailedLootString: function CALC_attackLogDetailedLootString(lootContainer) {
-      var lootString = '';
+      var lootString = ''
 
       $.each(lootContainer, function(index, iteration) {
         var _ref55 = [iteration.type, ''],
           type = _ref55[0],
-          icon = _ref55[1];
+          icon = _ref55[1]
 
         if (type === -1) {
-          icon = '<img src="assets/img/cash.png" alt="Cash" />';
+          icon = '<img src="assets/img/cash.png" alt="Cash" />'
         } else {
-          icon = '<span class="' + rHelper.methods.CALC_convertId(type).icon + '"></span>';
+          icon = '<span class="' + rHelper.methods.CALC_convertId(type).icon + '"></span>'
         }
 
-        lootString += icon + ' ' + iteration.amount.toLocaleString('en-US') + ' ';
-      });
+        lootString += icon + ' ' + iteration.amount.toLocaleString('en-US') + ' '
+      })
 
-      return lootString;
+      return lootString
     },
     CALC_convertDateToIso: function CALC_convertDateToIso(milliseconds) {
       /*
       src https://stackoverflow.com/questions/10830357/javascript-toisostring-ignores-timezone-offset?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
       */
 
-      var tzoffset = new Date(milliseconds).getTimezoneOffset() * 60000;
+      var tzoffset = new Date(milliseconds).getTimezoneOffset() * 60000
       var date = new Date(milliseconds - tzoffset)
         .toISOString()
         .slice(0, -1)
-        .match(/(\d{4}\-\d{2}\-\d{2})T(\d{2}:\d{2}:\d{2})/);
-      return date[1] + ' ' + date[2];
+        .match(/(\d{4}\-\d{2}\-\d{2})T(\d{2}:\d{2}:\d{2})/)
+      return date[1] + ' ' + date[2]
     },
     CALC_currentScanCost: function CALC_currentScanCost() {
       var _ref56 = [rHelper.data.buildings[0].level, rHelper.methods.CALC_totalMineCount()],
         techCenterLevel = _ref56[0],
-        mineCount = _ref56[1];
+        mineCount = _ref56[1]
 
-      return Math.round(10000 * Math.pow(2.4, techCenterLevel) * (1 + mineCount / 1000) / 5000) * 5000;
+      return Math.round(10000 * Math.pow(2.4, techCenterLevel) * (1 + mineCount / 1000) / 5000) * 5000
     },
     CALC_toMilliseconds: function CALC_toMilliseconds(unix) {
-      return unix * 1000;
+      return unix * 1000
     },
     CALC_mineEstRevenue: function CALC_mineEstRevenue(subObj, type, age) {
-      'use strict';
+      'use strict'
 
-      return Math.round(subObj.fullRate * rHelper.methods.CALC_returnPriceViaId(type, 8) * age * 24 * subObj.HQBoost);
+      return Math.round(subObj.fullRate * rHelper.methods.CALC_returnPriceViaId(type, 8) * age * 24 * subObj.HQBoost)
     },
     CALC_theoreticalFactoryLevelCap: function CALC_theoreticalFactoryLevelCap(factoryId, workload) {
-      return Math.floor(rHelper.data.products[factoryId].factoryLevel * workload);
+      return Math.floor(rHelper.data.products[factoryId].factoryLevel * workload)
     },
     CALC_createMapContentString: function CALC_createMapContentString(relObj, buildDate, age, estRevenue, subObj) {
-      'use strict';
+      'use strict'
 
-      var quality = subObj.quality * 100;
+      var quality = subObj.quality * 100
       return (
         '<div>\n        <h1 class="firstHeading">' +
         relObj.name +
@@ -4453,436 +4455,436 @@ var rHelper = {
         '% => ' +
         (quality * subObj.techFactor).toFixed(2) +
         ' %</td>\n        </tr>\n        </tbody>\n        </table>\n        </div>\n        </div>'
-      );
+      )
     },
     CALC_headquarterRemainingCost: function CALC_headquarterRemainingCost(i, material, userHqLevel) {
-      'use strict';
+      'use strict'
 
       var _ref57 = [rHelper.methods.CALC_returnPriceViaId(material), rHelper.data.headquarter[userHqLevel].amount - rHelper.data.headquarter.user.paid[i]],
         price = _ref57[0],
-        missing = _ref57[1];
+        missing = _ref57[1]
 
       if (missing < 0) {
-        missing = 0;
+        missing = 0
       }
 
-      return price * missing;
+      return price * missing
     },
     CALC_headquarterContentIcon: function CALC_headquarterContentIcon(material) {
-      'use strict';
+      'use strict'
 
-      var container = $(crEl('span'));
-      container.addClass(rHelper.methods.CALC_convertId(material).icon);
-      return container[0].outerHTML;
+      var container = $(crEl('span'))
+      container.addClass(rHelper.methods.CALC_convertId(material).icon)
+      return container[0].outerHTML
     },
     CALC_headquarterContentRequiredAmount: function CALC_headquarterContentRequiredAmount(amount) {
-      'use strict';
+      'use strict'
 
-      var span = $(crEl('span')).html(amount.toLocaleString('en-US'));
-      return span[0].outerHTML;
+      var span = $(crEl('span')).html(amount.toLocaleString('en-US'))
+      return span[0].outerHTML
     },
     CALC_convertMeterToYards: function CALC_convertMeterToYards(meter) {
-      'use strict';
+      'use strict'
 
-      return Math.round(meter * 1.09361);
+      return Math.round(meter * 1.09361)
     },
     CALC_headquarterLevelCost: function CALC_headquarterLevelCost(level) {
-      'use strict';
+      'use strict'
 
       var _ref58 = [0, rHelper.data.headquarter[level]],
         cost = _ref58[0],
-        hqLevel = _ref58[1];
+        hqLevel = _ref58[1]
 
       if ($.isArray(hqLevel.material)) {
         $.each(hqLevel.material, function(k, material) {
-          cost += hqLevel.amount * rHelper.methods.CALC_returnPriceViaId(material);
-        });
+          cost += hqLevel.amount * rHelper.methods.CALC_returnPriceViaId(material)
+        })
       }
 
-      return cost;
+      return cost
     },
     CALC_headquarterOvwMaterial: function CALC_headquarterOvwMaterial(level) {
-      'use strict';
+      'use strict'
 
       var _ref59 = [rHelper.data.headquarter[level], ''],
         hqLevel = _ref59[0],
-        string = _ref59[1];
+        string = _ref59[1]
 
       if ($.isArray(hqLevel.material)) {
         $.each(hqLevel.material, function(k, material) {
-          var addClass = void 0;
+          var addClass = void 0
 
           if (material <= 13) {
-            addClass = rHelper.data.material[material].icon;
+            addClass = rHelper.data.material[material].icon
           } else if (material >= 14 && material <= 35) {
-            material -= 14;
-            addClass = rHelper.data.products[material].icon;
+            material -= 14
+            addClass = rHelper.data.products[material].icon
           } else if (material >= 36 && material <= 51) {
-            material -= 36;
-            addClass = rHelper.data.loot[material].icon;
+            material -= 36
+            addClass = rHelper.data.loot[material].icon
           } else {
-            material -= 52;
-            addClass = rHelper.data.units[material].icon;
+            material -= 52
+            addClass = rHelper.data.units[material].icon
           }
 
-          var span = $(crEl('span')).addClass(addClass);
-          string += span[0].outerHTML + ' ';
-        });
+          var span = $(crEl('span')).addClass(addClass)
+          string += span[0].outerHTML + ' '
+        })
       }
 
-      return string;
+      return string
     },
     CALC_totalBuildingErectionSum: function CALC_totalBuildingErectionSum() {
-      'use strict';
+      'use strict'
 
-      var total = 0;
+      var total = 0
       $.each(rHelper.data.buildings, function(i, building) {
         var _loop2 = function _loop2(level) {
           $.each(building.material, function(k, material) {
-            var materialAmount = 'materialAmount' + k;
+            var materialAmount = 'materialAmount' + k
 
             if (material != -1) {
-              total += rHelper.methods.CALC_returnPriceViaId(material) * building[materialAmount][level];
+              total += rHelper.methods.CALC_returnPriceViaId(material) * building[materialAmount][level]
             } else {
-              total += building[materialAmount][level];
+              total += building[materialAmount][level]
             }
-          });
-        };
+          })
+        }
 
         for (var level = 0; level < building.level; level += 1) {
-          _loop2(level);
+          _loop2(level)
         }
-      });
+      })
 
-      return total;
+      return total
     },
     CALC_perfectWorth: function CALC_perfectWorth(type) {
-      'use strict';
+      'use strict'
 
-      var total = 0;
+      var total = 0
 
       if (type === 'headquarter') {
         $.each(rHelper.data.headquarter, function(i, hqLevel) {
           $.each(hqLevel.material, function(k, material) {
-            total += hqLevel.amount * rHelper.methods.CALC_returnPriceViaId(material);
-          });
-        });
+            total += hqLevel.amount * rHelper.methods.CALC_returnPriceViaId(material)
+          })
+        })
       } else if (type === 'buildings') {
         $.each(rHelper.data.buildings, function(i, building) {
           var _loop3 = function _loop3(level) {
             $.each(building.material, function(k, material) {
-              var materialAmount = 'materialAmount' + k;
+              var materialAmount = 'materialAmount' + k
 
               if (material != -1) {
-                total += rHelper.methods.CALC_returnPriceViaId(material) * building[materialAmount][level];
+                total += rHelper.methods.CALC_returnPriceViaId(material) * building[materialAmount][level]
               } else {
-                total += building[materialAmount][level];
+                total += building[materialAmount][level]
               }
-            });
-          };
+            })
+          }
 
           for (var level = 0; level < 10; level += 1) {
-            _loop3(level);
+            _loop3(level)
           }
-        });
+        })
       }
 
-      return total;
+      return total
     },
     CALC_companyWorth: function CALC_companyWorth() {
-      'use strict';
+      'use strict'
 
-      var companyWorth = 0;
+      var companyWorth = 0
 
-      var fns = ['CALC_totalHeadquarterErectionSum', 'CALC_totalBuildingErectionSum', 'CALC_totalFactoryErectionWorth', 'CALC_totalWarehouseErectionWorth', 'CALC_totalMineErectionSum'];
+      var fns = ['CALC_totalHeadquarterErectionSum', 'CALC_totalBuildingErectionSum', 'CALC_totalFactoryErectionWorth', 'CALC_totalWarehouseErectionWorth', 'CALC_totalMineErectionSum']
 
       $.each(fns, function(i, fn) {
-        companyWorth += rHelper.methods[fn]();
-      });
+        companyWorth += rHelper.methods[fn]()
+      })
 
-      return companyWorth;
+      return companyWorth
     },
     CALC_totalHeadquarterErectionSum: function CALC_totalHeadquarterErectionSum() {
-      'use strict';
+      'use strict'
 
-      var total = 0;
-      var headquarter = rHelper.data.headquarter;
+      var total = 0
+      var headquarter = rHelper.data.headquarter
 
       if (headquarter.user) {
-        var userHq = headquarter.user;
-        var userHqLevel = userHq.level;
+        var userHq = headquarter.user
+        var userHqLevel = userHq.level
 
         var _loop4 = function _loop4(i) {
-          var hqLevel = rHelper.data.headquarter[i];
+          var hqLevel = rHelper.data.headquarter[i]
           $.each(hqLevel.material, function(k, material) {
-            total += hqLevel.amount * rHelper.methods.CALC_returnPriceViaId(material);
-          });
-        };
+            total += hqLevel.amount * rHelper.methods.CALC_returnPriceViaId(material)
+          })
+        }
 
         for (var i = userHqLevel - 1; i >= 1; i -= 1) {
-          _loop4(i);
+          _loop4(i)
         }
         if (userHqLevel != 10) {
           $.each(userHq.paid, function(i, paid) {
             if (paid != 0) {
-              var material = rHelper.data.headquarter[userHqLevel].material[i];
-              total += paid * rHelper.methods.CALC_returnPriceViaId(material);
+              var material = rHelper.data.headquarter[userHqLevel].material[i]
+              total += paid * rHelper.methods.CALC_returnPriceViaId(material)
             }
-          });
+          })
         }
       }
 
-      return total;
+      return total
     },
     CALC_totalMineErectionSum: function CALC_totalMineErectionSum() {
-      'use strict';
+      'use strict'
 
       var _ref60 = [0, rHelper.methods.CALC_totalMineCount()],
         total = _ref60[0],
-        totalMines = _ref60[1];
+        totalMines = _ref60[1]
 
       $.each(rHelper.data.material, function(i, material) {
-        total += material.basePrice * (1 + 0.01 * totalMines) * material.amountOfMines;
-      });
+        total += material.basePrice * (1 + 0.01 * totalMines) * material.amountOfMines
+      })
 
-      return Math.round(total);
+      return Math.round(total)
     },
     CALC_totalWarehouseErectionWorth: function CALC_totalWarehouseErectionWorth() {
-      'use strict';
+      'use strict'
 
-      var total = 0;
-      var subArrays = ['material', 'products', 'loot', 'units'];
+      var total = 0
+      var subArrays = ['material', 'products', 'loot', 'units']
 
       $.each(subArrays, function(i, index) {
         $.each(rHelper.data[index], function(k, obj) {
           for (var _k = 1; _k <= obj.warehouse.level; _k += 1) {
-            total += Math.pow(_k - 1, 2) * 1250000;
+            total += Math.pow(_k - 1, 2) * 1250000
           }
-        });
-      });
+        })
+      })
 
-      return total;
+      return total
     },
     CALC_totalFactoryErectionWorth: function CALC_totalFactoryErectionWorth() {
-      'use strict';
+      'use strict'
 
-      var total = 0;
+      var total = 0
 
       $.each(rHelper.data.products, function(i, factory) {
         var _loop5 = function _loop5(level) {
           $.each(factory.upgradeMaterial, function(k, material) {
-            var value = Math.pow(level, 2) * factory.upgradeMaterialAmount[k];
+            var value = Math.pow(level, 2) * factory.upgradeMaterialAmount[k]
             if (material != -1) {
-              total += value * rHelper.methods.CALC_returnPriceViaId(material);
+              total += value * rHelper.methods.CALC_returnPriceViaId(material)
             } else {
-              total += value;
+              total += value
             }
-          });
-        };
+          })
+        }
 
         for (var level = 0; level <= factory.factoryLevel; level += 1) {
-          _loop5(level);
+          _loop5(level)
         }
-      });
+      })
 
-      return total;
+      return total
     },
     CALC_unitsCraftingPrice: function CALC_unitsCraftingPrice(unitId) {
-      'use strict';
+      'use strict'
 
-      var unit = rHelper.data.units[unitId];
-      var worth = unit.prices.current.ai;
-      var requiredAmount = unit.requiredAmount;
-      var requirements = unit.requirements;
+      var unit = rHelper.data.units[unitId]
+      var worth = unit.prices.current.ai
+      var requiredAmount = unit.requiredAmount
+      var requirements = unit.requirements
 
       $.each(requirements, function(index, requirement) {
-        var price = rHelper.methods.CALC_returnPriceViaId(requirement);
-        worth += price * requiredAmount[index];
-      });
+        var price = rHelper.methods.CALC_returnPriceViaId(requirement)
+        worth += price * requiredAmount[index]
+      })
 
-      var settings = rHelper.data.settings[3];
-      var transportCostInclusion = 1;
+      var settings = rHelper.data.settings[3]
+      var transportCostInclusion = 1
 
       if ((typeof settings === 'undefined' ? 'undefined' : _typeof(settings)) !== undefined) {
-        transportCostInclusion = rHelper.data.settings[3].value;
+        transportCostInclusion = rHelper.data.settings[3].value
       }
 
       if (transportCostInclusion === 1) {
-        worth *= rHelper.data.buildings[9].transportCost;
+        worth *= rHelper.data.buildings[9].transportCost
       }
 
-      worth = Math.round(worth);
-      unit.profit.craftingPrice = worth;
-      return worth;
+      worth = Math.round(worth)
+      unit.profit.craftingPrice = worth
+      return worth
     },
     CALC_unitsPricePerStrength: function CALC_unitsPricePerStrength(unitId) {
-      'use strict';
+      'use strict'
 
-      var buildingLevel = 0;
-      var strength = 0;
-      var pricePerStrength = 0;
-      var referencePrice = 0;
-      var profitObj = rHelper.data.units[unitId].profit;
+      var buildingLevel = 0
+      var strength = 0
+      var pricePerStrength = 0
+      var referencePrice = 0
+      var profitObj = rHelper.data.units[unitId].profit
 
       switch (unitId) {
         case 0:
         case 2:
         case 3:
-          buildingLevel = rHelper.data.buildings[3].level;
-          break;
+          buildingLevel = rHelper.data.buildings[3].level
+          break
         case 1:
         case 4:
         case 5:
-          buildingLevel = rHelper.data.buildings[4].level;
-          break;
+          buildingLevel = rHelper.data.buildings[4].level
+          break
       }
 
-      strength = rHelper.data.units[unitId].baseStrength * buildingLevel;
-      var marketPriceIncludingTransportation = profitObj.marketPrice * rHelper.data.buildings[9].transportCost;
+      strength = rHelper.data.units[unitId].baseStrength * buildingLevel
+      var marketPriceIncludingTransportation = profitObj.marketPrice * rHelper.data.buildings[9].transportCost
 
       if (marketPriceIncludingTransportation >= profitObj.craftingPrice) {
-        referencePrice = profitObj.craftingPrice;
+        referencePrice = profitObj.craftingPrice
       } else {
-        referencePrice = marketPriceIncludingTransportation;
+        referencePrice = marketPriceIncludingTransportation
       }
 
-      pricePerStrength = Math.round(referencePrice / strength);
-      return pricePerStrength;
+      pricePerStrength = Math.round(referencePrice / strength)
+      return pricePerStrength
     },
     CALC_unitsProfit: function CALC_unitsProfit(unitId) {
-      'use strict';
+      'use strict'
 
-      var profitObj = rHelper.data.units[unitId].profit;
-      var profit = (1 - profitObj.marketPrice / profitObj.craftingPrice) * 100;
-      profit *= -1;
-      profitObj.profit = profit;
+      var profitObj = rHelper.data.units[unitId].profit
+      var profit = (1 - profitObj.marketPrice / profitObj.craftingPrice) * 100
+      profit *= -1
+      profitObj.profit = profit
 
-      return profit;
+      return profit
     },
     CALC_recyclingProfit: function CALC_recyclingProfit(lootId) {
-      'use strict';
+      'use strict'
 
-      var profitObj = rHelper.data.loot[lootId].profit;
-      var profit = (1 - profitObj.outputWorth / profitObj.inputWorth) * 100;
-      profit *= -1;
+      var profitObj = rHelper.data.loot[lootId].profit
+      var profit = (1 - profitObj.outputWorth / profitObj.inputWorth) * 100
+      profit *= -1
 
-      return profit;
+      return profit
     },
     CALC_recyclingInputWorth: function CALC_recyclingInputWorth(lootId) {
-      'use strict';
+      'use strict'
 
-      var loot = rHelper.data.loot[lootId];
-      var amount = loot.recyclingDivisor;
-      var convertedId = lootId + 36;
-      var price = rHelper.methods.CALC_returnPriceViaId(convertedId, 0);
-      var worth = price * amount;
+      var loot = rHelper.data.loot[lootId]
+      var amount = loot.recyclingDivisor
+      var convertedId = lootId + 36
+      var price = rHelper.methods.CALC_returnPriceViaId(convertedId, 0)
+      var worth = price * amount
 
-      var settings = rHelper.data.settings[3];
-      var transportCostInclusion = 1;
+      var settings = rHelper.data.settings[3]
+      var transportCostInclusion = 1
 
       if ((typeof settings === 'undefined' ? 'undefined' : _typeof(settings)) !== undefined) {
-        transportCostInclusion = rHelper.data.settings[3].value;
+        transportCostInclusion = rHelper.data.settings[3].value
       }
 
       if (transportCostInclusion === 1) {
-        worth *= rHelper.data.buildings[9].transportCost;
+        worth *= rHelper.data.buildings[9].transportCost
       }
 
-      worth = Math.round(worth);
-      loot.profit.inputWorth = worth;
-      return worth;
+      worth = Math.round(worth)
+      loot.profit.inputWorth = worth
+      return worth
     },
     CALC_recyclingOutputWorth: function CALC_recyclingOutputWorth(lootId, recyclingPlantLevel) {
-      'use strict';
+      'use strict'
 
-      var resultingAmount = rHelper.data.loot[lootId].recyclingAmount;
-      var resultingProducts = rHelper.data.loot[lootId].recyclingProduct;
-      var worth = 0;
+      var resultingAmount = rHelper.data.loot[lootId].recyclingAmount
+      var resultingProducts = rHelper.data.loot[lootId].recyclingProduct
+      var worth = 0
 
       if ($.isArray(resultingProducts)) {
         $.each(resultingProducts, function(index, resultingProduct) {
-          worth += rHelper.methods.CALC_recyclingOutputWorthHelper(recyclingPlantLevel, resultingProduct, resultingAmount, index);
-        });
+          worth += rHelper.methods.CALC_recyclingOutputWorthHelper(recyclingPlantLevel, resultingProduct, resultingAmount, index)
+        })
       } else {
-        worth += rHelper.methods.CALC_recyclingOutputWorthHelper(recyclingPlantLevel, resultingProducts, resultingAmount);
+        worth += rHelper.methods.CALC_recyclingOutputWorthHelper(recyclingPlantLevel, resultingProducts, resultingAmount)
       }
 
-      worth = Math.round(worth);
-      rHelper.data.loot[lootId].profit.outputWorth = worth;
-      return worth;
+      worth = Math.round(worth)
+      rHelper.data.loot[lootId].profit.outputWorth = worth
+      return worth
     },
     CALC_recyclingOutputWorthHelper: function CALC_recyclingOutputWorthHelper(recyclingPlantLevel, resultingProduct, resultingAmount, index) {
-      'use strict';
+      'use strict'
 
-      var price = rHelper.methods.CALC_returnPriceViaId(resultingProduct, 0);
-      var amount = resultingAmount * recyclingPlantLevel;
+      var price = rHelper.methods.CALC_returnPriceViaId(resultingProduct, 0)
+      var amount = resultingAmount * recyclingPlantLevel
 
       if ($.isArray(resultingAmount)) {
-        amount = resultingAmount[index] * recyclingPlantLevel;
+        amount = resultingAmount[index] * recyclingPlantLevel
       }
 
-      var worth = amount * price;
-      return worth;
+      var worth = amount * price
+      return worth
     },
     CALC_recyclingRequirement: function CALC_recyclingRequirement(lootId) {
-      'use strict';
+      'use strict'
 
-      return rHelper.data.loot[lootId].recyclingDivisor;
+      return rHelper.data.loot[lootId].recyclingDivisor
     },
     CALC_recyclingProducts: function CALC_recyclingProducts(lootId, recyclingPlantLevel) {
-      'use strict';
+      'use strict'
 
-      var resultingAmount = rHelper.data.loot[lootId].recyclingAmount;
-      var resultingProducts = rHelper.data.loot[lootId].recyclingProduct;
-      var string = '';
+      var resultingAmount = rHelper.data.loot[lootId].recyclingAmount
+      var resultingProducts = rHelper.data.loot[lootId].recyclingProduct
+      var string = ''
 
       if ($.isArray(resultingProducts)) {
         $.each(resultingProducts, function(index, resultingProduct) {
-          string += rHelper.methods.CALC_recyclingProductsHelper(recyclingPlantLevel, resultingProduct, resultingAmount, index);
-        });
+          string += rHelper.methods.CALC_recyclingProductsHelper(recyclingPlantLevel, resultingProduct, resultingAmount, index)
+        })
       } else {
-        string += rHelper.methods.CALC_recyclingProductsHelper(recyclingPlantLevel, resultingProducts, resultingAmount);
+        string += rHelper.methods.CALC_recyclingProductsHelper(recyclingPlantLevel, resultingProducts, resultingAmount)
       }
 
-      return string;
+      return string
     },
     CALC_recyclingProductsHelper: function CALC_recyclingProductsHelper(recyclingPlantLevel, resultingProduct, resultingAmount, index) {
-      'use strict';
+      'use strict'
 
-      var product = rHelper.methods.CALC_convertId(resultingProduct);
-      var icon = $(crEl('span')).addClass(product.icon);
-      var amount = resultingAmount * recyclingPlantLevel;
+      var product = rHelper.methods.CALC_convertId(resultingProduct)
+      var icon = $(crEl('span')).addClass(product.icon)
+      var amount = resultingAmount * recyclingPlantLevel
 
       if ($.isArray(resultingAmount)) {
-        amount = resultingAmount[index] * recyclingPlantLevel;
+        amount = resultingAmount[index] * recyclingPlantLevel
       }
 
-      var string = icon[0].outerHTML + ' ' + amount.toLocaleString('en-US') + ' ';
-      return string;
+      var string = icon[0].outerHTML + ' ' + amount.toLocaleString('en-US') + ' '
+      return string
     },
     CALC_buildingToLevel10: function CALC_buildingToLevel10(buildingId) {
-      'use strict';
+      'use strict'
 
-      var building = rHelper.data.buildings[buildingId];
-      var buildingLevel = building.level;
-      var level10Cost = 0;
-      var level10Transportation = 0;
+      var building = rHelper.data.buildings[buildingId]
+      var buildingLevel = building.level
+      var level10Cost = 0
+      var level10Transportation = 0
 
       for (var level = buildingLevel; level < 10; level += 1) {
         for (var i = 0; i <= 3; i += 1) {
           if (i === 0) {
-            var cash = building.materialAmount0[level];
-            level10Cost += cash;
+            var cash = building.materialAmount0[level]
+            level10Cost += cash
           } else {
-            var selector = 'materialAmount' + i;
-            var materialAmount = building[selector][level];
+            var selector = 'materialAmount' + i
+            var materialAmount = building[selector][level]
 
             if (typeof materialAmount === 'number') {
-              var materialPrice = rHelper.methods.CALC_returnPriceViaId(building.material[i]);
-              var materialWorth = materialPrice * materialAmount;
-              var transportation = (rHelper.data.buildings[9].transportCost - 1) * materialWorth;
-              level10Cost += materialWorth;
-              level10Transportation += transportation;
+              var materialPrice = rHelper.methods.CALC_returnPriceViaId(building.material[i])
+              var materialWorth = materialPrice * materialAmount
+              var transportation = (rHelper.data.buildings[9].transportCost - 1) * materialWorth
+              level10Cost += materialWorth
+              level10Transportation += transportation
             }
           }
         }
@@ -4890,136 +4892,136 @@ var rHelper = {
       return {
         level10Cost: level10Cost,
         level10Transportation: Math.round(level10Transportation)
-      };
+      }
     },
     CALC_warehouseUpgradeCost: function CALC_warehouseUpgradeCost(targetLevel) {
-      'use strict';
+      'use strict'
 
-      return Math.pow(targetLevel - 1, 2) * 1250000;
+      return Math.pow(targetLevel - 1, 2) * 1250000
     },
     CALC_warehouseCostFromTo: function CALC_warehouseCostFromTo(start, end) {
-      'use strict';
+      'use strict'
 
-      var warehouseCost = 0;
+      var warehouseCost = 0
       for (var i = end; i > start; i -= 1) {
-        warehouseCost += rHelper.methods.CALC_warehouseUpgradeCost(i);
+        warehouseCost += rHelper.methods.CALC_warehouseUpgradeCost(i)
       }
-      return warehouseCost;
+      return warehouseCost
     },
     CALC_warehouseContingent: function CALC_warehouseContingent(level) {
-      'use strict';
+      'use strict'
 
-      return Math.pow(level, 2) * 5000;
+      return Math.pow(level, 2) * 5000
     },
     CALC_warehouseUpgradeCostContigentBased: function CALC_warehouseUpgradeCostContigentBased(startLevel, endContingent) {
-      'use strict';
+      'use strict'
 
-      var warehouseCost = 0;
-      var nextBiggerTargetLevel = Math.ceil(Math.sqrt(endContingent / 5000));
+      var warehouseCost = 0
+      var nextBiggerTargetLevel = Math.ceil(Math.sqrt(endContingent / 5000))
 
-      warehouseCost += rHelper.methods.CALC_warehouseCostFromTo(startLevel, nextBiggerTargetLevel);
-      return warehouseCost;
+      warehouseCost += rHelper.methods.CALC_warehouseCostFromTo(startLevel, nextBiggerTargetLevel)
+      return warehouseCost
     },
     CALC_warehouseUpgradeCostOnInput: function CALC_warehouseUpgradeCostOnInput(id, type, value) {
-      'use strict';
+      'use strict'
 
-      var mode = $('#warehouse-' + type + '-calc-1-' + id).val();
-      var currentWarehouseLevel = rHelper.data[type][id].warehouse.level;
-      var upgradeCost = 0;
+      var mode = $('#warehouse-' + type + '-calc-1-' + id).val()
+      var currentWarehouseLevel = rHelper.data[type][id].warehouse.level
+      var upgradeCost = 0
 
       switch (mode) {
         case 'level':
-          upgradeCost = rHelper.methods.CALC_warehouseCostFromTo(currentWarehouseLevel, value);
-          break;
+          upgradeCost = rHelper.methods.CALC_warehouseCostFromTo(currentWarehouseLevel, value)
+          break
         case 'contingent':
-          upgradeCost = rHelper.methods.CALC_warehouseUpgradeCostContigentBased(currentWarehouseLevel, value);
-          break;
+          upgradeCost = rHelper.methods.CALC_warehouseUpgradeCostContigentBased(currentWarehouseLevel, value)
+          break
       }
 
-      return upgradeCost;
+      return upgradeCost
     },
     CALC_warehouseWorth: function CALC_warehouseWorth(id, type) {
-      'use strict';
+      'use strict'
 
-      var price = 0;
-      var priceId = 0;
+      var price = 0
+      var priceId = 0
 
       switch (type) {
         case 'material':
-          priceId = id;
-          break;
+          priceId = id
+          break
         case 'products':
-          priceId = id + 14;
-          break;
+          priceId = id + 14
+          break
         case 'loot':
-          priceId = id + 36;
-          break;
+          priceId = id + 36
+          break
         case 'units':
-          priceId = id + 51;
-          break;
+          priceId = id + 51
+          break
       }
 
-      price = rHelper.methods.CALC_returnPriceViaId(priceId);
-      return price;
+      price = rHelper.methods.CALC_returnPriceViaId(priceId)
+      return price
     },
     CALC_warehouseRemainingTimeToFull: function CALC_warehouseRemainingTimeToFull(id, type) {
-      'use strict';
+      'use strict'
 
-      var el = rHelper.data[type][id];
-      var remainingCapacity = el.warehouse.contingent - el.warehouse.fillAmount;
+      var el = rHelper.data[type][id]
+      var remainingCapacity = el.warehouse.contingent - el.warehouse.fillAmount
       var remainingTime = 0,
-        divisor = 1;
+        divisor = 1
 
       if (type === 'material') {
-        divisor = el.perHour;
+        divisor = el.perHour
       } else if (type === 'products') {
-        divisor = el.scaling * el.factoryLevel * rHelper.methods.CALC_factoryMinWorkload(id);
+        divisor = el.scaling * el.factoryLevel * rHelper.methods.CALC_factoryMinWorkload(id)
       }
 
-      remainingTime = remainingCapacity / divisor;
+      remainingTime = remainingCapacity / divisor
 
       if (isNaN(remainingTime) || (type === 'products' && el.turnover <= 0) || type === 'loot' || type === 'units' || remainingTime === Infinity) {
-        remainingTime = '∞';
+        remainingTime = '∞'
       } else {
         if (remainingTime > 24) {
-          remainingTime = '> ' + (remainingTime / 24).toFixed(2) + ' days';
+          remainingTime = '> ' + (remainingTime / 24).toFixed(2) + ' days'
         } else {
-          remainingTime = '> ' + remainingTime.toFixed(2) + ' hours';
+          remainingTime = '> ' + remainingTime.toFixed(2) + ' hours'
         }
       }
 
-      return remainingTime;
+      return remainingTime
     },
     CALC_warehouseTotalLevel: function CALC_warehouseTotalLevel() {
-      'use strict';
+      'use strict'
 
       var total = 0,
-        arr = ['material', 'products', 'loot', 'units'];
+        arr = ['material', 'products', 'loot', 'units']
 
       $.each(arr, function(index, pointer) {
         $.each(rHelper.data[pointer], function(index, el) {
-          total += el.warehouse.level;
-        });
-      });
+          total += el.warehouse.level
+        })
+      })
 
-      return total;
+      return total
     },
     CALC_warehouseTotalWorth: function CALC_warehouseTotalWorth() {
-      'use strict';
+      'use strict'
 
       var total = 0,
-        arr = ['material', 'products', 'loot', 'units'];
+        arr = ['material', 'products', 'loot', 'units']
 
       $.each(arr, function(index, pointer) {
         $.each(rHelper.data[pointer], function(index, el) {
-          total += rHelper.methods.CALC_warehouseWorth(index, pointer) * el.warehouse.fillAmount;
-        });
-      });
+          total += rHelper.methods.CALC_warehouseWorth(index, pointer) * el.warehouse.fillAmount
+        })
+      })
 
-      return total;
+      return total
     },
     CALC_flowDistributionHelper: function CALC_flowDistributionHelper(type, dependantFactory, id, i) {
-      'use strict';
+      'use strict'
 
       var originalIndex = 0,
         dependantIconIndex = 0,
@@ -5028,189 +5030,189 @@ var rHelper = {
         requiredAmount = 0,
         string = '',
         arrow =
-          '<svg xmlns="http://www.w3.org/2000/svg" width="15" fill="#fff" viewBox="0 0 31.49 31.49"><path d="M21.205 5.007c-.429-.444-1.143-.444-1.587 0-.429.429-.429 1.143 0 1.571l8.047 8.047H1.111C.492 14.626 0 15.118 0 15.737c0 .619.492 1.127 1.111 1.127h26.554l-8.047 8.032c-.429.444-.429 1.159 0 1.587.444.444 1.159.444 1.587 0l9.952-9.952c.444-.429.444-1.143 0-1.571l-9.952-9.953z"/></svg>';
+          '<svg xmlns="http://www.w3.org/2000/svg" width="15" fill="#fff" viewBox="0 0 31.49 31.49"><path d="M21.205 5.007c-.429-.444-1.143-.444-1.587 0-.429.429-.429 1.143 0 1.571l8.047 8.047H1.111C.492 14.626 0 15.118 0 15.737c0 .619.492 1.127 1.111 1.127h26.554l-8.047 8.032c-.429.444-.429 1.159 0 1.587.444.444 1.159.444 1.587 0l9.952-9.952c.444-.429.444-1.143 0-1.571l-9.952-9.953z"/></svg>'
 
       if (type === 'material') {
-        dependantIconIndex = dependantFactory - 14;
-        dependantObj = rHelper.data.products[dependantIconIndex];
+        dependantIconIndex = dependantFactory - 14
+        dependantObj = rHelper.data.products[dependantIconIndex]
 
         if ($.isArray(dependantObj.dependencies)) {
-          originalIndex = dependantObj.dependencies.indexOf(id);
-          requiredAmountPerLevel = dependantObj.requiredAmount[originalIndex];
+          originalIndex = dependantObj.dependencies.indexOf(id)
+          requiredAmountPerLevel = dependantObj.requiredAmount[originalIndex]
         } else {
-          originalIndex = dependantObj.dependencies;
-          requiredAmountPerLevel = dependantObj.requiredAmount;
+          originalIndex = dependantObj.dependencies
+          requiredAmountPerLevel = dependantObj.requiredAmount
         }
       } else {
-        dependantIconIndex = dependantFactory;
-        dependantObj = rHelper.data.products[dependantFactory];
+        dependantIconIndex = dependantFactory
+        dependantObj = rHelper.data.products[dependantFactory]
 
         if ($.isArray(dependantObj.dependencies)) {
-          originalIndex = dependantObj.dependencies.indexOf(id + 14);
-          requiredAmountPerLevel = dependantObj.requiredAmount[originalIndex];
+          originalIndex = dependantObj.dependencies.indexOf(id + 14)
+          requiredAmountPerLevel = dependantObj.requiredAmount[originalIndex]
         } else {
-          originalIndex = dependantObj.dependencies;
-          requiredAmountPerLevel = dependantObj.requiredAmount;
+          originalIndex = dependantObj.dependencies
+          requiredAmountPerLevel = dependantObj.requiredAmount
         }
       }
 
       if (dependantObj.turnover > 0) {
-        requiredAmount = dependantObj.factoryLevel * requiredAmountPerLevel;
+        requiredAmount = dependantObj.factoryLevel * requiredAmountPerLevel
       }
 
       string +=
-        '<span class="resources-' + type + '-' + id + '"></span> ' + requiredAmount.toLocaleString('en-US') + ' ' + arrow + ' <span class="resources-product-' + dependantIconIndex + '"></span>';
-      var name1 = '';
-      var name2 = dependantObj.name;
+        '<span class="resources-' + type + '-' + id + '"></span> ' + requiredAmount.toLocaleString('en-US') + ' ' + arrow + ' <span class="resources-product-' + dependantIconIndex + '"></span>'
+      var name1 = ''
+      var name2 = dependantObj.name
 
       switch (type) {
         case 'material':
-          name1 = rHelper.data.material[id].name;
-          break;
+          name1 = rHelper.data.material[id].name
+          break
         case 'product':
-          name1 = rHelper.data.products[id].name;
-          break;
+          name1 = rHelper.data.products[id].name
+          break
       }
 
       $('#flow-' + type + '-distribution-' + id + '-' + i)
         .html(string)
-        .attr('data-th', name1 + ' to ' + name2);
-      return requiredAmount;
+        .attr('data-th', name1 + ' to ' + name2)
+      return requiredAmount
     },
     CALC_flowDistribution: function CALC_flowDistribution(id, type) {
-      'use strict';
+      'use strict'
 
-      var perHour = 0;
-      var obj = {};
-      var requiredAmount = 0;
+      var perHour = 0
+      var obj = {}
+      var requiredAmount = 0
 
       switch (type) {
         case 'material':
-          obj = rHelper.data.material[id];
-          perHour = obj.perHour;
-          break;
+          obj = rHelper.data.material[id]
+          perHour = obj.perHour
+          break
         case 'product':
-          obj = rHelper.data.products[id];
-          var factoryLevel = obj.factoryLevel;
-          var scaling = obj.scaling;
-          var workload = rHelper.methods.CALC_factoryMinWorkload(id);
-          perHour = factoryLevel * scaling * workload;
-          break;
+          obj = rHelper.data.products[id]
+          var factoryLevel = obj.factoryLevel
+          var scaling = obj.scaling
+          var workload = rHelper.methods.CALC_factoryMinWorkload(id)
+          perHour = factoryLevel * scaling * workload
+          break
       }
 
-      var dependantFactories = obj.dependantFactories;
+      var dependantFactories = obj.dependantFactories
 
       if ($.isArray(dependantFactories)) {
         $.each(dependantFactories, function(i, dependantFactory) {
-          requiredAmount += rHelper.methods.CALC_flowDistributionHelper(type, dependantFactory, id, i);
-        });
+          requiredAmount += rHelper.methods.CALC_flowDistributionHelper(type, dependantFactory, id, i)
+        })
       } else if (dependantFactories != '') {
-        requiredAmount += rHelper.methods.CALC_flowDistributionHelper(type, dependantFactories, id, 0);
+        requiredAmount += rHelper.methods.CALC_flowDistributionHelper(type, dependantFactories, id, 0)
       }
 
-      return perHour - requiredAmount;
+      return perHour - requiredAmount
     },
     CALC_flowRate: function CALC_flowRate(id, type) {
-      'use strict';
+      'use strict'
 
-      var rate = 0;
+      var rate = 0
       switch (type) {
         case 'material':
-          rate = rHelper.data.material[id].perHour;
-          break;
+          rate = rHelper.data.material[id].perHour
+          break
         case 'product':
-          var factory = rHelper.data.products[id];
-          var workload = rHelper.methods.CALC_factoryMinWorkload(id);
-          rate = factory.factoryLevel * factory.scaling * workload;
-          break;
+          var factory = rHelper.data.products[id]
+          var workload = rHelper.methods.CALC_factoryMinWorkload(id)
+          rate = factory.factoryLevel * factory.scaling * workload
+          break
       }
-      return rate;
+      return rate
     },
     CALC_factoryMinWorkload: function CALC_factoryMinWorkload(factoryId) {
-      'use strict';
+      'use strict'
 
-      var workload = rHelper.data.products[factoryId].dependencyWorkload.min();
+      var workload = rHelper.data.products[factoryId].dependencyWorkload.min()
       if (workload > 1) {
-        workload = 1;
+        workload = 1
       }
 
       // check for ideal conditions
       if (rHelper.data.settings[2].value === 1) {
-        workload = 1;
+        workload = 1
       }
 
-      return workload;
+      return workload
     },
     CALC_diamondTotalProfit: function CALC_diamondTotalProfit() {
-      'use strict';
+      'use strict'
 
-      var val = 0;
+      var val = 0
 
       $.each(rHelper.data.products, function(i, factory) {
-        var diamondProfit = factory.diamond.profit;
+        var diamondProfit = factory.diamond.profit
         if (diamondProfit > 0) {
-          val += diamondProfit;
+          val += diamondProfit
         }
-      });
+      })
 
-      return val;
+      return val
     },
     CALC_diamondTop10Profit: function CALC_diamondTop10Profit() {
-      'use strict';
+      'use strict'
 
-      var arr = [];
+      var arr = []
 
       $.each(rHelper.data.products, function(i, factory) {
-        var diamondProfit = factory.diamond.profit;
+        var diamondProfit = factory.diamond.profit
         if (diamondProfit > 0) {
-          arr.push(diamondProfit);
+          arr.push(diamondProfit)
         }
-      });
+      })
 
-      var sum = 0;
+      var sum = 0
       arr = arr.sort(function(a, b) {
-        return b - a;
-      });
+        return b - a
+      })
       for (var i = 0; i <= 9; i += 1) {
         if (arr[i]) {
-          sum += arr[i];
+          sum += arr[i]
         }
       }
-      return sum;
+      return sum
     },
     CALC_diamondEfficiency: function CALC_diamondEfficiency(factoryId) {
-      'use strict';
+      'use strict'
 
-      var factoryDiamond = rHelper.data.products[factoryId].diamond;
-      var efficiency = factoryDiamond.outputWorth / (factoryDiamond.dependenciesWorth + factoryDiamond.productionCost);
+      var factoryDiamond = rHelper.data.products[factoryId].diamond
+      var efficiency = factoryDiamond.outputWorth / (factoryDiamond.dependenciesWorth + factoryDiamond.productionCost)
       if (isNaN(efficiency)) {
-        efficiency = 0;
+        efficiency = 0
       }
 
-      factoryDiamond.efficiency = efficiency;
-      return efficiency;
+      factoryDiamond.efficiency = efficiency
+      return efficiency
     },
     CALC_diamondProfit: function CALC_diamondProfit(factoryId) {
-      'use strict';
+      'use strict'
 
-      var factoryDiamond = rHelper.data.products[factoryId].diamond;
-      factoryDiamond.profit = factoryDiamond.outputWorth - (factoryDiamond.dependenciesWorth + factoryDiamond.productionCost);
-      return factoryDiamond.profit;
+      var factoryDiamond = rHelper.data.products[factoryId].diamond
+      factoryDiamond.profit = factoryDiamond.outputWorth - (factoryDiamond.dependenciesWorth + factoryDiamond.productionCost)
+      return factoryDiamond.profit
     },
     CALC_nextGreaterWarehouseLevel: function CALC_nextGreaterWarehouseLevel(amount) {
-      'use strict';
+      'use strict'
 
-      return Math.ceil(Math.sqrt(amount / 5000));
+      return Math.ceil(Math.sqrt(amount / 5000))
     },
     CALC_diamondFactoryOutput: function CALC_diamondFactoryOutput(factoryId) {
-      'use strict';
+      'use strict'
 
-      var factory = rHelper.data.products[factoryId];
-      var outputAmount = factory.factoryLevel * factory.scaling * 5 * 24;
-      var productionCost = 5 * 24 * factory.cashPerHour;
+      var factory = rHelper.data.products[factoryId]
+      var outputAmount = factory.factoryLevel * factory.scaling * 5 * 24
+      var productionCost = 5 * 24 * factory.cashPerHour
 
       if (factory.factoryLevel === 0) {
-        productionCost = 0;
+        productionCost = 0
       }
 
       rHelper.data.products[factoryId].diamond = {
@@ -5219,265 +5221,265 @@ var rHelper = {
         productionCost: productionCost,
         efficiency: 0,
         profit: 0
-      };
-      return factory.factoryLevel * factory.scaling * 5 * 24;
+      }
+      return factory.factoryLevel * factory.scaling * 5 * 24
     },
     CALC_dependantFactoriesHelper: function CALC_dependantFactoriesHelper(dependantFactory, type) {
-      'use strict';
+      'use strict'
 
       if (type === 'material') {
-        dependantFactory -= 14;
+        dependantFactory -= 14
       }
 
-      var fns = ['INSRT_factoryDependencies', 'INSRT_factoryWorkload', 'INSRT_factoryTurnover', 'INSRT_factoryTurnoverPerUpgrade', 'INSRT_factoryROI'];
+      var fns = ['INSRT_factoryDependencies', 'INSRT_factoryWorkload', 'INSRT_factoryTurnover', 'INSRT_factoryTurnoverPerUpgrade', 'INSRT_factoryROI']
 
       $.each(fns, function(i, fn) {
-        rHelper.methods[fn](dependantFactory);
-      });
+        rHelper.methods[fn](dependantFactory)
+      })
 
-      rHelper.methods.INSRT_factoryHighlightColumns();
+      rHelper.methods.INSRT_factoryHighlightColumns()
       if (rHelper.data.products[dependantFactory].dependantFactories != '') {
-        rHelper.methods.CALC_dependantFactories(dependantFactory, 'product');
+        rHelper.methods.CALC_dependantFactories(dependantFactory, 'product')
       }
     },
     CALC_dependantFactories: function CALC_dependantFactories(id, type) {
-      'use strict';
+      'use strict'
 
-      var dependantFactories = '';
+      var dependantFactories = ''
       switch (type) {
         case 'material':
-          dependantFactories = rHelper.data.material[id].dependantFactories;
-          break;
+          dependantFactories = rHelper.data.material[id].dependantFactories
+          break
         case 'product':
-          dependantFactories = rHelper.data.products[id].dependantFactories;
-          break;
+          dependantFactories = rHelper.data.products[id].dependantFactories
+          break
       }
 
       if ($.isArray(dependantFactories)) {
         $.each(dependantFactories, function(k, dependantFactory) {
-          rHelper.methods.CALC_dependantFactoriesHelper(dependantFactory, type);
-        });
+          rHelper.methods.CALC_dependantFactoriesHelper(dependantFactory, type)
+        })
       } else if (dependantFactories != '') {
-        rHelper.methods.CALC_dependantFactoriesHelper(dependantFactories, type);
+        rHelper.methods.CALC_dependantFactoriesHelper(dependantFactories, type)
       }
     },
     CALC_factoryTurnoverPerUpgrade: function CALC_factoryTurnoverPerUpgrade(factoryId) {
-      'use strict';
+      'use strict'
 
-      var value = 0;
-      var nextLevelWorkloadArray = [];
-      var dependencies = rHelper.data.products[factoryId].dependencies;
+      var value = 0
+      var nextLevelWorkloadArray = []
+      var dependencies = rHelper.data.products[factoryId].dependencies
 
       if ($.isArray(dependencies)) {
         $.each(dependencies, function(dependencyIndex) {
-          var dependencyWorkload = rHelper.methods.CALC_factoryDepedencyWorkload(factoryId, dependencyIndex, 'nextLevel');
-          nextLevelWorkloadArray.push(dependencyWorkload);
-        });
+          var dependencyWorkload = rHelper.methods.CALC_factoryDepedencyWorkload(factoryId, dependencyIndex, 'nextLevel')
+          nextLevelWorkloadArray.push(dependencyWorkload)
+        })
       } else {
-        var dependencyWorkload = rHelper.methods.CALC_factoryDepedencyWorkload(factoryId, 0, 'nextLevel');
-        nextLevelWorkloadArray.push(dependencyWorkload);
+        var dependencyWorkload = rHelper.methods.CALC_factoryDepedencyWorkload(factoryId, 0, 'nextLevel')
+        nextLevelWorkloadArray.push(dependencyWorkload)
       }
-      var nextLevelWorkload = nextLevelWorkloadArray.min();
+      var nextLevelWorkload = nextLevelWorkloadArray.min()
       if (nextLevelWorkload > 1) {
-        nextLevelWorkload = 1;
+        nextLevelWorkload = 1
       }
-      value = parseInt(rHelper.methods.CALC_factoryTurnover(factoryId, 'nextLevel', nextLevelWorkload) - rHelper.data.products[factoryId].turnover);
+      value = parseInt(rHelper.methods.CALC_factoryTurnover(factoryId, 'nextLevel', nextLevelWorkload) - rHelper.data.products[factoryId].turnover)
       if (value < 10 && value > -10) {
-        value = 0;
+        value = 0
       }
-      return value;
+      return value
     },
     CALC_factoryDependencyExistingAmount: function CALC_factoryDependencyExistingAmount(dependantObj, dependencyIndex) {
-      'use strict';
+      'use strict'
 
       if (dependantObj.perHour) {
-        return dependantObj.perHour;
+        return dependantObj.perHour
       } else {
         //return dependantObj.factoryLevel * dependantObj.scaling * (dependantObj.dependencyWorkload[dependencyIndex] / 100);
-        return dependantObj.factoryLevel * dependantObj.scaling;
+        return dependantObj.factoryLevel * dependantObj.scaling
       }
     },
     CALC_factoryWorkloadMinNonSanitized: function CALC_factoryWorkloadMinNonSanitized(factoryId) {
-      'use strict';
+      'use strict'
 
-      var workload = rHelper.data.products[factoryId].dependencyWorkload.min();
+      var workload = rHelper.data.products[factoryId].dependencyWorkload.min()
 
       // check for ideal conditions
       if (rHelper.data.settings[2].value === 1) {
-        workload = 1;
+        workload = 1
       }
 
-      return workload;
+      return workload
     },
     CALC_factoryCashCostPerHour: function CALC_factoryCashCostPerHour(factoryId, nextLevel) {
-      'use strict';
+      'use strict'
 
-      var factory = rHelper.data.products[factoryId];
-      var factoryLevel = factory.factoryLevel;
+      var factory = rHelper.data.products[factoryId]
+      var factoryLevel = factory.factoryLevel
       if (nextLevel) {
-        factoryLevel += 1;
+        factoryLevel += 1
       }
-      return factory.cashPerHour * factoryLevel;
+      return factory.cashPerHour * factoryLevel
     },
     CALC_factoryTurnover: function CALC_factoryTurnover(factoryId, nextLevel, nextLevelWorkload) {
-      'use strict';
+      'use strict'
 
-      var factory = rHelper.data.products[factoryId];
-      var price = rHelper.methods.CALC_returnPriceViaId(factoryId + 14);
-      var factoryLevel = factory.factoryLevel;
-      var cashCost = rHelper.methods.CALC_factoryCashCostPerHour(factoryId, nextLevel);
-      var workload = rHelper.methods.CALC_factoryMinWorkload(factoryId);
-      var materialWorth = 0;
+      var factory = rHelper.data.products[factoryId]
+      var price = rHelper.methods.CALC_returnPriceViaId(factoryId + 14)
+      var factoryLevel = factory.factoryLevel
+      var cashCost = rHelper.methods.CALC_factoryCashCostPerHour(factoryId, nextLevel)
+      var workload = rHelper.methods.CALC_factoryMinWorkload(factoryId)
+      var materialWorth = 0
 
       if (nextLevel) {
-        factoryLevel += 1;
-        workload = nextLevelWorkload;
+        factoryLevel += 1
+        workload = nextLevelWorkload
       }
-      var outputWorth = factory.scaling * factoryLevel * price;
+      var outputWorth = factory.scaling * factoryLevel * price
 
       // check for ideal conditions
       if (rHelper.data.settings[2].value === 1) {
-        workload = 1;
+        workload = 1
       }
 
       if ($.isArray(factory.dependencies)) {
         $.each(factory.dependencies, function(index) {
-          var dependencyWorth = rHelper.methods.CALC_factoryDependencyWorth(factoryId, index, nextLevel);
-          materialWorth += dependencyWorth;
-        });
+          var dependencyWorth = rHelper.methods.CALC_factoryDependencyWorth(factoryId, index, nextLevel)
+          materialWorth += dependencyWorth
+        })
       } else {
-        var dependencyWorth = rHelper.methods.CALC_factoryDependencyWorth(factoryId, 0, nextLevel);
-        materialWorth += dependencyWorth;
+        var dependencyWorth = rHelper.methods.CALC_factoryDependencyWorth(factoryId, 0, nextLevel)
+        materialWorth += dependencyWorth
       }
 
-      return Math.round((outputWorth - materialWorth - cashCost) * workload);
+      return Math.round((outputWorth - materialWorth - cashCost) * workload)
     },
     CALC_factoryDependencyWorth: function CALC_factoryDependencyWorth(factoryId, dependencyIndex, nextLevel) {
-      'use strict';
+      'use strict'
 
-      var factory = rHelper.data.products[factoryId];
-      var factoryLevel = factory.factoryLevel;
+      var factory = rHelper.data.products[factoryId]
+      var factoryLevel = factory.factoryLevel
 
       var requiredAmount = 0,
-        dependencyPrice = 0;
+        dependencyPrice = 0
 
       if (nextLevel) {
-        factoryLevel += 1;
+        factoryLevel += 1
       }
       if ($.isArray(factory.dependencies)) {
-        requiredAmount = factory.requiredAmount[dependencyIndex];
-        dependencyPrice = rHelper.methods.CALC_returnPriceViaId(factory.dependencies[dependencyIndex]);
+        requiredAmount = factory.requiredAmount[dependencyIndex]
+        dependencyPrice = rHelper.methods.CALC_returnPriceViaId(factory.dependencies[dependencyIndex])
       } else {
-        requiredAmount = factory.requiredAmount;
-        dependencyPrice = rHelper.methods.CALC_returnPriceViaId(factory.dependencies);
+        requiredAmount = factory.requiredAmount
+        dependencyPrice = rHelper.methods.CALC_returnPriceViaId(factory.dependencies)
       }
 
-      return factoryLevel * requiredAmount * dependencyPrice;
+      return factoryLevel * requiredAmount * dependencyPrice
     },
     CALC_factoryDepedencyWorkload: function CALC_factoryDepedencyWorkload(factoryId, dependencyIndex, nextLevel) {
-      'use strict';
+      'use strict'
 
-      var factory = rHelper.data.products[factoryId];
-      var factoryLevel = factory.factoryLevel;
+      var factory = rHelper.data.products[factoryId]
+      var factoryLevel = factory.factoryLevel
 
       var _ref61 = [0, 0, ,],
         workload = _ref61[0],
         existingAmount = _ref61[1],
         thisDependency = _ref61[2],
-        baseAmountRequirement = _ref61[3];
+        baseAmountRequirement = _ref61[3]
 
       if (nextLevel) {
-        factoryLevel += 1;
+        factoryLevel += 1
       }
 
       if ($.isArray(factory.dependencies)) {
-        thisDependency = factory.dependencies[dependencyIndex];
-        baseAmountRequirement = factory.requiredAmount[dependencyIndex];
+        thisDependency = factory.dependencies[dependencyIndex]
+        baseAmountRequirement = factory.requiredAmount[dependencyIndex]
       } else {
-        thisDependency = factory.dependencies;
-        baseAmountRequirement = factory.requiredAmount;
+        thisDependency = factory.dependencies
+        baseAmountRequirement = factory.requiredAmount
       }
 
-      var requiredAmount = baseAmountRequirement * factoryLevel;
+      var requiredAmount = baseAmountRequirement * factoryLevel
 
       if (thisDependency <= 13) {
-        existingAmount = rHelper.data.material[thisDependency].perHour;
+        existingAmount = rHelper.data.material[thisDependency].perHour
       } else {
-        var actualFactory = rHelper.methods.CALC_convertId(thisDependency);
-        var minDependencyWorkload = actualFactory.dependencyWorkload.min();
+        var actualFactory = rHelper.methods.CALC_convertId(thisDependency)
+        var minDependencyWorkload = actualFactory.dependencyWorkload.min()
         if (minDependencyWorkload > 1) {
-          minDependencyWorkload = 1;
+          minDependencyWorkload = 1
         }
-        existingAmount = actualFactory.factoryLevel * actualFactory.scaling * minDependencyWorkload;
+        existingAmount = actualFactory.factoryLevel * actualFactory.scaling * minDependencyWorkload
       }
 
-      workload = existingAmount / requiredAmount;
+      workload = existingAmount / requiredAmount
       if (isNaN(workload) || workload === Infinity) {
-        workload = 0;
+        workload = 0
       }
 
       // check for ideal conditions
       if (rHelper.data.settings[2].value === 1) {
-        workload = 1;
+        workload = 1
       }
 
-      return workload;
+      return workload
     },
     CALC_factoryROI: function CALC_factoryROI(factoryId) {
-      'use strict';
+      'use strict'
 
-      return rHelper.data.products[factoryId].upgradeCost / rHelper.data.products[factoryId].turnoverIncrease / 24;
+      return rHelper.data.products[factoryId].upgradeCost / rHelper.data.products[factoryId].turnoverIncrease / 24
     },
     CALC_factoryComparatorRequiredVsExistingAmount: function CALC_factoryComparatorRequiredVsExistingAmount(requiredAmount, existingAmount) {
-      'use strict';
+      'use strict'
 
-      var addClass = void 0;
+      var addClass = void 0
 
       if (isNaN(existingAmount)) {
-        existingAmount = 0;
+        existingAmount = 0
       }
 
       if (existingAmount < requiredAmount) {
-        addClass = 'class="faulty-dependency"';
+        addClass = 'class="faulty-dependency"'
       } else {
-        addClass = '';
+        addClass = ''
       }
 
-      return addClass;
+      return addClass
     },
     CALC_factoryDependencyRequiredAmount: function CALC_factoryDependencyRequiredAmount(factoryId, dependencyIndex) {
-      'use strict';
+      'use strict'
 
-      var factory = rHelper.data.products[factoryId];
-      var requiredAmount = 0;
+      var factory = rHelper.data.products[factoryId]
+      var requiredAmount = 0
 
       if ($.isArray(factory.requiredAmount)) {
-        requiredAmount = factory.requiredAmount[dependencyIndex];
+        requiredAmount = factory.requiredAmount[dependencyIndex]
       } else {
-        requiredAmount = factory.requiredAmount;
+        requiredAmount = factory.requiredAmount
       }
 
-      return requiredAmount * factory.factoryLevel;
+      return requiredAmount * factory.factoryLevel
     },
     CALC_totalFactoryUpgrades: function CALC_totalFactoryUpgrades() {
-      'use strict';
+      'use strict'
 
-      var totalFactoryUpgrades = 0;
+      var totalFactoryUpgrades = 0
 
       $.each(rHelper.data.products, function(i, factory) {
-        totalFactoryUpgrades += factory.factoryLevel;
-      });
+        totalFactoryUpgrades += factory.factoryLevel
+      })
 
-      return totalFactoryUpgrades;
+      return totalFactoryUpgrades
     },
     CALC_factoryUpgradeCost: function CALC_factoryUpgradeCost(factoryId) {
-      'use strict';
+      'use strict'
 
-      var factoryLevel = rHelper.data.products[factoryId].factoryLevel;
+      var factoryLevel = rHelper.data.products[factoryId].factoryLevel
       if (typeof factoryLevel === 'undefined' || !factoryLevel) {
-        factoryLevel = 0;
+        factoryLevel = 0
       }
-      var nextLevel = factoryLevel + 1;
+      var nextLevel = factoryLevel + 1
 
       var _ref62 = [0, 0, , , $(crEl('table')), $(crEl('tbody'))],
         sum = _ref62[0],
@@ -5485,247 +5487,247 @@ var rHelper = {
         td = _ref62[2],
         small = _ref62[3],
         table = _ref62[4],
-        tbody = _ref62[5];
+        tbody = _ref62[5]
 
       $.each(rHelper.data.products[factoryId].upgradeMaterialAmount, function(i, amount) {
         var _ref63 = [$(crEl('tr')), 0],
           tr = _ref63[0],
-          k = _ref63[1];
+          k = _ref63[1]
 
         if (i === 0) {
-          sum += amount * Math.pow(nextLevel, 2);
+          sum += amount * Math.pow(nextLevel, 2)
           for (k = 0; k <= 2; k += 1) {
-            td = $(crEl('td'));
+            td = $(crEl('td'))
             switch (k) {
               case 0:
                 var img = $(crEl('img'))
                   .attr('src', 'assets/img/cash.png')
-                  .attr('alt', 'Cash');
-                td.append(img[0]);
-                break;
+                  .attr('alt', 'Cash')
+                td.append(img[0])
+                break
               case 1:
                 td
                   .addClass('text-right')
                   .attr('colspan', 3)
-                  .text(sum.toLocaleString('en-US'));
-                break;
+                  .text(sum.toLocaleString('en-US'))
+                break
               case 2:
-                small = $(crEl('small')).text('Transportation');
-                td.addClass('text-right text-warning').append(small[0]);
-                break;
+                small = $(crEl('small')).text('Transportation')
+                td.addClass('text-right text-warning').append(small[0])
+                break
             }
-            tr.append(td[0]);
+            tr.append(td[0])
           }
         } else {
-          var upgradeMaterial = rHelper.data.products[factoryId].upgradeMaterial[i];
-          var upgradeMaterialAmount = amount * Math.pow(nextLevel, 2);
-          var price = rHelper.methods.CALC_returnPriceViaId(upgradeMaterial);
-          var materialWorth = price * upgradeMaterialAmount;
-          var transportation = (rHelper.data.buildings[9].transportCost - 1) * materialWorth;
-          var className = void 0;
+          var upgradeMaterial = rHelper.data.products[factoryId].upgradeMaterial[i]
+          var upgradeMaterialAmount = amount * Math.pow(nextLevel, 2)
+          var price = rHelper.methods.CALC_returnPriceViaId(upgradeMaterial)
+          var materialWorth = price * upgradeMaterialAmount
+          var transportation = (rHelper.data.buildings[9].transportCost - 1) * materialWorth
+          var className = void 0
 
-          sum += materialWorth;
-          sumTransportation += transportation;
-          upgradeMaterial += 1;
+          sum += materialWorth
+          sumTransportation += transportation
+          upgradeMaterial += 1
 
           if (upgradeMaterial <= 13) {
-            className = 'material';
+            className = 'material'
           } else if (upgradeMaterial >= 14 && upgradeMaterial <= 35) {
-            upgradeMaterial -= 14;
-            className = 'product';
+            upgradeMaterial -= 14
+            className = 'product'
           } else if (upgradeMaterial >= 36 && upgradeMaterial <= 51) {
-            upgradeMaterial -= 36;
-            className = 'loot';
+            upgradeMaterial -= 36
+            className = 'loot'
           } else {
-            upgradeMaterial -= 51;
-            className = 'units';
+            upgradeMaterial -= 51
+            className = 'units'
           }
 
           for (k = 0; k <= 4; k += 1) {
-            td = $(crEl('td'));
+            td = $(crEl('td'))
             switch (k) {
               case 0:
-                td.addClass('resources-' + className + '-' + (upgradeMaterial - 1));
-                break;
+                td.addClass('resources-' + className + '-' + (upgradeMaterial - 1))
+                break
               case 1:
-                td.addClass('text-right').text(upgradeMaterialAmount.toLocaleString('en-US'));
-                break;
+                td.addClass('text-right').text(upgradeMaterialAmount.toLocaleString('en-US'))
+                break
               case 2:
-                td.text('≙');
-                break;
+                td.text('≙')
+                break
               case 3:
-                td.addClass('text-right').text(materialWorth.toLocaleString('en-US'));
-                break;
+                td.addClass('text-right').text(materialWorth.toLocaleString('en-US'))
+                break
               case 4:
                 small = $(crEl('small'))
                   .addClass('text-warning')
-                  .text(transportation.toLocaleString('en-US'));
-                td.addClass('text-right').append(small[0]);
-                break;
+                  .text(transportation.toLocaleString('en-US'))
+                td.addClass('text-right').append(small[0])
+                break
             }
-            tr.append(td[0]);
+            tr.append(td[0])
           }
         }
-        tbody.append(tr[0]);
-      });
-      var tr = $(crEl('tr'));
+        tbody.append(tr[0])
+      })
+      var tr = $(crEl('tr'))
       for (var k = 0; k <= 1; k += 1) {
-        td = $(crEl('td')).addClass('text-right');
+        td = $(crEl('td')).addClass('text-right')
 
         if (k === 0) {
-          td.attr('colspan', 4).text(sum.toLocaleString('en-US'));
+          td.attr('colspan', 4).text(sum.toLocaleString('en-US'))
         } else {
           small = $(crEl('small'))
             .addClass('text-warning')
-            .text(sumTransportation.toLocaleString('en-US'));
-          td.append(small[0]);
+            .text(sumTransportation.toLocaleString('en-US'))
+          td.append(small[0])
         }
-        tr.append(td[0]);
+        tr.append(td[0])
       }
 
-      tbody.append(tr[0]);
-      table.append(tbody[0]);
-      rHelper.data.products[factoryId].upgradeCost = sum;
+      tbody.append(tr[0])
+      table.append(tbody[0])
+      rHelper.data.products[factoryId].upgradeCost = sum
 
       var result = {
         sum: sum,
         title: table[0].outerHTML
-      };
-      return result;
+      }
+      return result
     },
     CALC_factoryOutput: function CALC_factoryOutput(factoryId) {
-      'use strict';
+      'use strict'
 
-      var factory = rHelper.data.products[factoryId];
-      return factory.factoryLevel * factory.scaling;
+      var factory = rHelper.data.products[factoryId]
+      return factory.factoryLevel * factory.scaling
     },
     CALC_totalMineCount: function CALC_totalMineCount() {
-      'use strict';
+      'use strict'
 
-      var totalMineCount = 0;
+      var totalMineCount = 0
       $.each(rHelper.data.material, function(i, material) {
-        totalMineCount += material.amountOfMines;
-      });
+        totalMineCount += material.amountOfMines
+      })
 
-      return totalMineCount;
+      return totalMineCount
     },
     CALC_totalMineWorth: function CALC_totalMineWorth() {
-      'use strict';
+      'use strict'
 
-      var totalMineWorth = 0;
+      var totalMineWorth = 0
       $.each(rHelper.data.material, function(i) {
-        totalMineWorth += rHelper.methods.CALC_materialRateWorth(i);
-      });
+        totalMineWorth += rHelper.methods.CALC_materialRateWorth(i)
+      })
 
-      return totalMineWorth;
+      return totalMineWorth
     },
     CALC_returnPriceViaId: function CALC_returnPriceViaId(id, period) {
-      'use strict';
+      'use strict'
 
-      var possiblePrices = ['current', '1day', '3days', '7days', '4weeks', '3months', '6months', '1year', 'max'];
+      var possiblePrices = ['current', '1day', '3days', '7days', '4weeks', '3months', '6months', '1year', 'max']
 
-      var index = 0;
+      var index = 0
       if (typeof period === 'undefined') {
-        var settings = rHelper.data.settings[5];
-        var priceAgeSetting = 2;
+        var settings = rHelper.data.settings[5]
+        var priceAgeSetting = 2
 
         if ((typeof settings === 'undefined' ? 'undefined' : _typeof(settings)) !== undefined) {
-          priceAgeSetting = rHelper.data.settings[5].value;
+          priceAgeSetting = rHelper.data.settings[5].value
         }
 
-        index = possiblePrices[priceAgeSetting];
+        index = possiblePrices[priceAgeSetting]
       } else if (typeof period === 'number') {
-        index = possiblePrices[period];
+        index = possiblePrices[period]
       }
 
-      var target = rHelper.methods.CALC_convertId(id);
-      var targetPrices = target.prices[index];
+      var target = rHelper.methods.CALC_convertId(id)
+      var targetPrices = target.prices[index]
 
       if (targetPrices.ai >= targetPrices.player) {
-        return targetPrices.ai;
+        return targetPrices.ai
       } else {
-        return targetPrices.player;
+        return targetPrices.player
       }
     },
     CALC_convertId: function CALC_convertId(id) {
-      'use strict';
+      'use strict'
 
       if (id <= 13) {
-        return rHelper.data.material[id];
+        return rHelper.data.material[id]
       } else if (id >= 14 && id <= 35) {
-        id -= 14;
-        return rHelper.data.products[id];
+        id -= 14
+        return rHelper.data.products[id]
       } else if (id >= 36 && id <= 51) {
-        id -= 36;
-        return rHelper.data.loot[id];
+        id -= 36
+        return rHelper.data.loot[id]
       } else {
-        id -= 52;
-        return rHelper.data.units[id];
+        id -= 52
+        return rHelper.data.units[id]
       }
     },
     CALC_materialNewMinePrice: function CALC_materialNewMinePrice(totalMineCount, materialId) {
-      'use strict';
+      'use strict'
 
-      return Math.round(rHelper.data.material[materialId].basePrice * (1 + totalMineCount / 50));
+      return Math.round(rHelper.data.material[materialId].basePrice * (1 + totalMineCount / 50))
     },
     CALC_materialRateWorth: function CALC_materialRateWorth(materialId) {
-      'use strict';
+      'use strict'
 
-      return rHelper.data.material[materialId].perHour * rHelper.methods.CALC_returnPriceViaId(materialId);
+      return rHelper.data.material[materialId].perHour * rHelper.methods.CALC_returnPriceViaId(materialId)
     },
     CALC_materialMinePerfectIncome: function CALC_materialMinePerfectIncome(materialId) {
-      'use strict';
+      'use strict'
 
-      return rHelper.data.material[materialId].maxRate * rHelper.methods.CALC_returnPriceViaId(materialId);
+      return rHelper.data.material[materialId].maxRate * rHelper.methods.CALC_returnPriceViaId(materialId)
     },
     CALC_materialMineROI: function CALC_materialMineROI(type) {
-      'use strict';
+      'use strict'
 
-      var array = [];
+      var array = []
 
       for (var i = 0; i <= 13; i += 1) {
-        var newMinePrice = rHelper.methods.CALC_materialNewMinePrice(rHelper.methods.CALC_totalMineCount(), i);
-        var perfectIncome = rHelper.methods.CALC_materialMinePerfectIncome(i);
-        var customTUPrice = rHelper.methods.CALC_customTUPrice();
+        var newMinePrice = rHelper.methods.CALC_materialNewMinePrice(rHelper.methods.CALC_totalMineCount(), i)
+        var perfectIncome = rHelper.methods.CALC_materialMinePerfectIncome(i)
+        var customTUPrice = rHelper.methods.CALC_customTUPrice()
 
         switch (type) {
           case '100':
-            array.push(newMinePrice / perfectIncome / 24);
-            break;
+            array.push(newMinePrice / perfectIncome / 24)
+            break
           case '505':
-            array.push((newMinePrice + customTUPrice) / perfectIncome / 24 / 5.05);
-            break;
+            array.push((newMinePrice + customTUPrice) / perfectIncome / 24 / 5.05)
+            break
           case '505hq':
-            var userHQLevel = 1;
+            var userHQLevel = 1
             if (rHelper.data.headquarter.user) {
-              userHQLevel = rHelper.data.headquarter.user.level;
+              userHQLevel = rHelper.data.headquarter.user.level
             }
-            var hqBoost = rHelper.data.headquarter[userHQLevel - 1].boost - 0.9;
-            array.push((newMinePrice + customTUPrice) / perfectIncome / 24 / 5.05 / hqBoost);
-            break;
+            var hqBoost = rHelper.data.headquarter[userHQLevel - 1].boost - 0.9
+            array.push((newMinePrice + customTUPrice) / perfectIncome / 24 / 5.05 / hqBoost)
+            break
         }
       }
 
-      return array;
+      return array
     },
     CALC_customTUPrice: function CALC_customTUPrice() {
-      'use strict';
+      'use strict'
 
-      var customTUPrice = 0;
-      var tuIndex = 46;
+      var customTUPrice = 0
+      var tuIndex = 46
 
-      var settings = rHelper.data.settings[1];
-      var customTUCombination = [111, 26, 0, 0];
+      var settings = rHelper.data.settings[1]
+      var customTUCombination = [111, 26, 0, 0]
 
       if ((typeof settings === 'undefined' ? 'undefined' : _typeof(settings)) !== undefined) {
-        customTUCombination = settings.value;
+        customTUCombination = settings.value
       }
 
       for (var i = 0; i <= 3; i += 1) {
-        customTUPrice += customTUCombination[i] * rHelper.methods.CALC_returnPriceViaId(tuIndex + i);
+        customTUPrice += customTUCombination[i] * rHelper.methods.CALC_returnPriceViaId(tuIndex + i)
       }
 
-      return customTUPrice;
+      return customTUPrice
     }
   },
   graphs: {
@@ -5800,45 +5802,45 @@ var rHelper = {
   },
   data: {},
   tu: []
-};
+}
 
-var openedWindow = void 0;
-var isLoggedIn = false;
+var openedWindow = void 0
+var isLoggedIn = false
 
-(function() {
-  $('#loading-text').text('fetching data');
+;(function() {
+  $('#loading-text').text('fetching data')
 
-  var cookieCheck = parseInt(getCookie('loggedIn'));
+  var cookieCheck = parseInt(getCookie('loggedIn'))
   if (cookieCheck === 1) {
-    isLoggedIn = true;
+    isLoggedIn = true
   }
 
   if (typeof localStorage.rGame != 'undefined' && !isLoggedIn) {
     // if logged out and data in localStorage
-    rHelper.data = JSON.parse(localStorage.getItem('rGame'));
-    loadingAnimToggler('hide');
-    console.log('Found existing data!');
-    rHelper.init.core();
+    rHelper.data = JSON.parse(localStorage.getItem('rGame'))
+    loadingAnimToggler('hide')
+    console.log('Found existing data!')
+    rHelper.init.core()
   } else {
     // if logged in or no data in localStorage
     $.get({
       url: 'api/core.php',
       success: function success(response) {
-        rHelper.data = response;
-        localStorage.setItem('rGame', JSON.stringify(response));
-        loadingAnimToggler('hide');
+        rHelper.data = response
+        localStorage.setItem('rGame', JSON.stringify(response))
+        loadingAnimToggler('hide')
 
         if (isLoggedIn) {
-          console.log('Returning user - fetched existing data!');
+          console.log('Returning user - fetched existing data!')
         } else {
-          console.log('New user - fetched basic data!');
+          console.log('New user - fetched basic data!')
         }
 
-        rHelper.init.user();
+        rHelper.init.user()
       },
       error: function error(response) {
-        swal('Error fetching data', 'Error message:<br />' + response + '<br /> Please try again.', 'error');
+        swal('Error fetching data', 'Error message:<br />' + response + '<br /> Please try again.', 'error')
       }
-    });
+    })
   }
-})();
+})()

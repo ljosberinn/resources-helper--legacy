@@ -54,8 +54,12 @@ $changelogContent = [
     "date" => "May 22th 2018",
     "description" => "
     <strong>General</strong><br />
-    - NEW: <a href='https://github.com/ljosberinn/resources-helper/issues/19' rel='noopener noreferrer' target='_blank'>setting to manually overwrite your API data - default deactivated</a><br/>
-    - NEW: <a href='https://github.com/ljosberinn/resources-helper/issues/20' rel='noopener noreferrer' target='_blank'>two additional graphs - mine and factory ROI</a>",
+    - NEW: <a href='https://github.com/ljosberinn/resources-helper/issues/19' rel='noopener noreferrer' target='_blank'>setting to manually overwrite your API data - default deactivated</a><br />
+    - NEW: <a href='https://github.com/ljosberinn/resources-helper/issues/20' rel='noopener noreferrer' target='_blank'>two additional graphs - mine and factory ROI</a><br />
+    <br />
+    <strong>Bugfixes</strong><br />
+    - fixed a bug where the headquarter graph would show wrong values<br/>
+    - fixed a bug where saving was impossible for non api users (thanks to gescher industry)",
   ],
   7 => [
     "class" => "",

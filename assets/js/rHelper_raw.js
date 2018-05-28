@@ -2604,7 +2604,9 @@ const rHelper = {
             if (setting.value === 1) {
               $('#settings-overwrite-api-container').remove();
             } else {
-              $('#save-button').remove();
+              if (rHelper.data.userInformation.realKey !== false) {
+                $('#save-button').remove();
+              }
             }
             break;
         }
