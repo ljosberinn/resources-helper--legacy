@@ -2291,6 +2291,12 @@ class resourcesGame
         case 122: // HR Department
             $building = 11;
             break;
+        case 127: // Seismology center
+            $building = 13;
+            break;
+        case 126: // Fire Station
+            $building = 12;
+            break;
         }
 
         return $building;

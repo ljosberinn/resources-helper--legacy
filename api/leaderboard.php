@@ -52,23 +52,23 @@ function getPrices($host, $user, $pw, $db)
  */
 function returnQueries($type)
 {
-    switch($type) {
-    case "general":
-        return "SELECT `name`, `points`, `rank`, `level`, `registeredGame` FROM `userOverview` WHERE `id` = ?";
-    break;
-    case "headquarter":
-        return "SELECT `mineCount`, `level`, `progress0`, `progress1`, `progress2`, `progress3` FROM `userHeadquarter` WHERE `id` = ?";
-    break;
-    case "material":
-        return "SELECT `perHour0`, `amountOfMines0`, `perHour1`, `amountOfMines1`, `perHour2`, `amountOfMines2`, `perHour3`, `amountOfMines3`, `perHour4`, `amountOfMines4`, `perHour5`, `amountOfMines5`, `perHour6`, `amountOfMines6`, `perHour7`, `amountOfMines7`, `perHour8`, `amountOfMines8`, `perHour9`, `amountOfMines9`, `perHour10`, `amountOfMines10`, `perHour11`, `amountOfMines11`, `perHour12`, `amountOfMines12`, `perHour13`, `amountOfMines13` FROM `userMaterial` WHERE `id` = ?";
-    case "products":
-        return "SELECT `factory0`, `factory1`, `factory2`, `factory3`, `factory4`, `factory5`, `factory6`, `factory7`, `factory8`, `factory9`, `factory10`, `factory11`, `factory12`, `factory13`, `factory14`, `factory15`, `factory16`, `factory17`, `factory18`, `factory19`, `factory20`, `factory21` FROM `userFactories` WHERE `id` = ?";
-    break;
-    case "buildings":
-        return "SELECT `building0`, `building1`, `building2`, `building3`, `building4`, `building5`, `building6`, `building7`, `building8`, `building9`, `building10`, `building11` FROM `userBuildings` WHERE `id` = ?";
-    break;
-    case "warehouse":
-        return "SELECT
+    switch ($type) {
+        case "general":
+            return "SELECT `name`, `points`, `rank`, `level`, `registeredGame` FROM `userOverview` WHERE `id` = ?";
+            break;
+        case "headquarter":
+            return "SELECT `mineCount`, `level`, `progress0`, `progress1`, `progress2`, `progress3` FROM `userHeadquarter` WHERE `id` = ?";
+            break;
+        case "material":
+            return "SELECT `perHour0`, `amountOfMines0`, `perHour1`, `amountOfMines1`, `perHour2`, `amountOfMines2`, `perHour3`, `amountOfMines3`, `perHour4`, `amountOfMines4`, `perHour5`, `amountOfMines5`, `perHour6`, `amountOfMines6`, `perHour7`, `amountOfMines7`, `perHour8`, `amountOfMines8`, `perHour9`, `amountOfMines9`, `perHour10`, `amountOfMines10`, `perHour11`, `amountOfMines11`, `perHour12`, `amountOfMines12`, `perHour13`, `amountOfMines13` FROM `userMaterial` WHERE `id` = ?";
+        case "products":
+            return "SELECT `factory0`, `factory1`, `factory2`, `factory3`, `factory4`, `factory5`, `factory6`, `factory7`, `factory8`, `factory9`, `factory10`, `factory11`, `factory12`, `factory13`, `factory14`, `factory15`, `factory16`, `factory17`, `factory18`, `factory19`, `factory20`, `factory21` FROM `userFactories` WHERE `id` = ?";
+            break;
+        case "buildings":
+            return "SELECT `building0`, `building1`, `building2`, `building3`, `building4`, `building5`, `building6`, `building7`, `building8`, `building9`, `building10`, `building11`, `building12`, `building13` FROM `userBuildings` WHERE `id` = ?";
+            break;
+        case "warehouse":
+            return "SELECT
         `level0`, `level1`, `level2`, `level3`, `level4`, `level5`, `level6`, `level7`, `level8`, `level9`, `level10`, `level11`, `level12`, `level13`, `level14`, `level15`, `level16`, `level17`, `level18`, `level19`, `level20`, `level21`, `level22`, `level23`, `level24`, `level25`, `level26`, `level27`, `level28`, `level29`, `level30`, `level31`, `level32`, `level33`, `level34`, `level35`, `level36`, `level37`, `level38`, `level39`, `level40`, `level41`, `level42`, `level43`, `level44`, `level45`, `level46`, `level47`, `level48`, `level49`, `level50`, `level51`, `level52`, `level53`, `level54`, `level55`, `level56`,  `level57` FROM `userWarehouse` WHERE `id` = ?";
     }
 }
@@ -95,9 +95,9 @@ function shoveDataToArray($result, $query, $target, $userId)
         $result[$userId][$target] = $data;
 
         if ($target == "general") {
-            $daysPlaying                                = round((time("now") - $data["registeredGame"])/86400) + 1;
-            $result[$userId][$target]["pointsPerDay"]   = round($data["points"] / $daysPlaying);
-            $result[$userId][$target]["daysPlaying"]    = $daysPlaying;
+            $daysPlaying = round((time("now") - $data["registeredGame"]) / 86400) + 1;
+            $result[$userId][$target]["pointsPerDay"] = round($data["points"] / $daysPlaying);
+            $result[$userId][$target]["daysPlaying"] = $daysPlaying;
             $result[$userId][$target]["registeredGame"] = date("Y-m-j h:i (a)", $data["registeredGame"]);
         }
     }
@@ -167,7 +167,6 @@ function getHeadquarterBaseData($conn)
     return $result;
 }
 
-
 /**
  * Returns worth of a headquarter depending on level and progress
  *
@@ -228,7 +227,7 @@ function countMines($materialArray)
     $mineCount = 0;
 
     for ($i = 0; $i <= 13; $i += 1) {
-        $mineCount += $materialArray["amountOfMines" .$i];
+        $mineCount += $materialArray["amountOfMines" . $i];
     }
 
     return $mineCount;
@@ -245,7 +244,7 @@ function getMineBasePrices($conn)
 {
     $result = [];
 
-    $basePriceQuery  = "SELECT `basePrice` FROM `resources`";
+    $basePriceQuery = "SELECT `basePrice` FROM `resources`";
     $basePrice = $conn->query($basePriceQuery);
 
     if ($basePrice->num_rows > 0) {
@@ -256,7 +255,6 @@ function getMineBasePrices($conn)
 
     return $result;
 }
-
 
 /**
  * Returns approximated cost of all mines currently built
@@ -276,10 +274,9 @@ function returnMineErectionSum($mineBaseData, $materialArray, $conn, $prices)
 
     $index = 0;
     foreach ($materialArray as $material) {
-        $sum += $mineBaseData[$index] * ( 1 + 0.01 * $totalMines) * $materialArray["amountOfMines" .$index];
+        $sum += $mineBaseData[$index] * (1 + 0.01 * $totalMines) * $materialArray["amountOfMines" . $index];
         $index += 1;
     }
-
 
     return $sum;
 }
@@ -332,7 +329,7 @@ function convertId($id)
 
     return [
         "subArray" => $subArray,
-        "position" => $position
+        "position" => $position,
     ];
 }
 
@@ -356,7 +353,7 @@ function returnPriceViaId($id, $prices, $period)
         "3months",
         "6months",
         "1year",
-        "max"
+        "max",
     ];
 
     $index = 0;
@@ -403,10 +400,10 @@ function getBuildingsData($conn)
         }
     }
 
-    for ($i = 0; $i <= 11; $i += 1) {
+    for ($i = 0; $i <= 13; $i += 1) {
         $result[$i]["material"] = splitCommaToArray($result[$i]["material"]);
         for ($k = 0; $k <= 3; $k += 1) {
-            $result[$i]["materialAmount" .$k] = splitCommaToArray($result[$i]["materialAmount". $k]);
+            $result[$i]["materialAmount" . $k] = splitCommaToArray($result[$i]["materialAmount" . $k]);
         }
     }
 
@@ -477,8 +474,8 @@ function returnBuildingsErectionSum($buildingsBaseData, $buildingsArray, $conn, 
         for ($level = 0; $level < $buildingLevel; $level += 1) {
 
             for ($materialIndex = 0; $materialIndex <= 3; $materialIndex += 1) {
-                $material       = $buildingsBaseData[$buildingsIndex]["material"][$materialIndex];
-                $materialAmount = $buildingsBaseData[$buildingsIndex]["materialAmount" .$materialIndex][$level];
+                $material = $buildingsBaseData[$buildingsIndex]["material"][$materialIndex];
+                $materialAmount = $buildingsBaseData[$buildingsIndex]["materialAmount" . $materialIndex][$level];
 
                 if ($material == -1) {
                     $sum += $materialAmount;
@@ -507,12 +504,12 @@ function generateLeaderboardData($conn, $prices)
     $result = [];
 
     $template = [
-        "material"    => [],
-        "products"    => [],
-        "buildings"   => [],
+        "material" => [],
+        "products" => [],
+        "buildings" => [],
         "headquarter" => [],
         "warehouse" => [],
-        "general"     => [],
+        "general" => [],
     ];
 
     $userIds = getValidUserIds($conn);
@@ -527,7 +524,7 @@ function generateLeaderboardData($conn, $prices)
     ];
 
     foreach ($queries as $shortcut) {
-        ${$shortcut. "DataQuery"} = $conn->prepare(returnQueries($shortcut));
+        ${$shortcut . "DataQuery"} = $conn->prepare(returnQueries($shortcut));
     }
 
     $headquarterBaseData = getHeadquarterBaseData($conn);
@@ -543,28 +540,28 @@ function generateLeaderboardData($conn, $prices)
         }
 
         $preparableQueries = [
-            "generalDataQuery"     => "general",
+            "generalDataQuery" => "general",
             "headquarterDataQuery" => "headquarter",
-            "materialDataQuery"    => "material",
-            "productsDataQuery"    => "products",
-            "buildingsDataQuery"   => "buildings",
-            "warehouseDataQuery"   => "warehouse",
+            "materialDataQuery" => "material",
+            "productsDataQuery" => "products",
+            "buildingsDataQuery" => "buildings",
+            "warehouseDataQuery" => "warehouse",
         ];
 
         foreach ($preparableQueries as $query => $target) {
             $result = shoveDataToArray($result, ${$query}, $target, $userId);
         }
 
-        $result[$userId]["headquarterSum"]       = returnHeadquarterWorth($headquarterBaseData, $result[$userId]["headquarter"], $conn, $prices);
-        $result[$userId]["mineErectionSum"]      = returnMineErectionSum($mineBasePrices, $result[$userId]["material"], $conn, $prices);
-        $result[$userId]["mineIncome"]           = returnMineIncome($result[$userId]["material"], $conn, $prices);
-        $result[$userId]["totalMineCount"]       = countMines($result[$userId]["material"]);
+        $result[$userId]["headquarterSum"] = returnHeadquarterWorth($headquarterBaseData, $result[$userId]["headquarter"], $conn, $prices);
+        $result[$userId]["mineErectionSum"] = returnMineErectionSum($mineBasePrices, $result[$userId]["material"], $conn, $prices);
+        $result[$userId]["mineIncome"] = returnMineIncome($result[$userId]["material"], $conn, $prices);
+        $result[$userId]["totalMineCount"] = countMines($result[$userId]["material"]);
         $result[$userId]["factoryTotalUpgrades"] = array_sum($result[$userId]["products"]);
-        $result[$userId]["factoryErectionSum"]   = returnFactoryErectionSum($factoryBaseData, $result[$userId]["products"], $conn, $prices);
+        $result[$userId]["factoryErectionSum"] = returnFactoryErectionSum($factoryBaseData, $result[$userId]["products"], $conn, $prices);
         $result[$userId]["buildingsErectionSum"] = returnBuildingsErectionSum($buildingsBaseData, $result[$userId]["buildings"], $conn, $prices);
         $result[$userId]["warehouseErectionSum"] = returnWarehouseErectionSum($result[$userId]["warehouse"]);
-        $result[$userId]["companyWorth"]         = returnCompanyWorth($result[$userId]);
-        $result[$userId]["tradeData"]            = returnTradeLogData($userId, $conn);
+        $result[$userId]["companyWorth"] = returnCompanyWorth($result[$userId]);
+        $result[$userId]["tradeData"] = returnTradeLogData($userId, $conn);
 
         unset($result[$userId]["products"]);
         unset($result[$userId]["material"]);
@@ -608,15 +605,15 @@ function returnWarehouseErectionSum($userData)
 function returnTradeLogData($userId, $conn)
 {
 
-    $log = "userTradeLog_" .$userId;
+    $log = "userTradeLog_" . $userId;
 
     $result = [];
 
     $queries = [
-        "SELECT MIN(timestamp) AS `firstKnownAction`, MAX(timestamp)  AS `lastKnownAction` FROM `" .$log. "`",
-        "SELECT SUM(`amount` * `price`) AS `totalSell` FROM `" .$log. "` WHERE `event` = 1",
-        "SELECT SUM(`amount` * `price`) AS `totalBuy` FROM `" .$log. "` WHERE `event` = 0",
-        "SELECT SUM(`amount` * `price`) AS `sumKISell` FROM `" .$log. "` WHERE `actor` = 'KI'",
+        "SELECT MIN(timestamp) AS `firstKnownAction`, MAX(timestamp)  AS `lastKnownAction` FROM `" . $log . "`",
+        "SELECT SUM(`amount` * `price`) AS `totalSell` FROM `" . $log . "` WHERE `event` = 1",
+        "SELECT SUM(`amount` * `price`) AS `totalBuy` FROM `" . $log . "` WHERE `event` = 0",
+        "SELECT SUM(`amount` * `price`) AS `sumKISell` FROM `" . $log . "` WHERE `actor` = 'KI'",
     ];
 
     foreach ($queries as $query) {
@@ -642,11 +639,11 @@ function returnTradeLogData($userId, $conn)
     $potentiallyMissingData = [
         "totalSell",
         "sumKISell",
-        "totalBuy"
+        "totalBuy",
     ];
 
     foreach ($potentiallyMissingData as $dataset) {
-        if(!$result[$dataset]) {
+        if (!$result[$dataset]) {
             $result[$dataset] = 0;
         }
     }
@@ -668,7 +665,7 @@ function returnMineIncome($userData, $conn, $prices)
     $sum = 0;
 
     for ($i = 0; $i <= 13; $i += 1) {
-        $sum += returnPriceViaId($i, $prices) * $userData["perHour" .$i];
+        $sum += returnPriceViaId($i, $prices) * $userData["perHour" . $i];
     }
 
     return $sum;
@@ -697,7 +694,6 @@ function getFactoryData($conn)
     return $result;
 }
 
-
 $conn = connect($host, $user, $pw, $db);
 $prices = getPrices($host, $user, $pw, $db);
 $result = generateLeaderboardData($conn, $prices);
@@ -712,5 +708,3 @@ foreach ($headers as $header) {
 }
 
 echo json_encode($result, JSON_NUMERIC_CHECK);
-
-?>
