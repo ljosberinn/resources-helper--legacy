@@ -6,10 +6,6 @@
 
 working - stable
 
-### TODO
-
-* test mail ideas
-
 ## What's included
 
 ```
