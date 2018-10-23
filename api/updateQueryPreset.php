@@ -10,7 +10,7 @@ if (isset($_POST['queries'])) {
     $conn->set_charset('utf8');
 
     $allowedQueries = [0, 1, 2, 3, 4, 5, 51, 6, 7, 9, 10];
-    $givenQueries = split(',', $_POST['queries']);
+    $givenQueries = explode(',', $_POST['queries']);
 
     $string = '';
 
