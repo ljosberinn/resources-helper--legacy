@@ -2135,7 +2135,7 @@ class resourcesGame
 
         if ($userId != 0) {
 
-            $query = "SELECT `id` FROM `userFactories` WHERE `id` = " .$userId. "";
+            $query = "SELECT `id` FROM `userFactories` WHERE `id` = " .$userId;
             $checkForPreviousEntry = $this->_conn->query($query);
 
             if ($checkForPreviousEntry->num_rows === 1) {
