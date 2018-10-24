@@ -1797,6 +1797,10 @@ class resourcesGame
         if ($getMissions->num_rows > 0) {
             while ($data = $getMissions->fetch_assoc()) {
 
+                if((int)$data['id'] === 56) {
+                    continue;
+                }
+
                 $result[$data["id"]]["img"] = "resources-missions-" .$data["id"];
 
                 $arr = [
