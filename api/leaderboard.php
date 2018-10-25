@@ -162,13 +162,13 @@ function getHeadquarterBaseData($conn) {
 /**
  * Returns worth of a headquarter depending on level and progress
  *
- * @param array  $headquarterBaseData [base data]
- * @param array  $headquarterArray    [originating array]
- * @param object $prices              [prices object]
+ * @param array $headquarterBaseData [base data]
+ * @param array $headquarterArray    [originating array]
+ * @param array $prices              [prices object]
  *
  * @return number $sum
  */
-function returnHeadquarterWorth($headquarterBaseData, $headquarterArray, $prices) {
+function returnHeadquarterWorth(array $headquarterBaseData = [], array $headquarterArray, array $prices = []) {
     $sum = 0;
 
     $userHQLevel = $headquarterArray["level"];
@@ -185,22 +185,24 @@ function returnHeadquarterWorth($headquarterBaseData, $headquarterArray, $prices
         $requiredAmount = $headquarterBaseData[$i]["amount"];
 
         foreach ($headquarterBaseData[$i]["material"] as $material) {
-            $price = returnPriceViaId($material, $prices, -1);
+            $price = returnPriceViaId($material, $prices);
             $sum   += $price * $requiredAmount;
         }
 
-        if ($userHQLevel != 10) {
+        if ((int)$userHQLevel !== 10) {
             $k = 0;
             foreach ($paid as $paidValue) {
-                if ($paidValue != 0) {
+                if ((int)$paidValue !== 0) {
                     $material = $headquarterBaseData[($userHQLevel - 2)]["material"][$k];
-                    $price    = returnPriceViaId($material, $prices, -1);
+                    $price    = returnPriceViaId($material, $prices);
                     $sum      += $price * $paidValue;
+
                 }
                 $k += 1;
             }
         }
     }
+
 
     return $sum;
 }
@@ -327,7 +329,7 @@ function convertId($id) {
  *
  * @return number $targetPrices [price value]
  */
-function returnPriceViaId($id, array $prices, int $period = -1) {
+function returnPriceViaId(int $id = 0, array $prices = [], int $period = -1) {
     $possiblePrices = [
         "current",
         "1day",
@@ -340,7 +342,7 @@ function returnPriceViaId($id, array $prices, int $period = -1) {
         "max",
     ];
 
-    $index = (int)$period !== -1 ? 2 : $period;
+    $index = (int)$period === -1 ? 2 : $period;
 
     $priceAge = $possiblePrices[$index];
 
@@ -413,7 +415,7 @@ function returnFactoryErectionSum($factoryBaseData, $productsArray, $prices) {
                 if ($upgradeMaterial == -1) {
                     $sum += $value;
                 } else {
-                    $price = returnPriceViaId($upgradeMaterial, $prices, -1);
+                    $price = returnPriceViaId($upgradeMaterial, $prices);
                     $sum   += $value * $price;
                 }
 
@@ -450,7 +452,7 @@ function returnBuildingsErectionSum($buildingsBaseData, $buildingsArray, $prices
                 if ($material == -1) {
                     $sum += $materialAmount;
                 } else {
-                    $price = returnPriceViaId($material, $prices, -1);
+                    $price = returnPriceViaId($material, $prices);
                     $sum   += $materialAmount * $price;
                 }
             }
@@ -465,7 +467,7 @@ function returnBuildingsErectionSum($buildingsBaseData, $buildingsArray, $prices
  * Outputs leaderboard JSON data
  *
  * @param object $conn   [database connection]
- * @param object $prices [prices object]
+ * @param array  $prices [prices object]
  *
  * @return array [leaderboard data]
  */
@@ -536,6 +538,7 @@ function generateLeaderboardData($conn, $prices) {
         unset($result[$userId]["material"]);
         unset($result[$userId]["buildings"]);
         unset($result[$userId]["warehouse"]);
+
     }
 
     return $result;
@@ -630,7 +633,7 @@ function returnMineIncome($userData, $prices) {
     $sum = 0;
 
     for ($i = 0; $i <= 13; $i += 1) {
-        $sum += returnPriceViaId($i, $prices, -1) * $userData["perHour" . $i];
+        $sum += returnPriceViaId($i, $prices) * $userData["perHour" . $i];
     }
 
     return $sum;
