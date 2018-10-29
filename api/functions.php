@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @method public explodeGET($get)
+ * @method explodeGET($get)
  * @param array $get [$_GET]
  * @return string [$_GET as key => value string (ex. "abc=def&ghi&...")]
  */
@@ -22,12 +22,12 @@ function explodeGET($get)
 
 
 /**
- * @method public connect()
+ * @method connect()
  * @return object [mysqli object]
  */
 function connect()
 {
-    include_once "db.php";
+    require_once "db.php";
     $conn = new mysqli($host, $user, $pw, $db);
     $conn->set_charset("UTF-8");
 
@@ -36,7 +36,7 @@ function connect()
 
 
 /**
- * @method public appendJSFiles
+ * @method appendJSFiles
  * @param array $files [$ownJSFiles, relative links to file]
  * @return string [script link]
  */
@@ -54,10 +54,10 @@ function appendFiles($files)
             $link = $link."?";
         }
 
-        if($subInfo["type"] == "js") {
+        if($subInfo["type"] === "js") {
             echo '
             <script ' .$mode. ' src="' .$link. '' .$lastModified. '"></script>';
-        } else if($subInfo["type"] == "css") {
+        } else if($subInfo["type"] === "css") {
             echo '
             <link rel="stylesheet" href="' .$link. '' .$lastModified. '" />';
         }
@@ -67,7 +67,7 @@ function appendFiles($files)
 
 
 /**
- * @method public showInvalidityWarning
+ * @method showInvalidityWarning
  * @param string $message [message to be shown]
  * @return string [html]
  */
@@ -80,21 +80,17 @@ function showInvalidityWarning($message)
 }
 
 /**
- * @method public pregMail
+ * @method pregMail
  * @param string $mail [mial adress to be validated]
  * @return bool [true/false]
  */
 function pregMail($mail)
 {
-    if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
-        return false;
-    } else {
-        return true;
-    }
+    return filter_var($mail, FILTER_VALIDATE_EMAIL);
 }
 
 /**
- * @method public validateRegistration
+ * @method validateRegistration
  * @param array $post [all the $_POST-variables]
  * @return bool [basically true false by not redirecting if true]
  */
@@ -123,14 +119,19 @@ function validateRegistration($post)
             header("Location: index.php?invalidRegistration");
         }
 
-        if (preg_match("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{4,}$", $post["registration-pw-1"]) === false || preg_match("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{4,}$", $post["registration-pw-1"]) === false) {
+        $matches = [];
+
+        preg_match('/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/', $post["registration-pw-1"], $matches);
+        preg_match('/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/', $post["registration-pw-2"], $matches);
+
+        if(count($matches) === 0) {
             header("Location: index.php?invalidPasswordExp");
         }
     }
 }
 
 /**
- * @method public test_input
+ * @method test_input
  * @param string $data []
  * @return string [stripped data]
  */

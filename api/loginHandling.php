@@ -2,7 +2,7 @@
 
 $mail = test_input($_POST["login-mail"]);
 $password = test_input($_POST["login-pw"]);
-$passwordPreg = preg_match("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$", $password);
+$passwordPreg = preg_match('/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/', $password);
 
 if (!empty($mail) && $passwordPreg !== 0) {
 
@@ -10,7 +10,7 @@ if (!empty($mail) && $passwordPreg !== 0) {
 
     $getSalt = $conn->query($getSaltQuery);
 
-    if ($getSalt->num_rows == 1) {
+    if ($getSalt->num_rows === 1) {
         while ($data = $getSalt->fetch_assoc()) {
             $salt = $data["salt"];
             $hashedPasswordDB = $data["password"];
@@ -35,7 +35,7 @@ if (!empty($mail) && $passwordPreg !== 0) {
             header("Location: index.php?invalidCredentials");
         }
 
-    } else if ($getSalt->num_rows == 0) {
+    } else if ($getSalt->num_rows === 0) {
         header("Location: index.php?invalidCredentials");
     }
 

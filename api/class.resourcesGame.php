@@ -1024,7 +1024,7 @@ class resourcesGame
      * @return array [returns modified $baseData]
      */
     public function getUserMaterials($baseData, $userId) {
-        $query = "SELECT * FROM `userMaterial` WHERE `id` = " . $userId . "";
+        $query = "SELECT * FROM `userMaterial` WHERE `id` = " . $userId;
 
         $getUserMaterial = $this->_conn->query($query);
 
@@ -1117,12 +1117,13 @@ class resourcesGame
      * @return array [returns modified $baseData]
      */
     public function getUserWarehouseContent($baseData, $userId) {
-        $query = "SELECT * FROM `userWarehouse` WHERE `id` = " . $userId . "";
+        $query = "SELECT * FROM `userWarehouse` WHERE `id` = " . $userId;
 
         $getUserWarehouse = $this->_conn->query($query);
 
         if ($getUserWarehouse->num_rows > 0) {
             while ($data = $getUserWarehouse->fetch_assoc()) {
+
                 foreach ($data as $key => $value) {
                     $index = preg_replace("/[^0-9]/", "", $key);
 
@@ -1141,11 +1142,17 @@ class resourcesGame
                         }
 
                         $baseData[$subArray][$arrayPosition]["warehouse"][$target]      = $value;
-                        $baseData[$subArray][$arrayPosition]["warehouse"]["fillStatus"] = $baseData[$subArray][$arrayPosition]["warehouse"]["fillAmount"] / $baseData[$subArray][$arrayPosition]["warehouse"]["contingent"];
+                        $baseData[$subArray][$arrayPosition]["warehouse"]["fillStatus"] = (int)$baseData[$subArray][$arrayPosition]["warehouse"]["fillAmount"] / (int)$baseData[$subArray][$arrayPosition]["warehouse"]["contingent"];
+
+                        if(gettype($baseData[$subArray][$arrayPosition]["warehouse"]["fillStatus"]) === 'double') {
+                            $baseData[$subArray][$arrayPosition]["warehouse"]["fillStatus"] = 0.00;
+                        }
                     }
                 }
             }
         }
+
+
 
         return $baseData;
     }
@@ -3034,7 +3041,7 @@ class resourcesGame
     public function getAPIData($query, $key, $userId, $anonymity) {
         $url = 'https://www.resources-game.ch/resapi/?q=' . $query . '&f=1&d=30&l=en&k=' . $key;
 
-        $time      = time('now');
+        $time      = time();
         $hashedKey = md5($key);
 
         if ($query != 5) {
