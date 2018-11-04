@@ -28,7 +28,7 @@
 
         <?php
 
-        require "app/pages/tradelog/simple.php";
+        require_once "app/pages/tradelog/simple.php";
 
         ?>
 
@@ -50,7 +50,7 @@
 
         <?php
 
-        require "app/pages/tradelog/detailed.php";
+        require_once "app/pages/tradelog/detailed.php";
 
         ?>
 

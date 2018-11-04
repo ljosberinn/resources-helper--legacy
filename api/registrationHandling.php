@@ -1,29 +1,29 @@
 <?php
 
-validateRegistration($_POST);
+validateRegistration ($_POST);
 
 $existingMailQuery = "SELECT `id` FROM `userOverview` WHERE `mail` = '" . $_POST["registration-mail"] . "'";
 
-$existingMailCheck = $conn->query($existingMailQuery);
+$existingMailCheck = $conn->query ($existingMailQuery);
 
 if ($existingMailCheck->num_rows > 0) {
-    header("Location: index.php?duplicateRegistrationMail=" . $_POST["registration-mail"] . "");
+    header ("Location: index.php?duplicateRegistrationMail=" . $_POST["registration-mail"] . "");
 } else {
     $options = [
         "cost" => 12,
-        'salt' => random_bytes(22),
+        'salt' => random_bytes (22),
     ];
 
-    $hashPassword = password_hash($_POST["registration-pw-1"], PASSWORD_BCRYPT, $options);
+    $hashPassword = password_hash ($_POST["registration-pw-1"], PASSWORD_BCRYPT, $options);
 
     $apiKey = $hashedApiKey = "";
 
     if (!empty($_POST["registration-api-key"])) {
         $apiKey       = $_POST["registration-api-key"];
-        $hashedApiKey = md5($apiKey);
+        $hashedApiKey = md5 ($apiKey);
     }
 
-    $time = time();
+    $time = time ();
 
     $insertionQuery = "INSERT INTO
 	`userOverview`(
@@ -40,35 +40,35 @@ if ($existingMailCheck->num_rows > 0) {
 			'" . $_POST["registration-mail"] . "',
 			'" . $hashPassword . "',
 			'" . $options["salt"] . "',
-			" . time() . ",
+			" . time () . ",
 			" . $_POST["registration-language"] . ",
 			'" . $apiKey . "',
 			'" . $hashedApiKey . "'
 		);";
 
-    $insertion = $conn->query($insertionQuery);
+    $insertion = $conn->query ($insertionQuery);
 
     $getNewIdQuery = "SELECT `id` FROM `userOverview` WHERE `mail` = '" . $_POST["registration-mail"] . "'";
-    $getNewId      = $conn->query($getNewIdQuery);
+    $getNewId      = $conn->query ($getNewIdQuery);
 
-    while ($data = $getNewId->fetch_assoc()) {
+    while ($data = $getNewId->fetch_assoc ()) {
         $id = $data["id"];
     }
 
     $getSettingDefaultsQuery = "SELECT `setting`, `value` FROM `settings`";
-    $getSettings             = $conn->query($getSettingDefaultsQuery);
+    $getSettings             = $conn->query ($getSettingDefaultsQuery);
 
     $columns = "";
     $values  = "" . $id . ",";
 
-    while ($data = $getSettings->fetch_assoc()) {
+    while ($data = $getSettings->fetch_assoc ()) {
         $columns .= "`" . $data["setting"] . "`,";
         $values  .= "'" . $data["value"] . "',";
     }
 
-    $insertNewUserSettingsQuery = "INSERT INTO `userSettings` (`id`, " . substr($columns, 0, -1) . ") VALUES (" . substr($values, 0, -1) . ");";
+    $insertNewUserSettingsQuery = "INSERT INTO `userSettings` (`id`, " . substr ($columns, 0, -1) . ") VALUES (" . substr ($values, 0, -1) . ");";
 
-    $insertNewUserSettings = $conn->query($insertNewUserSettingsQuery);
+    $insertNewUserSettings = $conn->query ($insertNewUserSettingsQuery);
 
     $templateQueries = [
         "INSERT INTO `userFactories` (`id`) VALUES (" . $id . ")",
@@ -79,8 +79,8 @@ if ($existingMailCheck->num_rows > 0) {
     ];
 
     foreach ($templateQueries as $query) {
-        $conn->query($query);
+        $conn->query ($query);
     }
 
-    header("Location: index.php?successfulRegistration=" . $_POST["registration-mail"] . "&token=" . md5($time));
+    header ("Location: index.php?successfulRegistration=" . $_POST["registration-mail"] . "&token=" . md5 ($time));
 }

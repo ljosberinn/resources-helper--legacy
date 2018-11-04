@@ -7,10 +7,9 @@
 
   <?php
 
+  require_once "recyclingunits/recycling.php";
 
-  require "recyclingunits/recycling.php";
-
-  require "recyclingunits/units.php";
+  require_once "recyclingunits/units.php";
 
   ?>
 

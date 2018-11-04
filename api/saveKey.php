@@ -1,17 +1,14 @@
 <?php
 
-if (isset($_POST['key'])
-  && strlen($_POST['key']) == 45
-  ) {
-    session_start();
+if (isset($_POST['key']) && strlen ((int) $_POST['key']) === 45) {
+    session_start ();
 
-    include 'db.php';
+    require_once 'db.php';
     $conn = new mysqli($host, $user, $pw, $db);
 
-    $updateQuery = "UPDATE `userOverview` SET `realKey` = '" .$_POST['key']. "' WHERE `id` = " .$_SESSION['id']. "";
+    $updateQuery = "UPDATE `userOverview` SET `realKey` = '" . $conn->real_escape_string ($_POST['key']) . "' WHERE `id` = " . $_SESSION['id'];
 
-
-    $update = $conn->query($updateQuery);
+    $update = $conn->query ($updateQuery);
 
     if ($update) {
         return true;

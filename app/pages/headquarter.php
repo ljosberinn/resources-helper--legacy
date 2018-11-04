@@ -27,12 +27,12 @@ if ($_SESSION["id"]) {
         </h5>
       </div>
 
-      <div id="collapse-headquarter-info" class="collapse <?php echo $show1; ?>" role="tabpanel" aria-labelledby="heading-hq-1">
+        <div id="collapse-headquarter-info" class="collapse <?= $show1; ?>" role="tabpanel" aria-labelledby="heading-hq-1">
         <div class="card-block p-4 bg-light">
 
         <?php
 
-        require "app/pages/headquarter/headquarter.php";
+        require_once "app/pages/headquarter/headquarter.php";
 
         ?>
 
@@ -50,12 +50,12 @@ if ($_SESSION["id"]) {
       </div>
 
 
-      <div id="collapse-headquarter-ovw" class="collapse <?php echo $show2; ?>" role="tabpanel" aria-labelledby="heading-hq-2">
+        <div id="collapse-headquarter-ovw" class="collapse <?= $show2; ?>" role="tabpanel" aria-labelledby="heading-hq-2">
         <div class="card-block p-4 bg-light">
 
         <?php
 
-        require "app/pages/headquarter/overview.php";
+        require_once "app/pages/headquarter/overview.php";
 
         ?>
 

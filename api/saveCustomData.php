@@ -1,17 +1,15 @@
 <?php
 
 if (isset($_POST['data']['amountOfMines']) // done
-     && isset($_POST['data']['mineRates']) // done
-     && isset($_POST['data']['warehouseLevels']) // done
-     && isset($_POST['data']['warehouseFillAmounts']) // done
-     && isset($_POST['data']['factoryLevels']) // done
-     && isset($_POST['data']['buildingLevels']) // done
-     && isset($_POST['data']['headquarterLevel'])
-    && isset($_POST['data']['headquarterPaid'])
-) {
-    session_start();
+    && isset($_POST['data']['mineRates']) // done
+    && isset($_POST['data']['warehouseLevels']) // done
+    && isset($_POST['data']['warehouseFillAmounts']) // done
+    && isset($_POST['data']['factoryLevels']) // done
+    && isset($_POST['data']['buildingLevels']) // done
+    && isset($_POST['data']['headquarterLevel']) && isset($_POST['data']['headquarterPaid'])) {
+    session_start ();
 
-    include 'db.php';
+    require_once 'db.php';
     $conn = new mysqli($host, $user, $pw, $db);
 
     $queries = [];
@@ -23,8 +21,8 @@ if (isset($_POST['data']['amountOfMines']) // done
         $updateMaterialQuery .= "`perHour" . $i . "` = " . $_POST['data']['mineRates'][$i] . ", `amountOfMines" . $i . "` = " . $_POST['data']['amountOfMines'][$i] . ", ";
     }
 
-    $updateMaterialQuery = substr($updateMaterialQuery, 0, -2) . " WHERE `id` = " . $_SESSION['id'] . "";
-    array_push($queries, $updateMaterialQuery);
+    $updateMaterialQuery = substr ($updateMaterialQuery, 0, -2) . " WHERE `id` = " . $_SESSION['id'] . "";
+    $queries[]           = $updateMaterialQuery;
 
     // update userFactories
     $updateFactoriesQuery = "UPDATE `userFactories` SET ";
@@ -33,8 +31,8 @@ if (isset($_POST['data']['amountOfMines']) // done
         $updateFactoriesQuery .= "`factory" . $i . "` = " . $_POST['data']['factoryLevels'][$i] . ", ";
     }
 
-    $updateFactoriesQuery = substr($updateFactoriesQuery, 0, -2) . " WHERE `id` = " . $_SESSION['id'] . "";
-    array_push($queries, $updateFactoriesQuery);
+    $updateFactoriesQuery = substr ($updateFactoriesQuery, 0, -2) . " WHERE `id` = " . $_SESSION['id'] . "";
+    $queries[]            = $updateFactoriesQuery;
 
     // update userBuildings
     $updateBuildingsQuery = "UPDATE `userBuildings` SET ";
@@ -43,8 +41,8 @@ if (isset($_POST['data']['amountOfMines']) // done
         $updateBuildingsQuery .= "`building" . $i . "` = " . $_POST['data']['buildingLevels'][$i] . ", ";
     }
 
-    $updateBuildingsQuery = substr($updateBuildingsQuery, 0, -2) . " WHERE `id` = " . $_SESSION['id'] . "";
-    array_push($queries, $updateBuildingsQuery);
+    $updateBuildingsQuery = substr ($updateBuildingsQuery, 0, -2) . " WHERE `id` = " . $_SESSION['id'] . "";
+    $queries[]            = $updateBuildingsQuery;
 
     // update userWarehouse
     $updateWarehouseQuery = "UPDATE `userWarehouse` SET ";
@@ -53,8 +51,8 @@ if (isset($_POST['data']['amountOfMines']) // done
         $updateWarehouseQuery .= "`level" . $i . "` = " . $_POST['data']['warehouseLevels'][$i] . ", `fillAmount" . $i . "` = " . $_POST['data']['warehouseFillAmounts'][$i] . ", ";
     }
 
-    $updateWarehouseQuery = substr($updateWarehouseQuery, 0, -2) . " WHERE `id` = " . $_SESSION['id'] . "";
-    array_push($queries, $updateWarehouseQuery);
+    $updateWarehouseQuery = substr ($updateWarehouseQuery, 0, -2) . " WHERE `id` = " . $_SESSION['id'] . "";
+    $queries[]            = $updateWarehouseQuery;
 
     // update userHeadquarter
     $updateHeadquarterQuery = "UPDATE `userHeadquarter` SET `level` = " . $_POST['data']['headquarterLevel'] . ", ";
@@ -63,13 +61,13 @@ if (isset($_POST['data']['amountOfMines']) // done
         $updateHeadquarterQuery .= "`progress" . $i . "` = " . $_POST['data']['headquarterPaid'][$i] . ", ";
     }
 
-    $updateHeadquarterQuery = substr($updateHeadquarterQuery, 0, -2) . " WHERE `id` = " . $_SESSION['id'] . "";
-    array_push($queries, $updateHeadquarterQuery);
+    $updateHeadquarterQuery = substr ($updateHeadquarterQuery, 0, -2) . " WHERE `id` = " . $_SESSION['id'] . "";
+    $queries[]              = $updateHeadquarterQuery;
 
     $increment = 0;
 
     foreach ($queries as $query) {
-        $update = $conn->query($query);
+        $update = $conn->query ($query);
 
         if ($update) {
             $increment += 1;
@@ -77,11 +75,11 @@ if (isset($_POST['data']['amountOfMines']) // done
     }
 
     if ($increment == 5) {
-        header('HTTP/1.0 200 OK');
+        header ('HTTP/1.0 200 OK');
     } else {
-        header('HTTP/1.0 418 I\'m a teapot');
+        header ('HTTP/1.0 418 I\'m a teapot');
     }
 
 } else {
-    header('HTTP/1.0 403 Forbidden');
+    header ('HTTP/1.0 403 Forbidden');
 }

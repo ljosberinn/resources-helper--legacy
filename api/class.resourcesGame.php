@@ -172,7 +172,7 @@ class resourcesGame
         $explode = explode(",", $string);
 
         foreach ($explode as $dataset) {
-            array_push($array, $dataset);
+            $array[] = $dataset;
         }
 
         return $array;
@@ -910,7 +910,7 @@ class resourcesGame
                 }
                 $image += 1;
 
-                array_push($answer, $data);
+                $answer[]    = $data;
                 $globalIndex += 1;
             }
         }
@@ -1358,7 +1358,7 @@ class resourcesGame
 
         if ($getValidTargets->num_rows > 0) {
             while ($data = $getValidTargets->fetch_assoc()) {
-                array_push($validTargets, $data["target"]);
+                $validTargets[] = $data['target'];
             }
         }
 
@@ -1426,7 +1426,7 @@ class resourcesGame
 
         if ($getAttackingDays->num_rows > 0) {
             while ($data = $getAttackingDays->fetch_assoc()) {
-                array_push($validDays, substr($data["validDay"], 0, -9));
+                $validDays[] = substr ($data["validDay"], 0, -9);
             }
         }
 
@@ -1539,7 +1539,7 @@ class resourcesGame
 
         if ($getSimpleAttackLog->num_rows > 0) {
             while ($data = $getSimpleAttackLog->fetch_assoc()) {
-                array_push($result, $data);
+                $result[] = $data;
             }
         }
 
@@ -1582,7 +1582,7 @@ class resourcesGame
 
         if ($getDefenseLog->num_rows > 0) {
             while ($data = $getDefenseLog->fetch_assoc()) {
-                array_push($result, $data);
+                $result[] = $data;
             }
         }
 
@@ -1614,7 +1614,7 @@ class resourcesGame
 
                 if ($bccomb > 0) {
                     $data["relation"] = $relation;
-                    array_push($result, $data);
+                    $result[]         = $data;
                 }
             }
         }
@@ -1632,7 +1632,7 @@ class resourcesGame
      *
      * @return array [returns array with mine information]
      */
-    private function _extractMineInformation($userId, $relation, $type) {
+    private function _extractMineInformation ($userId, $relation, $type = '') {
         $result = [];
 
         $query = "SELECT * FROM `userMineMap_" . $userId . "`";
@@ -1645,8 +1645,8 @@ class resourcesGame
 
         if ($getUserMineMap->num_rows > 0) {
             while ($data = $getUserMineMap->fetch_assoc()) {
-                $data["relation"] = $relation;
-                array_push($result, $data);
+                $data['relation'] = $relation;
+                $result[]         = $data;
             }
         }
 
@@ -1693,7 +1693,7 @@ class resourcesGame
 
         if ($getUserIds->num_rows > 0) {
             while ($id = $getUserIds->fetch_assoc()) {
-                array_push($userIds, $id["id"]);
+                $userIds[] = $id['id'];
             }
         }
 
@@ -1849,7 +1849,7 @@ class resourcesGame
 
         if ($getUser->num_rows > 0) {
             while ($data = $getUser->fetch_assoc()) {
-                array_push($result, $data);
+                $result[] = $data;
             }
         }
 
@@ -1961,7 +1961,7 @@ class resourcesGame
                     'entries' => $data['entries'],
                 ];
 
-                array_push($result['days'], $arr);
+                $result['days'][] = $arr;
             }
         }
 
@@ -1970,7 +1970,7 @@ class resourcesGame
 
         if ($getMostRecentEntries->num_rows > 0) {
             while ($data = $getMostRecentEntries->fetch_assoc()) {
-                array_push($result['log'], $data);
+                $result['log'][] = $data;
             }
         }
 
@@ -1980,7 +1980,7 @@ class resourcesGame
 
         if ($distinctIds->num_rows > 0) {
             while ($data = $distinctIds->fetch_assoc()) {
-                array_push($ids, $data['id']);
+                $ids[] = $data['id'];
             }
         }
 

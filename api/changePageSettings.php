@@ -1,9 +1,9 @@
 <?php
 
-session_start();
+session_start ();
 
 if (!isset($_SESSION["id"])) {
-    header("../index.php");
+    header ("../index.php");
 }
 
 
@@ -25,8 +25,8 @@ $possiblePOSTVars = [
 $query = "UPDATE `userSettings` SET ";
 
 foreach ($_POST as $var => $value) {
-    if (!in_array($var, $possiblePOSTVars)) {
-        header("Location: ../index.php");
+    if (!in_array ($var, $possiblePOSTVars)) {
+        header ("Location: ../index.php");
     }
 
     switch ($var) {
@@ -47,7 +47,7 @@ foreach ($_POST as $var => $value) {
                 $customTU .= $tu . ", ";
             }
 
-            $customTU = substr($customTU, 0, -2);
+            $customTU = substr ($customTU, 0, -2);
 
             if ($customTU != "") {
                 $query .= "`customTU` = '" . $customTU . "', ";
@@ -70,28 +70,28 @@ foreach ($_POST as $var => $value) {
 
         case "settings-hq-visibility":
             $allowedValues = [0, 1];
-            if (in_array($value, $allowedValues)) {
+            if (in_array ($value, $allowedValues)) {
                 $query .= "`mapVisibleHQ` = " . $value . ", ";
             } else {
-                header("Location: ../index.php");
+                header ("Location: ../index.php");
             }
             break;
 
         case "settings-mine-visibility":
             $allowedValues = [0, 1];
-            if (in_array($value, $allowedValues)) {
+            if (in_array ($value, $allowedValues)) {
                 $query .= "`mineVisibilityWorldMap` = " . $value . ", ";
             } else {
-                header("Location: ../index.php");
+                header ("Location: ../index.php");
             }
             break;
 
         case "settings-price-age":
             $allowedValues = [0, 1, 2, 3, 4, 5, 6, 7, 8,];
-            if (in_array($value, $allowedValues)) {
+            if (in_array ($value, $allowedValues)) {
                 $query .= "`priceAge` = " . $value . ", ";
             } else {
-                header("Location: ../index.php");
+                header ("Location: ../index.php");
             }
             break;
 
@@ -110,28 +110,28 @@ foreach ($_POST as $var => $value) {
     }
 }
 
-$postArrayKeys = array_keys($_POST);
+$postArrayKeys = array_keys ($_POST);
 
-if (!in_array("settings-ideal-conditions", $postArrayKeys)) {
+if (!in_array ("settings-ideal-conditions", $postArrayKeys)) {
     $query .= "`idealCondition` = 0, ";
 }
 
-if (!in_array("settings-toggle-transport-cost-inclusion", $postArrayKeys)) {
+if (!in_array ("settings-toggle-transport-cost-inclusion", $postArrayKeys)) {
     $query .= "`transportCostInclusion` = 0, ";
 }
 
-if (!in_array("settings-show-names", $postArrayKeys)) {
+if (!in_array ("settings-show-names", $postArrayKeys)) {
     $query .= "`showNames` = 0, ";
 }
 
-$query = substr($query, 0, -2) . " WHERE `id` = " . $_SESSION["id"];
+$query = substr ($query, 0, -2) . " WHERE `id` = " . $_SESSION["id"];
 
-require "db.php";
+require_once "db.php";
 
 $conn = new mysqli($host, $user, $pw, $db);
 
-$update = $conn->query($query);
+$update = $conn->query ($query);
 
 if ($update) {
-    header("Location: ../index.php?settingsSaved");
+    header ("Location: ../index.php?settingsSaved");
 }

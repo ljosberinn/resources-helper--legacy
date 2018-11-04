@@ -27,7 +27,7 @@
 
         <?php
 
-        require "app/pages/settings/pageSettings.php";
+        require_once "app/pages/settings/pageSettings.php";
 
         ?>
 
@@ -47,7 +47,7 @@
 
         <?php
 
-        require "app/pages/settings/generalSettings.php";
+        require_once "app/pages/settings/generalSettings.php";
 
         ?>
 

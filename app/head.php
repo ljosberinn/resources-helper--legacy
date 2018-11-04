@@ -1,122 +1,116 @@
-<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
 <meta name="theme-color" content="#342f2d"/>
 
 <!-- All Search Engines -->
-<meta name="robots" content="index,follow" />
+<meta name="robots" content="index,follow"/>
 <!-- Google Specific -->
-<meta name="googlebot" content="index,follow" />
+<meta name="googlebot" content="index,follow"/>
 <!-- admin contact information -->
-<link rel="me" href="mailto:admin@gerritalex.de" />
+<link rel="me" href="mailto:admin@gerritalex.de"/>
 
 <!-- general page information -->
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-title" content="Resources Helper" />
-<meta name="mobile-web-app-capable" content="yes" />
-<meta name="application-name" content="Resources Helper" />
-<meta name="description" content="Resources Helper is your go-to calculator for Resources mobile GPS real-time economy simulation" />
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="Resources Helper"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="application-name" content="Resources Helper"/>
+<meta name="description" content="Resources Helper is your go-to calculator for Resources mobile GPS real-time economy simulation"/>
 
-<meta name="author" content="Gerrit Alex" />
-<meta name="language" content="en" />
+<meta name="author" content="Gerrit Alex"/>
+<meta name="language" content="en"/>
 
-<meta name="keywords" lang="en" content="calculator, realtime, mobile, game, android, economy simulation" />
-<meta name="reply-to" content="admin@gerritalex.de" />
-<meta name="distribution" content="global" />
-<meta name="revisit-after" content="7 days" />
-<meta name="page-topic" content="Resources Helper is your go-to calculator for Resources mobile GPS real-time economy simulation" />
+<meta name="keywords" lang="en" content="calculator, realtime, mobile, game, android, economy simulation"/>
+<meta name="reply-to" content="admin@gerritalex.de"/>
+<meta name="distribution" content="global"/>
+<meta name="revisit-after" content="7 days"/>
+<meta name="page-topic" content="Resources Helper is your go-to calculator for Resources mobile GPS real-time economy simulation"/>
 
 <!-- favicons, generated via http://realfavicongenerator.net/ -->
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-<link rel="manifest" href="/manifest.json" />
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
-<meta name="apple-mobile-web-app-title" content="Resources Helper" />
-<meta name="application-name" content="Resources Helper" />
-<meta name="theme-color" content="#ffffff" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"/>
+<meta name="apple-mobile-web-app-title" content="Resources Helper"/>
+<meta name="application-name" content="Resources Helper"/>
+<meta name="theme-color" content="#ffffff"/>
 
 <!-- OpenGraph for Facebook & WhatsApp -->
-<meta property="og:title" content="Resources Helper" />
-<meta property="og:type" content="website" />
+<meta property="og:title" content="Resources Helper"/>
+<meta property="og:type" content="website"/>
 <meta property="og:url" content="https://resources-helper.de/">
-<meta property="og:description" content="Resources Helper is your go-to calculator for Resources mobile GPS real-time economy simulation" />
+<meta property="og:description" content="Resources Helper is your go-to calculator for Resources mobile GPS real-time economy simulation"/>
 
 <!-- Google+ page description -->
-<meta itemprop="name" content="Resources Helper" />
-<meta itemprop="description" content="Resources Helper is your go-to calculator for Resources mobile GPS real-time economy simulation" />
-<meta itemprop="lastReviewed" content="2018-05-03" />
+<meta itemprop="name" content="Resources Helper"/>
+<meta itemprop="description" content="Resources Helper is your go-to calculator for Resources mobile GPS real-time economy simulation"/>
+<meta itemprop="lastReviewed" content="2018-05-03"/>
 
 <!-- Twitter page description -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Resources Helper" />
-<meta name="twitter:description" content="Resources Helper is your go-to calculator for Resources mobile GPS real-time economy simulation" />
-<meta name="twitter:creator" content="@gerrit_alex" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Resources Helper"/>
+<meta name="twitter:description" content="Resources Helper is your go-to calculator for Resources mobile GPS real-time economy simulation"/>
+<meta name="twitter:creator" content="@gerrit_alex"/>
 
 <title>Resources Helper</title>
 
 <!-- DNS prefetch -->
-<link rel="dns-prefetch" href="//code.highcharts.com" />
-<link rel="dns-prefetch" href="//maps.googleapis.com" />
-<link rel="dns-prefetch" href="//code.jquery.com" />
-<link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
-<link rel="dns-prefetch" href="//unpkg.com" />
-<link rel="dns-prefetch" href="//maps.googleapis.com" />
+<link rel="dns-prefetch" href="//code.highcharts.com"/>
+<link rel="dns-prefetch" href="//maps.googleapis.com"/>
+<link rel="dns-prefetch" href="//code.jquery.com"/>
+<link rel="dns-prefetch" href="//cdn.jsdelivr.net"/>
+<link rel="dns-prefetch" href="//unpkg.com"/>
+<link rel="dns-prefetch" href="//maps.googleapis.com"/>
 
 <!-- external stylesheets
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans"> -->
 
 <!-- internal stylesheets -->
-<link rel="stylesheet" href="assets/css/GoogleFonts_OpenSans.min.css" />
-<link rel="stylesheet" href="assets/css/sweetalert2.min.css" />
+<link rel="stylesheet" href="assets/css/GoogleFonts_OpenSans.min.css"/>
+<link rel="stylesheet" href="assets/css/sweetalert2.min.css"/>
 
 <?php
 
 $cssFiles = [
     "assets/css/bootstrap.custom.min.css" => [
-        "mode" => "",
+        "mode"   => "",
         "params" => "",
-        "type" => "css",
+        "type"   => "css",
     ],
-    "assets/css/custom.min.css" => [
-        "mode" => "",
+    "assets/css/custom.min.css"           => [
+        "mode"   => "",
         "params" => "",
-        "type" => "css",
+        "type"   => "css",
     ],
 ];
 
-appendFiles($cssFiles);
+appendFiles ($cssFiles);
 
 ?>
 
 <!-- hacky inline stylesheets -->
-<?php
-
-if (isset($_SESSION["id"])) {
-    echo '
+<?php if (isset($_SESSION["id"])) { ?>
     <style>
-    @media (max-width: 639px) {
-        #loading-container {
-            display: block;
-            text-align: center;
-            margin-top: 5px;
+        @media (max-width: 639px) {
+            #loading-container {
+                display: block;
+                text-align: center;
+                margin-top: 5px;
+            }
         }
-    }
-    </style>';
-} else {
-    echo '
+    </style>
+<?php } else { ?>
     <style>
-    @media (max-width: 1240px) {
-        #loading-container {
-            display: block;
-            text-align: center;
-            margin-top: 5px;
+        @media (max-width: 1240px) {
+            #loading-container {
+                display: block;
+                text-align: center;
+                margin-top: 5px;
+            }
         }
-    }
-    </style>';
-}
-
-?>
+    </style>
+<?php } ?>
 
 <!-- JS external -->
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -133,18 +127,18 @@ if (isset($_SESSION["id"])) {
 <?php
 
 $jsFiles = [
-    "assets/js/sorttable.min.js" => [
-        "mode" => "",
+    "assets/js/sorttable.min.js"           => [
+        "mode"   => "",
         "params" => "",
-        "type" => "js",
+        "type"   => "js",
     ],
     "assets/js/googleMarkerCluster.min.js" => [
-        "mode" => "async",
+        "mode"   => "async",
         "params" => "",
-        "type" => "js",
+        "type"   => "js",
     ],
 ];
 
-appendFiles($jsFiles);
+appendFiles ($jsFiles);
 
 ?>

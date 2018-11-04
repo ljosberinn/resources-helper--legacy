@@ -1,14 +1,14 @@
 <?php
 
 $columns = [
-  "Unit"               => $textOrientation. " sorttable_nosort",
-  "Crafting price"     => $textOrientation,
-  "Market price"       => $textOrientation,
-  "Price per strength" => $textOrientation,
-  "Profit"             => $textOrientation
+    "Unit"               => $textOrientation . " sorttable_nosort",
+    "Crafting price"     => $textOrientation,
+    "Market price"       => $textOrientation,
+    "Price per strength" => $textOrientation,
+    "Profit"             => $textOrientation,
 ];
 
-$arrayKeys = array_keys($columns);
+$arrayKeys = array_keys ($columns);
 
 $textOrientation = "text-md-right text-sm-left";
 
@@ -17,49 +17,49 @@ $textOrientation = "text-md-right text-sm-left";
 <p class="lead">Units</p>
 
 <table class="table table-responsive table-break-medium table-striped mb-3" id="units-tbl">
-  <thead>
+    <thead>
     <tr class="small">
 
-      <?php
+        <?php
 
-      $i = 0;
+        $i = 0;
 
-      foreach ($columns as $column => $classes) {
+        foreach ($columns as $column => $classes) {
+            ?>
 
-          echo '
-          <th id="units-th-' .$i. '" class="' .$classes. '">' .$column. '</th>';
+            <th id="units-th-<?= $i ?>" class="<?= $classes ?>"><?= $column ?></th>
+            <?php
 
-          $i += 1;
-      }
+            $i += 1;
+        }
 
-      ?>
+        ?>
 
     </tr>
-  </thead>
-  <tbody>
+    </thead>
+    <tbody>
 
-  <?php
+    <?php
 
-  $order = [
-    0, 2, 3, 5, 4, 1
-  ];
+    foreach ([
+                 0,
+                 2,
+                 3,
+                 5,
+                 4,
+                 1,
+             ] as $i) { ?>
+        <tr>
+            <td class="<?= $textOrientation ?>" data-th="<?= $arrayKeys[0] ?>">
+                <span class="resources-unit-<?= $i ?>"></span>
+            </td>
+            <td class="<?= $textOrientation ?>" data-th="<?= $arrayKeys[1] ?>" id="units-crafting-<?= $i ?>"></td>
+            <td class="<?= $textOrientation ?>" data-th="<?= $arrayKeys[2] ?>" id="units-market-<?= $i ?>"></td>
+            <td class="<?= $textOrientation ?>" data-th="<?= $arrayKeys[3] ?>" id="units-pps-<?= $i ?>"></td>
+            <td class="<?= $textOrientation ?>" data-th="<?= $arrayKeys[4] ?>" id="units-profit-<?= $i ?>"></td>
+        </tr>
 
-  foreach ($order as $i) {
+    <?php } ?>
 
-    echo '
-    <tr>
-      <td class="' .$textOrientation. '" data-th="' .$arrayKeys[0]. '">
-        <span class="resources-unit-' .$i. '"></span>
-      </td>
-      <td class="' .$textOrientation. '" data-th="' .$arrayKeys[1]. '" id="units-crafting-' .$i. '"></td>
-      <td class="' .$textOrientation. '" data-th="' .$arrayKeys[2]. '" id="units-market-' .$i. '"></td>
-      <td class="' .$textOrientation. '" data-th="' .$arrayKeys[3]. '" id="units-pps-' .$i. '"></td>
-      <td class="' .$textOrientation. '" data-th="' .$arrayKeys[4]. '" id="units-profit-' .$i. '"></td>
-    </tr>
-    ';
-  }
-
-  ?>
-
-  </tbody>
+    </tbody>
 </table>

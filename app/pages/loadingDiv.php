@@ -4,7 +4,7 @@
 
     $loadingAnimations = glob("assets/img/loadingAnimations/*.svg", GLOB_NOSORT);
 
-    require $loadingAnimations[array_rand($loadingAnimations, 1)];
+    require_once $loadingAnimations[array_rand ($loadingAnimations, 1)];
 
     ?>
 

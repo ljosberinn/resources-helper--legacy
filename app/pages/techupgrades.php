@@ -20,7 +20,7 @@
 
         <?php
 
-        require "app/pages/techupgrades/calculator.php";
+        require_once "app/pages/techupgrades/calculator.php";
 
         ?>
 
@@ -43,7 +43,7 @@
 
         <?php
 
-        require "app/pages/techupgrades/combinations.php";
+        require_once "app/pages/techupgrades/combinations.php";
 
         ?>
 
