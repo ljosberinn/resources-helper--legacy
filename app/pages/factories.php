@@ -37,7 +37,7 @@ $arrayKeys = array_keys ($columns);
                     $i = 0;
 
                     foreach ($columns as $column => $specialClasses) { ?>
-                        <th id="factories-th-<?= $i ?>" class="<?= $textOrientation ?><?= $specialClasses ?>">
+                        <th id="factories-th-<?= $i ?>" class="<?= $textOrientation ?> <?= $specialClasses ?>">
                             <?= $column ?>
                         </th>
                         <?php

@@ -45,7 +45,7 @@
 <!-- Google+ page description -->
 <meta itemprop="name" content="Resources Helper"/>
 <meta itemprop="description" content="Resources Helper is your go-to calculator for Resources mobile GPS real-time economy simulation"/>
-<meta itemprop="lastReviewed" content="2018-05-03"/>
+<meta itemprop="lastReviewed" content="2018-11-07"/>
 
 <!-- Twitter page description -->
 <meta name="twitter:card" content="summary_large_image"/>
