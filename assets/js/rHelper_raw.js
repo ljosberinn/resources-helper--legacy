@@ -1562,7 +1562,7 @@ const rHelper = {
       }
     },
     EVNT_attackLogTrigger() {
-      $('#heading-defenselog a').on('click', e => {
+      $('#heading-defenselog-simple a').on('click', e => {
         e.preventDefault();
         rHelper.methods.API_getAttackLog('defenseSimple');
       });
@@ -2057,6 +2057,45 @@ const rHelper = {
 
       $('#attacklog-detailed-profit-avg').text(dataContainer.avg.profit.toLocaleString('en-US'));
       $('#attacklog-detailed-profit-total').text(dataContainer.total.profit.toLocaleString('en-US'));
+    },
+
+    INSRT_defenseLogDetailedGeneralInformation (dataContainer) {
+      $('#defenselog-detailed-units-lost-avg').html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion('offense', dataContainer.avg.unitsLost));
+      $('#defenselog-detailed-units-lost-total').html(rHelper.methods.CALC_attackLogDetailedUnitStringInsertion('offense', dataContainer.total.unitsLost));
+
+      $('#defenselog-detailed-factor-avg').text(`${dataContainer.avg.factor}%`);
+
+      $('#defenselog-detailed-profit-avg').text(dataContainer.avg.profit.toLocaleString('en-US'));
+      $('#defenselog-detailed-profit-total').text(dataContainer.total.profit.toLocaleString('en-US'));
+    },
+
+    INSRT_defenseLogDetailed (type, dataContainer) {
+      let [target, select, sortableTable, dataTHs] = [
+        $('#defenselog-tbody-detailed'),
+        $('#defenselog-detailed-selector'),
+        $('#collapse-defenselog-detailed table')[1],
+        ['Attacking player (level)', 'Timestamp & position', 'Units lost', 'Units destroyed', 'Lootfactor', 'Loot', 'Profit']
+      ];
+
+      target.empty();
+
+      if (select[0].children.length === 2) {
+        $.each(dataContainer.validTargets, (i, target) => {
+          select.append(`<option value="${target}">${target}</option>`);
+        });
+      }
+
+      $.each(dataContainer.data, (i, dataset) => {
+        target.append(rHelper.methods.CALC_attackLogDetailedDatasetIteration(i, dataset, dataTHs));
+      });
+
+      rHelper.methods.INSRT_defenseLogDetailedGeneralInformation(dataContainer);
+
+      ['last', 'next'].forEach(type => {
+        rHelper.methods.CALC_attackLogDetailedPageButtonToggler(type, dataContainer);
+      });
+
+      sorttable.makeSortable(sortableTable);
     },
     INSRT_attackLogDetailed(type, dataContainer) {
       let [target, select, sortableTable, dataTHs] = [

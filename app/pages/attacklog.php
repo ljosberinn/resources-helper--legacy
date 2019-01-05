@@ -7,7 +7,7 @@
 
     <div id="attacklog-accordion" role="tablist" aria-multiselectable="true" class="col">
         <div class="card">
-            <div class="card-header bg-dark" role="tab" id="heading-defenselog">
+            <div class="card-header bg-dark" role="tab" id="heading-defenselog-simple">
                 <h5 class="mb-0">
                     <a class="collapsed" data-toggle="collapse" data-parent="#attacklog-accordion" href="#collapse-defenselog-simple" aria-expanded="false" aria-controls="collapse-defenselog-simple" id="defenselog-header">
                         Simple Defense Log
@@ -15,18 +15,44 @@
                 </h5>
             </div>
 
-            <div id="collapse-defenselog-simple" class="collapse" role="tabpanel" aria-labelledby="heading-defenselog">
+            <div id="collapse-defenselog-simple" class="collapse" role="tabpanel" aria-labelledby="heading-defenselog-simple">
                 <div class="card-block p-4 bg-light">
 
                     <?php
 
-                    require_once "app/pages/attacklog/defense.php";
+                    require_once "app/pages/attacklog/defenseSimple.php";
 
                     ?>
 
                 </div>
             </div>
         </div>
+
+        <?php if ($_SESSION['id'] == 1) { ?>
+
+            <div class="card">
+                <div class="card-header bg-dark" role="tab" id="heading-defenselog-detailed">
+                    <h5 class="mb-0">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#attacklog-accordion" href="#collapse-defenselog-detailed" aria-expanded="false" aria-controls="collapse-defenselog-detailed" id="defenselog-detailed-header">
+                            Detailed Defense Log
+                        </a>
+                    </h5>
+                </div>
+
+                <div id="collapse-defenselog-detailed" class="collapse" role="tabpanel" aria-labelledby="heading-defenselog-detailed">
+                    <div class="card-block p-4 bg-light">
+
+                        <?php
+
+                        require_once "app/pages/attacklog/defenseDetailed.php";
+
+                        ?>
+
+                    </div>
+                </div>
+            </div>
+
+        <?php } ?>
 
         <div class="card">
             <div class="card-header bg-dark" role="tab" id="heading-attacklog-1">
@@ -42,7 +68,7 @@
 
                     <?php
 
-                    require_once "app/pages/attacklog/simple.php";
+                    require_once "app/pages/attacklog/attackSimple.php";
 
                     ?>
 
@@ -65,7 +91,7 @@
 
                     <?php
 
-                    require_once "app/pages/attacklog/detailed.php";
+                    require_once "app/pages/attacklog/attackDetailed.php";
 
                     ?>
 

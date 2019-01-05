@@ -45,33 +45,33 @@ class resourcesGame
      * @example resources => min = 0, max = 13, length = 14, outputName = material, localizationTable = materialNames
      */
     const TABLE_NAMES = [
-        "resources" => [
-            "min"               => 0,
-            "max"               => 13,
-            "length"            => 14,
-            "outputName"        => "material",
-            "localizationTable" => "materialNames",
+        'resources' => [
+            'min'               => 0,
+            'max'               => 13,
+            'length'            => 14,
+            'outputName'        => 'material',
+            'localizationTable' => 'materialNames',
         ],
-        "factories" => [
-            "min"               => 14,
-            "max"               => 35,
-            "length"            => 22,
-            "outputName"        => "products",
-            "localizationTable" => "productNames",
+        'factories' => [
+            'min'               => 14,
+            'max'               => 35,
+            'length'            => 22,
+            'outputName'        => 'products',
+            'localizationTable' => 'productNames',
         ],
-        "loot"      => [
-            "min"               => 36,
-            "max"               => 51,
-            "length"            => 16,
-            "outputName"        => "loot",
-            "localizationTable" => "lootNames",
+        'loot'      => [
+            'min'               => 36,
+            'max'               => 51,
+            'length'            => 16,
+            'outputName'        => 'loot',
+            'localizationTable' => 'lootNames',
         ],
-        "units"     => [
-            "min"               => 52,
-            "max"               => 57,
-            "length"            => 6,
-            "outputName"        => "units",
-            "localizationTable" => "unitNames",
+        'units'     => [
+            'min'               => 52,
+            'max'               => 57,
+            'length'            => 6,
+            'outputName'        => 'units',
+            'localizationTable' => 'unitNames',
         ],
     ];
 
@@ -80,15 +80,15 @@ class resourcesGame
      * @example current, 1day, 3days, 7days, 4weeks, 3months, 6months, 1year, max
      */
     const PRICE_INTERVALS = [
-        "current" => 60 * 60,
-        "1day"    => 60 * 60 * 24,
-        "3days"   => 60 * 60 * 24 * 3,
-        "7days"   => 60 * 60 * 24 * 7,
-        "4weeks"  => 60 * 60 * 24 * 7 * 4,
-        "3months" => 60 * 60 * 24 * 7 * 4 * 3,
-        "6months" => 60 * 60 * 24 * 7 * 4 * 6,
-        "1year"   => 60 * 60 * 24 * 365,
-        "max"     => 0,
+        'current' => 60 * 60,
+        '1day'    => 60 * 60 * 24,
+        '3days'   => 60 * 60 * 24 * 3,
+        '7days'   => 60 * 60 * 24 * 7,
+        '4weeks'  => 60 * 60 * 24 * 7 * 4,
+        '3months' => 60 * 60 * 24 * 7 * 4 * 3,
+        '6months' => 60 * 60 * 24 * 7 * 4 * 6,
+        '1year'   => 60 * 60 * 24 * 365,
+        'max'     => 0,
     ];
 
     /**
@@ -96,10 +96,10 @@ class resourcesGame
      * @example contingent, fillAmount, filLStatus, level
      */
     const WAREHOUSE_ARRAY = [
-        "contingent",
-        "fillAmount",
-        "fillStatus",
-        "level",
+        'contingent',
+        'fillAmount',
+        'fillStatus',
+        'level',
     ];
 
     /**
@@ -107,8 +107,8 @@ class resourcesGame
      * @example amountOfMines, perHour
      */
     const RESOURCE_ARRAY = [
-        "amountOfMines",
-        "perHour",
+        'amountOfMines',
+        'perHour',
     ];
 
     /**
@@ -116,7 +116,7 @@ class resourcesGame
      * @example factoryLevel
      */
     const PRODUCT_ARRAY = [
-        "factoryLevel",
+        'factoryLevel',
     ];
 
     /**
@@ -131,29 +131,29 @@ class resourcesGame
      * @example de, en, fr, ru, jp, in
      */
     const LANGUAGES = [
-        "de",
-        "en",
-        "fr",
-        "ru",
-        "jp",
-        "in",
-        "cz",
+        'de',
+        'en',
+        'fr',
+        'ru',
+        'jp',
+        'in',
+        'cz',
     ];
 
     /**
      * @var array SETTINGS [defines settings and their base value]
      */
     const SETTINGS = [
-        "language"               => self::LANGUAGES[0],
-        "customTU"               => [111, 26, 0, 0],
-        "idealCondition"         => 0,
-        "factoryNames"           => 0,
-        "transportCostInclusion" => 0,
-        "mapVisibleHQ"           => 0,
-        "showNames"              => 0,
-        "queryPreset"            => [1, 2, 3, 4, 5, 51, 6, 7, 9, 10],
-        "mineVisibilityWorldMap" => 0,
-        "mayOverwriteAPI"        => 0,
+        'language'               => self::LANGUAGES[0],
+        'customTU'               => [111, 26, 0, 0],
+        'idealCondition'         => 0,
+        'factoryNames'           => 0,
+        'transportCostInclusion' => 0,
+        'mapVisibleHQ'           => 0,
+        'showNames'              => 0,
+        'queryPreset'            => [1, 2, 3, 4, 5, 51, 6, 7, 9, 10],
+        'mineVisibilityWorldMap' => 0,
+        'mayOverwriteAPI'        => 0,
     ];
 
 
@@ -169,7 +169,7 @@ class resourcesGame
      */
     private function _convertArrayStringToArray($string) {
         $array   = [];
-        $explode = explode(",", $string);
+        $explode = explode(',', $string);
 
         foreach ($explode as $dataset) {
             $array[] = $dataset;
@@ -187,7 +187,7 @@ class resourcesGame
     private function _DBConnection() {
         try {
             $_conn = new mysqli($this->_host, $this->_user, $this->_pw, $this->_db);
-            $_conn->set_charset("utf8mb4");
+            $_conn->set_charset('utf8mb4');
             $this->_conn = $_conn;
         } catch (Exception $e) {
             return $e->getMessage();
@@ -218,7 +218,7 @@ class resourcesGame
 
         $this->_conn = $this->_DBConnection();
 
-        if ($_prices === "on") {
+        if ($_prices === 'on') {
             $this->_prices = $this->getAllPrices();
         }
     }
@@ -234,39 +234,39 @@ class resourcesGame
      * @return array [returns modified array]
      */
     private function _getBaseQuery($type) {
-        $stmt = "SELECT ";
+        $stmt = 'SELECT ';
 
         switch ($type) {
-            case "resources":
-                $stmt .= "`basePrice`, `dependantFactories`, `maxRate`";
+            case 'resources':
+                $stmt .= '`basePrice`, `dependantFactories`, `maxRate`';
                 break;
 
-            case "factories":
-                $stmt .= "`cashPerHour`, `dependantFactories`, `dependencies`, `scaling`, `requiredAmount`, `upgradeMaterial`, `upgradeMaterialAmount`";
+            case 'factories':
+                $stmt .= '`cashPerHour`, `dependantFactories`, `dependencies`, `scaling`, `requiredAmount`, `upgradeMaterial`, `upgradeMaterialAmount`';
                 break;
 
-            case "loot":
-                $stmt .= "`recyclingDivisor`, `recyclingProduct`, `recyclingAmount`";
+            case 'loot':
+                $stmt .= '`recyclingDivisor`, `recyclingProduct`, `recyclingAmount`';
                 break;
 
-            case "units":
-                $stmt .= "`requirements`, `requiredAmount`, `baseStrength`";
+            case 'units':
+                $stmt .= '`requirements`, `requiredAmount`, `baseStrength`';
                 break;
 
-            case "headquarter":
-                $stmt .= "`amount`, `material`, `boost`, `radius`";
+            case 'headquarter':
+                $stmt .= '`amount`, `material`, `boost`, `radius`';
                 break;
 
-            case "buildings":
-                $stmt .= "`level`, `material`, `materialAmount0`, `materialAmount1`, `materialAmount2`, `materialAmount3`";
+            case 'buildings':
+                $stmt .= '`level`, `material`, `materialAmount0`, `materialAmount1`, `materialAmount2`, `materialAmount3`';
                 break;
 
-            case "settings":
-                $stmt .= "`setting`, `value`, `description`";
+            case 'settings':
+                $stmt .= '`setting`, `value`, `description`';
                 break;
         }
 
-        $stmt .= " FROM `" . $type . "` ORDER BY `id` ASC";
+        $stmt .= ' FROM `' . $type . '` ORDER BY `id` ASC';
 
         return $stmt;
     }
@@ -533,38 +533,38 @@ class resourcesGame
      */
     public function getAllPrices() {
         $_prices = [
-            "resources" => [],
-            "factories" => [],
-            "loot"      => [],
-            "units"     => [],
+            'resources' => [],
+            'factories' => [],
+            'loot'      => [],
+            'units'     => [],
         ];
 
         foreach (self::TABLE_NAMES as $arrayIndex => $minMax) {
             $globalIndex = 0;
 
-            for ($index = $minMax["min"]; $index <= $minMax["max"]; $index += 1) {
-                $query = "SELECT * FROM ";
+            for ($index = $minMax['min']; $index <= $minMax['max']; ++$index) {
+                $query = 'SELECT * FROM ';
 
                 $officialId = $this->_convertInternalIdToOldStructure($index);
 
                 foreach (self::PRICE_INTERVALS as $interval => $seconds) {
-                    $indexInterval = $index . "_" . $interval;
+                    $indexInterval = $index . '_' . $interval;
 
-                    $query .= "(
+                    $query .= '(
                       SELECT
-                      AVG(" . $officialId . "_k) AS `" . $indexInterval . "_ai`,
-                      AVG(nullif(" . $officialId . "_tk, 0)) AS `" . $indexInterval . "_player`
-                      FROM `price` ";
+                      AVG(' . $officialId . '_k) AS `' . $indexInterval . '_ai`,
+                      AVG(nullif(' . $officialId . '_tk, 0)) AS `' . $indexInterval . '_player`
+                      FROM `price` ';
 
                     switch ($interval) {
-                        case "max":
+                        case 'max':
                             break;
                         default:
-                            $query .= "WHERE `ts` >= (UNIX_TIMESTAMP() - " . $seconds . ")";
+                            $query .= 'WHERE `ts` >= (UNIX_TIMESTAMP() - ' . $seconds . ')';
                             break;
                     }
 
-                    $query .= ") AS `" . $indexInterval . "`, ";
+                    $query .= ') AS `' . $indexInterval . '`, ';
                 }
 
                 $query = substr($query, 0, -2);
@@ -574,18 +574,18 @@ class resourcesGame
                 if ($getPrices->num_rows > 0) {
                     while ($result = $getPrices->fetch_assoc()) {
                         foreach (self::PRICE_INTERVALS as $interval => $seconds) {
-                            $_prices[$arrayIndex][$globalIndex][$interval]["ai"]     = round($result[$index . "_" . $interval . "_ai"]);
-                            $_prices[$arrayIndex][$globalIndex][$interval]["player"] = round($result[$index . "_" . $interval . "_player"]);
+                            $_prices[$arrayIndex][$globalIndex][$interval]['ai']     = round($result[$index . '_' . $interval . '_ai']);
+                            $_prices[$arrayIndex][$globalIndex][$interval]['player'] = round($result[$index . '_' . $interval . '_player']);
                         }
                     }
                 } else {
                     foreach (self::PRICE_INTERVALS as $interval => $seconds) {
-                        $_prices[$arrayIndex][$globalIndex][$interval]["ai"]     = 0;
-                        $_prices[$arrayIndex][$globalIndex][$interval]["player"] = 0;
+                        $_prices[$arrayIndex][$globalIndex][$interval]['ai']     = 0;
+                        $_prices[$arrayIndex][$globalIndex][$interval]['player'] = 0;
                     }
                 }
 
-                $globalIndex += 1;
+                ++$globalIndex;
             }
         }
 
@@ -828,26 +828,26 @@ class resourcesGame
         $answer = [];
 
         switch ($type) {
-            case "resources":
-                $imgClass = "material";
+            case 'resources':
+                $imgClass = 'material';
                 break;
-            case "factories":
-                $imgClass = "product";
+            case 'factories':
+                $imgClass = 'product';
                 break;
-            case "loot":
-                $imgClass = "loot";
+            case 'loot':
+                $imgClass = 'loot';
                 break;
-            case "units":
-                $imgClass = "unit";
+            case 'units':
+                $imgClass = 'unit';
                 break;
-            case "headquarter":
-                $imgClass = "hq";
+            case 'headquarter':
+                $imgClass = 'hq';
                 break;
-            case "buildings":
-                $imgClass = "building";
+            case 'buildings':
+                $imgClass = 'building';
                 break;
-            case "settings":
-                $imgClass = "settings";
+            case 'settings':
+                $imgClass = 'settings';
                 break;
         }
 
@@ -861,35 +861,35 @@ class resourcesGame
                 DB stores arrays as comma-separated strings => convert them to array before appending
                 */
                 foreach ($data as $index => $dataset) {
-                    if (strpos($dataset, ",") !== false) {
+                    if (strpos($dataset, ',') !== false) {
                         $data[$index] = $this->_convertArrayStringToArray($dataset);
                     }
                 }
 
-                if ($imgClass !== "hq" && $imgClass !== "building" && $imgClass !== "settings") {
+                if ($imgClass !== 'hq' && $imgClass !== 'building' && $imgClass !== 'settings') {
 
                     /*
                     adds prices
                     */
                     foreach (self::PRICE_INTERVALS as $interval => $seconds) {
-                        $data["prices"][$interval] = $this->_prices[$type][$globalIndex][$interval];
+                        $data['prices'][$interval] = $this->_prices[$type][$globalIndex][$interval];
                     }
 
                     /*
                     globally adds warehouse subobject
                     */
                     foreach (self::WAREHOUSE_ARRAY as $array) {
-                        $data["warehouse"][$array] = 0;
+                        $data['warehouse'][$array] = 0;
                     }
 
                     /*
                     adds special subobjects depending on type
                     */
                     switch ($type) {
-                        case "factories":
+                        case 'factories':
                             $originArray = self::PRODUCT_ARRAY;
                             break;
-                        case "resources":
+                        case 'resources':
                             $originArray = self::RESOURCE_ARRAY;
                             break;
                         default:
@@ -905,13 +905,13 @@ class resourcesGame
                 /*
                 links to corresponding image
                 */
-                if ($imgClass !== "settings") {
-                    $data["icon"] = "resources-" . $imgClass . "-" . $image;
+                if ($imgClass !== 'settings') {
+                    $data['icon'] = 'resources-' . $imgClass . '-' . $image;
                 }
-                $image += 1;
+                ++$image;
 
                 $answer[]    = $data;
-                $globalIndex += 1;
+                ++$globalIndex;
             }
         }
 
@@ -944,41 +944,41 @@ class resourcesGame
      * @return array [returns corresponding user settings]
      */
     public function getUserSettings($baseData, $userId) {
-        $stmt  = "SELECT * FROM `userSettings` WHERE `id` = " . $userId . "";
+        $stmt  = 'SELECT * FROM `userSettings` WHERE `id` = ' . $userId . '';
         $query = $this->_conn->query($stmt);
 
         if ($query->num_rows === 1) {
             while ($data = $query->fetch_assoc()) {
 
-                $baseData[0]["setting"] = "lang";
-                $baseData[0]["value"]   = $data["lang"];
+                $baseData[0]['setting'] = 'lang';
+                $baseData[0]['value']   = $data['lang'];
 
-                $baseData[1]["setting"] = "customTU";
-                $baseData[1]["value"]   = $this->_convertArrayStringToArray($data["customTU"]);
+                $baseData[1]['setting'] = 'customTU';
+                $baseData[1]['value']   = $this->_convertArrayStringToArray($data['customTU']);
 
-                $baseData[2]["setting"] = "idealCondition";
-                $baseData[2]["value"]   = $data["idealCondition"];
+                $baseData[2]['setting'] = 'idealCondition';
+                $baseData[2]['value']   = $data['idealCondition'];
 
-                $baseData[3]["setting"] = "transportCostInclusion";
-                $baseData[3]["value"]   = $data["transportCostInclusion"];
+                $baseData[3]['setting'] = 'transportCostInclusion';
+                $baseData[3]['value']   = $data['transportCostInclusion'];
 
-                $baseData[4]["setting"] = "mapVisibleHQ";
-                $baseData[4]["value"]   = $data["mapVisibleHQ"];
+                $baseData[4]['setting'] = 'mapVisibleHQ';
+                $baseData[4]['value']   = $data['mapVisibleHQ'];
 
-                $baseData[5]["setting"] = "priceAge";
-                $baseData[5]["value"]   = $data["priceAge"];
+                $baseData[5]['setting'] = 'priceAge';
+                $baseData[5]['value']   = $data['priceAge'];
 
-                $baseData[6]["setting"] = "showNames";
-                $baseData[6]["value"]   = $data["showNames"];
+                $baseData[6]['setting'] = 'showNames';
+                $baseData[6]['value']   = $data['showNames'];
 
-                $baseData[7]["setting"] = "queryPreset";
-                $baseData[7]["value"]   = $this->_convertArrayStringToArray($data["queryPreset"]);
+                $baseData[7]['setting'] = 'queryPreset';
+                $baseData[7]['value']   = $this->_convertArrayStringToArray($data['queryPreset']);
 
-                $baseData[8]["setting"] = "mineVisibilityWorldMap";
-                $baseData[8]["value"]   = $data["mineVisibilityWorldMap"];
+                $baseData[8]['setting'] = 'mineVisibilityWorldMap';
+                $baseData[8]['value']   = $data['mineVisibilityWorldMap'];
 
-                $baseData[9]["setting"] = "mayOverwriteAPI";
-                $baseData[9]["value"]   = $data["mayOverwriteAPI"];
+                $baseData[9]['setting'] = 'mayOverwriteAPI';
+                $baseData[9]['value']   = $data['mayOverwriteAPI'];
 
             }
         }
@@ -996,16 +996,16 @@ class resourcesGame
      * @return array [returns corresponding user settings]
      */
     public function getUserSpecialBuildings($baseData, $userId) {
-        $query = "SELECT * FROM `userBuildings` WHERE `id` = " . $userId . "";
+        $query = 'SELECT * FROM `userBuildings` WHERE `id` = ' . $userId . '';
 
         $getUserBuildings = $this->_conn->query($query);
 
         if ($getUserBuildings->num_rows === 1) {
             while ($data = $getUserBuildings->fetch_assoc()) {
                 foreach ($data as $building => $buildingLevel) {
-                    if (strpos($building, "building") !== false) {
+                    if (strpos($building, 'building') !== false) {
                         $building                     = substr($building, 8, 2);
-                        $baseData[$building]["level"] = $buildingLevel;
+                        $baseData[$building]['level'] = $buildingLevel;
                     }
                 }
             }
@@ -1024,22 +1024,22 @@ class resourcesGame
      * @return array [returns modified $baseData]
      */
     public function getUserMaterials($baseData, $userId) {
-        $query = "SELECT * FROM `userMaterial` WHERE `id` = " . $userId;
+        $query = 'SELECT * FROM `userMaterial` WHERE `id` = ' . $userId;
 
         $getUserMaterial = $this->_conn->query($query);
 
         if ($getUserMaterial->num_rows > 0) {
             while ($data = $getUserMaterial->fetch_assoc()) {
                 foreach ($data as $key => $value) {
-                    $index = preg_replace("/[^0-9]/", "", $key);
+                    $index = preg_replace('/[^0-9]/', '', $key);
 
                     if (is_numeric($index)) {
-                        if (strpos($key, "amountOfMines") !== false) {
+                        if (strpos($key, 'amountOfMines') !== false) {
                             $key    = substr($key, 13);
-                            $target = "amountOfMines";
-                        } elseif (strpos($key, "perHour") !== false) {
+                            $target = 'amountOfMines';
+                        } elseif (strpos($key, 'perHour') !== false) {
                             $key    = substr($key, 7);
-                            $target = "perHour";
+                            $target = 'perHour';
                         }
                         $baseData[$key][$target] = $value;
                     }
@@ -1060,22 +1060,22 @@ class resourcesGame
      */
     private function _convertIndexToSubarray($index) {
         if ($index >= 0 && $index <= 13) {
-            $subArray      = "material";
+            $subArray      = 'material';
             $arrayPosition = $index;
         } elseif ($index >= 14 && $index <= 35) {
-            $subArray      = "products";
+            $subArray      = 'products';
             $arrayPosition = $index - 14;
         } elseif ($index >= 36 && $index <= 51) {
-            $subArray      = "loot";
+            $subArray      = 'loot';
             $arrayPosition = $index - 36;
         } elseif ($index >= 52) {
-            $subArray      = "units";
+            $subArray      = 'units';
             $arrayPosition = $index - 52;
         }
 
         return [
-            "subArray"      => $subArray,
-            "arrayPosition" => $arrayPosition,
+            'subArray'      => $subArray,
+            'arrayPosition' => $arrayPosition,
         ];
     }
 
@@ -1089,16 +1089,16 @@ class resourcesGame
      * @return array [returns modified $baseData]
      */
     public function getUserFactories($baseData, $userId) {
-        $query = "SELECT * FROM `userFactories` WHERE `id` = " . $userId . "";
+        $query = 'SELECT * FROM `userFactories` WHERE `id` = ' . $userId . '';
 
         $getUserFactories = $this->_conn->query($query);
 
         if ($getUserFactories->num_rows > 0) {
             while ($data = $getUserFactories->fetch_assoc()) {
                 foreach ($data as $factory => $level) {
-                    if (strpos($factory, "factory") !== false) {
+                    if (strpos($factory, 'factory') !== false) {
                         $factory                            = substr($factory, 7);
-                        $baseData[$factory]["factoryLevel"] = $level;
+                        $baseData[$factory]['factoryLevel'] = $level;
                     }
                 }
             }
@@ -1117,7 +1117,7 @@ class resourcesGame
      * @return array [returns modified $baseData]
      */
     public function getUserWarehouseContent($baseData, $userId) {
-        $query = "SELECT * FROM `userWarehouse` WHERE `id` = " . $userId;
+        $query = 'SELECT * FROM `userWarehouse` WHERE `id` = ' . $userId;
 
         $getUserWarehouse = $this->_conn->query($query);
 
@@ -1125,27 +1125,27 @@ class resourcesGame
             while ($data = $getUserWarehouse->fetch_assoc()) {
 
                 foreach ($data as $key => $value) {
-                    $index = preg_replace("/[^0-9]/", "", $key);
+                    $index = preg_replace('/[^0-9]/', '', $key);
 
                     if (is_numeric($index)) {
                         $subArrayData  = $this->_convertIndexToSubarray($index);
-                        $subArray      = $subArrayData["subArray"];
-                        $arrayPosition = $subArrayData["arrayPosition"];
+                        $subArray      = $subArrayData['subArray'];
+                        $arrayPosition = $subArrayData['arrayPosition'];
 
                         if (strpos($key, self::WAREHOUSE_ARRAY[3]) !== false) {
                             $key                                                            = substr($key, 5);
                             $target                                                         = self::WAREHOUSE_ARRAY[3];
-                            $baseData[$subArray][$arrayPosition]["warehouse"]["contingent"] = pow($value, 2) * 5000;
+                            $baseData[$subArray][$arrayPosition]['warehouse']['contingent'] = pow($value, 2) * 5000;
                         } elseif (strpos($key, self::WAREHOUSE_ARRAY[1]) !== false) {
                             $key    = substr($key, 10);
                             $target = self::WAREHOUSE_ARRAY[1];
                         }
 
-                        $baseData[$subArray][$arrayPosition]["warehouse"][$target]      = $value;
-                        $baseData[$subArray][$arrayPosition]["warehouse"]["fillStatus"] = (int)$baseData[$subArray][$arrayPosition]["warehouse"]["fillAmount"] / (int)$baseData[$subArray][$arrayPosition]["warehouse"]["contingent"];
+                        $baseData[$subArray][$arrayPosition]['warehouse'][$target]      = $value;
+                        $baseData[$subArray][$arrayPosition]['warehouse']['fillStatus'] = (int) $baseData[$subArray][$arrayPosition]['warehouse']['fillAmount'] / (int) $baseData[$subArray][$arrayPosition]['warehouse']['contingent'];
 
-                        if(gettype($baseData[$subArray][$arrayPosition]["warehouse"]["fillStatus"]) === 'double') {
-                            $baseData[$subArray][$arrayPosition]["warehouse"]["fillStatus"] = 0.00;
+                        if (gettype($baseData[$subArray][$arrayPosition]['warehouse']['fillStatus']) === 'double') {
+                            $baseData[$subArray][$arrayPosition]['warehouse']['fillStatus'] = 0.00;
                         }
                     }
                 }
@@ -1181,7 +1181,7 @@ class resourcesGame
      * @return array [contains userInfo]
      */
     public function getUserInfo($userId) {
-        $query = "SELECT
+        $query = 'SELECT
         `registeredPage`,
         `mail`,
         `registeredGame`,
@@ -1192,7 +1192,7 @@ class resourcesGame
         `name`,
         `points`,
         `rank`,
-        `level` FROM `userOverview` WHERE `id` = " . $userId . "";
+        `level` FROM `userOverview` WHERE `id` = ' . $userId . '';
 
         $getUserInfo = $this->_conn->query($query);
 
@@ -1202,21 +1202,21 @@ class resourcesGame
             while ($data = $getUserInfo->fetch_assoc()) {
 
                 $arr = [
-                    "hashedKey" => $data["hashedKey"],
-                    "realKey"   => $data["realKey"],
+                    'hashedKey' => $data['hashedKey'],
+                    'realKey'   => $data['realKey'],
                 ];
 
                 foreach ($arr as $index => $key) {
-                    if ($key === "") {
+                    if ($key === '') {
                         $key = false;
                     }
                     $result[$index] = $key;
                 }
 
                 $arr = [
-                    "registeredPage" => $data["registeredPage"],
-                    "registeredGame" => $data["registeredGame"],
-                    "lastUpdate"     => $data["lastUpdate"],
+                    'registeredPage' => $data['registeredPage'],
+                    'registeredGame' => $data['registeredGame'],
+                    'lastUpdate'     => $data['lastUpdate'],
                 ];
 
                 foreach ($arr as $index => $timestamp) {
@@ -1224,23 +1224,23 @@ class resourcesGame
                 }
 
                 $arr = [
-                    "remainingCredits" => $data["remainingCredits"],
-                    "mail"             => $data["mail"],
-                    "name"             => $data["name"],
-                    "points"           => $data["points"],
-                    "rank"             => $data["rank"],
-                    "level"            => $data["level"],
+                    'remainingCredits' => $data['remainingCredits'],
+                    'mail'             => $data['mail'],
+                    'name'             => $data['name'],
+                    'points'           => $data['points'],
+                    'rank'             => $data['rank'],
+                    'level'            => $data['level'],
                 ];
 
                 foreach ($arr as $index => $value) {
-                    if ($value === "") {
+                    if ($value === '') {
                         $value = false;
                     }
 
                     $result[$index] = $value;
                 }
 
-                $result["securityToken"] = md5($data["registeredPage"]);
+                $result['securityToken'] = md5($data['registeredPage']);
             }
         }
 
@@ -1258,8 +1258,8 @@ class resourcesGame
      */
     public function createTable($type, $userId) {
         switch ($type) {
-            case "attackLog":
-                $query = "CREATE TABLE IF NOT EXISTS `userAttackLog_" . $userId . "` (
+            case 'attackLog':
+                $query = 'CREATE TABLE IF NOT EXISTS `userAttackLog_' . $userId . '` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `target` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
             `targetLevel` smallint(3) NOT NULL,
@@ -1291,10 +1291,10 @@ class resourcesGame
             `profit` bigint(16) NOT NULL,
             PRIMARY KEY (`id`),
             UNIQUE KEY `timestamp` (`timestamp`)
-            ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+            ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;';
                 break;
-            case "mineMap":
-                $query = "CREATE TABLE IF NOT EXISTS `userMineMap_" . $userId . "` (
+            case 'mineMap':
+                $query = 'CREATE TABLE IF NOT EXISTS `userMineMap_' . $userId . '` (
             `lon` decimal(9,6) NOT NULL,
             `lat` decimal(9,6) NOT NULL,
             `type` smallint(2) NOT NULL,
@@ -1306,10 +1306,10 @@ class resourcesGame
             `techFactor` float NOT NULL,
             UNIQUE KEY `uc_name` (`lon`,`lat`),
             UNIQUE KEY `builddate` (`builddate`)
-            ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+            ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;';
                 break;
-            case "tradeLog":
-                $query = "CREATE TABLE IF NOT EXISTS `userTradeLog_" . $userId . "` (
+            case 'tradeLog':
+                $query = 'CREATE TABLE IF NOT EXISTS `userTradeLog_' . $userId . '` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `timestamp` int(10) NOT NULL,
             `event` tinyint(1) NOT NULL,
@@ -1321,10 +1321,10 @@ class resourcesGame
             `actorLevel` mediumint(3) NOT NULL,
             PRIMARY KEY (`id`),
             UNIQUE KEY `uniqueness` (`event`,`timestamp`,`actor`,`itemId`)
-            ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+            ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci';
                 break;
-            case "missions":
-                $query = "CREATE TABLE IF NOT EXISTS `userMissions_" . $userId . "` (
+            case 'missions':
+                $query = 'CREATE TABLE IF NOT EXISTS `userMissions_' . $userId . '` (
             `id` int(11) NOT NULL,
             `startTimestamp` int(10) NOT NULL,
             `endTimestamp` int(10) NOT NULL,
@@ -1335,7 +1335,7 @@ class resourcesGame
             `penalty` bigint(15) NOT NULL,
             `status` tinyint(1) NOT NULL,
             UNIQUE KEY `id` (`id`)
-            ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+            ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci';
                 break;
         }
 
@@ -1350,10 +1350,10 @@ class resourcesGame
      *
      * @return array [returns attackLog]
      */
-    public function getDetailedAttackLog($userId, $target, $skipCount) {
+    public function getDetailedAttackLog($userId, $target, $skipCount, $attackOrDefense = 'A') {
         $validTargets = [];
 
-        $validTargetsQuery = "SELECT DISTINCT(`target`) FROM `userAttackLog_" . $userId . "` WHERE `action` = 'A' ORDER BY `target` ASC";
+        $validTargetsQuery = 'SELECT DISTINCT(`target`) FROM `userAttackLog_' . $userId . "` WHERE `action` = 'A' ORDER BY `target` ASC";
         $getValidTargets   = $this->_conn->query($validTargetsQuery);
 
         if ($getValidTargets->num_rows > 0) {
@@ -1367,28 +1367,29 @@ class resourcesGame
         }
 
         $result = [
-            "validTargets" => $validTargets,
-            "skipCount"    => $skipCount,
-            "avg"          => [
-                "profit"    => 0,
-                "factor"    => 0,
-                "unitsLost" => [],
+            'validTargets' => $validTargets,
+            'skipCount'    => $skipCount,
+            'avg'          => [
+                'profit'    => 0,
+                'factor'    => 0,
+                'unitsLost' => [],
             ],
-            "total"        => [
-                "profit"    => 0,
-                "factor"    => 0,
-                "unitsLost" => [],
+            'total'        => [
+                'profit'    => 0,
+                'factor'    => 0,
+                'unitsLost' => [],
             ],
-            "days"         => [
+            'days'         => [
 
             ],
         ];
 
-        $query = "SELECT
+        $query = 'SELECT
         `target`,
         `targetLevel`,
         `timestamp`,
         `aUnit1`, `aUnit2`, `aUnit3`,
+        `aUnit1Price`, `aUnit2Price`, `aUnit3Price`,
         `dUnit1`, `dUnit2`, `dUnit3`,
         `lat`, `lon`,
         `result`,
@@ -1397,28 +1398,25 @@ class resourcesGame
         `lootQty1`, `lootQty2`,
         `lootPrice1`, `lootPrice2`,
         `worth`, `profit`
-        FROM `userAttackLog_" . $userId . "` WHERE `action` = 'A'";
+        FROM `userAttackLog_' . $userId . "` WHERE `action` = '" . $attackOrDefense . "'";
 
         /*
         get amount of entries for this query for page-wise iteration on frontend
         */
 
-        $getMaxLengthQuery = "SELECT COUNT(*) AS `maxLength` FROM `userAttackLog_" . $userId . "` WHERE `action` = 'A'";
+        $getMaxLengthQuery = 'SELECT COUNT(*) AS `maxLength` FROM `userAttackLog_' . $userId . "` WHERE `action` = '" . $attackOrDefense . "'";
 
         /*
         group all results per day
         */
 
-        $getAttackingDaysQuery = "SELECT FROM_UNIXTIME(`timestamp`) as `validDay` FROM `userAttackLog_" . $userId . "` WHERE `action` = 'A' GROUP BY DATE(FROM_UNIXTIME(timestamp)) ORDER BY `timestamp` DESC";
+        $getAttackingDaysQuery = 'SELECT FROM_UNIXTIME(`timestamp`) as `validDay` FROM `userAttackLog_' . $userId . "` WHERE `action` = '" . $attackOrDefense . "' GROUP BY DATE(FROM_UNIXTIME(timestamp)) ORDER BY `timestamp` DESC";
 
-        if (!empty($target)) {
-
-            if (in_array($target, $validTargets)) {
-                $addendum              = " AND `target` = '" . $target . "'";
-                $query                 .= $addendum;
-                $getMaxLengthQuery     .= $addendum;
-                $getAttackingDaysQuery = "SELECT FROM_UNIXTIME(`timestamp`) as `validDay` FROM `userAttackLog_" . $userId . "` WHERE `action` = 'A' AND `target` = '" . $target . "' GROUP BY DATE(FROM_UNIXTIME(timestamp)) ORDER BY `timestamp` DESC";
-            }
+        if (!empty($target) && in_array($target, $validTargets)) {
+            $addendum              = " AND `target` = '" . $target . "'";
+            $query                 .= $addendum;
+            $getMaxLengthQuery     .= $addendum;
+            $getAttackingDaysQuery = "SELECT FROM_UNIXTIME(`timestamp`) as `validDay` FROM `userAttackLog_" . $userId . "` WHERE `action` = '" . $attackOrDefense . "' AND `target` = '" . $target . "' GROUP BY DATE(FROM_UNIXTIME(timestamp)) ORDER BY `timestamp` DESC";
         }
 
         $validDays        = [];
@@ -1426,24 +1424,24 @@ class resourcesGame
 
         if ($getAttackingDays->num_rows > 0) {
             while ($data = $getAttackingDays->fetch_assoc()) {
-                $validDays[] = substr ($data["validDay"], 0, -9);
+                $validDays[] = substr($data['validDay'], 0, -9);
             }
         }
 
-        $result["validDays"] = $validDays;
+        $result['validDays'] = $validDays;
 
         $getMaxLength = $this->_conn->query($getMaxLengthQuery);
 
         $maxLength = 0;
         if ($getMaxLength->num_rows === 1) {
             while ($data = $getMaxLength->fetch_assoc()) {
-                $maxLength = $data["maxLength"];
+                $maxLength = $data['maxLength'];
             }
         }
 
-        $result["maxLength"] = $maxLength;
+        $result['maxLength'] = $maxLength;
 
-        $query .= " ORDER BY `timestamp` DESC LIMIT 100 OFFSET " . $skipCount;
+        $query .= ' ORDER BY `timestamp` DESC LIMIT 100 OFFSET ' . $skipCount;
 
         $getDetailedAttackLog = $this->_conn->query($query);
 
@@ -1453,28 +1451,28 @@ class resourcesGame
         if ($getDetailedAttackLog->num_rows > 0) {
             while ($data = $getDetailedAttackLog->fetch_assoc()) {
 
-                $result["data"][$i]["coordinates"]["lat"] = $data["lat"];
-                $result["data"][$i]["coordinates"]["lon"] = $data["lon"];
+                $result['data'][$i]['coordinates']['lat'] = $data['lat'];
+                $result['data'][$i]['coordinates']['lon'] = $data['lon'];
 
-                $result["data"][$i]["target"]      = $data["target"];
-                $result["data"][$i]["targetLevel"] = $data["targetLevel"];
+                $result['data'][$i]['target']      = $data['target'];
+                $result['data'][$i]['targetLevel'] = $data['targetLevel'];
 
-                $result["data"][$i]["loot"]["primary"]["type"]   = $data["lootId1"];
-                $result["data"][$i]["loot"]["primary"]["amount"] = $data["lootQty1"];
-                $result["data"][$i]["loot"]["primary"]["price"]  = $data["lootPrice1"];
+                $result['data'][$i]['loot']['primary']['type']   = $data['lootId1'];
+                $result['data'][$i]['loot']['primary']['amount'] = $data['lootQty1'];
+                $result['data'][$i]['loot']['primary']['price']  = $data['lootPrice1'];
 
-                $result["data"][$i]["loot"]["secondary"]["type"]   = $data["lootId2"];
-                $result["data"][$i]["loot"]["secondary"]["amount"] = $data["lootQty2"];
-                $result["data"][$i]["loot"]["secondary"]["price"]  = $data["lootPrice2"];
+                $result['data'][$i]['loot']['secondary']['type']   = $data['lootId2'];
+                $result['data'][$i]['loot']['secondary']['amount'] = $data['lootQty2'];
+                $result['data'][$i]['loot']['secondary']['price']  = $data['lootPrice2'];
 
-                for ($k = 0; $k <= 2; $k += 1) {
-                    $result["data"][$i]["offense"]["units"][$k] = $data["aUnit" . ($k + 1) . ""];
-                    $result["total"]["unitsLost"][$k]           += $data["aUnit" . ($k + 1) . ""];
+                for ($k = 0; $k <= 2; ++$k) {
+                    $result['data'][$i]['offense']['units'][$k] = $data['aUnit' . ($k + 1) . ''];
+                    $result['total']['unitsLost'][$k]           += $data['aUnit' . ($k + 1) . ''];
 
-                    $result["data"][$i]["defense"]["units"][$k] = $data["dUnit" . ($k + 1) . ""];
+                    $result['data'][$i]['defense']['units'][$k] = $data['dUnit' . ($k + 1) . ''];
                 }
 
-                switch ($data["result"]) {
+                switch ($data['result']) {
                     case 0:
                         $attackResult = false;
                         break;
@@ -1484,25 +1482,50 @@ class resourcesGame
                         break;
                 }
 
-                $result["data"][$i]["result"]     = $attackResult;
-                $result["data"][$i]["attackedAt"] = $data["timestamp"] * 1000;
+                if ($attackOrDefense === 'D') {
+                    $attackResult = !$attackResult;
+                }
 
-                $result["data"][$i]["profit"] = $data["profit"];
-                $result["total"]["profit"]    += $data["profit"];
+                $result['data'][$i]['result']     = $attackResult;
+                $result['data'][$i]['attackedAt'] = $data['timestamp'] * 1000;
 
-                $result["data"][$i]["factor"] = $data["factor"] * 100;
-                $result["total"]["factor"]    += $data["factor"];
+                if ($attackOrDefense === 'D') {
+                    $data['profit'] = 0;
+
+                    $index = 1;
+                    foreach ($result['data'][$i]['offense']['units'] as $attackingUnit) {
+                        $data['profit'] -= $attackingUnit * $data['aUnit' . $index . 'Price'];
+                        $index          += 1;
+                    }
+
+                    if ((int) $data['result'] === 0) {
+
+                        $data['profit'] += $data['lootQty1'] * $data['lootPrice1'];
+
+                        if ((int) $data['lootId2'] === -1) {
+                            $data['profit'] += $data['lootQty2'];
+                        } else {
+                            $data['profit'] += $data['lootQty2'] * $data['lootPrice2'];
+                        }
+                    }
+                }
+
+                $result['data'][$i]['profit'] = $data['profit'];
+                $result['total']['profit']    += $data['profit'];
+
+                $result['data'][$i]['factor'] = $data['factor'] * 100;
+                $result['total']['factor']    += $data['factor'];
 
                 $i++;
             }
         }
 
-        $result["avg"]["loot"]   = round($result["total"]["loot"] / $i);
-        $result["avg"]["profit"] = round($result["total"]["profit"] / $i);
-        $result["avg"]["factor"] = round($result["total"]["factor"] / $i) * 100;
+        $result['avg']['loot']   = round($result['total']['loot'] / $i);
+        $result['avg']['profit'] = round($result['total']['profit'] / $i);
+        $result['avg']['factor'] = round($result['total']['factor'] / $i) * 100;
 
-        for ($k = 0; $k <= 2; $k += 1) {
-            $result["avg"]["unitsLost"][$k] = round($result["total"]["unitsLost"][$k] / $i);
+        for ($k = 0; $k <= 2; ++$k) {
+            $result['avg']['unitsLost'][$k] = round($result['total']['unitsLost'][$k] / $i);
         }
 
         return $result;
@@ -1519,9 +1542,9 @@ class resourcesGame
     public function getSimpleAttackLog($userId) {
         $result = [];
 
-        $query = "SELECT
+        $query = 'SELECT
         `target` AS `targetName`,
-        ( SELECT MAX(`timestamp` * 1000) FROM `userAttackLog_" . $userId . "` WHERE `action` = 'A' AND `target` = targetName) `lastAttacked`,
+        ( SELECT MAX(`timestamp` * 1000) FROM `userAttackLog_' . $userId . "` WHERE `action` = 'A' AND `target` = targetName) `lastAttacked`,
         MAX(`targetLevel`) AS `targetLevel`,
         AVG(`factor`) AS `factor`,
         COUNT(*) AS `sumAttacks`,
@@ -1559,9 +1582,9 @@ class resourcesGame
 
         $result = [];
 
-        $query = "SELECT
+        $query = 'SELECT
         `target` AS `targetName`,
-        ( SELECT MAX(`timestamp` * 1000) FROM `userAttackLog_" . $userId . "` WHERE `action` = 'D' AND `target` = targetName) `lastAttacked`,
+        ( SELECT MAX(`timestamp` * 1000) FROM `userAttackLog_' . $userId . "` WHERE `action` = 'D' AND `target` = targetName) `lastAttacked`,
         MAX(`targetLevel`) AS `targetLevel`,
         AVG(`factor`) AS `factor`,
         COUNT(*) AS `sumAttacks`,
@@ -1602,7 +1625,7 @@ class resourcesGame
 
         $result = [];
 
-        $getHQData = "SELECT `lat`, `lon`, `level` FROM `userHeadquarter` WHERE `id` = " . $userId . "";
+        $getHQData = 'SELECT `lat`, `lon`, `level` FROM `userHeadquarter` WHERE `id` = ' . $userId . '';
         $getUserHQ = $this->_conn->query($getHQData);
 
         $threshold = 0.000000;
@@ -1610,10 +1633,10 @@ class resourcesGame
         if ($getUserHQ->num_rows === 1) {
             while ($data = $getUserHQ->fetch_assoc()) {
                 // prevent default entries with visible hq to be shown
-                $bccomb = bccomp(abs($data["lat"]), $threshold, 6) + bccomp(abs($data["lon"]), $threshold, 6);
+                $bccomb = bccomp(abs($data['lat']), $threshold, 6) + bccomp(abs($data['lon']), $threshold, 6);
 
                 if ($bccomb > 0) {
-                    $data["relation"] = $relation;
+                    $data['relation'] = $relation;
                     $result[]         = $data;
                 }
             }
@@ -1635,10 +1658,10 @@ class resourcesGame
     private function _extractMineInformation ($userId, $relation, $type = '') {
         $result = [];
 
-        $query = "SELECT * FROM `userMineMap_" . $userId . "`";
+        $query = 'SELECT * FROM `userMineMap_' . $userId . '`';
 
-        if ($type >= 0 && $type <= 13 && $type != "") {
-            $query = "SELECT * FROM `userMineMap_" . $userId . "` WHERE `type` = " . $type . "";
+        if ($type >= 0 && $type <= 13 && $type != '') {
+            $query = 'SELECT * FROM `userMineMap_' . $userId . '` WHERE `type` = ' . $type . '';
         }
 
         $getUserMineMap = $this->_conn->query($query);
@@ -1662,20 +1685,16 @@ class resourcesGame
      * @return int [returns 0 or 1]
      */
     private function _checkHQVisibility($userId) {
-        $querySetting   = "SELECT `mapVisibleHQ` FROM `userSettings` WHERE `id` = " . $userId . "";
+        $querySetting   = 'SELECT `mapVisibleHQ` FROM `userSettings` WHERE `id` = ' . $userId . '';
         $getUserSetting = $this->_conn->query($querySetting);
 
         if ($getUserSetting->num_rows === 1) {
             while ($data = $getUserSetting->fetch_assoc()) {
-                $hqVisibility = $data["mapVisibleHQ"];
+                $hqVisibility = $data['mapVisibleHQ'];
             }
         }
 
-        if ($hqVisibility == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return $hqVisibility == 1;
     }
 
     /**
@@ -1688,7 +1707,7 @@ class resourcesGame
     private function _extractUserIds() {
         $userIds = [];
 
-        $queryUserIds = "SELECT userSettings.id, userSettings.mineVisibilityWorldMap FROM `userOverview` LEFT JOIN `userSettings` ON userOverview.id = userSettings.id WHERE userSettings.mineVisibilityWorldMap = 1";
+        $queryUserIds = 'SELECT userSettings.id, userSettings.mineVisibilityWorldMap FROM `userOverview` LEFT JOIN `userSettings` ON userOverview.id = userSettings.id WHERE userSettings.mineVisibilityWorldMap = 1';
         $getUserIds   = $this->_conn->query($queryUserIds);
 
         if ($getUserIds->num_rows > 0) {
@@ -1709,10 +1728,10 @@ class resourcesGame
      * @return string ["friend" or "foe"]
      */
     private function _setRelationship($userId) {
-        if ($userId === $_SESSION["id"] && $userId !== 0) {
-            $relation = "friend";
+        if ($userId === $_SESSION['id'] && $userId !== 0) {
+            $relation = 'friend';
         } else {
-            $relation = "foe";
+            $relation = 'foe';
         }
 
         return $relation;
@@ -1728,8 +1747,8 @@ class resourcesGame
      */
     public function getPersonalMineMap($userId) {
         return [
-            "hq"    => $this->_extractHQInformation($userId, "friend"),
-            "mines" => $this->_extractMineInformation($userId, "friend"),
+            'hq'    => $this->_extractHQInformation($userId, 'friend'),
+            'mines' => $this->_extractMineInformation($userId, 'friend'),
         ];
     }
 
@@ -1744,8 +1763,8 @@ class resourcesGame
     public function getWorldMap($type) {
 
         $result = [
-            "hqs"   => [],
-            "mines" => [],
+            'hqs'   => [],
+            'mines' => [],
         ];
 
         $userIds = $this->_extractUserIds();
@@ -1757,10 +1776,10 @@ class resourcesGame
 
             // check setting for hq visibility
             if ($this->_checkHQVisibility($userId)) {
-                $result["hqs"] = array_merge($result["hqs"], $this->_extractHQInformation($userId, $relation));
+                $result['hqs'] = array_merge($result['hqs'], $this->_extractHQInformation($userId, $relation));
             }
 
-            $result["mines"] = array_merge($result["mines"], $this->_extractMineInformation($userId, $relation, $type));
+            $result['mines'] = array_merge($result['mines'], $this->_extractMineInformation($userId, $relation, $type));
         }
 
         return $result;
@@ -1778,30 +1797,30 @@ class resourcesGame
 
         $result = [];
 
-        $getMissionsBaseDataQuery = "SELECT `id`, `title`, `duration`, `intervalDays`, `rewardId` FROM `missions`";
+        $getMissionsBaseDataQuery = 'SELECT `id`, `title`, `duration`, `intervalDays`, `rewardId` FROM `missions`';
         $missionBaseData          = $this->_conn->query($getMissionsBaseDataQuery);
 
         if ($missionBaseData->num_rows > 0) {
             while ($data = $missionBaseData->fetch_assoc()) {
 
                 $arr = [
-                    "title",
-                    "duration",
-                    "intervalDays",
-                    "rewardId",
+                    'title',
+                    'duration',
+                    'intervalDays',
+                    'rewardId',
                 ];
 
                 foreach ($arr as $column) {
-                    if ($column === "rewardId") {
+                    if ($column === 'rewardId') {
                         $data[$column] = $this->_convertOfficialIdToInternalId($data[$column]);
                     }
 
-                    $result[$data["id"]][$column] = $data[$column];
+                    $result[$data['id']][$column] = $data[$column];
                 }
             }
         }
 
-        $query       = "SELECT * FROM `userMissions_" . $userId . "`";
+        $query       = 'SELECT * FROM `userMissions_' . $userId . '`';
         $getMissions = $this->_conn->query($query);
 
         if ($getMissions->num_rows > 0) {
@@ -1811,21 +1830,21 @@ class resourcesGame
                     continue;
                 }
 
-                $result[$data["id"]]["img"] = "resources-missions-" . $data["id"];
+                $result[$data['id']]['img'] = 'resources-missions-' . $data['id'];
 
                 $arr = [
-                    "startTimestamp",
-                    "endTimestamp",
-                    "progress",
-                    "goal",
-                    "cooldown",
-                    "rewardAmount",
-                    "penalty",
-                    "status",
+                    'startTimestamp',
+                    'endTimestamp',
+                    'progress',
+                    'goal',
+                    'cooldown',
+                    'rewardAmount',
+                    'penalty',
+                    'status',
                 ];
 
                 foreach ($arr as $column) {
-                    $result[$data["id"]][$column] = $data[$column];
+                    $result[$data['id']][$column] = $data[$column];
                 }
             }
         }
@@ -1843,7 +1862,7 @@ class resourcesGame
     public function getUserIndex() {
         $result = [];
 
-        $query = "SELECT  `userName`, `userLevel`, `firstSeen`, `lastSeen`, `lastTradedWith`, `sell`, `buy`, `transportCost` FROM `userIndex` ORDER BY `lastSeen` DESC LIMIT 500";
+        $query = 'SELECT  `userName`, `userLevel`, `firstSeen`, `lastSeen`, `lastTradedWith`, `sell`, `buy`, `transportCost` FROM `userIndex` ORDER BY `lastSeen` DESC LIMIT 500';
 
         $getUser = $this->_conn->query($query);
 
@@ -1873,13 +1892,13 @@ class resourcesGame
         $result['log']              = $result['timestamps'] = $result['days'] = $result['overview'] = [];
         $result['selling']['total'] = $result['buying']['total'] = $result['selling']['valuesById'] = $result['buying']['valuesById'] = 0;
 
-        for ($i = 0; $i <= 23; $i += 1) {
+        for ($i = 0; $i <= 23; ++$i) {
             $result['timestamps'][$i] = 0;
         }
 
-        for ($event = 0; $event <= 1; $event += 1) {
-            for ($i = 0; $i <= 57; $i += 1) {
-                $getSumQuery = "SELECT SUM(`amount` * `price`) as `sum` FROM `userTradeLog_" . $userId . "` WHERE `event` = " . $event . " AND `itemId` = " . $i . "";
+        for ($event = 0; $event <= 1; ++$event) {
+            for ($i = 0; $i <= 57; ++$i) {
+                $getSumQuery = 'SELECT SUM(`amount` * `price`) as `sum` FROM `userTradeLog_' . $userId . '` WHERE `event` = ' . $event . ' AND `itemId` = ' . $i . '';
                 $getSum      = $this->_conn->query($getSumQuery);
 
                 if ($getSum->num_rows === 1) {
@@ -1904,17 +1923,17 @@ class resourcesGame
         $result['buying']['valuesById'] = $buying;
 
         // selling hours
-        $getTimestampsQuery = "SELECT `timestamp` FROM `userTradeLog_" . $userId . "` WHERE `event` = 1";
+        $getTimestampsQuery = 'SELECT `timestamp` FROM `userTradeLog_' . $userId . '` WHERE `event` = 1';
         $getTimestamps      = $this->_conn->query($getTimestampsQuery);
 
         if ($getTimestamps->num_rows > 0) {
             while ($data = $getTimestamps->fetch_assoc()) {
-                $result['timestamps'][date('G', $data['timestamp'])] += 1;
+                ++$result['timestamps'][date('G', $data['timestamp'])];
             }
         }
 
         // skipCount
-        $mostRecentEntryQuery = "SELECT `timestamp` FROM `userTradeLog_" . $userId . "` ORDER BY `timestamp` DESC LIMIT 1";
+        $mostRecentEntryQuery = 'SELECT `timestamp` FROM `userTradeLog_' . $userId . '` ORDER BY `timestamp` DESC LIMIT 1';
         $mostRecentEntry      = $this->_conn->query($mostRecentEntryQuery);
         if ($mostRecentEntry->num_rows === 1) {
             $mostRecentEntry = $mostRecentEntry->fetch_assoc();
@@ -1940,17 +1959,15 @@ class resourcesGame
         // filter
         if (!isset($filter) || $filter === -1) {
             $filter    = -1;
-            $addFilter = "";
-        } else {
-            if ($filter >= -1) {
-                $addFilter = " AND `event` = " . $filter;
-            }
+            $addFilter = '';
+        } elseif ($filter >= -1) {
+            $addFilter = " AND `event` = " . $filter;
         }
 
         $result['filter'] = $filter;
 
         // individual days filter
-        $getDaysAndEntriesCountQuery = "SELECT DATE(FROM_UNIXTIME(`timestamp`)) AS `date`, COUNT(1) AS `entries` FROM `userTradeLog_" . $userId . "` GROUP BY DATE(FROM_UNIXTIME(`timestamp`)) ORDER BY `date` DESC";
+        $getDaysAndEntriesCountQuery = 'SELECT DATE(FROM_UNIXTIME(`timestamp`)) AS `date`, COUNT(1) AS `entries` FROM `userTradeLog_' . $userId . '` GROUP BY DATE(FROM_UNIXTIME(`timestamp`)) ORDER BY `date` DESC';
         $getDaysAndEntriesCount      = $this->_conn->query($getDaysAndEntriesCountQuery);
 
         if ($getDaysAndEntriesCount->num_rows > 0) {
@@ -1965,7 +1982,7 @@ class resourcesGame
             }
         }
 
-        $getMostRecentEntriesQuery = "SELECT `actor`, `actorLevel`, `transportCost`, `amount`, `price`, `itemId`, `timestamp`, `event` FROM `userTradeLog_" . $userId . "` WHERE `timestamp` > " . $end . " AND `timestamp` <= " . $start . " " . $addFilter . " ORDER BY `timestamp` DESC";
+        $getMostRecentEntriesQuery = 'SELECT `actor`, `actorLevel`, `transportCost`, `amount`, `price`, `itemId`, `timestamp`, `event` FROM `userTradeLog_' . $userId . '` WHERE `timestamp` > ' . $end . ' AND `timestamp` <= ' . $start . ' ' . $addFilter . ' ORDER BY `timestamp` DESC';
         $getMostRecentEntries      = $this->_conn->query($getMostRecentEntriesQuery);
 
         if ($getMostRecentEntries->num_rows > 0) {
@@ -1975,7 +1992,7 @@ class resourcesGame
         }
 
         // overview
-        $distinctIdsQuery = "SELECT DISTINCT(`itemId`) AS `id` FROM `userTradeLog_" . $userId . "` WHERE `timestamp` > " . $end . " AND `timestamp` <= " . $start;
+        $distinctIdsQuery = 'SELECT DISTINCT(`itemId`) AS `id` FROM `userTradeLog_' . $userId . '` WHERE `timestamp` > ' . $end . ' AND `timestamp` <= ' . $start;
         $distinctIds      = $this->_conn->query($distinctIdsQuery);
 
         if ($distinctIds->num_rows > 0) {
@@ -1985,7 +2002,7 @@ class resourcesGame
         }
 
         foreach ($ids as $id) {
-            $sellSumQuery = "SELECT SUM(`amount` * `price`) AS `sumSell` FROM `userTradeLog_" . $userId . "` WHERE `timestamp` > " . $end . " AND `timestamp` <= " . $start . " AND `event` = 1 AND `itemId` = " . $id . "";
+            $sellSumQuery = 'SELECT SUM(`amount` * `price`) AS `sumSell` FROM `userTradeLog_' . $userId . '` WHERE `timestamp` > ' . $end . ' AND `timestamp` <= ' . $start . ' AND `event` = 1 AND `itemId` = ' . $id . '';
             $sellSum      = $this->_conn->query($sellSumQuery);
 
             if ($sellSum->num_rows === 1) {
@@ -1994,7 +2011,7 @@ class resourcesGame
                 }
             }
 
-            $buySumQuery = "SELECT SUM(`amount` * `price`) AS `sumBuy` FROM `userTradeLog_" . $userId . "` WHERE `timestamp` > " . $end . " AND `timestamp` <= " . $start . " AND `event` = 0 AND `itemId` = " . $id . "";
+            $buySumQuery = 'SELECT SUM(`amount` * `price`) AS `sumBuy` FROM `userTradeLog_' . $userId . '` WHERE `timestamp` > ' . $end . ' AND `timestamp` <= ' . $start . ' AND `event` = 0 AND `itemId` = ' . $id . '';
             $buySum      = $this->_conn->query($buySumQuery);
 
             if ($buySum->num_rows === 1) {
@@ -2039,7 +2056,7 @@ class resourcesGame
         /*
         get name from previous set setting
         */
-        $language = self::LANGUAGES[$baseData["settings"][0]["value"]];
+        $language = self::LANGUAGES[$baseData['settings'][0]['value']];
 
         $names = [];
 
@@ -2047,16 +2064,16 @@ class resourcesGame
         iterate over all available languages and fetch their localizationTable
         */
         foreach (self::TABLE_NAMES as $key => $value) {
-            $names[$value["outputName"]] = $value["localizationTable"];
+            $names[$value['outputName']] = $value['localizationTable'];
         }
 
         /*
         add building localization
         */
-        $names["buildings"] = "buildingNames";
+        $names['buildings'] = 'buildingNames';
 
         foreach ($names as $subArray => $tableName) {
-            $query = "SELECT `" . $language . "` FROM `" . $tableName . "`";
+            $query = 'SELECT `' . $language . '` FROM `' . $tableName . '`';
 
             $getLanguage = $this->_conn->query($query);
 
@@ -2065,19 +2082,19 @@ class resourcesGame
 
                 while ($data = $getLanguage->fetch_assoc()) {
                     foreach ($data as $name) {
-                        if (strpos($name, "/") !== false) {
-                            $explode     = explode("/", $name);
+                        if (strpos($name, '/') !== false) {
+                            $explode     = explode('/', $name);
                             $name        = $explode[0];
                             $factoryName = $explode[1];
                         } else {
-                            $factoryName = "";
+                            $factoryName = '';
                         }
 
-                        $baseData[$subArray][$index]["name"] = $name;
-                        if ($factoryName !== "") {
-                            $baseData[$subArray][$index]["factoryName"] = $factoryName;
+                        $baseData[$subArray][$index]['name'] = $name;
+                        if ($factoryName !== '') {
+                            $baseData[$subArray][$index]['factoryName'] = $factoryName;
                         }
-                        $index += 1;
+                        ++$index;
                     }
                 }
             }
@@ -2100,18 +2117,18 @@ class resourcesGame
     private function _fillUpArrayWithZeroes($array, $supposedLength, $type) {
         if (sizeof($array) !== $supposedLength) {
             switch ($type) {
-                case "warehouse":
-                    $arrayPusher = ["level" => 0, "fillAmount" => 0];
+                case 'warehouse':
+                    $arrayPusher = ['level' => 0, 'fillAmount' => 0];
                     break;
-                case "mineSummary":
-                    $arrayPusher = ["perHour" => 0, "amountOfMines" => 0];
+                case 'mineSummary':
+                    $arrayPusher = ['perHour' => 0, 'amountOfMines' => 0];
                     break;
                 default:
                     $arrayPusher = 0;
                     break;
             }
 
-            for ($i = 0; $i < $supposedLength; $i += 1) {
+            for ($i = 0; $i < $supposedLength; ++$i) {
                 if (!$array[$i]) {
                     $array[$i] = $arrayPusher;
                 }
@@ -2133,44 +2150,44 @@ class resourcesGame
     private function _insertAPIFactoryData($data, $userId) {
         $factoryArray = [];
         foreach ($data as $factory) {
-            $factoryId                = $this->_convertOfficialIdToInternalId($factory["factoryID"]) - self::TABLE_NAMES["factories"]["min"];
-            $factoryArray[$factoryId] = $factory["lvl"];
+            $factoryId                = $this->_convertOfficialIdToInternalId($factory['factoryID']) - self::TABLE_NAMES['factories']['min'];
+            $factoryArray[$factoryId] = $factory['lvl'];
         }
 
         // sort factoryArray by key, ascending, to secure proper insertion further down
         ksort($factoryArray);
 
         // if user is missing factories, fill up with level 0
-        $supposedLength = self::TABLE_NAMES["factories"]["length"];
-        $factoryArray   = $this->_fillUpArrayWithZeroes($factoryArray, $supposedLength, "noarray");
+        $supposedLength = self::TABLE_NAMES['factories']['length'];
+        $factoryArray   = $this->_fillUpArrayWithZeroes($factoryArray, $supposedLength, 'noarray');
 
         if ($userId != 0) {
 
-            $query                 = "SELECT `id` FROM `userFactories` WHERE `id` = " . $userId;
+            $query                 = 'SELECT `id` FROM `userFactories` WHERE `id` = ' . $userId;
             $checkForPreviousEntry = $this->_conn->query($query);
 
             if ($checkForPreviousEntry->num_rows === 1) {
 
-                $stmt = "UPDATE `userFactories` SET ";
+                $stmt = 'UPDATE `userFactories` SET ';
 
                 foreach ($factoryArray as $factoryId => $factoryLevel) {
-                    $stmt .= "`factory" . $factoryId . "` = " . $factoryLevel . ",";
+                    $stmt .= '`factory' . $factoryId . '` = ' . $factoryLevel . ',';
                 }
-                $stmt = substr($stmt, 0, -1) . " WHERE `id` = " . $userId . ";";
+                $stmt = substr($stmt, 0, -1) . ' WHERE `id` = ' . $userId . ';';
             } elseif ($checkForPreviousEntry->num_rows === 0) {
-                $stmt = "INSERT INTO `userFactories` (`id`,";
+                $stmt = 'INSERT INTO `userFactories` (`id`,';
 
-                for ($i = 0; $i < $supposedLength; $i += 1) {
-                    $stmt .= "`factory" . $i . "`,";
+                for ($i = 0; $i < $supposedLength; ++$i) {
+                    $stmt .= '`factory' . $i . '`,';
                 }
                 $stmt = substr($stmt, 0, -1);
-                $stmt .= ") VALUES (" . $userId . ",";
+                $stmt .= ') VALUES (' . $userId . ',';
 
                 foreach ($factoryArray as $value) {
-                    $stmt .= $value . ",";
+                    $stmt .= $value . ',';
                 }
                 $stmt = substr($stmt, 0, -1);
-                $stmt .= ");";
+                $stmt .= ');';
             }
 
             $insertion = $this->_conn->query($stmt);
@@ -2198,13 +2215,13 @@ class resourcesGame
         $warehouseArray = [];
 
         foreach ($data as $warehouse) {
-            if ((int) $warehouse["itemID"] !== 1) {
-                $warehouseId = $this->_convertOfficialIdToInternalId($warehouse["itemID"]);
+            if ((int) $warehouse['itemID'] !== 1) {
+                $warehouseId = $this->_convertOfficialIdToInternalId($warehouse['itemID']);
 
                 if ($warehouseId !== -1) {
                     $warehouseArray[$warehouseId] = [
-                        "level"  => $warehouse["level"],
-                        "amount" => $warehouse["amount"],
+                        'level'  => $warehouse['level'],
+                        'amount' => $warehouse['amount'],
                     ];
                 }
             }
@@ -2214,47 +2231,47 @@ class resourcesGame
         ksort($warehouseArray);
 
         // if user is missing warehouses, fill up with level & amount 0
-        $supposedLength = self::TABLE_NAMES["resources"]["length"] + self::TABLE_NAMES["factories"]["length"] + self::TABLE_NAMES["loot"]["length"] + self::TABLE_NAMES["units"]["length"];
-        $warehouseArray = $this->_fillUpArrayWithZeroes($warehouseArray, $supposedLength, "warehouse");
+        $supposedLength = self::TABLE_NAMES['resources']['length'] + self::TABLE_NAMES['factories']['length'] + self::TABLE_NAMES['loot']['length'] + self::TABLE_NAMES['units']['length'];
+        $warehouseArray = $this->_fillUpArrayWithZeroes($warehouseArray, $supposedLength, 'warehouse');
 
         if ($userId != 0) {
 
-            $query                 = "SELECT `id` FROM `userWarehouse` WHERE `id` = " . $userId . "";
+            $query                 = 'SELECT `id` FROM `userWarehouse` WHERE `id` = ' . $userId . '';
             $checkForPreviousEntry = $this->_conn->query($query);
 
             if ($checkForPreviousEntry->num_rows === 1) {
-                $stmt = "UPDATE `userWarehouse` SET ";
+                $stmt = 'UPDATE `userWarehouse` SET ';
 
-                if ($warehouseData["amount"] === '') {
-                    $warehouseData["amount"] = 0;
+                if ($warehouseData['amount'] === '') {
+                    $warehouseData['amount'] = 0;
                 }
 
                 foreach ($warehouseArray as $warehouseId => $warehouseData) {
-                    $stmt .= "`level" . $warehouseId . "` = " . $warehouseData["level"] . ",`fillAmount" . $warehouseId . "` = " . $warehouseData["amount"] . ",";
+                    $stmt .= '`level' . $warehouseId . '` = ' . $warehouseData['level'] . ',`fillAmount' . $warehouseId . '` = ' . $warehouseData['amount'] . ',';
                 }
 
-                $stmt = substr($stmt, 0, -1) . " WHERE `id` = " . $userId . ";";
+                $stmt = substr($stmt, 0, -1) . ' WHERE `id` = ' . $userId . ';';
             } elseif ($checkForPreviousEntry->num_rows === 0) {
-                $stmt = "INSERT INTO `userWarehouse` (`id`,";
+                $stmt = 'INSERT INTO `userWarehouse` (`id`,';
 
-                for ($i = 0; $i < $supposedLength; $i += 1) {
-                    $stmt .= "`level" . $i . "`, `fillAmount" . $i . "`,";
+                for ($i = 0; $i < $supposedLength; ++$i) {
+                    $stmt .= '`level' . $i . '`, `fillAmount' . $i . '`,';
                 }
 
                 $stmt = substr($stmt, 0, -1);
-                $stmt .= ") VALUES (" . $userId . ",";
+                $stmt .= ') VALUES (' . $userId . ',';
 
                 foreach ($warehouseArray as $warehouseId => $warehouseData) {
 
-                    if ($warehouseData["amount"] === '') {
-                        $warehouseData["amount"] = 0;
+                    if ($warehouseData['amount'] === '') {
+                        $warehouseData['amount'] = 0;
                     }
 
-                    $stmt .= $warehouseData["level"] . "," . $warehouseData["amount"] . ",";
+                    $stmt .= $warehouseData['level'] . ',' . $warehouseData['amount'] . ',';
                 }
 
                 $stmt = substr($stmt, 0, -1);
-                $stmt .= ");";
+                $stmt .= ');';
             }
 
             $insertion = $this->_conn->query($stmt);
@@ -2333,45 +2350,45 @@ class resourcesGame
         $buildingArray = [];
 
         foreach ($data as $building) {
-            $buildingId                 = $this->_convertOfficialBuildingIdToInternalId($building["specbID"]);
-            $buildingArray[$buildingId] = $building["lvl"];
+            $buildingId                 = $this->_convertOfficialBuildingIdToInternalId($building['specbID']);
+            $buildingArray[$buildingId] = $building['lvl'];
         }
 
         // sort factoryArray by key, ascending, to secure proper insertion further down
         ksort($buildingArray);
 
         $supposedLength = self::BUILDING_AMOUNT;
-        $buildingArray  = $this->_fillUpArrayWithZeroes($buildingArray, $supposedLength, "noarray");
+        $buildingArray  = $this->_fillUpArrayWithZeroes($buildingArray, $supposedLength, 'noarray');
 
         if ($userId != 0) {
 
-            $query                 = "SELECT `id` FROM `userBuildings` WHERE `id` = " . $userId . "";
+            $query                 = 'SELECT `id` FROM `userBuildings` WHERE `id` = ' . $userId . '';
             $checkForPreviousEntry = $this->_conn->query($query);
 
             if ($checkForPreviousEntry->num_rows === 1) {
-                $stmt = "UPDATE `userBuildings` SET ";
+                $stmt = 'UPDATE `userBuildings` SET ';
 
                 foreach ($buildingArray as $buildingId => $buildingLevel) {
-                    $stmt .= "`building" . $buildingId . "` = " . $buildingLevel . ",";
+                    $stmt .= '`building' . $buildingId . '` = ' . $buildingLevel . ',';
                 }
 
-                $stmt = substr($stmt, 0, -1) . " WHERE `id` = " . $userId . ";";
+                $stmt = substr($stmt, 0, -1) . ' WHERE `id` = ' . $userId . ';';
             } elseif ($checkForPreviousEntry->num_rows === 0) {
-                $stmt = "INSERT INTO `userBuildings` (`id`,";
+                $stmt = 'INSERT INTO `userBuildings` (`id`,';
 
-                for ($i = 0; $i < $supposedLength; $i += 1) {
-                    $stmt .= "`building" . $i . "`,";
+                for ($i = 0; $i < $supposedLength; ++$i) {
+                    $stmt .= '`building' . $i . '`,';
                 }
 
                 $stmt = substr($stmt, 0, -1);
-                $stmt .= ") VALUES (" . $userId . ",";
+                $stmt .= ') VALUES (' . $userId . ',';
 
                 foreach ($buildingArray as $buildingId => $buildingLevel) {
-                    $stmt .= $buildingLevel . ",";
+                    $stmt .= $buildingLevel . ',';
                 }
 
                 $stmt = substr($stmt, 0, -1);
-                $stmt .= ");";
+                $stmt .= ');';
             }
 
             $insertion = $this->_conn->query($stmt);
@@ -2393,42 +2410,42 @@ class resourcesGame
         $data = $data[0];
 
         $headquarterArray = [
-            "level"     => $data["lvl"],
-            "lon"       => $data["lon"],
-            "lat"       => $data["lat"],
-            "progress0" => $data["progress1"],
-            "progress1" => $data["progress2"],
-            "progress2" => $data["progress3"],
-            "progress3" => $data["progress4"],
+            'level'     => $data['lvl'],
+            'lon'       => $data['lon'],
+            'lat'       => $data['lat'],
+            'progress0' => $data['progress1'],
+            'progress1' => $data['progress2'],
+            'progress2' => $data['progress3'],
+            'progress3' => $data['progress4'],
         ];
 
         if ($userId != 0) {
 
-            $query                 = "SELECT `id` FROM `userHeadquarter` WHERE `id` = " . $userId . "";
+            $query                 = 'SELECT `id` FROM `userHeadquarter` WHERE `id` = ' . $userId . '';
             $checkForPreviousEntry = $this->_conn->query($query);
 
             if ($checkForPreviousEntry->num_rows === 1) {
-                $stmt = "UPDATE `userHeadquarter` SET ";
+                $stmt = 'UPDATE `userHeadquarter` SET ';
 
                 foreach ($headquarterArray as $column => $value) {
-                    $stmt .= "`" . $column . "` = " . $value . ",";
+                    $stmt .= '`' . $column . '` = ' . $value . ',';
                 }
 
-                $stmt = substr($stmt, 0, -1) . " WHERE `id` = " . $userId . ";";
+                $stmt = substr($stmt, 0, -1) . ' WHERE `id` = ' . $userId . ';';
             } elseif ($checkForPreviousEntry->num_rows === 0) {
-                $stmt = "INSERT INTO `userHeadquarter` (`id`,";
+                $stmt = 'INSERT INTO `userHeadquarter` (`id`,';
 
                 foreach ($headquarterArray as $column => $value) {
-                    $stmt .= "`" . $column . "`,";
+                    $stmt .= '`' . $column . '`,';
                 }
 
-                $stmt = substr($stmt, 0, -1) . ") VALUES(" . $userId . ",";
+                $stmt = substr($stmt, 0, -1) . ') VALUES(' . $userId . ',';
 
                 foreach ($headquarterArray as $column => $value) {
-                    $stmt .= $value . ",";
+                    $stmt .= $value . ',';
                 }
 
-                $stmt = substr($stmt, 0, -1) . ");";
+                $stmt = substr($stmt, 0, -1) . ');';
 
             }
 
@@ -2436,14 +2453,14 @@ class resourcesGame
         }
 
         $headquarterArray = [
-            "level" => $data["lvl"],
-            "lon"   => $data["lon"],
-            "lat"   => $data["lat"],
-            "paid"  => [
-                $data["progress1"],
-                $data["progress2"],
-                $data["progress3"],
-                $data["progress4"],
+            'level' => $data['lvl'],
+            'lon'   => $data['lon'],
+            'lat'   => $data['lat'],
+            'paid'  => [
+                $data['progress1'],
+                $data['progress2'],
+                $data['progress3'],
+                $data['progress4'],
             ],
         ];
 
@@ -2463,42 +2480,42 @@ class resourcesGame
         $materialArray = [];
 
         foreach ($data as $material) {
-            $id = $this->_convertOfficialIdToInternalId($material["resourceID"]);
+            $id = $this->_convertOfficialIdToInternalId($material['resourceID']);
 
-            $materialArray[$id]["perHour"]       = round($material["SUMfullrate"]);
-            $materialArray[$id]["amountOfMines"] = $material["minecount"];
+            $materialArray[$id]['perHour']       = round($material['SUMfullrate']);
+            $materialArray[$id]['amountOfMines'] = $material['minecount'];
         }
 
         // sort materialArray by key, ascending, to secure proper insertion further down
         ksort($materialArray);
 
-        $materialArray = $this->_fillUpArrayWithZeroes($materialArray, 14, "mineSummary");
+        $materialArray = $this->_fillUpArrayWithZeroes($materialArray, 14, 'mineSummary');
 
         if ($userId != 0) {
 
-            $query                 = "SELECT `id` FROM `userMaterial` WHERE `id` = " . $userId . "";
+            $query                 = 'SELECT `id` FROM `userMaterial` WHERE `id` = ' . $userId . '';
             $checkForPreviousEntry = $this->_conn->query($query);
 
             if ($checkForPreviousEntry->num_rows === 1) {
-                $stmt = "UPDATE `userMaterial` SET ";
+                $stmt = 'UPDATE `userMaterial` SET ';
 
-                for ($i = 0; $i <= 13; $i += 1) {
-                    $stmt .= "`perHour" . $i . "` = " . $materialArray[$i]["perHour"] . ",`amountOfMines" . $i . "` = " . $materialArray[$i]["amountOfMines"] . ",";
+                for ($i = 0; $i <= 13; ++$i) {
+                    $stmt .= '`perHour' . $i . '` = ' . $materialArray[$i]['perHour'] . ',`amountOfMines' . $i . '` = ' . $materialArray[$i]['amountOfMines'] . ',';
                 }
 
-                $stmt = substr($stmt, 0, -1) . " WHERE `id` = " . $userId . ";";
+                $stmt = substr($stmt, 0, -1) . ' WHERE `id` = ' . $userId . ';';
             } elseif ($checkForPreviousEntry->num_rows === 0) {
-                $stmt = "INSERT INTO `userMaterial` (`id`,";
+                $stmt = 'INSERT INTO `userMaterial` (`id`,';
 
-                for ($i = 0; $i <= 13; $i += 1) {
-                    $stmt .= "`perHour" . $i . "`,`amountOfMines" . $i . "`,";
+                for ($i = 0; $i <= 13; ++$i) {
+                    $stmt .= '`perHour' . $i . '`,`amountOfMines' . $i . '`,';
                 }
-                $stmt = substr($stmt, 0, -1) . ") VALUES(" . $userId . ",";
+                $stmt = substr($stmt, 0, -1) . ') VALUES(' . $userId . ',';
 
-                for ($i = 0; $i <= 13; $i += 1) {
-                    $stmt .= $materialArray[$i]["perHour"] . "," . $materialArray[$i]["amountOfMines"] . ",";
+                for ($i = 0; $i <= 13; ++$i) {
+                    $stmt .= $materialArray[$i]['perHour'] . ',' . $materialArray[$i]['amountOfMines'] . ',';
                 }
-                $stmt = substr($stmt, 0, -1) . ");";
+                $stmt = substr($stmt, 0, -1) . ');';
             }
 
             $insertion = $this->_conn->query($stmt);
@@ -2520,52 +2537,50 @@ class resourcesGame
         $data = $data[0];
 
         // ignore app version and build
-        unset($data["appV"]);
-        unset($data["appVRB"]);
+        unset($data['appV'], $data['appVRB']);
 
-        $query = "UPDATE `userOverview` SET ";
+        $query = 'UPDATE `userOverview` SET ';
 
         $result = [];
 
         foreach ($data as $column => $value) {
             switch ($column) {
-                case "username":
+                case 'username':
                     if ($anonymity === true) {
                         continue;
-                    } else {
-                        $query .= "`name`";
                     }
+
+                    $query .= '`name`';
                     break;
-                case "lvl":
-                    $query .= "`level`";
+                case 'lvl':
+                    $query .= '`level`';
                     break;
-                case "points":
-                    $query .= "`points`";
+                case 'points':
+                    $query .= '`points`';
                     break;
-                case "worldrank":
-                    $query .= "`rank`";
+                case 'worldrank':
+                    $query .= '`rank`';
                     break;
-                case "registerdate":
-                    $query .= "`registeredGame`";
+                case 'registerdate':
+                    $query .= '`registeredGame`';
                     break;
                 default:
                     break;
             }
 
-            if ($anonymity === true && $column === "username") {
+            if ($anonymity === true && $column === 'username') {
                 continue;
-            } else {
-
-                if ($column === "username") {
-                    $value = str_replace('?', '', $value);
-                }
-
-                $result[$column] = $value;
-                $query           .= " = '" . $value . "',";
             }
+
+            if ($column === 'username') {
+                $value = str_replace('?', '', $value);
+            }
+
+            $result[$column] = $value;
+            $query           .= " = '" . $value . "',";
         }
 
-        $query = substr($query, 0, -1) . " WHERE `id` = " . $userId . ";";
+        $query = substr($query, 0, -1) . ' WHERE `id` = ' . $userId . ';';
 
         if ($userId != 0) {
             $insertion = $this->_conn->query($query);
@@ -2584,7 +2599,7 @@ class resourcesGame
      * @return int [price]
      */
     private function _returnRelativePrice($id, $timestamp) {
-        $query = "SELECT `" . $id . "_k` AS `ai`, `" . $id . "_tk` AS `player` FROM `price` WHERE `ts` <= " . $timestamp . " ORDER BY `ts` DESC LIMIT 1";
+        $query = 'SELECT `' . $id . '_k` AS `ai`, `' . $id . '_tk` AS `player` FROM `price` WHERE `ts` <= ' . $timestamp . ' ORDER BY `ts` DESC LIMIT 1';
 
         $getRelativePrice = $this->_conn->query($query);
 
@@ -2592,10 +2607,10 @@ class resourcesGame
 
         if ($getRelativePrice->num_rows === 1) {
             while ($data = $getRelativePrice->fetch_assoc()) {
-                if ($data["ai"] >= $data["player"]) {
-                    $price = $data["ai"];
+                if ($data['ai'] >= $data['player']) {
+                    $price = $data['ai'];
                 } else {
-                    $price = $data["player"];
+                    $price = $data['player'];
                 }
             }
         }
@@ -2613,7 +2628,7 @@ class resourcesGame
      */
     private function _removeEmojis($string) {
         return preg_replace("/[\x{1F3F4}](?:\x{E0067}\x{E0062}\x{E0077}\x{E006C}\x{E0073}\x{E007F})|[\x{1F3F4}](?:\x{E0067}\x{E0062}\x{E0073}\x{E0063}\x{E0074}\x{E007F})|[\x{1F3F4}](?:\x{E0067}\x{E0062}\x{E0065}\x{E006E}\x{E0067}\x{E007F})|[\x{1F3F4}](?:\x{200D}\x{2620}\x{FE0F})|[\x{1F3F3}](?:\x{FE0F}\x{200D}\x{1F308})|[\x{0023}\x{002A}\x{0030}\x{0031}\x{0032}\x{0033}\x{0034}\x{0035}\x{0036}\x{0037}\x{0038}\x{0039}](?:\x{FE0F}\x{20E3})|[\x{1F441}](?:\x{FE0F}\x{200D}\x{1F5E8}\x{FE0F})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F467}\x{200D}\x{1F467})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F467}\x{200D}\x{1F466})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F467})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F466}\x{200D}\x{1F466})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F466})|[\x{1F468}](?:\x{200D}\x{1F468}\x{200D}\x{1F467}\x{200D}\x{1F467})|[\x{1F468}](?:\x{200D}\x{1F468}\x{200D}\x{1F466}\x{200D}\x{1F466})|[\x{1F468}](?:\x{200D}\x{1F468}\x{200D}\x{1F467}\x{200D}\x{1F466})|[\x{1F468}](?:\x{200D}\x{1F468}\x{200D}\x{1F467})|[\x{1F468}](?:\x{200D}\x{1F468}\x{200D}\x{1F466})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F469}\x{200D}\x{1F467}\x{200D}\x{1F467})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F469}\x{200D}\x{1F466}\x{200D}\x{1F466})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F469}\x{200D}\x{1F467}\x{200D}\x{1F466})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F469}\x{200D}\x{1F467})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F469}\x{200D}\x{1F466})|[\x{1F469}](?:\x{200D}\x{2764}\x{FE0F}\x{200D}\x{1F469})|[\x{1F469}\x{1F468}](?:\x{200D}\x{2764}\x{FE0F}\x{200D}\x{1F468})|[\x{1F469}](?:\x{200D}\x{2764}\x{FE0F}\x{200D}\x{1F48B}\x{200D}\x{1F469})|[\x{1F469}\x{1F468}](?:\x{200D}\x{2764}\x{FE0F}\x{200D}\x{1F48B}\x{200D}\x{1F468})|[\x{1F468}\x{1F469}](?:\x{1F3FF}\x{200D}\x{1F9B3})|[\x{1F468}\x{1F469}](?:\x{1F3FE}\x{200D}\x{1F9B3})|[\x{1F468}\x{1F469}](?:\x{1F3FD}\x{200D}\x{1F9B3})|[\x{1F468}\x{1F469}](?:\x{1F3FC}\x{200D}\x{1F9B3})|[\x{1F468}\x{1F469}](?:\x{1F3FB}\x{200D}\x{1F9B3})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F9B3})|[\x{1F468}\x{1F469}](?:\x{1F3FF}\x{200D}\x{1F9B2})|[\x{1F468}\x{1F469}](?:\x{1F3FE}\x{200D}\x{1F9B2})|[\x{1F468}\x{1F469}](?:\x{1F3FD}\x{200D}\x{1F9B2})|[\x{1F468}\x{1F469}](?:\x{1F3FC}\x{200D}\x{1F9B2})|[\x{1F468}\x{1F469}](?:\x{1F3FB}\x{200D}\x{1F9B2})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F9B2})|[\x{1F468}\x{1F469}](?:\x{1F3FF}\x{200D}\x{1F9B1})|[\x{1F468}\x{1F469}](?:\x{1F3FE}\x{200D}\x{1F9B1})|[\x{1F468}\x{1F469}](?:\x{1F3FD}\x{200D}\x{1F9B1})|[\x{1F468}\x{1F469}](?:\x{1F3FC}\x{200D}\x{1F9B1})|[\x{1F468}\x{1F469}](?:\x{1F3FB}\x{200D}\x{1F9B1})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F9B1})|[\x{1F468}\x{1F469}](?:\x{1F3FF}\x{200D}\x{1F9B0})|[\x{1F468}\x{1F469}](?:\x{1F3FE}\x{200D}\x{1F9B0})|[\x{1F468}\x{1F469}](?:\x{1F3FD}\x{200D}\x{1F9B0})|[\x{1F468}\x{1F469}](?:\x{1F3FC}\x{200D}\x{1F9B0})|[\x{1F468}\x{1F469}](?:\x{1F3FB}\x{200D}\x{1F9B0})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F9B0})|[\x{1F575}\x{1F3CC}\x{26F9}\x{1F3CB}](?:\x{FE0F}\x{200D}\x{2640}\x{FE0F})|[\x{1F575}\x{1F3CC}\x{26F9}\x{1F3CB}](?:\x{FE0F}\x{200D}\x{2642}\x{FE0F})|[\x{1F46E}\x{1F575}\x{1F482}\x{1F477}\x{1F473}\x{1F471}\x{1F9D9}\x{1F9DA}\x{1F9DB}\x{1F9DC}\x{1F9DD}\x{1F64D}\x{1F64E}\x{1F645}\x{1F646}\x{1F481}\x{1F64B}\x{1F647}\x{1F926}\x{1F937}\x{1F486}\x{1F487}\x{1F6B6}\x{1F3C3}\x{1F9D6}\x{1F9D7}\x{1F9D8}\x{1F3CC}\x{1F3C4}\x{1F6A3}\x{1F3CA}\x{26F9}\x{1F3CB}\x{1F6B4}\x{1F6B5}\x{1F938}\x{1F93D}\x{1F93E}\x{1F939}](?:\x{1F3FF}\x{200D}\x{2640}\x{FE0F})|[\x{1F46E}\x{1F575}\x{1F482}\x{1F477}\x{1F473}\x{1F471}\x{1F9D9}\x{1F9DA}\x{1F9DB}\x{1F9DC}\x{1F9DD}\x{1F64D}\x{1F64E}\x{1F645}\x{1F646}\x{1F481}\x{1F64B}\x{1F647}\x{1F926}\x{1F937}\x{1F486}\x{1F487}\x{1F6B6}\x{1F3C3}\x{1F9D6}\x{1F9D7}\x{1F9D8}\x{1F3CC}\x{1F3C4}\x{1F6A3}\x{1F3CA}\x{26F9}\x{1F3CB}\x{1F6B4}\x{1F6B5}\x{1F938}\x{1F93D}\x{1F93E}\x{1F939}](?:\x{1F3FE}\x{200D}\x{2640}\x{FE0F})|[\x{1F46E}\x{1F575}\x{1F482}\x{1F477}\x{1F473}\x{1F471}\x{1F9D9}\x{1F9DA}\x{1F9DB}\x{1F9DC}\x{1F9DD}\x{1F64D}\x{1F64E}\x{1F645}\x{1F646}\x{1F481}\x{1F64B}\x{1F647}\x{1F926}\x{1F937}\x{1F486}\x{1F487}\x{1F6B6}\x{1F3C3}\x{1F9D6}\x{1F9D7}\x{1F9D8}\x{1F3CC}\x{1F3C4}\x{1F6A3}\x{1F3CA}\x{26F9}\x{1F3CB}\x{1F6B4}\x{1F6B5}\x{1F938}\x{1F93D}\x{1F93E}\x{1F939}](?:\x{1F3FD}\x{200D}\x{2640}\x{FE0F})|[\x{1F46E}\x{1F575}\x{1F482}\x{1F477}\x{1F473}\x{1F471}\x{1F9D9}\x{1F9DA}\x{1F9DB}\x{1F9DC}\x{1F9DD}\x{1F64D}\x{1F64E}\x{1F645}\x{1F646}\x{1F481}\x{1F64B}\x{1F647}\x{1F926}\x{1F937}\x{1F486}\x{1F487}\x{1F6B6}\x{1F3C3}\x{1F9D6}\x{1F9D7}\x{1F9D8}\x{1F3CC}\x{1F3C4}\x{1F6A3}\x{1F3CA}\x{26F9}\x{1F3CB}\x{1F6B4}\x{1F6B5}\x{1F938}\x{1F93D}\x{1F93E}\x{1F939}](?:\x{1F3FC}\x{200D}\x{2640}\x{FE0F})|[\x{1F46E}\x{1F575}\x{1F482}\x{1F477}\x{1F473}\x{1F471}\x{1F9D9}\x{1F9DA}\x{1F9DB}\x{1F9DC}\x{1F9DD}\x{1F64D}\x{1F64E}\x{1F645}\x{1F646}\x{1F481}\x{1F64B}\x{1F647}\x{1F926}\x{1F937}\x{1F486}\x{1F487}\x{1F6B6}\x{1F3C3}\x{1F9D6}\x{1F9D7}\x{1F9D8}\x{1F3CC}\x{1F3C4}\x{1F6A3}\x{1F3CA}\x{26F9}\x{1F3CB}\x{1F6B4}\x{1F6B5}\x{1F938}\x{1F93D}\x{1F93E}\x{1F939}](?:\x{1F3FB}\x{200D}\x{2640}\x{FE0F})|[\x{1F46E}\x{1F9B8}\x{1F9B9}\x{1F482}\x{1F477}\x{1F473}\x{1F471}\x{1F9D9}\x{1F9DA}\x{1F9DB}\x{1F9DC}\x{1F9DD}\x{1F9DE}\x{1F9DF}\x{1F64D}\x{1F64E}\x{1F645}\x{1F646}\x{1F481}\x{1F64B}\x{1F647}\x{1F926}\x{1F937}\x{1F486}\x{1F487}\x{1F6B6}\x{1F3C3}\x{1F46F}\x{1F9D6}\x{1F9D7}\x{1F9D8}\x{1F3C4}\x{1F6A3}\x{1F3CA}\x{1F6B4}\x{1F6B5}\x{1F938}\x{1F93C}\x{1F93D}\x{1F93E}\x{1F939}](?:\x{200D}\x{2640}\x{FE0F})|[\x{1F46E}\x{1F575}\x{1F482}\x{1F477}\x{1F473}\x{1F471}\x{1F9D9}\x{1F9DA}\x{1F9DB}\x{1F9DC}\x{1F9DD}\x{1F64D}\x{1F64E}\x{1F645}\x{1F646}\x{1F481}\x{1F64B}\x{1F647}\x{1F926}\x{1F937}\x{1F486}\x{1F487}\x{1F6B6}\x{1F3C3}\x{1F9D6}\x{1F9D7}\x{1F9D8}\x{1F3CC}\x{1F3C4}\x{1F6A3}\x{1F3CA}\x{26F9}\x{1F3CB}\x{1F6B4}\x{1F6B5}\x{1F938}\x{1F93D}\x{1F93E}\x{1F939}](?:\x{1F3FF}\x{200D}\x{2642}\x{FE0F})|[\x{1F46E}\x{1F575}\x{1F482}\x{1F477}\x{1F473}\x{1F471}\x{1F9D9}\x{1F9DA}\x{1F9DB}\x{1F9DC}\x{1F9DD}\x{1F64D}\x{1F64E}\x{1F645}\x{1F646}\x{1F481}\x{1F64B}\x{1F647}\x{1F926}\x{1F937}\x{1F486}\x{1F487}\x{1F6B6}\x{1F3C3}\x{1F9D6}\x{1F9D7}\x{1F9D8}\x{1F3CC}\x{1F3C4}\x{1F6A3}\x{1F3CA}\x{26F9}\x{1F3CB}\x{1F6B4}\x{1F6B5}\x{1F938}\x{1F93D}\x{1F93E}\x{1F939}](?:\x{1F3FE}\x{200D}\x{2642}\x{FE0F})|[\x{1F46E}\x{1F575}\x{1F482}\x{1F477}\x{1F473}\x{1F471}\x{1F9D9}\x{1F9DA}\x{1F9DB}\x{1F9DC}\x{1F9DD}\x{1F64D}\x{1F64E}\x{1F645}\x{1F646}\x{1F481}\x{1F64B}\x{1F647}\x{1F926}\x{1F937}\x{1F486}\x{1F487}\x{1F6B6}\x{1F3C3}\x{1F9D6}\x{1F9D7}\x{1F9D8}\x{1F3CC}\x{1F3C4}\x{1F6A3}\x{1F3CA}\x{26F9}\x{1F3CB}\x{1F6B4}\x{1F6B5}\x{1F938}\x{1F93D}\x{1F93E}\x{1F939}](?:\x{1F3FD}\x{200D}\x{2642}\x{FE0F})|[\x{1F46E}\x{1F575}\x{1F482}\x{1F477}\x{1F473}\x{1F471}\x{1F9D9}\x{1F9DA}\x{1F9DB}\x{1F9DC}\x{1F9DD}\x{1F64D}\x{1F64E}\x{1F645}\x{1F646}\x{1F481}\x{1F64B}\x{1F647}\x{1F926}\x{1F937}\x{1F486}\x{1F487}\x{1F6B6}\x{1F3C3}\x{1F9D6}\x{1F9D7}\x{1F9D8}\x{1F3CC}\x{1F3C4}\x{1F6A3}\x{1F3CA}\x{26F9}\x{1F3CB}\x{1F6B4}\x{1F6B5}\x{1F938}\x{1F93D}\x{1F93E}\x{1F939}](?:\x{1F3FC}\x{200D}\x{2642}\x{FE0F})|[\x{1F46E}\x{1F575}\x{1F482}\x{1F477}\x{1F473}\x{1F471}\x{1F9D9}\x{1F9DA}\x{1F9DB}\x{1F9DC}\x{1F9DD}\x{1F64D}\x{1F64E}\x{1F645}\x{1F646}\x{1F481}\x{1F64B}\x{1F647}\x{1F926}\x{1F937}\x{1F486}\x{1F487}\x{1F6B6}\x{1F3C3}\x{1F9D6}\x{1F9D7}\x{1F9D8}\x{1F3CC}\x{1F3C4}\x{1F6A3}\x{1F3CA}\x{26F9}\x{1F3CB}\x{1F6B4}\x{1F6B5}\x{1F938}\x{1F93D}\x{1F93E}\x{1F939}](?:\x{1F3FB}\x{200D}\x{2642}\x{FE0F})|[\x{1F46E}\x{1F9B8}\x{1F9B9}\x{1F482}\x{1F477}\x{1F473}\x{1F471}\x{1F9D9}\x{1F9DA}\x{1F9DB}\x{1F9DC}\x{1F9DD}\x{1F9DE}\x{1F9DF}\x{1F64D}\x{1F64E}\x{1F645}\x{1F646}\x{1F481}\x{1F64B}\x{1F647}\x{1F926}\x{1F937}\x{1F486}\x{1F487}\x{1F6B6}\x{1F3C3}\x{1F46F}\x{1F9D6}\x{1F9D7}\x{1F9D8}\x{1F3C4}\x{1F6A3}\x{1F3CA}\x{1F6B4}\x{1F6B5}\x{1F938}\x{1F93C}\x{1F93D}\x{1F93E}\x{1F939}](?:\x{200D}\x{2642}\x{FE0F})|[\x{1F468}\x{1F469}](?:\x{1F3FF}\x{200D}\x{1F692})|[\x{1F468}\x{1F469}](?:\x{1F3FE}\x{200D}\x{1F692})|[\x{1F468}\x{1F469}](?:\x{1F3FD}\x{200D}\x{1F692})|[\x{1F468}\x{1F469}](?:\x{1F3FC}\x{200D}\x{1F692})|[\x{1F468}\x{1F469}](?:\x{1F3FB}\x{200D}\x{1F692})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F692})|[\x{1F468}\x{1F469}](?:\x{1F3FF}\x{200D}\x{1F680})|[\x{1F468}\x{1F469}](?:\x{1F3FE}\x{200D}\x{1F680})|[\x{1F468}\x{1F469}](?:\x{1F3FD}\x{200D}\x{1F680})|[\x{1F468}\x{1F469}](?:\x{1F3FC}\x{200D}\x{1F680})|[\x{1F468}\x{1F469}](?:\x{1F3FB}\x{200D}\x{1F680})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F680})|[\x{1F468}\x{1F469}](?:\x{1F3FF}\x{200D}\x{2708}\x{FE0F})|[\x{1F468}\x{1F469}](?:\x{1F3FE}\x{200D}\x{2708}\x{FE0F})|[\x{1F468}\x{1F469}](?:\x{1F3FD}\x{200D}\x{2708}\x{FE0F})|[\x{1F468}\x{1F469}](?:\x{1F3FC}\x{200D}\x{2708}\x{FE0F})|[\x{1F468}\x{1F469}](?:\x{1F3FB}\x{200D}\x{2708}\x{FE0F})|[\x{1F468}\x{1F469}](?:\x{200D}\x{2708}\x{FE0F})|[\x{1F468}\x{1F469}](?:\x{1F3FF}\x{200D}\x{1F3A8})|[\x{1F468}\x{1F469}](?:\x{1F3FE}\x{200D}\x{1F3A8})|[\x{1F468}\x{1F469}](?:\x{1F3FD}\x{200D}\x{1F3A8})|[\x{1F468}\x{1F469}](?:\x{1F3FC}\x{200D}\x{1F3A8})|[\x{1F468}\x{1F469}](?:\x{1F3FB}\x{200D}\x{1F3A8})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F3A8})|[\x{1F468}\x{1F469}](?:\x{1F3FF}\x{200D}\x{1F3A4})|[\x{1F468}\x{1F469}](?:\x{1F3FE}\x{200D}\x{1F3A4})|[\x{1F468}\x{1F469}](?:\x{1F3FD}\x{200D}\x{1F3A4})|[\x{1F468}\x{1F469}](?:\x{1F3FC}\x{200D}\x{1F3A4})|[\x{1F468}\x{1F469}](?:\x{1F3FB}\x{200D}\x{1F3A4})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F3A4})|[\x{1F468}\x{1F469}](?:\x{1F3FF}\x{200D}\x{1F4BB})|[\x{1F468}\x{1F469}](?:\x{1F3FE}\x{200D}\x{1F4BB})|[\x{1F468}\x{1F469}](?:\x{1F3FD}\x{200D}\x{1F4BB})|[\x{1F468}\x{1F469}](?:\x{1F3FC}\x{200D}\x{1F4BB})|[\x{1F468}\x{1F469}](?:\x{1F3FB}\x{200D}\x{1F4BB})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F4BB})|[\x{1F468}\x{1F469}](?:\x{1F3FF}\x{200D}\x{1F52C})|[\x{1F468}\x{1F469}](?:\x{1F3FE}\x{200D}\x{1F52C})|[\x{1F468}\x{1F469}](?:\x{1F3FD}\x{200D}\x{1F52C})|[\x{1F468}\x{1F469}](?:\x{1F3FC}\x{200D}\x{1F52C})|[\x{1F468}\x{1F469}](?:\x{1F3FB}\x{200D}\x{1F52C})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F52C})|[\x{1F468}\x{1F469}](?:\x{1F3FF}\x{200D}\x{1F4BC})|[\x{1F468}\x{1F469}](?:\x{1F3FE}\x{200D}\x{1F4BC})|[\x{1F468}\x{1F469}](?:\x{1F3FD}\x{200D}\x{1F4BC})|[\x{1F468}\x{1F469}](?:\x{1F3FC}\x{200D}\x{1F4BC})|[\x{1F468}\x{1F469}](?:\x{1F3FB}\x{200D}\x{1F4BC})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F4BC})|[\x{1F468}\x{1F469}](?:\x{1F3FF}\x{200D}\x{1F3ED})|[\x{1F468}\x{1F469}](?:\x{1F3FE}\x{200D}\x{1F3ED})|[\x{1F468}\x{1F469}](?:\x{1F3FD}\x{200D}\x{1F3ED})|[\x{1F468}\x{1F469}](?:\x{1F3FC}\x{200D}\x{1F3ED})|[\x{1F468}\x{1F469}](?:\x{1F3FB}\x{200D}\x{1F3ED})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F3ED})|[\x{1F468}\x{1F469}](?:\x{1F3FF}\x{200D}\x{1F527})|[\x{1F468}\x{1F469}](?:\x{1F3FE}\x{200D}\x{1F527})|[\x{1F468}\x{1F469}](?:\x{1F3FD}\x{200D}\x{1F527})|[\x{1F468}\x{1F469}](?:\x{1F3FC}\x{200D}\x{1F527})|[\x{1F468}\x{1F469}](?:\x{1F3FB}\x{200D}\x{1F527})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F527})|[\x{1F468}\x{1F469}](?:\x{1F3FF}\x{200D}\x{1F373})|[\x{1F468}\x{1F469}](?:\x{1F3FE}\x{200D}\x{1F373})|[\x{1F468}\x{1F469}](?:\x{1F3FD}\x{200D}\x{1F373})|[\x{1F468}\x{1F469}](?:\x{1F3FC}\x{200D}\x{1F373})|[\x{1F468}\x{1F469}](?:\x{1F3FB}\x{200D}\x{1F373})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F373})|[\x{1F468}\x{1F469}](?:\x{1F3FF}\x{200D}\x{1F33E})|[\x{1F468}\x{1F469}](?:\x{1F3FE}\x{200D}\x{1F33E})|[\x{1F468}\x{1F469}](?:\x{1F3FD}\x{200D}\x{1F33E})|[\x{1F468}\x{1F469}](?:\x{1F3FC}\x{200D}\x{1F33E})|[\x{1F468}\x{1F469}](?:\x{1F3FB}\x{200D}\x{1F33E})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F33E})|[\x{1F468}\x{1F469}](?:\x{1F3FF}\x{200D}\x{2696}\x{FE0F})|[\x{1F468}\x{1F469}](?:\x{1F3FE}\x{200D}\x{2696}\x{FE0F})|[\x{1F468}\x{1F469}](?:\x{1F3FD}\x{200D}\x{2696}\x{FE0F})|[\x{1F468}\x{1F469}](?:\x{1F3FC}\x{200D}\x{2696}\x{FE0F})|[\x{1F468}\x{1F469}](?:\x{1F3FB}\x{200D}\x{2696}\x{FE0F})|[\x{1F468}\x{1F469}](?:\x{200D}\x{2696}\x{FE0F})|[\x{1F468}\x{1F469}](?:\x{1F3FF}\x{200D}\x{1F3EB})|[\x{1F468}\x{1F469}](?:\x{1F3FE}\x{200D}\x{1F3EB})|[\x{1F468}\x{1F469}](?:\x{1F3FD}\x{200D}\x{1F3EB})|[\x{1F468}\x{1F469}](?:\x{1F3FC}\x{200D}\x{1F3EB})|[\x{1F468}\x{1F469}](?:\x{1F3FB}\x{200D}\x{1F3EB})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F3EB})|[\x{1F468}\x{1F469}](?:\x{1F3FF}\x{200D}\x{1F393})|[\x{1F468}\x{1F469}](?:\x{1F3FE}\x{200D}\x{1F393})|[\x{1F468}\x{1F469}](?:\x{1F3FD}\x{200D}\x{1F393})|[\x{1F468}\x{1F469}](?:\x{1F3FC}\x{200D}\x{1F393})|[\x{1F468}\x{1F469}](?:\x{1F3FB}\x{200D}\x{1F393})|[\x{1F468}\x{1F469}](?:\x{200D}\x{1F393})|[\x{1F468}\x{1F469}](?:\x{1F3FF}\x{200D}\x{2695}\x{FE0F})|[\x{1F468}\x{1F469}](?:\x{1F3FE}\x{200D}\x{2695}\x{FE0F})|[\x{1F468}\x{1F469}](?:\x{1F3FD}\x{200D}\x{2695}\x{FE0F})|[\x{1F468}\x{1F469}](?:\x{1F3FC}\x{200D}\x{2695}\x{FE0F})|[\x{1F468}\x{1F469}](?:\x{1F3FB}\x{200D}\x{2695}\x{FE0F})|[\x{1F468}\x{1F469}](?:\x{200D}\x{2695}\x{FE0F})|[\x{1F476}\x{1F9D2}\x{1F466}\x{1F467}\x{1F9D1}\x{1F468}\x{1F469}\x{1F9D3}\x{1F474}\x{1F475}\x{1F46E}\x{1F575}\x{1F482}\x{1F477}\x{1F934}\x{1F478}\x{1F473}\x{1F472}\x{1F9D5}\x{1F9D4}\x{1F471}\x{1F935}\x{1F470}\x{1F930}\x{1F931}\x{1F47C}\x{1F385}\x{1F936}\x{1F9D9}\x{1F9DA}\x{1F9DB}\x{1F9DC}\x{1F9DD}\x{1F64D}\x{1F64E}\x{1F645}\x{1F646}\x{1F481}\x{1F64B}\x{1F647}\x{1F926}\x{1F937}\x{1F486}\x{1F487}\x{1F6B6}\x{1F3C3}\x{1F483}\x{1F57A}\x{1F9D6}\x{1F9D7}\x{1F9D8}\x{1F6C0}\x{1F6CC}\x{1F574}\x{1F3C7}\x{1F3C2}\x{1F3CC}\x{1F3C4}\x{1F6A3}\x{1F3CA}\x{26F9}\x{1F3CB}\x{1F6B4}\x{1F6B5}\x{1F938}\x{1F93D}\x{1F93E}\x{1F939}\x{1F933}\x{1F4AA}\x{1F9B5}\x{1F9B6}\x{1F448}\x{1F449}\x{261D}\x{1F446}\x{1F595}\x{1F447}\x{270C}\x{1F91E}\x{1F596}\x{1F918}\x{1F919}\x{1F590}\x{270B}\x{1F44C}\x{1F44D}\x{1F44E}\x{270A}\x{1F44A}\x{1F91B}\x{1F91C}\x{1F91A}\x{1F44B}\x{1F91F}\x{270D}\x{1F44F}\x{1F450}\x{1F64C}\x{1F932}\x{1F64F}\x{1F485}\x{1F442}\x{1F443}](?:\x{1F3FF})|[\x{1F476}\x{1F9D2}\x{1F466}\x{1F467}\x{1F9D1}\x{1F468}\x{1F469}\x{1F9D3}\x{1F474}\x{1F475}\x{1F46E}\x{1F575}\x{1F482}\x{1F477}\x{1F934}\x{1F478}\x{1F473}\x{1F472}\x{1F9D5}\x{1F9D4}\x{1F471}\x{1F935}\x{1F470}\x{1F930}\x{1F931}\x{1F47C}\x{1F385}\x{1F936}\x{1F9D9}\x{1F9DA}\x{1F9DB}\x{1F9DC}\x{1F9DD}\x{1F64D}\x{1F64E}\x{1F645}\x{1F646}\x{1F481}\x{1F64B}\x{1F647}\x{1F926}\x{1F937}\x{1F486}\x{1F487}\x{1F6B6}\x{1F3C3}\x{1F483}\x{1F57A}\x{1F9D6}\x{1F9D7}\x{1F9D8}\x{1F6C0}\x{1F6CC}\x{1F574}\x{1F3C7}\x{1F3C2}\x{1F3CC}\x{1F3C4}\x{1F6A3}\x{1F3CA}\x{26F9}\x{1F3CB}\x{1F6B4}\x{1F6B5}\x{1F938}\x{1F93D}\x{1F93E}\x{1F939}\x{1F933}\x{1F4AA}\x{1F9B5}\x{1F9B6}\x{1F448}\x{1F449}\x{261D}\x{1F446}\x{1F595}\x{1F447}\x{270C}\x{1F91E}\x{1F596}\x{1F918}\x{1F919}\x{1F590}\x{270B}\x{1F44C}\x{1F44D}\x{1F44E}\x{270A}\x{1F44A}\x{1F91B}\x{1F91C}\x{1F91A}\x{1F44B}\x{1F91F}\x{270D}\x{1F44F}\x{1F450}\x{1F64C}\x{1F932}\x{1F64F}\x{1F485}\x{1F442}\x{1F443}](?:\x{1F3FE})|[\x{1F476}\x{1F9D2}\x{1F466}\x{1F467}\x{1F9D1}\x{1F468}\x{1F469}\x{1F9D3}\x{1F474}\x{1F475}\x{1F46E}\x{1F575}\x{1F482}\x{1F477}\x{1F934}\x{1F478}\x{1F473}\x{1F472}\x{1F9D5}\x{1F9D4}\x{1F471}\x{1F935}\x{1F470}\x{1F930}\x{1F931}\x{1F47C}\x{1F385}\x{1F936}\x{1F9D9}\x{1F9DA}\x{1F9DB}\x{1F9DC}\x{1F9DD}\x{1F64D}\x{1F64E}\x{1F645}\x{1F646}\x{1F481}\x{1F64B}\x{1F647}\x{1F926}\x{1F937}\x{1F486}\x{1F487}\x{1F6B6}\x{1F3C3}\x{1F483}\x{1F57A}\x{1F9D6}\x{1F9D7}\x{1F9D8}\x{1F6C0}\x{1F6CC}\x{1F574}\x{1F3C7}\x{1F3C2}\x{1F3CC}\x{1F3C4}\x{1F6A3}\x{1F3CA}\x{26F9}\x{1F3CB}\x{1F6B4}\x{1F6B5}\x{1F938}\x{1F93D}\x{1F93E}\x{1F939}\x{1F933}\x{1F4AA}\x{1F9B5}\x{1F9B6}\x{1F448}\x{1F449}\x{261D}\x{1F446}\x{1F595}\x{1F447}\x{270C}\x{1F91E}\x{1F596}\x{1F918}\x{1F919}\x{1F590}\x{270B}\x{1F44C}\x{1F44D}\x{1F44E}\x{270A}\x{1F44A}\x{1F91B}\x{1F91C}\x{1F91A}\x{1F44B}\x{1F91F}\x{270D}\x{1F44F}\x{1F450}\x{1F64C}\x{1F932}\x{1F64F}\x{1F485}\x{1F442}\x{1F443}](?:\x{1F3FD})|[\x{1F476}\x{1F9D2}\x{1F466}\x{1F467}\x{1F9D1}\x{1F468}\x{1F469}\x{1F9D3}\x{1F474}\x{1F475}\x{1F46E}\x{1F575}\x{1F482}\x{1F477}\x{1F934}\x{1F478}\x{1F473}\x{1F472}\x{1F9D5}\x{1F9D4}\x{1F471}\x{1F935}\x{1F470}\x{1F930}\x{1F931}\x{1F47C}\x{1F385}\x{1F936}\x{1F9D9}\x{1F9DA}\x{1F9DB}\x{1F9DC}\x{1F9DD}\x{1F64D}\x{1F64E}\x{1F645}\x{1F646}\x{1F481}\x{1F64B}\x{1F647}\x{1F926}\x{1F937}\x{1F486}\x{1F487}\x{1F6B6}\x{1F3C3}\x{1F483}\x{1F57A}\x{1F9D6}\x{1F9D7}\x{1F9D8}\x{1F6C0}\x{1F6CC}\x{1F574}\x{1F3C7}\x{1F3C2}\x{1F3CC}\x{1F3C4}\x{1F6A3}\x{1F3CA}\x{26F9}\x{1F3CB}\x{1F6B4}\x{1F6B5}\x{1F938}\x{1F93D}\x{1F93E}\x{1F939}\x{1F933}\x{1F4AA}\x{1F9B5}\x{1F9B6}\x{1F448}\x{1F449}\x{261D}\x{1F446}\x{1F595}\x{1F447}\x{270C}\x{1F91E}\x{1F596}\x{1F918}\x{1F919}\x{1F590}\x{270B}\x{1F44C}\x{1F44D}\x{1F44E}\x{270A}\x{1F44A}\x{1F91B}\x{1F91C}\x{1F91A}\x{1F44B}\x{1F91F}\x{270D}\x{1F44F}\x{1F450}\x{1F64C}\x{1F932}\x{1F64F}\x{1F485}\x{1F442}\x{1F443}](?:\x{1F3FC})|[\x{1F476}\x{1F9D2}\x{1F466}\x{1F467}\x{1F9D1}\x{1F468}\x{1F469}\x{1F9D3}\x{1F474}\x{1F475}\x{1F46E}\x{1F575}\x{1F482}\x{1F477}\x{1F934}\x{1F478}\x{1F473}\x{1F472}\x{1F9D5}\x{1F9D4}\x{1F471}\x{1F935}\x{1F470}\x{1F930}\x{1F931}\x{1F47C}\x{1F385}\x{1F936}\x{1F9D9}\x{1F9DA}\x{1F9DB}\x{1F9DC}\x{1F9DD}\x{1F64D}\x{1F64E}\x{1F645}\x{1F646}\x{1F481}\x{1F64B}\x{1F647}\x{1F926}\x{1F937}\x{1F486}\x{1F487}\x{1F6B6}\x{1F3C3}\x{1F483}\x{1F57A}\x{1F9D6}\x{1F9D7}\x{1F9D8}\x{1F6C0}\x{1F6CC}\x{1F574}\x{1F3C7}\x{1F3C2}\x{1F3CC}\x{1F3C4}\x{1F6A3}\x{1F3CA}\x{26F9}\x{1F3CB}\x{1F6B4}\x{1F6B5}\x{1F938}\x{1F93D}\x{1F93E}\x{1F939}\x{1F933}\x{1F4AA}\x{1F9B5}\x{1F9B6}\x{1F448}\x{1F449}\x{261D}\x{1F446}\x{1F595}\x{1F447}\x{270C}\x{1F91E}\x{1F596}\x{1F918}\x{1F919}\x{1F590}\x{270B}\x{1F44C}\x{1F44D}\x{1F44E}\x{270A}\x{1F44A}\x{1F91B}\x{1F91C}\x{1F91A}\x{1F44B}\x{1F91F}\x{270D}\x{1F44F}\x{1F450}\x{1F64C}\x{1F932}\x{1F64F}\x{1F485}\x{1F442}\x{1F443}](?:\x{1F3FB})|[\x{1F1E6}\x{1F1E7}\x{1F1E8}\x{1F1E9}\x{1F1F0}\x{1F1F2}\x{1F1F3}\x{1F1F8}\x{1F1F9}\x{1F1FA}](?:\x{1F1FF})|[\x{1F1E7}\x{1F1E8}\x{1F1EC}\x{1F1F0}\x{1F1F1}\x{1F1F2}\x{1F1F5}\x{1F1F8}\x{1F1FA}](?:\x{1F1FE})|[\x{1F1E6}\x{1F1E8}\x{1F1F2}\x{1F1F8}](?:\x{1F1FD})|[\x{1F1E6}\x{1F1E7}\x{1F1E8}\x{1F1EC}\x{1F1F0}\x{1F1F2}\x{1F1F5}\x{1F1F7}\x{1F1F9}\x{1F1FF}](?:\x{1F1FC})|[\x{1F1E7}\x{1F1E8}\x{1F1F1}\x{1F1F2}\x{1F1F8}\x{1F1F9}](?:\x{1F1FB})|[\x{1F1E6}\x{1F1E8}\x{1F1EA}\x{1F1EC}\x{1F1ED}\x{1F1F1}\x{1F1F2}\x{1F1F3}\x{1F1F7}\x{1F1FB}](?:\x{1F1FA})|[\x{1F1E6}\x{1F1E7}\x{1F1EA}\x{1F1EC}\x{1F1ED}\x{1F1EE}\x{1F1F1}\x{1F1F2}\x{1F1F5}\x{1F1F8}\x{1F1F9}\x{1F1FE}](?:\x{1F1F9})|[\x{1F1E6}\x{1F1E7}\x{1F1EA}\x{1F1EC}\x{1F1EE}\x{1F1F1}\x{1F1F2}\x{1F1F5}\x{1F1F7}\x{1F1F8}\x{1F1FA}\x{1F1FC}](?:\x{1F1F8})|[\x{1F1E6}\x{1F1E7}\x{1F1E8}\x{1F1EA}\x{1F1EB}\x{1F1EC}\x{1F1ED}\x{1F1EE}\x{1F1F0}\x{1F1F1}\x{1F1F2}\x{1F1F3}\x{1F1F5}\x{1F1F8}\x{1F1F9}](?:\x{1F1F7})|[\x{1F1E6}\x{1F1E7}\x{1F1EC}\x{1F1EE}\x{1F1F2}](?:\x{1F1F6})|[\x{1F1E8}\x{1F1EC}\x{1F1EF}\x{1F1F0}\x{1F1F2}\x{1F1F3}](?:\x{1F1F5})|[\x{1F1E6}\x{1F1E7}\x{1F1E8}\x{1F1E9}\x{1F1EB}\x{1F1EE}\x{1F1EF}\x{1F1F2}\x{1F1F3}\x{1F1F7}\x{1F1F8}\x{1F1F9}](?:\x{1F1F4})|[\x{1F1E7}\x{1F1E8}\x{1F1EC}\x{1F1ED}\x{1F1EE}\x{1F1F0}\x{1F1F2}\x{1F1F5}\x{1F1F8}\x{1F1F9}\x{1F1FA}\x{1F1FB}](?:\x{1F1F3})|[\x{1F1E6}\x{1F1E7}\x{1F1E8}\x{1F1E9}\x{1F1EB}\x{1F1EC}\x{1F1ED}\x{1F1EE}\x{1F1EF}\x{1F1F0}\x{1F1F2}\x{1F1F4}\x{1F1F5}\x{1F1F8}\x{1F1F9}\x{1F1FA}\x{1F1FF}](?:\x{1F1F2})|[\x{1F1E6}\x{1F1E7}\x{1F1E8}\x{1F1EC}\x{1F1EE}\x{1F1F2}\x{1F1F3}\x{1F1F5}\x{1F1F8}\x{1F1F9}](?:\x{1F1F1})|[\x{1F1E8}\x{1F1E9}\x{1F1EB}\x{1F1ED}\x{1F1F1}\x{1F1F2}\x{1F1F5}\x{1F1F8}\x{1F1F9}\x{1F1FD}](?:\x{1F1F0})|[\x{1F1E7}\x{1F1E9}\x{1F1EB}\x{1F1F8}\x{1F1F9}](?:\x{1F1EF})|[\x{1F1E6}\x{1F1E7}\x{1F1E8}\x{1F1EB}\x{1F1EC}\x{1F1F0}\x{1F1F1}\x{1F1F3}\x{1F1F8}\x{1F1FB}](?:\x{1F1EE})|[\x{1F1E7}\x{1F1E8}\x{1F1EA}\x{1F1EC}\x{1F1F0}\x{1F1F2}\x{1F1F5}\x{1F1F8}\x{1F1F9}](?:\x{1F1ED})|[\x{1F1E6}\x{1F1E7}\x{1F1E8}\x{1F1E9}\x{1F1EA}\x{1F1EC}\x{1F1F0}\x{1F1F2}\x{1F1F3}\x{1F1F5}\x{1F1F8}\x{1F1F9}\x{1F1FA}\x{1F1FB}](?:\x{1F1EC})|[\x{1F1E6}\x{1F1E7}\x{1F1E8}\x{1F1EC}\x{1F1F2}\x{1F1F3}\x{1F1F5}\x{1F1F9}\x{1F1FC}](?:\x{1F1EB})|[\x{1F1E6}\x{1F1E7}\x{1F1E9}\x{1F1EA}\x{1F1EC}\x{1F1EE}\x{1F1EF}\x{1F1F0}\x{1F1F2}\x{1F1F3}\x{1F1F5}\x{1F1F7}\x{1F1F8}\x{1F1FB}\x{1F1FE}](?:\x{1F1EA})|[\x{1F1E6}\x{1F1E7}\x{1F1E8}\x{1F1EC}\x{1F1EE}\x{1F1F2}\x{1F1F8}\x{1F1F9}](?:\x{1F1E9})|[\x{1F1E6}\x{1F1E8}\x{1F1EA}\x{1F1EE}\x{1F1F1}\x{1F1F2}\x{1F1F3}\x{1F1F8}\x{1F1F9}\x{1F1FB}](?:\x{1F1E8})|[\x{1F1E7}\x{1F1EC}\x{1F1F1}\x{1F1F8}](?:\x{1F1E7})|[\x{1F1E7}\x{1F1E8}\x{1F1EA}\x{1F1EC}\x{1F1F1}\x{1F1F2}\x{1F1F3}\x{1F1F5}\x{1F1F6}\x{1F1F8}\x{1F1F9}\x{1F1FA}\x{1F1FB}\x{1F1FF}](?:\x{1F1E6})|[\x{00A9}\x{00AE}\x{203C}\x{2049}\x{2122}\x{2139}\x{2194}-\x{2199}\x{21A9}-\x{21AA}\x{231A}-\x{231B}\x{2328}\x{23CF}\x{23E9}-\x{23F3}\x{23F8}-\x{23FA}\x{24C2}\x{25AA}-\x{25AB}\x{25B6}\x{25C0}\x{25FB}-\x{25FE}\x{2600}-\x{2604}\x{260E}\x{2611}\x{2614}-\x{2615}\x{2618}\x{261D}\x{2620}\x{2622}-\x{2623}\x{2626}\x{262A}\x{262E}-\x{262F}\x{2638}-\x{263A}\x{2640}\x{2642}\x{2648}-\x{2653}\x{2660}\x{2663}\x{2665}-\x{2666}\x{2668}\x{267B}\x{267E}-\x{267F}\x{2692}-\x{2697}\x{2699}\x{269B}-\x{269C}\x{26A0}-\x{26A1}\x{26AA}-\x{26AB}\x{26B0}-\x{26B1}\x{26BD}-\x{26BE}\x{26C4}-\x{26C5}\x{26C8}\x{26CE}-\x{26CF}\x{26D1}\x{26D3}-\x{26D4}\x{26E9}-\x{26EA}\x{26F0}-\x{26F5}\x{26F7}-\x{26FA}\x{26FD}\x{2702}\x{2705}\x{2708}-\x{270D}\x{270F}\x{2712}\x{2714}\x{2716}\x{271D}\x{2721}\x{2728}\x{2733}-\x{2734}\x{2744}\x{2747}\x{274C}\x{274E}\x{2753}-\x{2755}\x{2757}\x{2763}-\x{2764}\x{2795}-\x{2797}\x{27A1}\x{27B0}\x{27BF}\x{2934}-\x{2935}\x{2B05}-\x{2B07}\x{2B1B}-\x{2B1C}\x{2B50}\x{2B55}\x{3030}\x{303D}\x{3297}\x{3299}\x{1F004}\x{1F0CF}\x{1F170}-\x{1F171}\x{1F17E}-\x{1F17F}\x{1F18E}\x{1F191}-\x{1F19A}\x{1F201}-\x{1F202}\x{1F21A}\x{1F22F}\x{1F232}-\x{1F23A}\x{1F250}-\x{1F251}\x{1F300}-\x{1F321}\x{1F324}-\x{1F393}\x{1F396}-\x{1F397}\x{1F399}-\x{1F39B}\x{1F39E}-\x{1F3F0}\x{1F3F3}-\x{1F3F5}\x{1F3F7}-\x{1F3FA}\x{1F400}-\x{1F4FD}\x{1F4FF}-\x{1F53D}\x{1F549}-\x{1F54E}\x{1F550}-\x{1F567}\x{1F56F}-\x{1F570}\x{1F573}-\x{1F57A}\x{1F587}\x{1F58A}-\x{1F58D}\x{1F590}\x{1F595}-\x{1F596}\x{1F5A4}-\x{1F5A5}\x{1F5A8}\x{1F5B1}-\x{1F5B2}\x{1F5BC}\x{1F5C2}-\x{1F5C4}\x{1F5D1}-\x{1F5D3}\x{1F5DC}-\x{1F5DE}\x{1F5E1}\x{1F5E3}\x{1F5E8}\x{1F5EF}\x{1F5F3}\x{1F5FA}-\x{1F64F}\x{1F680}-\x{1F6C5}\x{1F6CB}-\x{1F6D2}\x{1F6E0}-\x{1F6E5}\x{1F6E9}\x{1F6EB}-\x{1F6EC}\x{1F6F0}\x{1F6F3}-\x{1F6F9}\x{1F910}-\x{1F93A}\x{1F93C}-\x{1F93E}\x{1F940}-\x{1F945}\x{1F947}-\x{1F970}\x{1F973}-\x{1F976}\x{1F97A}\x{1F97C}-\x{1F9A2}\x{1F9B0}-\x{1F9B9}\x{1F9C0}-\x{1F9C2}\x{1F9D0}-\x{1F9FF}]/u",
-            "", $string);
+            '', $string);
     }
 
     /**
@@ -2628,54 +2643,54 @@ class resourcesGame
     private function _insertAPITradeLog($data, $userId) {
 
         if ($userId != 0) {
-            $tableBuilder = $this->createTable("tradeLog", $userId);
+            $tableBuilder = $this->createTable('tradeLog', $userId);
             $buildTable   = $this->_conn->query($tableBuilder);
 
-            $mostRecentTradeQuery = "SELECT `timestamp` FROM `userTradeLog_" . $userId . "` ORDER BY `timestamp` DESC LIMIT 1";
+            $mostRecentTradeQuery = 'SELECT `timestamp` FROM `userTradeLog_' . $userId . '` ORDER BY `timestamp` DESC LIMIT 1';
             $mostRecentTrade      = $this->_conn->query($mostRecentTradeQuery);
 
             if ($mostRecentTrade->num_rows === 1) {
                 while ($recentTradeData = $mostRecentTrade->fetch_assoc()) {
-                    $mostRecentTradeTS = $recentTradeData["timestamp"];
+                    $mostRecentTradeTS = $recentTradeData['timestamp'];
                 }
             } else {
                 $mostRecentTradeTS = 0;
             }
 
             foreach ($data as $tradeAction) {
-                $timestamp = $tradeAction["ts"];
+                $timestamp = $tradeAction['ts'];
 
                 if ($timestamp > $mostRecentTradeTS) {
-                    $query = "INSERT INTO `userTradeLog_" . $userId . "` (`timestamp`, `event`, `amount`, `price`, `transportCost`, `itemId`, `actor`, `actorLevel`) VALUES ";
+                    $query = 'INSERT INTO `userTradeLog_' . $userId . '` (`timestamp`, `event`, `amount`, `price`, `transportCost`, `itemId`, `actor`, `actorLevel`) VALUES ';
 
-                    switch ($tradeAction["event"]) {
-                        case "buy":
+                    switch ($tradeAction['event']) {
+                        case 'buy':
                             $event         = $sellValue = 0;
-                            $buyValue      = $tradeAction["amount"] * $tradeAction["ppstk"];
-                            $transportCost = $tradeAction["transcost"];
+                            $buyValue      = $tradeAction['amount'] * $tradeAction['ppstk'];
+                            $transportCost = $tradeAction['transcost'];
                             break;
-                        case "sell":
+                        case 'sell':
                             $event     = 1;
                             $buyValue  = $transportCost = 0;
-                            $sellValue = $tradeAction["amount"] * $tradeAction["ppstk"];
+                            $sellValue = $tradeAction['amount'] * $tradeAction['ppstk'];
                             break;
                     }
 
-                    $tradingUserName     = $this->_removeEmojis($tradeAction["username"]);
-                    $tradingPartnerLevel = $tradeAction["ulvl"];
+                    $tradingUserName     = $this->_removeEmojis($tradeAction['username']);
+                    $tradingPartnerLevel = $tradeAction['ulvl'];
 
-                    $itemId = $this->_convertOfficialIdToInternalId($tradeAction["itemID"]);
+                    $itemId = $this->_convertOfficialIdToInternalId($tradeAction['itemID']);
 
-                    $query .= "(
-                    " . $timestamp . ",
-                    " . $event . ",
-                    " . $tradeAction["amount"] . ",
-                    " . $tradeAction["ppstk"] . ",
-                    " . $tradeAction["transcost"] . ",
-                    " . $itemId . ",
+                    $query .= '(
+                    ' . $timestamp . ',
+                    ' . $event . ',
+                    ' . $tradeAction['amount'] . ',
+                    ' . $tradeAction['ppstk'] . ',
+                    ' . $tradeAction['transcost'] . ',
+                    ' . $itemId . ",
                     '" . $tradingUserName . "',
-                    " . $tradingPartnerLevel . "
-                    );";
+                    " . $tradingPartnerLevel . '
+                    );';
 
                     $insertIntoIndex = $this->_insertUserToIndex($timestamp, $tradingUserName, $tradingPartnerLevel, $userId, $sellValue, $buyValue, $transportCost);
                     $insertion       = $this->_conn->query($query);
@@ -2683,7 +2698,7 @@ class resourcesGame
             }
         }
 
-        $answer["callback"] = "rHelper.methods.API_getTradeLog()";
+        $answer['callback'] = 'rHelper.methods.API_getTradeLog()';
 
         return json_encode($answer);
     }
@@ -2699,51 +2714,51 @@ class resourcesGame
      */
     private function _insertAPIMissions($data, $userId) {
         if ($userId != 0) {
-            $tableBuilder = $this->createTable("missions", $userId);
+            $tableBuilder = $this->createTable('missions', $userId);
             $buildTable   = $this->_conn->query($tableBuilder);
 
             $result = [];
 
             foreach ($data as $mission) {
-                $id             = $mission["questID"];
-                $startTimestamp = $mission["starttime"];
-                $endTimestamp   = $mission["endtime"];
-                $progress       = $mission["progress"];
-                $goal           = $mission["missiongoal"];
-                $cooldown       = time("now") + $mission["cooldown"];
-                $rewardAmount   = $mission["rewardamount"];
-                $penalty        = $mission["penalty"];
-                $status         = $mission["status"];
+                $id             = $mission['questID'];
+                $startTimestamp = $mission['starttime'];
+                $endTimestamp   = $mission['endtime'];
+                $progress       = $mission['progress'];
+                $goal           = $mission['missiongoal'];
+                $cooldown       = time('now') + $mission['cooldown'];
+                $rewardAmount   = $mission['rewardamount'];
+                $penalty        = $mission['penalty'];
+                $status         = $mission['status'];
 
-                $checkExistingMissionQuery = "SELECT * FROM `userMissions_" . $userId . "` WHERE `id` = " . $id . "";
+                $checkExistingMissionQuery = 'SELECT * FROM `userMissions_' . $userId . '` WHERE `id` = ' . $id . '';
                 $checkExistingMission      = $this->_conn->query($checkExistingMissionQuery);
 
                 if ($checkExistingMission->num_rows === 0) {
-                    $query = "INSERT INTO `userMissions_" . $userId . "` (`id`, `startTimestamp`, `endTimestamp`, `progress`, `goal`, `cooldown`, `rewardAmount`, `penalty`, `status`) VALUES ";
+                    $query = 'INSERT INTO `userMissions_' . $userId . '` (`id`, `startTimestamp`, `endTimestamp`, `progress`, `goal`, `cooldown`, `rewardAmount`, `penalty`, `status`) VALUES ';
 
-                    $query .= "(
-                    " . $id . ",
-                    " . $startTimestamp . ",
-                    " . $endTimestamp . ",
-                    " . $progress . ",
-                    " . $goal . ",
-                    " . $cooldown . ",
-                    " . $rewardAmount . ",
-                    " . $penalty . ",
-                    " . $status . "
-                    );";
+                    $query .= '(
+                    ' . $id . ',
+                    ' . $startTimestamp . ',
+                    ' . $endTimestamp . ',
+                    ' . $progress . ',
+                    ' . $goal . ',
+                    ' . $cooldown . ',
+                    ' . $rewardAmount . ',
+                    ' . $penalty . ',
+                    ' . $status . '
+                    );';
                 } else {
 
-                    $query = "UPDATE `userMissions_" . $userId . "`
-                    SET `startTimestamp` = " . $startTimestamp . ",
-                    `endTimestamp` = " . $endTimestamp . ",
-                    `progress` = " . $progress . ",
-                    `goal` = " . $goal . ",
-                    `cooldown` =   " . $cooldown . ",
-                    `rewardAmount` = " . $rewardAmount . ",
-                    `penalty` = " . $penalty . ",
-                    `status` = " . $status . "
-                    WHERE `id` = " . $id . "";
+                    $query = 'UPDATE `userMissions_' . $userId . '`
+                    SET `startTimestamp` = ' . $startTimestamp . ',
+                    `endTimestamp` = ' . $endTimestamp . ',
+                    `progress` = ' . $progress . ',
+                    `goal` = ' . $goal . ',
+                    `cooldown` =   ' . $cooldown . ',
+                    `rewardAmount` = ' . $rewardAmount . ',
+                    `penalty` = ' . $penalty . ',
+                    `status` = ' . $status . '
+                    WHERE `id` = ' . $id . '';
                 }
 
                 $setMission = $this->_conn->query($query);
@@ -2757,25 +2772,25 @@ class resourcesGame
                 }
 
                 $result[$id] = [
-                    "startData"    => [
-                        "dateTime"  => $starTimeStamp,
-                        "timestamp" => $mission["starttime"],
+                    'startData'    => [
+                        'dateTime'  => $starTimeStamp,
+                        'timestamp' => $mission['starttime'],
                     ],
-                    "endData"      => [
-                        "dateTime"  => $endTimestamp,
-                        "timestamp" => $mission["endtime"],
+                    'endData'      => [
+                        'dateTime'  => $endTimestamp,
+                        'timestamp' => $mission['endtime'],
                     ],
-                    "progress"     => $progress,
-                    "goal"         => $goal,
-                    "cooldown"     => $cooldown,
-                    "rewardAmount" => $rewardAmount,
-                    "penalty"      => $penalty,
-                    "status"       => $status,
+                    'progress'     => $progress,
+                    'goal'         => $goal,
+                    'cooldown'     => $cooldown,
+                    'rewardAmount' => $rewardAmount,
+                    'penalty'      => $penalty,
+                    'status'       => $status,
                 ];
             }
         }
 
-        $answer["callback"] = "rHelper.methods.API_getMissions()";
+        $answer['callback'] = 'rHelper.methods.API_getMissions()';
 
         return json_encode($answer);
     }
@@ -2791,25 +2806,25 @@ class resourcesGame
      */
     private function _insertAPIAttackLog($data, $userId) {
         if ($userId != 0) {
-            $tableBuilder = $this->createTable("attackLog", $userId);
+            $tableBuilder = $this->createTable('attackLog', $userId);
             $createTable  = $this->_conn->query($tableBuilder);
 
-            $mostRecentAttackQuery = "SELECT `timestamp` FROM `userAttackLog_" . $userId . "` ORDER BY `timestamp` DESC LIMIT 1";
+            $mostRecentAttackQuery = 'SELECT `timestamp` FROM `userAttackLog_' . $userId . '` ORDER BY `timestamp` DESC LIMIT 1';
             $mostRecentAttack      = $this->_conn->query($mostRecentAttackQuery);
 
             if ($mostRecentAttack->num_rows === 1) {
                 while ($recentAttackData = $mostRecentAttack->fetch_assoc()) {
-                    $mostRecentAttackTS = $recentAttackData["timestamp"];
+                    $mostRecentAttackTS = $recentAttackData['timestamp'];
                 }
             } else {
                 $mostRecentAttackTS = 0;
             }
 
             foreach ($data as $attack) {
-                $timestamp = $attack["unixts"];
+                $timestamp = $attack['unixts'];
 
                 if ($timestamp > $mostRecentAttackTS) {
-                    $query = "INSERT INTO `userAttackLog_" . $userId . "` (
+                    $query = 'INSERT INTO `userAttackLog_' . $userId . '` (
                     `target`, `targetLevel`, `timestamp`,
                     `aUnit1`, `aUnit2`, `aUnit3`,
                     `dUnit1`, `dUnit2`, `dUnit3`,
@@ -2819,41 +2834,41 @@ class resourcesGame
                     `action`, `result`, `factor`,
                     `lootId1`, `lootQty1`, `lootPrice1`,
                     `lootId2`, `lootQty2`, `lootPrice2`,
-                    `worth`, `profit`) VALUES ";
+                    `worth`, `profit`) VALUES ';
 
-                    switch ($attack["result"]) {
-                        case "won":
+                    switch ($attack['result']) {
+                        case 'won':
                             $outcome = 1;
                             break;
-                        case "lost":
+                        case 'lost':
                         default:
                             $outcome = 0;
                             break;
                     }
 
                     // convert officially recieved ID to internal ID, then convert it to the old structure
-                    $currentPrice1Id = $this->_convertOfficialIdToInternalId($attack["loot1ItemID"]);
-                    $currentPrice2Id = $this->_convertOfficialIdToInternalId($attack["loot2ItemID"]);
+                    $currentPrice1Id = $this->_convertOfficialIdToInternalId($attack['loot1ItemID']);
+                    $currentPrice2Id = $this->_convertOfficialIdToInternalId($attack['loot2ItemID']);
 
                     $oldPrice1Id = $this->_convertInternalIdToOldStructure($currentPrice1Id);
                     $oldPrice2Id = $this->_convertInternalIdToOldStructure($currentPrice2Id);
 
                     $relPrice1 = $this->_returnRelativePrice($oldPrice1Id, $timestamp);
 
-                    $worthItem1 = $attack["loot1ItemQty"] * $relPrice1;
+                    $worthItem1 = $attack['loot1ItemQty'] * $relPrice1;
 
                     if ($oldPrice2Id != -1) {
                         $relPrice2  = $this->_returnRelativePrice($oldPrice2Id, $timestamp);
-                        $worthItem2 = $attack["loot2ItemQty"] * $relPrice2;
+                        $worthItem2 = $attack['loot2ItemQty'] * $relPrice2;
                     } else {
-                        $worthItem2 = $attack["loot2ItemQty"];
+                        $worthItem2 = $attack['loot2ItemQty'];
                         $relPrice2  = 1;
                     }
 
                     $worth = $worthItem1 + $worthItem2;
 
-                    if (is_numeric($attack["lootfactor"])) {
-                        $lootfactor = $attack["lootfactor"];
+                    if (is_numeric($attack['lootfactor'])) {
+                        $lootfactor = $attack['lootfactor'];
                     } else {
                         $lootfactor = 0;
                     }
@@ -2875,51 +2890,51 @@ class resourcesGame
                     if ($outcome === 1) {
                         $profit = $worth;
 
-                        for ($i = 1; $i <= 3; $i += 1) {
-                            $profit -= $attackungUnitPrices[($i - 1)] * $attack["AQtyUnit" . $i . ""];
+                        for ($i = 1; $i <= 3; ++$i) {
+                            $profit -= $attackungUnitPrices[$i - 1] * $attack['AQtyUnit' . $i . ''];
                         }
                     } else {
-                        for ($i = 1; $i <= 3; $i += 1) {
-                            $profit -= $attackungUnitPrices[($i - 1)] * $attack["AQtyUnit" . $i . ""];
+                        for ($i = 1; $i <= 3; ++$i) {
+                            $profit -= $attackungUnitPrices[$i - 1] * $attack['AQtyUnit' . $i . ''];
                         }
                     }
 
-                    $query .= "('" . $attack["targetUserName"] . "',
-                    " . $attack["targetUserLevel"] . ",
-                    " . $timestamp . ",
-                    " . $attack["AQtyUnit1"] . ",
-                    " . $attack["AQtyUnit2"] . ",
-                    " . $attack["AQtyUnit3"] . ",
-                    " . $attack["DQtyUnit1"] . ",
-                    " . $attack["DQtyUnit2"] . ",
-                    " . $attack["DQtyUnit3"] . ",
-                    " . $attackungUnitPrices[0] . ",
-                    " . $attackungUnitPrices[1] . ",
-                    " . $attackungUnitPrices[2] . ",
-                    " . $defendingUnitPrices[0] . ",
-                    " . $defendingUnitPrices[1] . ",
-                    " . $defendingUnitPrices[2] . ",
-                    " . $attack["lat"] . ",
-                    " . $attack["lon"] . ",
-                    '" . $attack["act"] . "',
-                    " . $outcome . ",
-                    " . $lootfactor . ",
-                    " . $currentPrice1Id . ",
-                    " . $attack["loot1ItemQty"] . ",
-                    " . $relPrice1 . ",
-                    " . $currentPrice2Id . ",
-                    " . $attack["loot2ItemQty"] . ",
-                    " . $relPrice2 . ",
-                    " . $worth . ",
-                    " . $profit . ");";
+                    $query .= "('" . $attack['targetUserName'] . "',
+                    " . $attack['targetUserLevel'] . ',
+                    ' . $timestamp . ',
+                    ' . $attack['AQtyUnit1'] . ',
+                    ' . $attack['AQtyUnit2'] . ',
+                    ' . $attack['AQtyUnit3'] . ',
+                    ' . $attack['DQtyUnit1'] . ',
+                    ' . $attack['DQtyUnit2'] . ',
+                    ' . $attack['DQtyUnit3'] . ',
+                    ' . $attackungUnitPrices[0] . ',
+                    ' . $attackungUnitPrices[1] . ',
+                    ' . $attackungUnitPrices[2] . ',
+                    ' . $defendingUnitPrices[0] . ',
+                    ' . $defendingUnitPrices[1] . ',
+                    ' . $defendingUnitPrices[2] . ',
+                    ' . $attack['lat'] . ',
+                    ' . $attack['lon'] . ",
+                    '" . $attack['act'] . "',
+                    " . $outcome . ',
+                    ' . $lootfactor . ',
+                    ' . $currentPrice1Id . ',
+                    ' . $attack['loot1ItemQty'] . ',
+                    ' . $relPrice1 . ',
+                    ' . $currentPrice2Id . ',
+                    ' . $attack['loot2ItemQty'] . ',
+                    ' . $relPrice2 . ',
+                    ' . $worth . ',
+                    ' . $profit . ');';
 
                     $insertion       = $this->_conn->query($query);
-                    $insertIntoIndex = $this->_insertUserToIndex($timestamp, $attack["targetUserName"], $attack["targetUserLevel"], $userId, 0, 0, 0);
+                    $insertIntoIndex = $this->_insertUserToIndex($timestamp, $attack['targetUserName'], $attack['targetUserLevel'], $userId, 0, 0, 0);
                 }
             }
         }
 
-        $answer["callback"] = "rHelper.methods.API_getAttackLog(\"attackSimple\")";
+        $answer['callback'] = 'rHelper.methods.API_getAttackLog("attackSimple")';
 
         return json_encode($answer);
     }
@@ -2937,11 +2952,11 @@ class resourcesGame
 
         if ($userId != 0) {
 
-            $tableBuilder = $this->createTable("mineMap", $userId);
+            $tableBuilder = $this->createTable('mineMap', $userId);
             $buildTable   = $this->_conn->query($tableBuilder);
 
             if ($userId != 0) {
-                $killFormerContentQuery = "DELETE FROM `userMineMap_" . $userId . "`";
+                $killFormerContentQuery = 'DELETE FROM `userMineMap_' . $userId . '`';
                 $killFormerContent      = $this->_conn->query($killFormerContentQuery);
             }
 
@@ -2964,27 +2979,27 @@ class resourcesGame
             /*
             rearrange table by builddate
             */
-            $orderTableQuery = "ALTER TABLE `userMineMap_" . $userId . "` ORDER BY  `builddate`";
+            $orderTableQuery = 'ALTER TABLE `userMineMap_' . $userId . '` ORDER BY  `builddate`';
             $sortTable       = $this->_conn->query($orderTableQuery);
 
             /*
             count mines within HQ by counting HQBoosted mines
             */
 
-            $countHQMinesQuery = "SELECT COUNT(  `rawRate` ) AS  `minesInHQ`, `HQBoost` FROM  `userMineMap_" . $userId . "` WHERE  `HQBoost` > 1";
+            $countHQMinesQuery = 'SELECT COUNT(  `rawRate` ) AS  `minesInHQ`, `HQBoost` FROM  `userMineMap_' . $userId . '` WHERE  `HQBoost` > 1';
             $countHQMines      = $this->_conn->query($countHQMinesQuery);
 
             if ($countHQMines->num_rows === 1) {
                 while ($data = $countHQMines->fetch_assoc()) {
-                    $hqMines = $data["minesInHQ"];
-                    $hqBoost = $data["HQBoost"];
+                    $hqMines = $data['minesInHQ'];
+                    $hqBoost = $data['HQBoost'];
                 }
             }
 
             /*
             update userHQ information based on recent result
             */
-            $updateUserHeadquarterQuery = "SELECT `id` FROM `userHeadquarter` WHERE `id` = " . $userId . "";
+            $updateUserHeadquarterQuery = 'SELECT `id` FROM `userHeadquarter` WHERE `id` = ' . $userId . '';
             $updateUserHeadquarter      = $this->_conn->query($updateUserHeadquarterQuery);
 
             if ($updateUserHeadquarter->num_rows === 0) {
@@ -3023,15 +3038,15 @@ class resourcesGame
                         $hqLevel = 1;
                         break;
                 }
-                $insertionQuery = "INSERT INTO `userHeadquarter` (`id`, `level`, `mineCount`) VALUES(" . $userId . ", " . $hqLevel . ", " . $hqMines . ");";
+                $insertionQuery = 'INSERT INTO `userHeadquarter` (`id`, `level`, `mineCount`) VALUES(' . $userId . ', ' . $hqLevel . ', ' . $hqMines . ');';
             } else {
-                $insertionQuery = "UPDATE `userHeadquarter` SET `mineCount` = " . $hqMines . " WHERE `id` = " . $userId . "";
+                $insertionQuery = 'UPDATE `userHeadquarter` SET `mineCount` = ' . $hqMines . ' WHERE `id` = ' . $userId . '';
             }
 
             $insertion = $this->_conn->query($insertionQuery);
         }
 
-        $answer["callback"] = "rHelper.methods.API_getMineMap()";
+        $answer['callback'] = 'rHelper.methods.API_getMineMap()';
 
         return json_encode($answer);
     }
@@ -3067,7 +3082,7 @@ class resourcesGame
         switch ($query) {
             case 0: // credits - STABLE
                 if ($userId != 0) {
-                    $query              = "UPDATE `userOverview` SET `lastUpdate` = " . $time . ", `remainingCredits` = " . $decoded_data[0]["creditsleft"] . " WHERE `id` = " . $userId . "";
+                    $query              = 'UPDATE `userOverview` SET `lastUpdate` = ' . $time . ', `remainingCredits` = ' . $decoded_data[0]['creditsleft'] . ' WHERE `id` = ' . $userId . '';
                     $updateUserOverview = $this->_conn->query($query);
                 }
 
@@ -3105,7 +3120,7 @@ class resourcesGame
                 break;
         }
 
-        $query             = "UPDATE `userOverview` SET `lastUpdate` = " . $time . ", `hashedKey` = '" . $hashedKey . "' WHERE `id` = '" . $userId . "'";
+        $query             = 'UPDATE `userOverview` SET `lastUpdate` = ' . $time . ", `hashedKey` = '" . $hashedKey . "' WHERE `id` = '" . $userId . "'";
         $refreshLastUpdate = $this->_conn->query($query);
     }
 
@@ -3119,20 +3134,20 @@ class resourcesGame
      * @return array [returns modified array]
      */
     public function getUserHeadquarter($baseData, $userId) {
-        $query = "SELECT * FROM `userHeadquarter` WHERE `id` = " . $userId . "";
+        $query = 'SELECT * FROM `userHeadquarter` WHERE `id` = ' . $userId . '';
 
         $getUserHeadquarter = $this->_conn->query($query);
 
         if ($getUserHeadquarter->num_rows === 1) {
             while ($data = $getUserHeadquarter->fetch_assoc()) {
 
-                $baseData["user"] = [
-                    "hqPosition" => [
-                        "lat" => $data["lat"],
-                        "lon" => $data["lon"],
+                $baseData['user'] = [
+                    'hqPosition' => [
+                        'lat' => $data['lat'],
+                        'lon' => $data['lon'],
                     ],
-                    "level"      => $data["level"],
-                    "paid"       => [
+                    'level'      => $data['level'],
+                    'paid'       => [
                         0,
                         0,
                         0,
@@ -3140,8 +3155,8 @@ class resourcesGame
                     ],
                 ];
 
-                for ($i = 0; $i <= 3; $i += 1) {
-                    $baseData["user"]["paid"][$i] = $data["progress" . $i . ""];
+                for ($i = 0; $i <= 3; ++$i) {
+                    $baseData['user']['paid'][$i] = $data['progress' . $i . ''];
                 }
             }
         }
@@ -3164,15 +3179,15 @@ class resourcesGame
      * @return bool [true/false]
      */
     private function _insertUserToIndex($lastSeen, $tradingPartner, $tradingPartnerLevel, $userId, $sellValue, $buyValue, $transportCost) {
-        $transformIdToNameQuery = "SELECT `name` FROM `userOverview` WHERE `id` = " . $userId . "";
+        $transformIdToNameQuery = 'SELECT `name` FROM `userOverview` WHERE `id` = ' . $userId . '';
         $transformIdToName      = $this->_conn->query($transformIdToNameQuery);
 
         if ($transformIdToName->num_rows === 1) {
             while ($data = $transformIdToName->fetch_assoc()) {
-                $actingUser = $data["name"];
+                $actingUser = $data['name'];
             }
         } else {
-            $actingUser = "";
+            $actingUser = '';
         }
 
         $checkExistingQuery = "SELECT `lastSeen`, `lastTradedWith` FROM `userIndex` WHERE `userName` = '" . $tradingPartner . "'";
@@ -3182,8 +3197,8 @@ class resourcesGame
 
             // check for previous entry
             while ($data = $checkExisting->fetch_assoc()) {
-                $lastSeenDB              = $data["lastSeen"];
-                $lastKnownTradingPartner = $data["lastTradeWith"];
+                $lastSeenDB              = $data['lastSeen'];
+                $lastKnownTradingPartner = $data['lastTradeWith'];
             }
 
             // lastSeen must always be close to now than 0
@@ -3192,26 +3207,26 @@ class resourcesGame
             }
 
             // update entry
-            $query = "UPDATE `userIndex` SET `userLevel` = " . $tradingPartnerLevel . ", `lastSeen` = " . $lastSeen . ", `lastTradedWith` = '" . $actingUser . "', `sell` = `sell` + " . $sellValue . ", `buy` = `buy` + " . $buyValue . ", `transportCost` = `transportCost` + " . $transportCost . " WHERE `userName` = '" . $tradingPartner . "';";
+            $query = 'UPDATE `userIndex` SET `userLevel` = ' . $tradingPartnerLevel . ', `lastSeen` = ' . $lastSeen . ", `lastTradedWith` = '" . $actingUser . "', `sell` = `sell` + " . $sellValue . ', `buy` = `buy` + ' . $buyValue . ', `transportCost` = `transportCost` + ' . $transportCost . " WHERE `userName` = '" . $tradingPartner . "';";
         } else {
             // insert new unique user
             $query = "INSERT INTO `userIndex` (
             `userName`, `userLevel`,
             `firstSeen`, `lastSeen`, `lastTradedWith`,
             `sell`, `buy`, `transportCost`) VALUES(
-            '" . $tradingPartner . "', " . $tradingPartnerLevel . ",
-            " . $lastSeen . ", " . $lastSeen . ", '" . $actingUser . "',
-            " . $sellValue . ", " . $buyValue . ", " . $transportCost . "
-            );";
+            '" . $tradingPartner . "', " . $tradingPartnerLevel . ',
+            ' . $lastSeen . ', ' . $lastSeen . ", '" . $actingUser . "',
+            " . $sellValue . ', ' . $buyValue . ', ' . $transportCost . '
+            );';
         }
 
         $insertion = $this->_conn->query($query);
 
         if ($insertion) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -3225,12 +3240,12 @@ class resourcesGame
 
         $language_slug = self::LANGUAGES[$language];
 
-        $stmt = "SELECT `target`, `" . $language_slug . "` FROM `localization`";
+        $stmt = 'SELECT `target`, `' . $language_slug . '` FROM `localization`';
 
         $getLanguage = $this->_conn->query($stmt);
         if ($getLanguage->num_rows > 0) {
             while ($data = $getLanguage->fetch_assoc()) {
-                $result[$data["target"]] = $data[$language_slug];
+                $result[$data['target']] = $data[$language_slug];
             }
         }
 

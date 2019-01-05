@@ -1628,10 +1628,15 @@ var rHelper = {
       }
     },
     EVNT_attackLogTrigger: function EVNT_attackLogTrigger() {
-      $('#heading-defenselog a').on('click', function(e) {
+      $('#heading-defenselog-simple a').on('click', function (e) {
         e.preventDefault()
         rHelper.methods.API_getAttackLog('defenseSimple')
       })
+
+      $('#heading-defenselog-detailed a').on('click', function (e) {
+        e.preventDefault();
+        rHelper.methods.API_getAttackLog('defenseDetailed');
+      });
 
       $('#heading-attacklog-1 a').on('click', function(e) {
         e.preventDefault()

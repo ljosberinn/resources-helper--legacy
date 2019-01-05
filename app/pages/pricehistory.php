@@ -2,7 +2,7 @@
 
 <div class="bg-light mt-3 mb-3 p-4 col-12 rounded" id="module-pricehistory">
 
-    <h6><span><?php echo file_get_contents ("assets/img/icons/chart.svg"); ?></span> <span id="pricehistory-header">Price History</span> <select class="custom-select" id="pricehistory-selector">
+    <h6><span><?php echo file_get_contents("assets/img/icons/chart.svg"); ?></span> <span id="pricehistory-header">Price History</span> <select class="custom-select" id="pricehistory-selector">
             <option selected disabled id="pricehistory-select-txt">select resource</option>
             <?php
 
@@ -27,28 +27,16 @@
                         break;
                 }
 
-                /*if ($i >= 0 && $i <= 13) {
-                    $imgClass = "material";
-                    $k        = $i;
-                } elseif ($i >= 14 && $i <= 35) {
-                    $imgClass = "products";
-                    $k        = $i - 14;
-                } elseif ($i > 35 && $i < 52) {
-                    $imgClass = "loot";
-                    $k        = $i - 36;
-                } else {
-                    $imgClass = "units";
-                    $k        = $i - 52;
-                }*/
-
                 if ($i === 0) {
-                    echo '<optgroup label="Material"></optgroup>';
+                    echo '<optgroup label="Material">';
                 } elseif ($i === 14) {
-                    echo '<optgroup label="Products"></optgroup>';
+                    echo '</optgroup><optgroup label="Products">';
                 } elseif ($i === 36) {
-                    echo '<optgroup label="Loot"></optgroup>';
+                    echo '</optgroup><optgroup label="Loot">';
                 } elseif ($i === 52) {
-                    echo '<optgroup label="Units"></optgroup>';
+                    echo '</optgroup><optgroup label="Units">';
+                } elseif ($i === 58) {
+                    echo '</optgroup>';
                 }
 
                 ?>

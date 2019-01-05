@@ -51,6 +51,9 @@ if (isset($_GET["key"]) && isset($_GET["query"])) {
         case "defenseSimple":
             $output = json_encode ($resourcesGame->getDefenseLog ($userId), JSON_NUMERIC_CHECK);
             break;
+        case "defenseDetailed":
+            $output = json_encode($resourcesGame->getDetailedAttackLog($userId, $_GET['target'], $_GET['skip'], 'D'), JSON_NUMERIC_CHECK);
+            break;
         default:
             $output = json_encode ($resourcesGame->getSimpleAttackLog ($userId), JSON_NUMERIC_CHECK);
             break;
