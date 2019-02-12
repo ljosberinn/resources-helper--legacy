@@ -59,7 +59,7 @@ class FactoryHandler implements APIInterface {
     }
 
     private static function isValidFactory(int $factoryID, array $factory): bool {
-        return in_array($factoryID, self::$possiblFactoryIDs, true) && !empty($factory['name']) && $factory['lvl'] > 0;
+        return in_array($factoryID, self::$possiblFactoryIDs, true) && !empty($factory['name']) && $factory['level'] > 0;
     }
 
     public function extractFactoryData(array $dataset): array {
@@ -78,7 +78,7 @@ class FactoryHandler implements APIInterface {
             }
 
             if($key === 'strike') {
-                $factory[$key] = $value === 'yes' ? 1 : 0;
+                $factory['striking'] = $value === 'yes' ? 1 : 0;
             }
         }
         return [$factoryID, $factory];
