@@ -1,5 +1,18 @@
 {
-  "require-dev": {
-    "squizlabs/php_codesniffer": "^3.2"
+  "scripts": {
+    "metrics": "php vendor/phpmetrics/phpmetrics/bin/phpmetrics --exclude-dir=\"vendor\",  --report-html=\"./build/metrics\" src",
+    "stan": "php vendor/phpstan/phpstan/bin/phpstan analyze src --level=7",
+    "mess-detector": "php vendor/phpmd/phpmd/src/bin/phpmd src/ html cleancode --ignore-violations-on-exit --strict --reportfile \"./build/phpmd.html\" --exclude vendor",
+    "phpcpd": "php vendor/sebastian/phpcpd/phpcpd --exclude vendor src",
+    "phpcf": "php vendor/wapmorgan/php-code-fixer/bin/phpcf --target 7.3 src --exclude vendor",
+    "analysis": "composer run phpcf && composer run stan && composer run metrics && composer run mess-detector && composer run phpcpd"
+  },
+  "require": {
+    "phpstan/phpstan": "^0.11.1",
+    "phpmetrics/phpmetrics": "^2.4",
+    "phpmd/phpmd": "^2.6",
+    "sebastian/phpcpd": "^4.1",
+    "dephpend/dephpend": "dev-master",
+    "wapmorgan/php-code-fixer": "dev-master"
   }
 }

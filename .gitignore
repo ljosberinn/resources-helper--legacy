@@ -1,9 +1,5 @@
-.idea
-api/db.php
-.ftpconfig
-.vscode/sftp.json
-vendor
-.htaccess
-assets/js/*.min.js
-assets/css/*.min.css
-node_modules/
+/build/
+/vendor/
+src/vendor/
+src/node_modules/
+/src/api/api-response/
