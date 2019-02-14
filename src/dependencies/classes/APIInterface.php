@@ -2,5 +2,7 @@
 
 interface APIInterface {
 
-    public function transform(array $data): bool;
+    public function transform(PDO $pdo, array $data, int $playerIndexUID): bool;
+
+    #public function save(array $data):bool;
 }

@@ -42,7 +42,7 @@ class FactoryHandler implements APIInterface {
         125,
     ];
 
-    public function transform(array $data): bool {
+    public function transform(PDO $pdo, array $data, int $playerIndexUID): bool {
 
         $factories = [];
 

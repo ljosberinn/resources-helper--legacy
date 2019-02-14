@@ -23,7 +23,7 @@ class HeadquarterHandler implements APIInterface {
      * }
      */
 
-    public function transform(array $data): bool {
+    public function transform(PDO $pdo, array $data, int $playerIndexUID): bool {
         $data = (array) $data[0];
 
         foreach(['itemname1', 'itemname2', 'itemname3', 'itemname4'] as $itemName) {

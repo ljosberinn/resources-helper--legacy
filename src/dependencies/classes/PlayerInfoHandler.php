@@ -1,6 +1,6 @@
 <?php
 
-class PlayerInfoHandler implements APIInterface {
+class PlayerInfoHandler extends APICore implements APIInterface {
 
     /*
      * {
@@ -16,7 +16,7 @@ class PlayerInfoHandler implements APIInterface {
 
     private $unwantedKeys = ['appV', 'abbVRB', 'lvl'];
 
-    public function transform(array $data): bool {
+    public function transform(PDO $pdo, array $data, int $playerIndexUID): bool {
         $data = (array) $data[0];
 
         $data['level'] = $data['lvl'];
@@ -26,5 +26,12 @@ class PlayerInfoHandler implements APIInterface {
         }
 
         return true;
+    }
+
+    public function getPlayerNameFromSource(): string {
+        $playerInfoData = $this->curlAPI();
+
+        // raw api data is nested one level; also check against potential errors during curlAPI
+        return $playerInfoData[0]['username'] ?? '';
     }
 }

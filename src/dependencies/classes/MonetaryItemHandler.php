@@ -18,7 +18,7 @@ class MonetaryItemHandler implements APIInterface {
         21 => 'Transport costs',
     ];
 
-    public function transform(array $data): bool {
+    public function transform(PDO $pdo, array $data, int $playerIndexUID): bool {
         foreach($data as &$dataset) {
             unset($dataset['itemName']);
         }

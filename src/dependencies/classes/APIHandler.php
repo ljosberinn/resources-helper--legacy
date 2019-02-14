@@ -1,83 +1,53 @@
 <?php
 
-class APIHandler {
+class APIHandler extends APICore {
 
-    private $apiMap = [
-        0  => 'APICreditsHandler',
-        1  => 'FactoryHandler',
-        2  => 'WarehouseHandler',
-        3  => 'SpecialBuildingsHandler',
-        4  => 'HeadquarterHandler',
-        5  => 'MineDetailsHandler',
-        6  => 'TradeLogHandler',
-        7  => 'PlayerInfoHandler',
-        8  => 'MonetaryItemHandler',
-        9  => 'CombatLogHandler',
-        10 => 'MissionHandler',
-        51 => 'MineHandler',
+    private $response = [
+        'success' => false,
+        'actor'   => 0,
     ];
 
-    private $key;
-    private $query;
+    /** @var PDO */
+    private $pdo;
 
     public function __construct(string $key, int $query) {
+        parent::__construct($key, $query);
 
-        $this->key   = $key;
-        $this->query = $query;
+        $singleton = Singleton::getInstance();
+        $this->pdo = $singleton->getConnection();
 
         echo $this->handleQuery();
     }
 
     private function handleQuery(): string {
-        $response = [
-            'success' => false,
-        ];
+        $this->response['actor'] = $this->setActor();
 
-        if(isset($this->apiMap[$this->query]) && $this->isValidKey()) {
-            $data = $this->curlAPI();
-
-            $className = $this->apiMap[$this->query];
-            /** @var APICreditsHandler|FactoryHandler|WarehouseHandler|SpecialBuildingsHandler|HeadquarterHandler|MineDetailsHandler|TradeLogHandler|PlayerInfoHandler|MonetaryItemHandler|CombatLogHandler|MissionHandler|MineHandler $class */
-            $class               = new $className();
-            $response['success'] = $class->transform($data);
+        if($this->response['actor'] === 0 || !$this->isValidKey() || !$this->queryExists()) {
+            return $this->respond();
         }
 
-        return (string) json_encode($response, JSON_NUMERIC_CHECK);
-    }
+        $data = $this->curlAPI();
 
-    private function isValidKey(): bool {
-        return strlen($this->key) === 45 && ctype_alnum($this->key);
-    }
-
-    private function curlAPI(): array {
-        $uri = $this->buildURI();
-
-        try {
-            $curl = curl_init();
-
-            curl_setopt_array($curl, [
-                CURLOPT_URL            => $uri,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_SSL_VERIFYPEER => true,
-            ]);
-
-            $response = curl_exec($curl);
-            curl_close($curl);
-
-            if(is_string($response)) {
-                return (array) json_decode($response, true);
-            }
-
-        } catch(Error $error) {
-            return [];
+        if(empty($data)) {
+            return $this->respond();
         }
 
-        return [];
+        $className = $this->apiMap[$this->query];
+        /** @var APICreditsHandler|FactoryHandler|WarehouseHandler|SpecialBuildingsHandler|HeadquarterHandler|MineDetailsHandler|TradeLogHandler|PlayerInfoHandler|MonetaryItemHandler|CombatLogHandler|MissionHandler|MineHandler $class */
+        $class = new $className();
+
+        $this->response['success'] = $class->transform($this->pdo, $data, $this->response['actor']);
+
+        return $this->respond();
     }
 
-    private function buildURI(): string {
-        return 'https://resources-game.ch/resapi/?l=en&f=1&q=' . $this->query . '&k=' . $this->key;
+    private function setActor(): int {
+        $user = new User($this->pdo, $this->key);
+
+        return $user->exists() ? $user->get() : $user->add();
     }
 
+    private function respond(): string {
+        return (string) json_encode($this->response, JSON_NUMERIC_CHECK);
+    }
 }

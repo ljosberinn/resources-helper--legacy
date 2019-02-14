@@ -2,7 +2,6 @@
 
 class TradeLogHandler implements APIInterface {
 
-    private $currentUserUID = 1;
     /*
      * {
      *  "ts": "1549837882",
@@ -78,35 +77,42 @@ class TradeLogHandler implements APIInterface {
 
     private $currentlyIteratedUsers = [];
 
-    public function transform(array $data): bool {
-        $singleton = Singleton::getInstance();
-        $pdo       = $singleton->getConnection();
+    private $playerIndexUID;
 
-        $userIndex = new UserIndex($pdo);
+    /** @var PDO */
+    private $pdo;
+
+    public function transform(PDO $pdo, array $data, int $playerIndexUID): bool {
+        $this->pdo            = $pdo;
+        $this->playerIndexUID = $playerIndexUID;
+
+        $userIndex = new PlayerIndex($pdo);
+
+        $lastDatasetTimestamp = $this->loadLastDatasetTimestamp();
+
+        echo $lastDatasetTimestamp . '<br>';
 
         foreach($data as $dataset) {
-            if($this->isValidTradeGood($dataset['itemID'])) {
+            if($lastDatasetTimestamp < $dataset['ts'] && $this->isValidTradeGood($dataset['itemID'])) {
 
                 $escapedUserName = $userIndex->escapeUserName($dataset['username']);
 
+                // disallow pure unicode-character players due to indistinguishability
                 if(empty($escapedUserName)) {
                     continue;
                 }
 
-                $userUID = $this->getPlayerID($userIndex, $escapedUserName, $dataset['ts']);
-
-                $dataset = [
+                // abort whole process if one insert failed
+                if(!$this->save($pdo, [
                     'timestamp'       => $dataset['ts'],
-                    'actor'           => $this->currentUserUID,
-                    'businessPartner' => $userUID,
+                    'playerIndexUID'  => $this->playerIndexUID,
+                    'businessPartner' => $this->getPlayerID($userIndex, $escapedUserName, $dataset['ts']),
                     'event'           => $dataset['event'] === 'buy' ? 1 : 0,
                     'itemID'          => $dataset['itemID'],
                     'amount'          => $dataset['amount'],
                     'pricePerUnit'    => $dataset['ppstk'],
                     'transportation'  => $dataset['transcost'],
-                ];
-
-                if(!$this->save($pdo, $dataset)) {
+                ])) {
                     return false;
                 }
             }
@@ -115,38 +121,31 @@ class TradeLogHandler implements APIInterface {
         return true;
     }
 
-    private function isNewDataset(PDO $pdo, array $params): bool {
-        $stmt = $pdo->prepare('SELECT `uid` FROM `tradeLog` WHERE `timestamp` = :timestamp AND `actor` = :actor AND `businessPartner` = :businessPartner AND `event` = :event AND `itemID` = :itemID AND `amount` = :amount AND `pricePerUnit` = :pricePerUnit AND `transportation` = :transportation');
-        $stmt->execute($params);
 
-        return $stmt->rowCount() === 0;
+    private function loadLastDatasetTimestamp(): int {
+        $stmt = $this->pdo->prepare('SELECT `timestamp` FROM `tradeLog` WHERE `playerIndexUID` = :playerIndexUID ORDER BY `timestamp` DESC LIMIT 1');
+        $stmt->execute([
+            'playerIndexUID' => $this->playerIndexUID,
+        ]);
+
+        if($stmt->rowCount() === 1) {
+            return $stmt->fetch()['timestamp'];
+        }
+
+        return 0;
     }
 
     private function save(PDO $pdo, array $dataset): bool {
-        $params = [
-            'timestamp'       => $dataset['timestamp'],
-            'actor'           => $dataset['actor'],
-            'businessPartner' => $dataset['businessPartner'],
-            'event'           => $dataset['event'],
-            'itemID'          => $dataset['itemID'],
-            'amount'          => $dataset['amount'],
-            'pricePerUnit'    => $dataset['pricePerUnit'],
-            'transportation'  => $dataset['transportation'],
-        ];
+        $stmt = $pdo->prepare('INSERT INTO `tradeLog` (`timestamp`, `playerIndexUID`, `businessPartner`, `event`, `itemID`, `amount`, `pricePerUnit`, `transportation`) VALUES(:timestamp, :playerIndexUID, :businessPartner, :event, :itemID, :amount, :pricePerUnit, :transportation)');
 
-        if($this->isNewDataset($pdo, $params)) {
-            $stmt = $pdo->prepare('INSERT INTO `tradeLog` (`timestamp`, `actor`, `businessPartner`, `event`, `itemID`, `amount`, `pricePerUnit`, `transportation`) VALUES(:timestamp, :actor, :businessPartner, :event, :itemID, :amount, :pricePerUnit, :transportation)');
-
-            return $stmt->execute($params);
-        }
-        return true;
+        return $stmt->execute($dataset);
     }
 
     private function isValidTradeGood(int $tradeGood): bool {
         return in_array($tradeGood, $this->validTradeGoods, true);
     }
 
-    private function getPlayerID(UserIndex $userIndex, string $escapedUserName, int $lastSeen = 0): int {
+    private function getPlayerID(PlayerIndex $userIndex, string $escapedUserName, int $lastSeen = 0): int {
         if(isset($this->currentlyIteratedUsers[$escapedUserName])) {
             return $this->currentlyIteratedUsers[$escapedUserName];
         }

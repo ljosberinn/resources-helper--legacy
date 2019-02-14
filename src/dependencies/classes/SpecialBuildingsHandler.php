@@ -12,7 +12,7 @@ class SpecialBuildingsHandler implements APIInterface {
 
     private $validSpecialBuildingIDs = [62, 65, 116, 97, 72, 59, 119, 121, 71, 86, 122, 123, 127, 126];
 
-    public function transform(array $data): bool {
+    public function transform(PDO $pdo, array $data, int $playerIndexUID): bool {
         $specialBuildings = [];
 
         foreach($data as $dataset) {
