@@ -90,8 +90,6 @@ class TradeLogHandler implements APIInterface {
 
         $lastDatasetTimestamp = $this->loadLastDatasetTimestamp();
 
-        echo $lastDatasetTimestamp . '<br>';
-
         foreach($data as $dataset) {
             if($lastDatasetTimestamp < $dataset['ts'] && $this->isValidTradeGood($dataset['itemID'])) {
 
