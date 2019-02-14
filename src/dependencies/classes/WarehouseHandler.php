@@ -2,7 +2,7 @@
 
 class WarehouseHandler implements APIInterface {
 
-    private static $generalGoods = [
+    private $generalGoods = [
         1,
         2,
         3,
@@ -64,32 +64,32 @@ class WarehouseHandler implements APIInterface {
         124,
     ];
 
-    public function transform(array $data): array {
-        $response = [
+    public function transform(array $data): bool {
+        $warehouses = [
             'general' => [],
             'luxury'  => [],
         ];
 
         foreach($data as $dataset) {
-            if(self::isGeneralGood($dataset['itemID'])) {
+            if($this->isGeneralGood($dataset['itemID'])) {
 
-                $response['general'][$dataset['itemID']] = [
+                $warehouses['general'][$dataset['itemID']] = [
                     'level'  => $dataset['level'],
                     'amount' => $dataset['amount'],
                 ];
                 continue;
             }
 
-            $response['luxury'][$dataset['itemID']] = [
+            $warehouses['luxury'][$dataset['itemID']] = [
                 'level'  => $dataset['level'],
                 'amount' => $dataset['amount'],
             ];
         }
 
-        return $response;
+        return true;
     }
 
-    private static function isGeneralGood(int $itemID): bool {
-        return in_array($itemID, self::$generalGoods, true);
+    private function isGeneralGood(int $itemID): bool {
+        return in_array($itemID, $this->generalGoods, true);
     }
 }

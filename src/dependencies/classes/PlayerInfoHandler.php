@@ -14,17 +14,17 @@ class PlayerInfoHandler implements APIInterface {
      * }
      */
 
-    private static $unwantedKeys = ['appV', 'abbVRB', 'lvl'];
+    private $unwantedKeys = ['appV', 'abbVRB', 'lvl'];
 
-    public function transform(array $data): array {
+    public function transform(array $data): bool {
         $data = (array) $data[0];
 
         $data['level'] = $data['lvl'];
 
-        foreach(self::$unwantedKeys as $key) {
+        foreach($this->unwantedKeys as $key) {
             unset($data[$key]);
         }
 
-        return $data;
+        return true;
     }
 }

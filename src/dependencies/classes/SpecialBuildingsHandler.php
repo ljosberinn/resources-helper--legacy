@@ -10,22 +10,22 @@ class SpecialBuildingsHandler implements APIInterface {
      * }
      */
 
-    private static $validSpecialBuildingIDs = [62, 65, 116, 97, 72, 59, 119, 121, 71, 86, 122, 123, 127, 126];
+    private $validSpecialBuildingIDs = [62, 65, 116, 97, 72, 59, 119, 121, 71, 86, 122, 123, 127, 126];
 
-    public function transform(array $data): array {
-        $response = [];
+    public function transform(array $data): bool {
+        $specialBuildings = [];
 
         foreach($data as $dataset) {
-            if(self::isValidSpecialBuilding($dataset['specbID'])) {
-                $response[$dataset['specbID']] = $dataset['lvl'];
+            if($this->isValidSpecialBuilding($dataset['specbID'])) {
+                $specialBuildings[$dataset['specbID']] = $dataset['lvl'];
             }
         }
 
-        return $response;
+        return true;
     }
 
-    private static function isValidSpecialBuilding(int $specbID): bool {
-        return in_array($specbID, self::$validSpecialBuildingIDs, true);
+    private function isValidSpecialBuilding(int $specbID): bool {
+        return in_array($specbID, $this->validSpecialBuildingIDs, true);
     }
 
 }

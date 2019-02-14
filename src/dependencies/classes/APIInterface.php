@@ -2,5 +2,5 @@
 
 interface APIInterface {
 
-    public function transform(array $data): array;
+    public function transform(array $data): bool;
 }

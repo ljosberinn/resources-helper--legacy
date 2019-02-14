@@ -29,12 +29,10 @@ class MineDetailsHandler implements APIInterface {
      * }
      */
 
-    public function transform(array $data): array {
-
-        $response = [];
+    public function transform(array $data): bool {
 
         foreach($data as $dataset) {
-            $response[] = [
+            $dataset = [
                 'type'  => $dataset['resourceID'],
                 'lat'   => $dataset['lat'],
                 'lon'   => $dataset['lon'],
@@ -55,6 +53,6 @@ class MineDetailsHandler implements APIInterface {
             ];
         }
 
-        return $response;
+        return true;
     }
 }

@@ -8,7 +8,8 @@ class APICreditsHandler implements APIInterface {
      * }
      */
 
-    public function transform(array $data): array {
-        return (array) $data[0];
+    public function transform(array $data): bool {
+        return true;
+        #return (array) $data[0];
     }
 }

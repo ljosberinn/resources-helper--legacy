@@ -23,7 +23,7 @@ class Singleton {
         ]);
     }
 
-    public static function getInstance() {
+    public static function getInstance(): Singleton {
         if(!self::$instance) {
             self::$instance = new Singleton();
         }
@@ -42,10 +42,12 @@ class Singleton {
     }
 
     /** @noinspection PhpUnusedPrivateMethodInspection */
+    /** @noinspection MagicMethodsValidityInspection */
     private function __sleep(): array {
     }
 
     /** @noinspection PhpUnusedPrivateMethodInspection */
+    /** @noinspection MagicMethodsValidityInspection */
     private function __wakeup() {
     }
 }

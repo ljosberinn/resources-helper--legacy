@@ -22,16 +22,16 @@ class MissionHandler implements APIInterface {
      * }
      */
 
-    private static $unwantedKeys = ['title', 'descr', 'durHours', 'rewarditem', 'intervalDays', 'thumb'];
+    private $unwantedKeys = ['title', 'descr', 'durHours', 'rewarditem', 'intervalDays', 'thumb'];
 
-    public function transform(array $data): array {
+    public function transform(array $data): bool {
 
         foreach($data as &$dataset) {
-            foreach(self::$unwantedKeys as $key) {
+            foreach($this->unwantedKeys as $key) {
                 unset($dataset[$key]);
             }
         }
 
-        return $data;
+        return true;
     }
 }

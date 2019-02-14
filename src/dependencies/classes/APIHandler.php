@@ -2,7 +2,7 @@
 
 class APIHandler {
 
-    private static $apiMap = [
+    private $apiMap = [
         0  => 'APICreditsHandler',
         1  => 'FactoryHandler',
         2  => 'WarehouseHandler',
@@ -25,23 +25,24 @@ class APIHandler {
         $this->key   = $key;
         $this->query = $query;
 
+        echo $this->handleQuery();
+    }
+
+    private function handleQuery(): string {
         $response = [
             'success' => false,
-            'data'    => [],
         ];
 
-        if(isset(self::$apiMap[$query]) && $this->isValidKey()) {
+        if(isset($this->apiMap[$this->query]) && $this->isValidKey()) {
             $data = $this->curlAPI();
 
-            $className = self::$apiMap[$query];
+            $className = $this->apiMap[$this->query];
             /** @var APICreditsHandler|FactoryHandler|WarehouseHandler|SpecialBuildingsHandler|HeadquarterHandler|MineDetailsHandler|TradeLogHandler|PlayerInfoHandler|MonetaryItemHandler|CombatLogHandler|MissionHandler|MineHandler $class */
-            $class = new $className();
-
-            $response['data']    = $class->transform($data);
-            $response['success'] = true;
+            $class               = new $className();
+            $response['success'] = $class->transform($data);
         }
 
-        echo json_encode($response, JSON_NUMERIC_CHECK);
+        return (string) json_encode($response, JSON_NUMERIC_CHECK);
     }
 
     private function isValidKey(): bool {

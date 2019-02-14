@@ -2,6 +2,7 @@
 
 class TradeLogHandler implements APIInterface {
 
+    private $currentUserUID = 1;
     /*
      * {
      *  "ts": "1549837882",
@@ -16,7 +17,7 @@ class TradeLogHandler implements APIInterface {
      * }
      */
 
-    private static $validTradeGoods = [
+    private $validTradeGoods = [
         2,
         3,
         7,
@@ -77,47 +78,88 @@ class TradeLogHandler implements APIInterface {
 
     private $currentlyIteratedUsers = [];
 
-    public function transform(array $data): array {
+    public function transform(array $data): bool {
+        $singleton = Singleton::getInstance();
+        $pdo       = $singleton->getConnection();
 
-        $response = [];
+        $userIndex = new UserIndex($pdo);
 
         foreach($data as $dataset) {
-            if(self::isValidTradeGood($dataset['itemID'])) {
+            if($this->isValidTradeGood($dataset['itemID'])) {
 
-                $userUID = $this->getPlayerID($dataset['username'], $dataset['ts']);
+                $escapedUserName = $userIndex->escapeUserName($dataset['username']);
 
-                $response[$dataset['ts']] = [
-                    'event'           => $dataset['event'] === 'buy' ? 1 : 0,
+                if(empty($escapedUserName)) {
+                    continue;
+                }
+
+                $userUID = $this->getPlayerID($userIndex, $escapedUserName, $dataset['ts']);
+
+                $dataset = [
+                    'timestamp'       => $dataset['ts'],
+                    'actor'           => $this->currentUserUID,
                     'businessPartner' => $userUID,
+                    'event'           => $dataset['event'] === 'buy' ? 1 : 0,
                     'itemID'          => $dataset['itemID'],
                     'amount'          => $dataset['amount'],
-                    'pricePerUnit'    => $dataset['pricePerUnit'],
-                    'transportation'  => $dataset['transportation'],
+                    'pricePerUnit'    => $dataset['ppstk'],
+                    'transportation'  => $dataset['transcost'],
                 ];
+
+                if(!$this->save($pdo, $dataset)) {
+                    return false;
+                }
             }
         }
 
-        return $response;
+        return true;
     }
 
-    private static function isValidTradeGood(int $tradeGood): bool {
-        return in_array($tradeGood, self::$validTradeGoods, true);
+    private function isNewDataset(PDO $pdo, array $params): bool {
+        $stmt = $pdo->prepare('SELECT `uid` FROM `tradeLog` WHERE `timestamp` = :timestamp AND `actor` = :actor AND `businessPartner` = :businessPartner AND `event` = :event AND `itemID` = :itemID AND `amount` = :amount AND `pricePerUnit` = :pricePerUnit AND `transportation` = :transportation');
+        $stmt->execute($params);
+
+        return $stmt->rowCount() === 0;
     }
 
-    private function getPlayerID(string $name, int $lastSeen = 0): int {
-        if(isset($this->currentlyIteratedUsers[$name])) {
-            return $this->currentlyIteratedUsers[$name];
+    private function save(PDO $pdo, array $dataset): bool {
+        $params = [
+            'timestamp'       => $dataset['timestamp'],
+            'actor'           => $dataset['actor'],
+            'businessPartner' => $dataset['businessPartner'],
+            'event'           => $dataset['event'],
+            'itemID'          => $dataset['itemID'],
+            'amount'          => $dataset['amount'],
+            'pricePerUnit'    => $dataset['pricePerUnit'],
+            'transportation'  => $dataset['transportation'],
+        ];
+
+        if($this->isNewDataset($pdo, $params)) {
+            $stmt = $pdo->prepare('INSERT INTO `tradeLog` (`timestamp`, `actor`, `businessPartner`, `event`, `itemID`, `amount`, `pricePerUnit`, `transportation`) VALUES(:timestamp, :actor, :businessPartner, :event, :itemID, :amount, :pricePerUnit, :transportation)');
+
+            return $stmt->execute($params);
+        }
+        return true;
+    }
+
+    private function isValidTradeGood(int $tradeGood): bool {
+        return in_array($tradeGood, $this->validTradeGoods, true);
+    }
+
+    private function getPlayerID(UserIndex $userIndex, string $escapedUserName, int $lastSeen = 0): int {
+        if(isset($this->currentlyIteratedUsers[$escapedUserName])) {
+            return $this->currentlyIteratedUsers[$escapedUserName];
         }
 
-        $userIndex = new UserIndex();
-
-        $userUID = $userIndex->getPlayerIDByName($name);
+        $userUID = $userIndex->getPlayerIDByName($escapedUserName);
 
         if($userUID === 0) {
-            $userUID = $userIndex->addPlayer($name, $lastSeen);
+            $userUID = $userIndex->addPlayer($escapedUserName, $lastSeen);
+        } else {
+            $userIndex->updateLastSeenTimestampByPlayerID($userUID, $lastSeen);
         }
 
-        $this->currentlyIteratedUsers[$name] = $userUID;
+        $this->currentlyIteratedUsers[$escapedUserName] = $userUID;
 
         return $userUID;
     }

@@ -3,7 +3,7 @@
 class MonetaryItemHandler implements APIInterface {
 
 
-    private static $categories = [
+    private $categories = [
         1  => 'Wares sold',
         2  => 'Wares purchased',
         3  => 'Chat trades inc.',
@@ -18,11 +18,11 @@ class MonetaryItemHandler implements APIInterface {
         21 => 'Transport costs',
     ];
 
-    public function transform(array $data): array {
+    public function transform(array $data): bool {
         foreach($data as &$dataset) {
             unset($dataset['itemName']);
         }
 
-        return $data;
+        return true;
     }
 }

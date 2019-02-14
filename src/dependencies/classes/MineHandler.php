@@ -25,18 +25,17 @@ class MineHandler implements APIInterface {
      * }
      */
 
-    private static $unwantedKeys = ['name', 'resourceName', 'mineID', 'OAcondition'];
+    private $unwantedKeys = ['name', 'resourceName', 'mineID', 'OAcondition'];
 
-    public function transform(array $data): array {
-
-        $response = [];
+    public function transform(array $data): bool {
 
         foreach($data as $dataset) {
-            foreach(self::$unwantedKeys as $key) {
+            foreach($this->unwantedKeys as $key) {
                 unset($dataset[$key]);
             }
 
-            $response[$dataset['resourceID']] = [
+            $dataset = [
+                'resourceID'     => $dataset['resourceID'],
                 'amount'         => $dataset['minecount'],
                 'sumTechRate'    => $dataset['SUMfullrate'],
                 'sumRawRate'     => $dataset['SUMrawrate'],
@@ -51,10 +50,9 @@ class MineHandler implements APIInterface {
                 'avgQuality'       => $dataset['OAquality'],
                 'avgTechedQuality' => $dataset['OAqualityInclTU'],
                 'avgPenalty'       => $dataset['OAattackpenalty'],
-
             ];
         }
 
-        return $response;
+        return true;
     }
 }

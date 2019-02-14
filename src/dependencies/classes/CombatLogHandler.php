@@ -27,12 +27,15 @@ class CombatLogHandler implements APIInterface {
 
     private $currentlyIteratedUsers = [];
 
-    public function transform(array $data): array {
+    public function transform(array $data): bool {
 
-        $response = [];
+        $singleton = Singleton::getInstance();
+        $pdo       = $singleton->getConnection();
+
+        $userIndex = new UserIndex($pdo);
 
         foreach($data as &$dataset) {
-            $userUID = $this->getPlayerID($dataset['targetUserName'], $dataset['unixts']);
+            $userUID = $this->getPlayerID($userIndex, $dataset['targetUserName'], $dataset['unixts']);
 
             /* 4 possible cases
              * act === D & result === lost ? API player is defender and lost
@@ -44,7 +47,7 @@ class CombatLogHandler implements APIInterface {
             $action = $dataset['act'] === 'D' ? 0 : 1;
             $result = $dataset['result'] === 'lost' ? 0 : 1;
 
-            $response[] = [
+            $dataset = [
                 'action'     => $action,
                 'result'     => $result,
                 'timestamp'  => $dataset['unixts'],
@@ -70,15 +73,13 @@ class CombatLogHandler implements APIInterface {
             ];
         }
 
-        return $response;
+        return true;
     }
 
-    private function getPlayerID(string $name, int $lastSeen = 0): int {
+    private function getPlayerID(UserIndex $userIndex, string $name, int $lastSeen = 0): int {
         if(isset($this->currentlyIteratedUsers[$name])) {
             return $this->currentlyIteratedUsers[$name];
         }
-
-        $userIndex = new UserIndex();
 
         $userUID = $userIndex->getPlayerIDByName($name);
 

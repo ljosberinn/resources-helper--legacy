@@ -11,13 +11,13 @@ class FactoryHandler implements APIInterface {
      * }
      */
 
-    private static $factoryDataBlueprint = [
+    private $factoryDataBlueprint = [
         'name'     => '',
         'level'    => 0,
         'striking' => 0,
     ];
 
-    private static $possiblFactoryIDs = [
+    private $possiblFactoryIDs = [
         6,
         23,
         25,
@@ -42,35 +42,35 @@ class FactoryHandler implements APIInterface {
         125,
     ];
 
-    public function transform(array $data): array {
+    public function transform(array $data): bool {
 
-        $response = [];
+        $factories = [];
 
         foreach($data as $dataset) {
 
             [$factoryID, $factory] = $this->extractFactoryData($dataset);
 
-            if(self::isValidFactory($factoryID, $factory)) {
-                $response[$factoryID] = $factory;
+            if($this->isValidFactory($factoryID, $factory)) {
+                $factories[$factoryID] = $factory;
             }
         }
 
-        return $response;
+        return true;
     }
 
-    private static function isValidFactory(int $factoryID, array $factory): bool {
-        return in_array($factoryID, self::$possiblFactoryIDs, true) && !empty($factory['name']) && $factory['level'] > 0;
+    private function isValidFactory(int $factoryID, array $factory): bool {
+        return in_array($factoryID, $this->possiblFactoryIDs, true) && !empty($factory['name']) && $factory['level'] > 0;
     }
 
     public function extractFactoryData(array $dataset): array {
         $factoryID = 0;
 
-        $factory = self::$factoryDataBlueprint;
+        $factory = $this->factoryDataBlueprint;
 
         foreach($dataset as $key => $value) {
 
             if($key === 'factoryID') {
-                $factoryID = $value;
+                $factoryID = (int) $value;
             }
 
             if($key === 'lvl') {

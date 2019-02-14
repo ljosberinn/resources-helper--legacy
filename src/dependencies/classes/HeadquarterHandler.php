@@ -23,13 +23,13 @@ class HeadquarterHandler implements APIInterface {
      * }
      */
 
-    public function transform(array $data): array {
+    public function transform(array $data): bool {
         $data = (array) $data[0];
 
         foreach(['itemname1', 'itemname2', 'itemname3', 'itemname4'] as $itemName) {
             unset($data[$itemName]);
         }
 
-        return $data;
+        return true;
     }
 }
