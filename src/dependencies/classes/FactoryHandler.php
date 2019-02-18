@@ -17,29 +17,29 @@ class FactoryHandler implements APIInterface {
         'striking' => 0,
     ];
 
-    private $possiblFactoryIDs = [
-        6,
-        23,
-        25,
-        29,
-        31,
-        33,
-        34,
-        37,
-        39,
-        52,
-        61,
-        63,
-        68,
-        69,
-        76,
-        80,
-        85,
-        91,
-        95,
-        101,
-        118,
-        125,
+    private static $possibleFactories = [
+        6   => 'ConcreteFactory',
+        23  => 'FertilizerFactory',
+        25  => 'BricksFactory',
+        29  => 'InsecticidesFactory',
+        31  => 'SteelFactory',
+        33  => 'AluminiumFactory',
+        34  => 'SilverFactory',
+        37  => 'CopperFactory',
+        39  => 'FossilFuelFactory',
+        52  => 'TitaniumFactory',
+        61  => 'GlassFactory',
+        63  => 'PlasticsFactory',
+        68  => 'SiliconFactory',
+        69  => 'ElectronicsFactory',
+        76  => 'MedicalTechnologyFactory',
+        80  => 'GoldFactory',
+        85  => 'JewelleryFactory',
+        91  => 'LithiumFactory',
+        95  => 'BatteriesFactory',
+        101 => 'ArmsFactory',
+        118 => 'ScanDrones',
+        125 => 'TrucksFactory',
     ];
 
     public function transform(PDO $pdo, array $data, int $playerIndexUID): bool {
@@ -59,7 +59,7 @@ class FactoryHandler implements APIInterface {
     }
 
     private function isValidFactory(int $factoryID, array $factory): bool {
-        return in_array($factoryID, $this->possiblFactoryIDs, true) && !empty($factory['name']) && $factory['level'] > 0;
+        return array_key_exists($factoryID, self::$possibleFactories) && !empty($factory['name']) && $factory['level'] > 0;
     }
 
     public function extractFactoryData(array $dataset): array {
@@ -82,6 +82,10 @@ class FactoryHandler implements APIInterface {
             }
         }
         return [$factoryID, $factory];
+    }
+
+    public static function getNameByID(int $factoryID): string {
+        return self::$possibleFactories[$factoryID];
     }
 
 }
