@@ -14,14 +14,14 @@ class PlayerInfoHandler extends APICore implements APIInterface {
      * }
      */
 
-    private $unwantedKeys = ['appV', 'abbVRB', 'lvl'];
+    private const UNWANTED_KEYS = ['appV', 'abbVRB', 'lvl'];
 
     public function transform(PDO $pdo, array $data, int $playerIndexUID): bool {
         $data = (array) $data[0];
 
         $data['level'] = $data['lvl'];
 
-        foreach($this->unwantedKeys as $key) {
+        foreach(self::UNWANTED_KEYS as $key) {
             unset($data[$key]);
         }
 

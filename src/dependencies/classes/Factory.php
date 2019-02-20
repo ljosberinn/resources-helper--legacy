@@ -26,12 +26,12 @@ class Factory {
         return require './static/' . $factoryName . '.php';
     }
 
-    private function scaleToLevel() {
+    private function scaleToLevel(): void {
         foreach($this->dependencies as $dependency => $amount) {
             $this->dependencies[$dependency] = $amount * $this->level;
         }
 
-        $this->scaling = $this->scaling * $this->level;
+        $this->scaling *= $this->level;
     }
 
     public function getDependencies(): array {

@@ -25,12 +25,12 @@ class MineHandler implements APIInterface {
      * }
      */
 
-    private $unwantedKeys = ['name', 'resourceName', 'mineID', 'OAcondition'];
+    private const UNWANTED_KEYS = ['name', 'resourceName', 'mineID', 'OAcondition'];
 
     public function transform(PDO $pdo, array $data, int $playerIndexUID): bool {
 
         foreach($data as $dataset) {
-            foreach($this->unwantedKeys as $key) {
+            foreach(self::UNWANTED_KEYS as $key) {
                 unset($dataset[$key]);
             }
 

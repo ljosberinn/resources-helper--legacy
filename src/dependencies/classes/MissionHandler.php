@@ -22,12 +22,12 @@ class MissionHandler implements APIInterface {
      * }
      */
 
-    private $unwantedKeys = ['title', 'descr', 'durHours', 'rewarditem', 'intervalDays', 'thumb'];
+    private const UNWANTED_KEYS = ['title', 'descr', 'durHours', 'rewarditem', 'intervalDays', 'thumb'];
 
     public function transform(PDO $pdo, array $data, int $playerIndexUID): bool {
 
         foreach($data as &$dataset) {
-            foreach($this->unwantedKeys as $key) {
+            foreach(self::UNWANTED_KEYS as $key) {
                 unset($dataset[$key]);
             }
         }

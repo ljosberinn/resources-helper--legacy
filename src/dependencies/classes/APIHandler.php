@@ -13,8 +13,8 @@ class APIHandler extends APICore {
     public function __construct(string $key, int $query) {
         parent::__construct($key, $query);
 
-        $singleton = Singleton::getInstance();
-        $this->pdo = $singleton->getConnection();
+        $db        = DB::getInstance();
+        $this->pdo = $db->getConnection();
 
         echo $this->handleQuery();
     }
@@ -32,7 +32,7 @@ class APIHandler extends APICore {
             return $this->respond();
         }
 
-        $className = $this->apiMap[$this->query];
+        $className = self::API_MAP[$this->query];
         /** @var APICreditsHandler|FactoryHandler|WarehouseHandler|SpecialBuildingsHandler|HeadquarterHandler|MineDetailsHandler|TradeLogHandler|PlayerInfoHandler|MonetaryItemHandler|CombatLogHandler|MissionHandler|MineHandler $class */
         $class = new $className();
 

@@ -1,6 +1,6 @@
 <?php
 
-class Singleton {
+class DB {
     /**
      * @var PDO
      */
@@ -23,9 +23,9 @@ class Singleton {
         ]);
     }
 
-    public static function getInstance(): Singleton {
+    public static function getInstance(): DB {
         if(!self::$instance) {
-            self::$instance = new Singleton();
+            self::$instance = new DB();
         }
 
         return self::$instance;

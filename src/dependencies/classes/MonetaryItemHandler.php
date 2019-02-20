@@ -3,7 +3,7 @@
 class MonetaryItemHandler implements APIInterface {
 
 
-    private $categories = [
+    private const CATEGORIES = [
         1  => 'Wares sold',
         2  => 'Wares purchased',
         3  => 'Chat trades inc.',

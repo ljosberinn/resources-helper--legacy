@@ -5,7 +5,7 @@ class APICore {
     protected $key;
     protected $query;
 
-    protected $apiMap = [
+    protected const API_MAP = [
         0  => 'APICreditsHandler',
         1  => 'FactoryHandler',
         2  => 'WarehouseHandler',
@@ -26,7 +26,7 @@ class APICore {
     }
 
     protected function queryExists(): bool {
-        return isset($this->apiMap[$this->query]);
+        return isset(self::API_MAP[$this->query]);
     }
 
     protected function curlAPI(): array {
