@@ -5,6 +5,6 @@ return [
     'dependantFactories' => [],
     'dependencies'       => [
         1  => 750 / 5 * 5000,
-        90 => 115,
+        90 => 17250,
     ],
 ];
