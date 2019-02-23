@@ -16,7 +16,7 @@ class TradeLogHandler implements APIInterface {
      * }
      */
 
-    private $validTradeGoods = [
+    private const VALID_TRADE_GOODS = [
         2,
         3,
         7,
@@ -144,7 +144,7 @@ class TradeLogHandler implements APIInterface {
     }
 
     private function isValidTradeGood(int $tradeGood): bool {
-        return in_array($tradeGood, $this->validTradeGoods, true);
+        return in_array($tradeGood, self::VALID_TRADE_GOODS, true);
     }
 
     private function getPlayerID(PlayerIndex $userIndex, string $escapedUserName, int $lastSeen = 0): int {
@@ -156,10 +156,13 @@ class TradeLogHandler implements APIInterface {
 
         if($userUID === 0) {
             $userUID = $userIndex->addPlayer($escapedUserName, $lastSeen);
-        } else {
-            $userIndex->updateLastSeenTimestampByPlayerID($userUID, $lastSeen);
+
+            $this->currentlyIteratedUsers[$escapedUserName] = $userUID;
+
+            return $userUID;
         }
 
+        $userIndex->updateLastSeenTimestampByPlayerID($userUID, $lastSeen);
         $this->currentlyIteratedUsers[$escapedUserName] = $userUID;
 
         return $userUID;
