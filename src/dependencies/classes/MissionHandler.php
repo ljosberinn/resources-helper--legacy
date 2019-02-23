@@ -22,9 +22,19 @@ class MissionHandler implements APIInterface {
      * }
      */
 
+    /** @var PDO $pdo */
+    private $pdo;
+
+    private $playerIndexUID;
+
     private const UNWANTED_KEYS = ['title', 'descr', 'durHours', 'rewarditem', 'intervalDays', 'thumb'];
 
-    public function transform(PDO $pdo, array $data, int $playerIndexUID): bool {
+    public function __construct(PDO $pdo, int $playerIndexUID) {
+        $this->pdo            = $pdo;
+        $this->playerIndexUID = $playerIndexUID;
+    }
+
+    public function transform(array $data): bool {
 
         foreach($data as &$dataset) {
             foreach(self::UNWANTED_KEYS as $key) {

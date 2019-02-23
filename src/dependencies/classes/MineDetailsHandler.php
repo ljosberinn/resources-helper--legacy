@@ -29,7 +29,17 @@ class MineDetailsHandler implements APIInterface {
      * }
      */
 
-    public function transform(PDO $pdo, array $data, int $playerIndexUID): bool {
+    /** @var PDO $pdo */
+    private $pdo;
+
+    private $playerIndexUID;
+
+    public function __construct(PDO $pdo, int $playerIndexUID) {
+        $this->pdo            = $pdo;
+        $this->playerIndexUID = $playerIndexUID;
+    }
+
+    public function transform(array $data): bool {
 
         foreach($data as $dataset) {
             $dataset = [

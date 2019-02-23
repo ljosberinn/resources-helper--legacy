@@ -87,11 +87,14 @@ class TradeLogHandler implements APIInterface {
         'save'                     => 'INSERT INTO `tradeLog` (`timestamp`, `playerIndexUID`, `businessPartner`, `event`, `itemID`, `amount`, `pricePerUnit`, `transportation`) VALUES(:timestamp, :playerIndexUID, :businessPartner, :event, :itemID, :amount, :pricePerUnit, :transportation)',
     ];
 
-    public function transform(PDO $pdo, array $data, int $playerIndexUID): bool {
+    public function __construct(PDO $pdo, int $playerIndexUID) {
         $this->pdo            = $pdo;
         $this->playerIndexUID = $playerIndexUID;
+    }
 
-        $userIndex = new PlayerIndex($pdo);
+    public function transform(array $data): bool {
+
+        $userIndex = new PlayerIndex($this->pdo);
 
         $lastDatasetTimestamp = $this->loadLastDatasetTimestamp();
 
@@ -108,7 +111,7 @@ class TradeLogHandler implements APIInterface {
             }
 
             // abort whole process if one insert failed
-            if(!$this->save($pdo, [
+            if(!$this->save([
                 'timestamp'       => $dataset['ts'],
                 'playerIndexUID'  => $this->playerIndexUID,
                 'businessPartner' => $this->getPlayerID($userIndex, $escapedUserName, $dataset['ts']),
@@ -138,8 +141,8 @@ class TradeLogHandler implements APIInterface {
         return 0;
     }
 
-    private function save(PDO $pdo, array $dataset): bool {
-        $stmt = $pdo->prepare(self::QUERIES['save']);
+    private function save(array $dataset): bool {
+        $stmt = $this->pdo->prepare(self::QUERIES['save']);
         return $stmt->execute($dataset);
     }
 

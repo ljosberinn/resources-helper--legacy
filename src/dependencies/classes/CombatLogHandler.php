@@ -27,8 +27,18 @@ class CombatLogHandler implements APIInterface {
 
     private $currentlyIteratedUsers = [];
 
-    public function transform(PDO $pdo, array $data, int $playerIndexUID): bool {
-        $userIndex = new PlayerIndex($pdo);
+    /** @var PDO $pdo */
+    private $pdo;
+
+    private $playerIndexUID;
+
+    public function __construct(PDO $pdo, int $playerIndexUID) {
+        $this->pdo            = $pdo;
+        $this->playerIndexUID = $playerIndexUID;
+    }
+
+    public function transform(array $data): bool {
+        $userIndex = new PlayerIndex($this->pdo);
 
         foreach($data as &$dataset) {
             $userUID = $this->getPlayerID($userIndex, $dataset['targetUserName'], $dataset['unixts']);

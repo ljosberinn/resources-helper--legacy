@@ -7,6 +7,10 @@ class APIHandler extends APICore {
         'actor'   => 0,
     ];
 
+    private const QUERIES = [
+        'updateLastSeenTimestamp' => 'UPDATE `user` SET `lastSeen` = :lastSeen WHERE `playerIndexUID` = :playerIndexUID',
+    ];
+
     /** @var PDO */
     private $pdo;
 
@@ -34,9 +38,9 @@ class APIHandler extends APICore {
 
         $className = self::API_MAP[$this->query];
         /** @var APICreditsHandler|FactoryHandler|WarehouseHandler|SpecialBuildingsHandler|HeadquarterHandler|MineDetailsHandler|TradeLogHandler|PlayerInfoHandler|MonetaryItemHandler|CombatLogHandler|MissionHandler|MineHandler $class */
-        $class = new $className();
+        $class = new $className($this->pdo, $this->response['actor']);
 
-        $this->response['success'] = $class->transform($this->pdo, $data, $this->response['actor']);
+        $this->response['success'] = $class->transform($data) && $this->updateLastSeenTimestamp();
 
         return $this->respond();
     }
@@ -49,5 +53,13 @@ class APIHandler extends APICore {
 
     private function respond(): string {
         return (string) json_encode($this->response, JSON_NUMERIC_CHECK);
+    }
+
+    private function updateLastSeenTimestamp(): bool {
+        $stmt = $this->pdo->prepare(self::QUERIES['updateLastSeenTimestamp']);
+        return $stmt->execute([
+            'lastSeen'       => time(),
+            'playerIndexUID' => $this->response['actor'],
+        ]);
     }
 }

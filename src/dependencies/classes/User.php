@@ -2,6 +2,7 @@
 
 class User {
 
+    /** @var string */
     private $key;
     private $playerIndexUID = 0;
 
@@ -10,7 +11,7 @@ class User {
 
     private const QUERIES = [
         'exists'            => 'SELECT `uid` FROM `user` WHERE `apiKey` = :apiKey',
-        'add'               => 'INSERT INTO `user` (`apiKey`, `playerIndexUID`) VALUES(:apiKey, :playerIndexUID)',
+        'add'               => 'INSERT INTO `user` (`apiKey`, `playerIndexUID`, `firstSeen`, `lastSeen`) VALUES(:apiKey, :playerIndexUID, :firstSeen, :lastSeen)',
         'get'               => 'SELECT `playerIndexUID` FROM `user` WHERE `apiKey` = :apiKey',
         'setPlayerIndexUID' => 'UPDATE `user` SET `playerIndexUID` = :playerIndexUID WHERE `apiKey` = :apiKey',
     ];
@@ -31,7 +32,7 @@ class User {
 
     public function add(): int {
         $playerIndex = new PlayerIndex($this->pdo);
-        $playerName  = $playerIndex->escapeUserName((new PlayerInfoHandler($this->key, 7))->getPlayerNameFromSource());
+        $playerName  = $playerIndex->escapeUserName((new APICore($this->key, 7))->getPlayerNameFromSource());
 
         if(empty($playerName)) {
             return 0;
@@ -45,6 +46,8 @@ class User {
         $stmt->execute([
             'apiKey'         => $this->key,
             'playerIndexUID' => $this->playerIndexUID,
+            'firstSeen'      => time(),
+            'lastSeen'       => time(),
         ]);
 
         return $this->playerIndexUID;

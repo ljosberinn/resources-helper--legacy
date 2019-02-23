@@ -14,24 +14,53 @@ class PlayerInfoHandler extends APICore implements APIInterface {
      * }
      */
 
-    private const UNWANTED_KEYS = ['appV', 'abbVRB', 'lvl'];
+    private const WANTED_KEYS = [
+        'lvl'          => 'playerLevel',
+        'points'       => 'points',
+        'worldrank'    => 'rank',
+        'registerdate' => 'registered',
+    ];
 
-    public function transform(PDO $pdo, array $data, int $playerIndexUID): bool {
-        $data = (array) $data[0];
+    /** @var PDO $pdo */
+    private $pdo;
 
-        $data['level'] = $data['lvl'];
+    private $playerIndexUID;
 
-        foreach(self::UNWANTED_KEYS as $key) {
-            unset($data[$key]);
-        }
+    private const QUERIES = [
+        'save' => 'UPDATE `user` SET `playerLevel` = :playerLevel, `points` = :points, `rank` = :rank, `registered` = :registered WHERE `playerIndexUID` = :playerIndexUID',
+    ];
 
-        return true;
+    public function __construct(PDO $pdo, int $playerIndexUID) {
+        parent::__construct('', 0);
+        $this->pdo            = $pdo;
+        $this->playerIndexUID = $playerIndexUID;
     }
 
-    public function getPlayerNameFromSource(): string {
-        $playerInfoData = $this->curlAPI();
+    public function transform(array $data): bool {
+        $relevantData = [
+            'level'      => 0,
+            'points'     => 0,
+            'rank'       => 0,
+            'registered' => 0,
+        ];
 
-        // raw api data is nested one level; also check against potential errors during curlAPI
-        return $playerInfoData[0]['username'] ?? '';
+        $data = (array) $data[0];
+
+        foreach(self::WANTED_KEYS as $key => $targetKey) {
+            $relevantData[$targetKey] = $data[$key];
+        }
+
+        return $this->save($relevantData);
+    }
+
+    private function save(array $data): bool {
+        $stmt = $this->pdo->prepare(self::QUERIES['save']);
+        return $stmt->execute([
+            'playerLevel'    => $data['playerLevel'],
+            'points'         => $data['points'],
+            'rank'           => $data['rank'],
+            'registered'     => $data['registered'],
+            'playerIndexUID' => $this->playerIndexUID,
+        ]);
     }
 }

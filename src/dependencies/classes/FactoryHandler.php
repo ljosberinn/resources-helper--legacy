@@ -46,10 +46,12 @@ class FactoryHandler implements APIInterface {
         'deleteOldData'  => 'DELETE FROM `factories` WHERE `playerIndexUID` = :playerIndexUID',
     ];
 
-    public function transform(PDO $pdo, array $data, int $playerIndexUID): bool {
+    public function __construct(PDO $pdo, int $playerIndexUID) {
         $this->pdo            = $pdo;
         $this->playerIndexUID = $playerIndexUID;
+    }
 
+    public function transform(array $data): bool {
         $factories = [];
 
         foreach($data as $dataset) {
@@ -85,6 +87,8 @@ class FactoryHandler implements APIInterface {
             return false;
         }
 
+        /** @noinspection SyntaxError */
+        /** @noinspection SyntaxError */
         $query = 'INSERT INTO `factories` (`playerIndexUID`, `timestamp`, `';
         $query .= implode('`, `', array_keys($factories)) . '`) VALUES (' . $this->playerIndexUID . ', ' . time() . ', ';
         $query .= implode(', ', array_values($factories)) . ')';

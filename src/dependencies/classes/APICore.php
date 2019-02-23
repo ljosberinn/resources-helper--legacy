@@ -63,4 +63,11 @@ class APICore {
     protected function isValidKey(): bool {
         return strlen($this->key) === 45 && ctype_alnum($this->key);
     }
+
+    public function getPlayerNameFromSource(): string {
+        $playerInfoData = $this->curlAPI();
+
+        // raw api data is nested one level; also check against potential errors during curlAPI
+        return $playerInfoData[0]['username'] ?? '';
+    }
 }

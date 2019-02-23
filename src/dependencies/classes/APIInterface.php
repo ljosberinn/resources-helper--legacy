@@ -2,7 +2,7 @@
 
 interface APIInterface {
 
-    public function transform(PDO $pdo, array $data, int $playerIndexUID): bool;
+    public function __construct(PDO $pdo, int $playerIndexUID);
 
-    #public function save(array $data):bool;
+    public function transform(array $data): bool;
 }
