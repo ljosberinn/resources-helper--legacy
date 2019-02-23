@@ -12,7 +12,7 @@ class Factory {
         $this->level = $level;
 
         $factoryName = FactoryHandler::getNameByID($type);
-        $factoryData = $this->factoryData($factoryName);
+        $factoryData = $this->getFactoryData($factoryName);
 
         $this->dependencies       = $factoryData['dependencies'];
         $this->scaling            = $factoryData['scaling'];
@@ -21,9 +21,9 @@ class Factory {
         $this->scaleToLevel();
     }
 
-    private function factoryData(string $factoryName): array {
+    private function getFactoryData(string $factoryName): array {
         /** @noinspection PhpIncludeInspection */
-        return require './static/' . $factoryName . '.php';
+        return require './static/factories/' . $factoryName . '.php';
     }
 
     private function scaleToLevel(): void {

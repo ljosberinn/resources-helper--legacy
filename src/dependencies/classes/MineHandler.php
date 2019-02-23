@@ -37,6 +37,10 @@ class MineHandler implements APIInterface {
         $this->playerIndexUID = $playerIndexUID;
     }
 
+    public static function getNameById(int $type) {
+
+    }
+
     public function transform(array $data): bool {
 
         foreach($data as $dataset) {

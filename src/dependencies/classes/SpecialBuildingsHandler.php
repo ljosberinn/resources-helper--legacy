@@ -15,7 +15,22 @@ class SpecialBuildingsHandler implements APIInterface {
 
     private $playerIndexUID;
 
-    private const VALID_SPECIAL_BUILDING_IDS = [62, 65, 116, 97, 72, 59, 119, 121, 71, 86, 122, 123, 127, 126];
+    private const POSSIBLE_SPECIAL_BUILDINGS = [
+        59  => 'RecyclingPlant',
+        62  => 'Casino',
+        65  => 'Museum',
+        71  => 'Hospital',
+        72  => 'LawFirm',
+        86  => 'MafiaHQ',
+        97  => 'TrainingCamp',
+        116 => 'TechCenter',
+        119 => 'DroneResearch',
+        121 => 'ServiceCenter',
+        122 => 'HRDepartment',
+        123 => 'HaulageFirm',
+        126 => 'FireStation',
+        127 => 'SeismologyCentre',
+    ];
 
     private const QUERIES = [
         'deleteOldData' => 'DELETE FROM `specialBuildings` WHERE `playerIndexUID` = :playerIndexUID',
@@ -24,6 +39,10 @@ class SpecialBuildingsHandler implements APIInterface {
     public function __construct(PDO $pdo, int $playerIndexUID) {
         $this->pdo            = $pdo;
         $this->playerIndexUID = $playerIndexUID;
+    }
+
+    public static function getNameById(int $specialBuildingID) {
+        return self::POSSIBLE_SPECIAL_BUILDINGS[$specialBuildingID];
     }
 
     public function transform(array $data): bool {
@@ -38,8 +57,8 @@ class SpecialBuildingsHandler implements APIInterface {
         return $this->save($specialBuildings);
     }
 
-    private function isValidSpecialBuilding(int $specbID): bool {
-        return in_array($specbID, self::VALID_SPECIAL_BUILDING_IDS, true);
+    private function isValidSpecialBuilding(int $id): bool {
+        return array_key_exists($id, self::POSSIBLE_SPECIAL_BUILDINGS);
     }
 
     private function deleteOldData(): bool {
@@ -52,7 +71,6 @@ class SpecialBuildingsHandler implements APIInterface {
             return false;
         }
 
-        /** @noinspection SyntaxError */
         $query = 'INSERT INTO `specialBuildings` (`playerIndexUID`, `timestamp`, `';
         $query .= implode('`, `', array_keys($specialBuildings)) . '`) VALUES (' . $this->playerIndexUID . ', ' . time() . ', ';
         $query .= implode(', ', array_values($specialBuildings)) . ')';

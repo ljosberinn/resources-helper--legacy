@@ -4,7 +4,7 @@
     "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
     "This file is @generated automatically"
   ],
-  "content-hash": "878801c4a93cbd4829dfac6f8292b29c",
+  "content-hash": "cee153f734f4464fe3159211c1615ed2",
   "packages": [
     {
       "name": "clue/stream-filter",
@@ -111,16 +111,16 @@
     },
     {
       "name": "ocramius/package-versions",
-      "version": "1.3.0",
+      "version": "1.4.0",
       "source": {
         "type": "git",
         "url": "https://github.com/Ocramius/PackageVersions.git",
-        "reference": "4489d5002c49d55576fa0ba786f42dbb009be46f"
+        "reference": "a4d4b60d0e60da2487bd21a2c6ac089f85570dbb"
       },
       "dist": {
         "type": "zip",
-        "url": "https://api.github.com/repos/Ocramius/PackageVersions/zipball/4489d5002c49d55576fa0ba786f42dbb009be46f",
-        "reference": "4489d5002c49d55576fa0ba786f42dbb009be46f",
+        "url": "https://api.github.com/repos/Ocramius/PackageVersions/zipball/a4d4b60d0e60da2487bd21a2c6ac089f85570dbb",
+        "reference": "a4d4b60d0e60da2487bd21a2c6ac089f85570dbb",
         "shasum": ""
       },
       "require": {
@@ -129,6 +129,7 @@
       },
       "require-dev": {
         "composer/composer": "^1.6.3",
+        "doctrine/coding-standard": "^5.0.1",
         "ext-zip": "*",
         "infection/infection": "^0.7.1",
         "phpunit/phpunit": "^7.0.0"
@@ -156,7 +157,7 @@
         }
       ],
       "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
-      "time": "2018-02-05T13:05:30+00:00"
+      "time": "2019-02-21T12:16:21+00:00"
     },
     {
       "name": "paragonie/random_compat",
@@ -322,16 +323,16 @@
     },
     {
       "name": "php-http/discovery",
-      "version": "1.6.0",
+      "version": "1.6.1",
       "source": {
         "type": "git",
         "url": "https://github.com/php-http/discovery.git",
-        "reference": "02b7ea21eafa0757af04140890a67d8ed45f83b2"
+        "reference": "684855f2c2e9d0a61868b8f8d6bd0295c8a4b651"
       },
       "dist": {
         "type": "zip",
-        "url": "https://api.github.com/repos/php-http/discovery/zipball/02b7ea21eafa0757af04140890a67d8ed45f83b2",
-        "reference": "02b7ea21eafa0757af04140890a67d8ed45f83b2",
+        "url": "https://api.github.com/repos/php-http/discovery/zipball/684855f2c2e9d0a61868b8f8d6bd0295c8a4b651",
+        "reference": "684855f2c2e9d0a61868b8f8d6bd0295c8a4b651",
         "shasum": ""
       },
       "require": {
@@ -382,7 +383,7 @@
         "message",
         "psr7"
       ],
-      "time": "2019-01-23T12:41:22+00:00"
+      "time": "2019-02-23T07:42:53+00:00"
     },
     {
       "name": "php-http/httplug",
@@ -1038,6 +1039,73 @@
       "time": "2018-08-06T14:22:27+00:00"
     },
     {
+      "name": "tracy/tracy",
+      "version": "v2.6.0",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/nette/tracy.git",
+        "reference": "28c54772200b5fefd8c9a421b36019cda2b2f9f4"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/nette/tracy/zipball/28c54772200b5fefd8c9a421b36019cda2b2f9f4",
+        "reference": "28c54772200b5fefd8c9a421b36019cda2b2f9f4",
+        "shasum": ""
+      },
+      "require": {
+        "ext-json": "*",
+        "ext-session": "*",
+        "php": ">=7.1"
+      },
+      "require-dev": {
+        "nette/di": "^2.4 || ~3.0.0",
+        "nette/tester": "^2.1",
+        "nette/utils": "^2.4 || ^3.0",
+        "psr/log": "^1.0"
+      },
+      "suggest": {
+        "https://nette.org/donate": "Please support Tracy via a donation"
+      },
+      "type": "library",
+      "extra": {
+        "branch-alias": {
+          "dev-master": "2.6-dev"
+        }
+      },
+      "autoload": {
+        "classmap": [
+          "src"
+        ],
+        "files": [
+          "src/Tracy/shortcuts.php"
+        ]
+      },
+      "notification-url": "https://packagist.org/downloads/",
+      "license": [
+        "BSD-3-Clause"
+      ],
+      "authors": [
+        {
+          "name": "David Grudl",
+          "homepage": "https://davidgrudl.com"
+        },
+        {
+          "name": "Nette Community",
+          "homepage": "https://nette.org/contributors"
+        }
+      ],
+      "description": "😎 Tracy: the addictive tool to ease debugging PHP code for cool developers. Friendly design, logging, profiler, advanced features like debugging AJAX calls or CLI support. You will love it.",
+      "homepage": "https://tracy.nette.org",
+      "keywords": [
+        "Xdebug",
+        "debug",
+        "debugger",
+        "nette",
+        "profiler"
+      ],
+      "time": "2019-02-20T06:26:57+00:00"
+    },
+    {
       "name": "vlucas/phpdotenv",
       "version": "v3.3.2",
       "source": {
@@ -1163,12 +1231,12 @@
       "source": {
         "type": "git",
         "url": "https://github.com/Roave/SecurityAdvisories.git",
-        "reference": "344bf4ed1263c75e7f96b87b80c52e8373561e19"
+        "reference": "614a9db1df6be4349544311096f8d48ca067ccbb"
       },
       "dist": {
         "type": "zip",
-        "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/344bf4ed1263c75e7f96b87b80c52e8373561e19",
-        "reference": "344bf4ed1263c75e7f96b87b80c52e8373561e19",
+        "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/614a9db1df6be4349544311096f8d48ca067ccbb",
+        "reference": "614a9db1df6be4349544311096f8d48ca067ccbb",
         "shasum": ""
       },
       "conflict": {
@@ -1203,8 +1271,91 @@
         "doctrine/mongodb-odm-bundle": ">=2,<3.0.1",
         "doctrine/orm": ">=2,<2.4.8|>=2.5,<2.5.1",
         "dompdf/dompdf": ">=0.6,<0.6.2",
-        "drupal/core": ">=7,<7.62|>=8,<8.5.9|>=8.6,<8.6.6",
-        "drupal/drupal": ">=7,<7.62|>=8,<8.5.9|>=8.6,<8.6.6",
+        "drupal/acquia_connector": ">=1,<1.16",
+        "drupal/autologout": ">=4,<4.5",
+        "drupal/backup_migrate": ">=3,<3.4",
+        "drupal/bealestreet": ">=1,<1.2",
+        "drupal/bible": ">=1,<1.7",
+        "drupal/bing_autosuggest_api": ">=1,<1.1",
+        "drupal/bootstrap": ">=3,<3.14",
+        "drupal/brilliant_gallery": ">=1,<1.10",
+        "drupal/ckeditor_uploadimage": ">=1,<1.5",
+        "drupal/cleantalk": ">=2,<2.7",
+        "drupal/cloud": ">=1,<1.7",
+        "drupal/commerce": ">=2,<2.9",
+        "drupal/commerce_custom_order_status": ">=1,<1.1",
+        "drupal/commerce_klarna_checkout": ">=1,<1.5",
+        "drupal/config_perms": ">=1,<1.1|>=2,<2.2",
+        "drupal/config_update": ">=1,<1.5",
+        "drupal/core": ">=7,<7.62|>=8,<8.5.11|>=8.6,<8.6.10",
+        "drupal/datereminder": ">=1,<1.15",
+        "drupal/decoupled_router": ">=1,<1.2",
+        "drupal/domain_integration": ">=1,<1.2",
+        "drupal/drupal": ">=7,<7.62|>=8,<8.5.11|>=8.6,<8.6.10",
+        "drupal/entity": ">=1,<1.9",
+        "drupal/entity_ref_tab_formatter": ">=1,<1.3",
+        "drupal/entityqueue_taxonomy": ">=1,<1.1",
+        "drupal/esign": ">=1,<1.10",
+        "drupal/eu_cookie_compliance": ">=1,<1.1",
+        "drupal/exif": ">=1,<1.1",
+        "drupal/feedback_collect": ">=1,<1.6",
+        "drupal/filefield_paths": ">=1,<1.1",
+        "drupal/filefield_sources": ">=1,<1.11",
+        "drupal/focal_point": ">=1,<1.2",
+        "drupal/fontawesome": ">=2,<2.12",
+        "drupal/fraction": ">=1,<1.2",
+        "drupal/gathercontent": ">=3,<3.5",
+        "drupal/genpass": ">=1,<1.1",
+        "drupal/hosting_https": ">=3,<3.170",
+        "drupal/jsonapi": ">=1,<1.16",
+        "drupal/lightbox2": ">=2,<2.11",
+        "drupal/link": ">=1,<1.6",
+        "drupal/litejazz": ">=2,<2.3",
+        "drupal/mailhandler": ">=2,<2.11",
+        "drupal/mass_pwreset": ">=1,<1.1",
+        "drupal/me": ">=1,<1.3",
+        "drupal/media": ">=2,<2.19",
+        "drupal/menu_export": ">=1,<1.2",
+        "drupal/metatag": ">=1,<1.8",
+        "drupal/miniorange_oauth_client": ">=1,<1.21",
+        "drupal/moneysuite": ">=10,<10.4",
+        "drupal/mosaik": ">=1,<1.2",
+        "drupal/netforum_authentication": ">=1,<1.1",
+        "drupal/newsflash": ">=2,<2.6",
+        "drupal/node_feedback": ">=1,<1.3",
+        "drupal/node_view_permissions": ">=1,<1.1",
+        "drupal/nucleus": ">=1,<1.6",
+        "drupal/nvp": ">=1,<1.1",
+        "drupal/panels_breadcrumbs": ">=2,<2.4",
+        "drupal/panopoly_core": ">=1,<1.49",
+        "drupal/paragraphs": ">=1,<1.6",
+        "drupal/password_policy": ">=1,<1.16",
+        "drupal/permissions_by_term": ">=1,<1.35",
+        "drupal/phonefield": ">=1,<1.1",
+        "drupal/phpconfig": ">=1,<1.1",
+        "drupal/preview_link": ">=1,<1.1",
+        "drupal/print": ">=2,<2.1",
+        "drupal/provision": ">=3,<3.170",
+        "drupal/pubdlcnt": ">=1,<1.3",
+        "drupal/renderkit": ">=1,<1.6",
+        "drupal/responsive_menus": ">=1,<1.7",
+        "drupal/restws": ">=2,<2.8",
+        "drupal/sagepay_payment": ">=1,<1.5",
+        "drupal/salesforce": ">=3,<3.1",
+        "drupal/search_api_solr": ">=1,<1.14",
+        "drupal/search_autocomplete": ">=4,<4.8",
+        "drupal/services_sso_client": ">=1,<1.6",
+        "drupal/stacks": ">=1,<1.1",
+        "drupal/tapestry": ">=2,<2.2",
+        "drupal/term_reference_tree": ">=1,<1.11",
+        "drupal/tfa_basic": ">=1,<1.1",
+        "drupal/tft": ">=1,<1.1",
+        "drupal/tmgmt": ">=1,<1.7",
+        "drupal/uuid": ">=1,<1.1",
+        "drupal/video": ">=1,<1.4",
+        "drupal/workbench_moderation": ">=1,<1.4",
+        "drupal/yandex_metrics": ">=3,<3.1",
+        "drupal/zircon": ">=1,<1.2",
         "erusev/parsedown": "<1.7",
         "ezsystems/ezpublish-kernel": ">=5.3,<5.3.12.1|>=5.4,<5.4.13.1|>=6,<6.7.9.1|>=6.8,<6.13.5.1|>=7,<7.2.4.1|>=7.3,<7.3.2.1",
         "ezsystems/ezpublish-legacy": ">=5.3,<5.3.12.6|>=5.4,<5.4.12.3|>=2011,<2017.12.4.3|>=2018.6,<2018.6.1.4|>=2018.9,<2018.9.1.3",
@@ -1263,7 +1414,7 @@
         "shopware/shopware": "<5.3.7",
         "silverstripe/cms": ">=3,<=3.0.11|>=3.1,<3.1.11",
         "silverstripe/forum": "<=0.6.1|>=0.7,<=0.7.3",
-        "silverstripe/framework": ">=3,<3.3",
+        "silverstripe/framework": ">=3,<3.6.7|>=3.7,<3.7.3|>=4,<4.0.7|>=4.1,<4.1.5|>=4.2,<4.2.4|>=4.3,<4.3.1",
         "silverstripe/userforms": "<3",
         "simple-updates/phpwhois": "<=1",
         "simplesamlphp/saml2": "<1.10.6|>=2,<2.3.8|>=3,<3.1.4",
@@ -1359,7 +1510,7 @@
         }
       ],
       "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-      "time": "2019-02-05T19:58:17+00:00"
+      "time": "2019-02-22T18:40:39+00:00"
     }
   ],
   "aliases": [],

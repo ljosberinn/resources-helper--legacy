@@ -12,7 +12,8 @@
     "ext-json": "*",
     "ext-curl": "*",
     "ext-pdo": "*",
-    "vlucas/phpdotenv": "^3.3"
+    "vlucas/phpdotenv": "^3.3",
+    "tracy/tracy": "^2.6"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master"
