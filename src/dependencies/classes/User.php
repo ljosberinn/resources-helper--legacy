@@ -5,7 +5,15 @@ class User {
     private $key;
     private $playerIndexUID = 0;
 
+    /** @var PDO $pdo */
     private $pdo;
+
+    private const QUERIES = [
+        'exists'            => 'SELECT `uid` FROM `user` WHERE `apiKey` = :apiKey',
+        'add'               => 'INSERT INTO `user` (`apiKey`, `playerIndexUID`) VALUES(:apiKey, :playerIndexUID)',
+        'get'               => 'SELECT `playerIndexUID` FROM `user` WHERE `apiKey` = :apiKey',
+        'setPlayerIndexUID' => 'UPDATE `user` SET `playerIndexUID` = :playerIndexUID WHERE `apiKey` = :apiKey',
+    ];
 
     public function __construct(PDO $pdo, string $apiKey) {
         $this->key = $apiKey;
@@ -13,7 +21,7 @@ class User {
     }
 
     public function exists(): bool {
-        $stmt = $this->pdo->prepare('SELECT `uid` FROM `user` WHERE `apiKey` = :apiKey');
+        $stmt = $this->pdo->prepare(self::QUERIES['exists']);
         $stmt->execute([
             'apiKey' => $this->key,
         ]);
@@ -33,7 +41,7 @@ class User {
             $this->playerIndexUID = $playerIndex->addPlayer($playerName);
         }
 
-        $stmt = $this->pdo->prepare('INSERT INTO `user` (`apiKey`, `playerIndexUID`) VALUES(:apiKey, :playerIndexUID)');
+        $stmt = $this->pdo->prepare(self::QUERIES['add']);
         $stmt->execute([
             'apiKey'         => $this->key,
             'playerIndexUID' => $this->playerIndexUID,
@@ -43,7 +51,7 @@ class User {
     }
 
     public function get(): int {
-        $stmt = $this->pdo->prepare('SELECT `playerIndexUID` FROM `user` WHERE `apiKey` = :apiKey');
+        $stmt = $this->pdo->prepare(self::QUERIES['get']);
         $stmt->execute([
             'apiKey' => $this->key,
         ]);
@@ -52,7 +60,7 @@ class User {
     }
 
     public function setPlayerIndexUID(int $playerIndexUID): void {
-        $stmt = $this->pdo->prepare('UPDATE `user` SET `playerIndexUID` = :playerIndexUID WHERE `apiKey` = :apiKey');
+        $stmt = $this->pdo->prepare(self::QUERIES['setPlayerIndexUID']);
         $stmt->execute([
             'playerIndexUID' => $playerIndexUID,
             'apiKey'         => $this->key,

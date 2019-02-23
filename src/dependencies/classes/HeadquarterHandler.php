@@ -23,10 +23,12 @@ class HeadquarterHandler implements APIInterface {
      * }
      */
 
+    private const UNWANTED_KEYS = ['itemname1', 'itemname2', 'itemname3', 'itemname4'];
+
     public function transform(PDO $pdo, array $data, int $playerIndexUID): bool {
         $data = (array) $data[0];
 
-        foreach(['itemname1', 'itemname2', 'itemname3', 'itemname4'] as $itemName) {
+        foreach(self::UNWANTED_KEYS as $itemName) {
             unset($data[$itemName]);
         }
 

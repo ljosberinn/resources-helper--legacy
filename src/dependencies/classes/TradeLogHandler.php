@@ -82,6 +82,11 @@ class TradeLogHandler implements APIInterface {
     /** @var PDO */
     private $pdo;
 
+    private const QUERIES = [
+        'loadLastDatasetTimestamp' => 'SELECT `timestamp` FROM `tradeLog` WHERE `playerIndexUID` = :playerIndexUID ORDER BY `timestamp` DESC LIMIT 1',
+        'save'                     => 'INSERT INTO `tradeLog` (`timestamp`, `playerIndexUID`, `businessPartner`, `event`, `itemID`, `amount`, `pricePerUnit`, `transportation`) VALUES(:timestamp, :playerIndexUID, :businessPartner, :event, :itemID, :amount, :pricePerUnit, :transportation)',
+    ];
+
     public function transform(PDO $pdo, array $data, int $playerIndexUID): bool {
         $this->pdo            = $pdo;
         $this->playerIndexUID = $playerIndexUID;
@@ -91,37 +96,37 @@ class TradeLogHandler implements APIInterface {
         $lastDatasetTimestamp = $this->loadLastDatasetTimestamp();
 
         foreach($data as $dataset) {
-            if($lastDatasetTimestamp < $dataset['ts'] && $this->isValidTradeGood($dataset['itemID'])) {
+            if($lastDatasetTimestamp > $dataset['ts'] || !$this->isValidTradeGood($dataset['itemID'])) {
+                continue;
+            }
 
-                $escapedUserName = $userIndex->escapeUserName($dataset['username']);
+            $escapedUserName = $userIndex->escapeUserName($dataset['username']);
 
-                // disallow pure unicode-character players due to indistinguishability
-                if(empty($escapedUserName)) {
-                    continue;
-                }
+            // disallow pure unicode-character players due to indistinguishability
+            if(empty($escapedUserName)) {
+                continue;
+            }
 
-                // abort whole process if one insert failed
-                if(!$this->save($pdo, [
-                    'timestamp'       => $dataset['ts'],
-                    'playerIndexUID'  => $this->playerIndexUID,
-                    'businessPartner' => $this->getPlayerID($userIndex, $escapedUserName, $dataset['ts']),
-                    'event'           => $dataset['event'] === 'buy' ? 1 : 0,
-                    'itemID'          => $dataset['itemID'],
-                    'amount'          => $dataset['amount'],
-                    'pricePerUnit'    => $dataset['ppstk'],
-                    'transportation'  => $dataset['transcost'],
-                ])) {
-                    return false;
-                }
+            // abort whole process if one insert failed
+            if(!$this->save($pdo, [
+                'timestamp'       => $dataset['ts'],
+                'playerIndexUID'  => $this->playerIndexUID,
+                'businessPartner' => $this->getPlayerID($userIndex, $escapedUserName, $dataset['ts']),
+                'event'           => $dataset['event'] === 'buy' ? 1 : 0,
+                'itemID'          => $dataset['itemID'],
+                'amount'          => $dataset['amount'],
+                'pricePerUnit'    => $dataset['ppstk'],
+                'transportation'  => $dataset['transcost'],
+            ])) {
+                return false;
             }
         }
 
         return true;
     }
 
-
     private function loadLastDatasetTimestamp(): int {
-        $stmt = $this->pdo->prepare('SELECT `timestamp` FROM `tradeLog` WHERE `playerIndexUID` = :playerIndexUID ORDER BY `timestamp` DESC LIMIT 1');
+        $stmt = $this->pdo->prepare(self::QUERIES['loadLastDatasetTimestamp']);
         $stmt->execute([
             'playerIndexUID' => $this->playerIndexUID,
         ]);
@@ -134,8 +139,7 @@ class TradeLogHandler implements APIInterface {
     }
 
     private function save(PDO $pdo, array $dataset): bool {
-        $stmt = $pdo->prepare('INSERT INTO `tradeLog` (`timestamp`, `playerIndexUID`, `businessPartner`, `event`, `itemID`, `amount`, `pricePerUnit`, `transportation`) VALUES(:timestamp, :playerIndexUID, :businessPartner, :event, :itemID, :amount, :pricePerUnit, :transportation)');
-
+        $stmt = $pdo->prepare(self::QUERIES['save']);
         return $stmt->execute($dataset);
     }
 

@@ -11,13 +11,7 @@ class FactoryHandler implements APIInterface {
      * }
      */
 
-    private $factoryDataBlueprint = [
-        'name'     => '',
-        'level'    => 0,
-        'striking' => 0,
-    ];
-
-    private static $possibleFactories = [
+    private const POSSIBLE_FACTORIES = [
         6   => 'ConcreteFactory',
         23  => 'FertilizerFactory',
         25  => 'BricksFactory',
@@ -42,50 +36,73 @@ class FactoryHandler implements APIInterface {
         125 => 'TrucksFactory',
     ];
 
+    /** @var PDO $pdo */
+    private $pdo;
+
+    private $playerIndexUID;
+
+    private const QUERIES = [
+        'archiveOldData' => 'INSERT INTO `factoriesHistory` SELECT * FROM `factories` WHERE `playerIndexUID` = :playerIndexUID',
+        'deleteOldData'  => 'DELETE FROM `factories` WHERE `playerIndexUID` = :playerIndexUID',
+    ];
+
     public function transform(PDO $pdo, array $data, int $playerIndexUID): bool {
+        $this->pdo            = $pdo;
+        $this->playerIndexUID = $playerIndexUID;
 
         $factories = [];
 
         foreach($data as $dataset) {
 
-            [$factoryID, $factory] = $this->extractFactoryData($dataset);
+            $factoryID = $dataset['factoryID'];
 
-            if($this->isValidFactory($factoryID, $factory)) {
-                $factories[$factoryID] = $factory;
+            if($this->isValidFactory($factoryID)) {
+                $factories[$factoryID] = (int) $dataset['lvl'];
             }
         }
 
-        return true;
+        return $this->save($factories);
     }
 
-    private function isValidFactory(int $factoryID, array $factory): bool {
-        return array_key_exists($factoryID, self::$possibleFactories) && !empty($factory['name']) && $factory['level'] > 0;
-    }
+    private function archiveOldData(): bool {
+        $params = ['playerIndexUID' => $this->playerIndexUID];
 
-    public function extractFactoryData(array $dataset): array {
-        $factoryID = 0;
-
-        $factory = $this->factoryDataBlueprint;
-
-        foreach($dataset as $key => $value) {
-
-            if($key === 'factoryID') {
-                $factoryID = (int) $value;
-            }
-
-            if($key === 'lvl') {
-                $factory['level'] = $value;
-            }
-
-            if($key === 'strike') {
-                $factory['striking'] = $value === 'yes' ? 1 : 0;
-            }
+        $stmt = $this->pdo->prepare(self::QUERIES['archiveOldData']);
+        if(!$stmt->execute($params)) {
+            return false;
         }
-        return [$factoryID, $factory];
+
+        return $this->deleteOldData($params);
+    }
+
+    private function deleteOldData(array $params): bool {
+        $stmt = $this->pdo->prepare(self::QUERIES['deleteOldData']);
+        return $stmt->execute($params);
+    }
+
+    private function save(array $factories): bool {
+        if(!$this->archiveOldData()) {
+            return false;
+        }
+
+        $query = 'INSERT INTO `factories` (`playerIndexUID`, `timestamp`, `';
+        $query .= implode('`, `', array_keys($factories)) . '`) VALUES (' . $this->playerIndexUID . ', ' . time() . ', ';
+        $query .= implode(', ', array_values($factories)) . ')';
+
+
+        if($this->pdo->query($query)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function isValidFactory(int $factoryID): bool {
+        return array_key_exists($factoryID, self::POSSIBLE_FACTORIES);
     }
 
     public static function getNameByID(int $factoryID): string {
-        return self::$possibleFactories[$factoryID];
+        return self::POSSIBLE_FACTORIES[$factoryID];
     }
 
 }
