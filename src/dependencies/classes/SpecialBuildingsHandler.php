@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class SpecialBuildingsHandler implements APIInterface {
 
@@ -49,8 +49,11 @@ class SpecialBuildingsHandler implements APIInterface {
         $specialBuildings = [];
 
         foreach($data as $dataset) {
-            if($this->isValidSpecialBuilding($dataset['specbID'])) {
-                $specialBuildings[$dataset['specbID']] = $dataset['lvl'];
+
+            $id = (int) $dataset['specbID'];
+
+            if($this->isValidSpecialBuilding($id)) {
+                $specialBuildings[$id] = (int) $dataset['lvl'];
             }
         }
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class CombatLogHandler implements APIInterface {
 
@@ -41,7 +41,7 @@ class CombatLogHandler implements APIInterface {
         $userIndex = new PlayerIndex($this->pdo);
 
         foreach($data as &$dataset) {
-            $userUID = $this->getPlayerID($userIndex, $dataset['targetUserName'], $dataset['unixts']);
+            $userUID = $this->getPlayerID($userIndex, $dataset['targetUserName'], (int) $dataset['unixts']);
 
             /* 4 possible cases
              * act === D & result === lost ? API player is defender and lost
@@ -63,18 +63,18 @@ class CombatLogHandler implements APIInterface {
                 'lat' => $dataset['lat'],
                 'lon' => $dataset['lon'],
 
-                'attackingUnit1' => $dataset['attackingUnit1'],
-                'attackingUnit2' => $dataset['attackingUnit2'],
-                'attackingUnit3' => $dataset['attackingUnit3'],
+                'attackingUnit1' => $dataset['AQtyUnit1'],
+                'attackingUnit2' => $dataset['AQtyUnit2'],
+                'attackingUnit3' => $dataset['AQtyUnit3'],
 
-                'defendingUnit1' => $dataset['defendingUnit1'],
-                'defendingUnit2' => $dataset['defendingUnit2'],
-                'defendingUnit3' => $dataset['defendingUnit3'],
+                'defendingUnit1' => $dataset['DQtyUnit1'],
+                'defendingUnit2' => $dataset['DQtyUnit2'],
+                'defendingUnit3' => $dataset['DQtyUnit3'],
 
-                'lootID1'       => $dataset['lootID1'],
-                'lootQuantity1' => $dataset['lootQuantity1'],
-                'lootID2'       => $dataset['lootID2'],
-                'lootQuantity2' => $dataset['lootQuantity2'],
+                'lootID1'       => $dataset['loot1ItemID'],
+                'lootQuantity1' => $dataset['loot1ItemQty'],
+                'lootID2'       => $dataset['loot2ItemID'],
+                'lootQuantity2' => $dataset['loot2ItemQty'],
                 'lootFactor'    => $dataset['lootfactor'],
             ];
         }

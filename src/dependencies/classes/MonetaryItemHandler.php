@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class MonetaryItemHandler implements APIInterface {
 
@@ -30,7 +30,7 @@ class MonetaryItemHandler implements APIInterface {
 
     public function transform(array $data): bool {
         foreach($data as &$dataset) {
-            unset($dataset['itemName']);
+            #unset($dataset['itemName']);
         }
 
         return true;

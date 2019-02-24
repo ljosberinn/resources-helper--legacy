@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class TradeLogHandler implements APIInterface {
 
@@ -99,6 +99,9 @@ class TradeLogHandler implements APIInterface {
         $lastDatasetTimestamp = $this->loadLastDatasetTimestamp();
 
         foreach($data as $dataset) {
+            $dataset['itemID'] = (int) $dataset['itemID'];
+            $dataset['ts']     = (int) $dataset['ts'];
+
             if($lastDatasetTimestamp > $dataset['ts'] || !$this->isValidTradeGood($dataset['itemID'])) {
                 continue;
             }

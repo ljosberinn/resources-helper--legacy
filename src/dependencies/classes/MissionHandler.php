@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class MissionHandler implements APIInterface {
 
@@ -27,6 +27,10 @@ class MissionHandler implements APIInterface {
 
     private $playerIndexUID;
 
+    private const QUERIES = [
+        'deleteOldData' => 'DELETE FROM `missions` WHERE `playerIndexUID` = :playerIndexUID',
+    ];
+
     private const UNWANTED_KEYS = ['title', 'descr', 'durHours', 'rewarditem', 'intervalDays', 'thumb'];
 
     public function __construct(PDO $pdo, int $playerIndexUID) {
@@ -36,12 +40,42 @@ class MissionHandler implements APIInterface {
 
     public function transform(array $data): bool {
 
-        foreach($data as &$dataset) {
-            foreach(self::UNWANTED_KEYS as $key) {
-                unset($dataset[$key]);
-            }
+        $result = [];
+
+        foreach($data as $dataset) {
+
+            $result[] = [
+
+            ];
         }
 
-        return true;
+        return $this->save($result);
+    }
+
+    private function deleteOldData(): bool {
+        $stmt = $this->pdo->prepare(self::QUERIES['deleteOldData']);
+        return $stmt->execute(['playerIndexUID' => $this->playerIndexUID]);
+    }
+
+    private function save(array $data): bool {
+        if(!$this->deleteOldData()) {
+            return false;
+        }
+
+        $now = time();
+
+        $query = 'INSERT INTO `missions` (`playerIndexUID`, `timestamp`, ) VALUES ';
+
+        foreach($data as $dataset) {
+            $query .= '(' . $this->playerIndexUID . ', ' . $now . ', ' . implode(', ', $dataset) . '), ';
+        }
+
+        $query = substr($query, 0, -2);
+
+        if($this->pdo->query($query)) {
+            return true;
+        }
+
+        return false;
     }
 }

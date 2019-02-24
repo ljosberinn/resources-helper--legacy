@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class APICreditsHandler implements APIInterface {
 
@@ -23,7 +23,7 @@ class APICreditsHandler implements APIInterface {
     }
 
     public function transform(array $data): bool {
-        return $this->save($data[0]['creditsleft']);
+        return $this->save((int) $data[0]['creditsleft']);
     }
 
     private function save(int $remainingAPICredits): bool {

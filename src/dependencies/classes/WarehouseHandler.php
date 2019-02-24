@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class WarehouseHandler implements APIInterface {
 
@@ -81,18 +81,20 @@ class WarehouseHandler implements APIInterface {
         ];
 
         foreach($data as $dataset) {
-            if($this->isGeneralGood($dataset['itemID'])) {
+            $itemID = (int) $dataset['itemID'];
 
-                $warehouses['general'][$dataset['itemID']] = [
-                    'level'  => $dataset['level'],
-                    'amount' => $dataset['amount'],
+            if($this->isGeneralGood($itemID)) {
+
+                $warehouses['general'][$itemID] = [
+                    'level'  => (int) $dataset['level'],
+                    'amount' => (int) $dataset['amount'],
                 ];
                 continue;
             }
 
-            $warehouses['luxury'][$dataset['itemID']] = [
-                'level'  => $dataset['level'],
-                'amount' => $dataset['amount'],
+            $warehouses['luxury'][$itemID] = [
+                'level'  => (int) $dataset['level'],
+                'amount' => (int) $dataset['amount'],
             ];
         }
 

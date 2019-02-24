@@ -1,10 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
-declare(strict_types=1);
+use Dotenv\Dotenv;
+use Tracy\Debugger;
 
 require_once 'vendor/autoload.php';
-
-use Tracy\Debugger;
 
 Debugger::enable(Debugger::DETECT);
 Debugger::$logSeverity = E_NOTICE | E_WARNING;
@@ -16,7 +15,7 @@ spl_autoload_register(function($className) {
     }
 });
 
-$dotenv = \Dotenv\Dotenv::create(__DIR__);
+$dotenv = Dotenv::create(__DIR__);
 $dotenv->load();
 $dotenv->required(['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS']);
 

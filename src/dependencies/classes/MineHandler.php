@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class MineHandler implements APIInterface {
 
@@ -30,7 +30,10 @@ class MineHandler implements APIInterface {
 
     private $playerIndexUID;
 
-    private const UNWANTED_KEYS = ['name', 'resourceName', 'mineID', 'OAcondition'];
+    private const QUERIES = [
+        'archiveOldData' => 'INSERT INTO `minesHistory` SELECT * FROM `mines` WHERE `playerIndexUID` = :playerIndexUID',
+        'deleteOldData'  => 'DELETE FROM `mines` WHERE `playerIndexUID` = :playerIndexUID',
+    ];
 
     public function __construct(PDO $pdo, int $playerIndexUID) {
         $this->pdo            = $pdo;
@@ -43,30 +46,68 @@ class MineHandler implements APIInterface {
 
     public function transform(array $data): bool {
 
+        $result = [];
+
         foreach($data as $dataset) {
-            foreach(self::UNWANTED_KEYS as $key) {
-                unset($dataset[$key]);
-            }
+            $result[] = [
+                $dataset['resourceID'], // resourceID
+                $dataset['minecount'], // amount
 
-            $dataset = [
-                'resourceID'     => $dataset['resourceID'],
-                'amount'         => $dataset['minecount'],
-                'sumTechRate'    => $dataset['SUMfullrate'],
-                'sumRawRate'     => $dataset['SUMrawrate'],
-                'sumDef1'        => $dataset['SUMdef1'],
-                'sumDef2'        => $dataset['SUMdef2'],
-                'sumDef3'        => $dataset['SUMdef3'],
-                'sumAttacks'     => $dataset['SUMattackcount'],
-                'sumAttacksLost' => $dataset['SUMattacklost'],
+                $dataset['SUMfullrate'], // sumTechRate
+                $dataset['SUMrawrate'], // sumRawRate
+                $dataset['SUMdef1'], // sumDef1
+                $dataset['SUMdef2'], // sumDef2
+                $dataset['SUMdef3'], // sumDef3
+                $dataset['SUMattackcount'], // sumAttacks
+                $dataset['SUMattacklost'], // sumAttacksLost
 
-                'avgTechFactor'    => $dataset['OAtechfactor'],
-                'avgHQBoost'       => $dataset['OAHQboost'],
-                'avgQuality'       => $dataset['OAquality'],
-                'avgTechedQuality' => $dataset['OAqualityInclTU'],
-                'avgPenalty'       => $dataset['OAattackpenalty'],
+                $dataset['OAtechfactor'], // avgTechFactor
+                $dataset['OAHQboost'], // avgHQBoost
+                $dataset['OAquality'], // avgQuality
+                $dataset['OAqualityInclTU'], // avgTechedQuality
+                $dataset['OAattackpenalty'], // avgPenalty
             ];
         }
 
-        return true;
+        return $this->save($result);
+    }
+
+
+    private function archiveOldData(): bool {
+        $params = ['playerIndexUID' => $this->playerIndexUID];
+
+        $stmt = $this->pdo->prepare(self::QUERIES['archiveOldData']);
+        if(!$stmt->execute($params)) {
+            return false;
+        }
+
+        return $this->deleteOldData($params);
+    }
+
+    private function deleteOldData(array $params): bool {
+        $stmt = $this->pdo->prepare(self::QUERIES['deleteOldData']);
+        return $stmt->execute($params);
+    }
+
+    private function save(array $data): bool {
+        if(!$this->archiveOldData()) {
+            return false;
+        }
+
+        $now = time();
+
+        $query = 'INSERT INTO `mines` (`playerIndexUID`, `timestamp`, `resourceID`, `amount`, `sumTechRate`, `sumRawRate`, `sumDef1`, `sumDef2`, `sumDef3`, `sumAttacks`, `sumAttacksLost`, `avgTechFactor`, `avgHQBoost`, `avgQuality`, `avgTechedQuality`, `avgPenalty`) VALUES ';
+
+        foreach($data as $dataset) {
+            $query .= '(' . $this->playerIndexUID . ', ' . $now . ', ' . implode(', ', $dataset) . '), ';
+        }
+
+        $query = substr($query, 0, -2);
+
+        if($this->pdo->query($query)) {
+            return true;
+        }
+
+        return false;
     }
 }

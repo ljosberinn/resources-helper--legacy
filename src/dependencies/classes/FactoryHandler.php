@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class FactoryHandler implements APIInterface {
 
@@ -56,7 +56,7 @@ class FactoryHandler implements APIInterface {
 
         foreach($data as $dataset) {
 
-            $factoryID = $dataset['factoryID'];
+            $factoryID = (int) $dataset['factoryID'];
 
             if($this->isValidFactory($factoryID)) {
                 $factories[$factoryID] = (int) $dataset['lvl'];

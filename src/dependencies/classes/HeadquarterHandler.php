@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 class HeadquarterHandler implements APIInterface {
 
@@ -28,6 +28,10 @@ class HeadquarterHandler implements APIInterface {
 
     private $playerIndexUID;
 
+    private const QUERIES = [
+        'deleteOldData' => 'DELETE FROM `headquarter` WHERE `playerIndexUID`= :playerIndexUID',
+    ];
+
     private const UNWANTED_KEYS = ['itemname1', 'itemname2', 'itemname3', 'itemname4'];
 
     public function __construct(PDO $pdo, int $playerIndexUID) {
@@ -38,9 +42,19 @@ class HeadquarterHandler implements APIInterface {
     public function transform(array $data): bool {
         $data = (array) $data[0];
 
-        foreach(self::UNWANTED_KEYS as $itemName) {
-            unset($data[$itemName]);
+        return $this->save($data);
+    }
+
+    private function deleteOldData(): bool {
+        $stmt = $this->pdo->prepare(self::QUERIES['deleteOldData']);
+        return $stmt->execute(['playerIndexUID' => $this->playerIndexUID]);
+    }
+
+    private function save(array $data): bool {
+        if(!$this->deleteOldData()) {
+            return false;
         }
+
 
         return true;
     }
