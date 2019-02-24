@@ -39,7 +39,7 @@ class MineDetailsHandler implements APIInterface {
         $this->playerIndexUID = $playerIndexUID;
     }
 
-    public function transform(array $data): bool {
+    public function transform(array $data): array {
 
         foreach($data as $dataset) {
             $dataset = [
@@ -63,6 +63,11 @@ class MineDetailsHandler implements APIInterface {
             ];
         }
 
+        return $data;
+    }
+
+    public function save(array $data): bool {
+        // TODO: Implement save() method.
         return true;
     }
 }

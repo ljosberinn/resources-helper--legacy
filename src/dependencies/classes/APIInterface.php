@@ -4,5 +4,7 @@ interface APIInterface {
 
     public function __construct(PDO $pdo, int $playerIndexUID);
 
-    public function transform(array $data): bool;
+    public function transform(array $data): array;
+
+    public function save(array $data): bool;
 }

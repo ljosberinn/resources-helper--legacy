@@ -51,7 +51,7 @@ class FactoryHandler implements APIInterface {
         $this->playerIndexUID = $playerIndexUID;
     }
 
-    public function transform(array $data): bool {
+    public function transform(array $data): array {
         $factories = [];
 
         foreach($data as $dataset) {
@@ -63,7 +63,7 @@ class FactoryHandler implements APIInterface {
             }
         }
 
-        return $this->save($factories);
+        return $factories;
     }
 
     private function archiveOldData(): bool {
@@ -82,7 +82,7 @@ class FactoryHandler implements APIInterface {
         return $stmt->execute($params);
     }
 
-    private function save(array $factories): bool {
+    public function save(array $factories): bool {
         if(!$this->archiveOldData()) {
             return false;
         }

@@ -45,7 +45,7 @@ class SpecialBuildingsHandler implements APIInterface {
         return self::POSSIBLE_SPECIAL_BUILDINGS[$specialBuildingID];
     }
 
-    public function transform(array $data): bool {
+    public function transform(array $data): array {
         $specialBuildings = [];
 
         foreach($data as $dataset) {
@@ -57,7 +57,7 @@ class SpecialBuildingsHandler implements APIInterface {
             }
         }
 
-        return $this->save($specialBuildings);
+        return $specialBuildings;
     }
 
     private function isValidSpecialBuilding(int $id): bool {
@@ -69,7 +69,7 @@ class SpecialBuildingsHandler implements APIInterface {
         return $stmt->execute(['playerIndexUID' => $this->playerIndexUID]);
     }
 
-    private function save(array $specialBuildings): bool {
+    public function save(array $specialBuildings): bool {
         if(!$this->deleteOldData()) {
             return false;
         }

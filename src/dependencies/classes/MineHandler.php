@@ -61,7 +61,7 @@ class MineHandler implements APIInterface {
         return self::VALID_RESOURCES[$type];
     }
 
-    public function transform(array $data): bool {
+    public function transform(array $data): array {
 
         $result = [];
 
@@ -86,9 +86,8 @@ class MineHandler implements APIInterface {
             ];
         }
 
-        return $this->save($result);
+        return $result;
     }
-
 
     private function archiveOldData(): bool {
         $params = ['playerIndexUID' => $this->playerIndexUID];
@@ -106,7 +105,7 @@ class MineHandler implements APIInterface {
         return $stmt->execute($params);
     }
 
-    private function save(array $data): bool {
+    public function save(array $data): bool {
         if(!$this->archiveOldData()) {
             return false;
         }

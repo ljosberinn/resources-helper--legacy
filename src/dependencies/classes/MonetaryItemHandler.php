@@ -28,11 +28,16 @@ class MonetaryItemHandler implements APIInterface {
         $this->playerIndexUID = $playerIndexUID;
     }
 
-    public function transform(array $data): bool {
+    public function transform(array $data): array {
         foreach($data as &$dataset) {
             #unset($dataset['itemName']);
         }
 
+        return $data;
+    }
+
+    public function save(array $data): bool {
+        // TODO: Implement save() method.
         return true;
     }
 }

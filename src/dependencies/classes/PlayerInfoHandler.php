@@ -36,12 +36,13 @@ class PlayerInfoHandler extends APICore implements APIInterface {
         $this->playerIndexUID = $playerIndexUID;
     }
 
-    public function transform(array $data): bool {
+    public function transform(array $data): array {
         $relevantData = [
-            'level'      => 0,
-            'points'     => 0,
-            'rank'       => 0,
-            'registered' => 0,
+            'playerLevel'    => 0,
+            'points'         => 0,
+            'rank'           => 0,
+            'registered'     => 0,
+            'playerIndexUID' => $this->playerIndexUID,
         ];
 
         $data = (array) $data[0];
@@ -50,17 +51,11 @@ class PlayerInfoHandler extends APICore implements APIInterface {
             $relevantData[$targetKey] = $data[$key];
         }
 
-        return $this->save($relevantData);
+        return $relevantData;
     }
 
-    private function save(array $data): bool {
+    public function save(array $data): bool {
         $stmt = $this->pdo->prepare(self::QUERIES['save']);
-        return $stmt->execute([
-            'playerLevel'    => $data['playerLevel'],
-            'points'         => $data['points'],
-            'rank'           => $data['rank'],
-            'registered'     => $data['registered'],
-            'playerIndexUID' => $this->playerIndexUID,
-        ]);
+        return $stmt->execute($data);
     }
 }

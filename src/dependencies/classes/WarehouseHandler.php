@@ -74,7 +74,7 @@ class WarehouseHandler implements APIInterface {
         $this->playerIndexUID = $playerIndexUID;
     }
 
-    public function transform(array $data): bool {
+    public function transform(array $data): array {
         $warehouses = [
             'general' => [],
             'luxury'  => [],
@@ -98,6 +98,11 @@ class WarehouseHandler implements APIInterface {
             ];
         }
 
+        return $warehouses;
+    }
+
+    public function save(array $data): bool {
+        // TODO: Implement save() method.
         return true;
     }
 

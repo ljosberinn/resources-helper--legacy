@@ -39,10 +39,8 @@ class HeadquarterHandler implements APIInterface {
         $this->playerIndexUID = $playerIndexUID;
     }
 
-    public function transform(array $data): bool {
-        $data = (array) $data[0];
-
-        return $this->save($data);
+    public function transform(array $data): array {
+        return (array) $data[0];
     }
 
     private function deleteOldData(): bool {
@@ -50,7 +48,7 @@ class HeadquarterHandler implements APIInterface {
         return $stmt->execute(['playerIndexUID' => $this->playerIndexUID]);
     }
 
-    private function save(array $data): bool {
+    public function save(array $data): bool {
         if(!$this->deleteOldData()) {
             return false;
         }

@@ -37,8 +37,10 @@ class CombatLogHandler implements APIInterface {
         $this->playerIndexUID = $playerIndexUID;
     }
 
-    public function transform(array $data): bool {
+    public function transform(array $data): array {
         $userIndex = new PlayerIndex($this->pdo);
+
+        $result = [];
 
         foreach($data as &$dataset) {
             $userUID = $this->getPlayerID($userIndex, $dataset['targetUserName'], (int) $dataset['unixts']);
@@ -50,12 +52,12 @@ class CombatLogHandler implements APIInterface {
              * act === A & result === lost ? API player is attacker and lost
              * act === A & result === won ? API player is attacker and won
              */
-            $action = $dataset['act'] === 'D' ? 0 : 1;
-            $result = $dataset['result'] === 'lost' ? 0 : 1;
+            $action  = $dataset['act'] === 'D' ? 0 : 1;
+            $outcome = $dataset['result'] === 'lost' ? 0 : 1;
 
-            $dataset = [
+            $result[] = [
                 'action'     => $action,
-                'result'     => $result,
+                'result'     => $outcome,
                 'timestamp'  => $dataset['unixts'],
                 'actor'      => $userUID,
                 'actorLevel' => $dataset['targetUserLevel'],
@@ -79,6 +81,10 @@ class CombatLogHandler implements APIInterface {
             ];
         }
 
+        return $result;
+    }
+
+    public function save(array $data): bool {
         return true;
     }
 

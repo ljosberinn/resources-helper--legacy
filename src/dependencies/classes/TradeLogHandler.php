@@ -92,7 +92,8 @@ class TradeLogHandler implements APIInterface {
         $this->playerIndexUID = $playerIndexUID;
     }
 
-    public function transform(array $data): bool {
+    public function transform(array $data): array {
+        $result = [];
 
         $userIndex = new PlayerIndex($this->pdo);
 
@@ -113,8 +114,7 @@ class TradeLogHandler implements APIInterface {
                 continue;
             }
 
-            // abort whole process if one insert failed
-            if(!$this->save([
+            $result[] = [
                 'timestamp'       => $dataset['ts'],
                 'playerIndexUID'  => $this->playerIndexUID,
                 'businessPartner' => $this->getPlayerID($userIndex, $escapedUserName, $dataset['ts']),
@@ -123,12 +123,10 @@ class TradeLogHandler implements APIInterface {
                 'amount'          => $dataset['amount'],
                 'pricePerUnit'    => $dataset['ppstk'],
                 'transportation'  => $dataset['transcost'],
-            ])) {
-                return false;
-            }
+            ];
         }
 
-        return true;
+        return $result;
     }
 
     private function loadLastDatasetTimestamp(): int {
@@ -142,9 +140,15 @@ class TradeLogHandler implements APIInterface {
         return 0;
     }
 
-    private function save(array $dataset): bool {
-        $stmt = $this->pdo->prepare(self::QUERIES['save']);
-        return $stmt->execute($dataset);
+    public function save(array $data): bool {
+        foreach($data as $dataset) {
+            $stmt = $this->pdo->prepare(self::QUERIES['save']);
+            if(!$stmt->execute($dataset)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private function isValidTradeGood(int $tradeGood): bool {

@@ -22,15 +22,15 @@ class APICreditsHandler implements APIInterface {
         $this->playerIndexUID = $playerIndexUID;
     }
 
-    public function transform(array $data): bool {
-        return $this->save((int) $data[0]['creditsleft']);
+    public function transform(array $data): array {
+        return [
+            'remainingAPICredits' => $data[0]['creditsleft'],
+            'playerIndexUID'      => $this->playerIndexUID,
+        ];
     }
 
-    private function save(int $remainingAPICredits): bool {
+    public function save(array $data): bool {
         $stmt = $this->pdo->prepare(self::QUERIES['save']);
-        return $stmt->execute([
-            'remainingAPICredits' => $remainingAPICredits,
-            'playerIndexUID'      => $this->playerIndexUID,
-        ]);
+        return $stmt->execute($data);
     }
 }

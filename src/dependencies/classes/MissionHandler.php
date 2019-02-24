@@ -38,8 +38,7 @@ class MissionHandler implements APIInterface {
         $this->playerIndexUID = $playerIndexUID;
     }
 
-    public function transform(array $data): bool {
-
+    public function transform(array $data): array {
         $result = [];
 
         foreach($data as $dataset) {
@@ -49,7 +48,7 @@ class MissionHandler implements APIInterface {
             ];
         }
 
-        return $this->save($result);
+        return $result;
     }
 
     private function deleteOldData(): bool {
@@ -57,7 +56,7 @@ class MissionHandler implements APIInterface {
         return $stmt->execute(['playerIndexUID' => $this->playerIndexUID]);
     }
 
-    private function save(array $data): bool {
+    public function save(array $data): bool {
         if(!$this->deleteOldData()) {
             return false;
         }
