@@ -133,9 +133,7 @@ class TradeLogHandler implements APIInterface {
 
     private function loadLastDatasetTimestamp(): int {
         $stmt = $this->pdo->prepare(self::QUERIES['loadLastDatasetTimestamp']);
-        $stmt->execute([
-            'playerIndexUID' => $this->playerIndexUID,
-        ]);
+        $stmt->execute(['playerIndexUID' => $this->playerIndexUID,]);
 
         if($stmt->rowCount() === 1) {
             return $stmt->fetch()['timestamp'];
@@ -164,13 +162,12 @@ class TradeLogHandler implements APIInterface {
             $userUID = $userIndex->addPlayer($escapedUserName, $lastSeen);
 
             $this->currentlyIteratedUsers[$escapedUserName] = $userUID;
-
             return $userUID;
         }
 
         $userIndex->updateLastSeenTimestampByPlayerID($userUID, $lastSeen);
-        $this->currentlyIteratedUsers[$escapedUserName] = $userUID;
 
+        $this->currentlyIteratedUsers[$escapedUserName] = $userUID;
         return $userUID;
     }
 }

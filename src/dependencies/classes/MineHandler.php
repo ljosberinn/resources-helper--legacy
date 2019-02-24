@@ -35,13 +35,30 @@ class MineHandler implements APIInterface {
         'deleteOldData'  => 'DELETE FROM `mines` WHERE `playerIndexUID` = :playerIndexUID',
     ];
 
+    private const VALID_RESOURCES = [
+        2  => 'Clay',
+        3  => 'Gravel',
+        8  => 'Coal',
+        10 => 'CrudeOil',
+        12 => 'Bauxite',
+        13 => 'IronOre',
+        14 => 'GoldOre',
+        15 => 'SilverOre',
+        20 => 'Limestone',
+        26 => 'Chalcopyrite',
+        49 => 'Ilmenite',
+        53 => 'QuartzSand',
+        81 => 'RoughDiamonds',
+        90 => 'LithiumOre',
+    ];
+
     public function __construct(PDO $pdo, int $playerIndexUID) {
         $this->pdo            = $pdo;
         $this->playerIndexUID = $playerIndexUID;
     }
 
     public static function getNameById(int $type) {
-
+        return self::VALID_RESOURCES[$type];
     }
 
     public function transform(array $data): bool {

@@ -18,7 +18,11 @@ class PlayerIndex {
     public function updateLastSeenTimestampByPlayerID(int $uid, int $timestamp): bool {
         $stmt = $this->pdo->prepare(self::QUERIES['updateLastSeenTimestampByPlayerID']);
 
-        return $stmt->execute(['lastSeen' => $timestamp, 'uid' => $uid, 'lastSeen2' => $timestamp]);
+        return $stmt->execute([
+            'lastSeen'  => $timestamp,
+            'uid'       => $uid,
+            'lastSeen2' => $timestamp,
+        ]);
     }
 
     public function getPlayerIDByName(string $userName): int {
