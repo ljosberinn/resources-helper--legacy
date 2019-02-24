@@ -87,8 +87,6 @@ class FactoryHandler implements APIInterface {
             return false;
         }
 
-        /** @noinspection SyntaxError */
-        /** @noinspection SyntaxError */
         $query = 'INSERT INTO `factories` (`playerIndexUID`, `timestamp`, `';
         $query .= implode('`, `', array_keys($factories)) . '`) VALUES (' . $this->playerIndexUID . ', ' . time() . ', ';
         $query .= implode(', ', array_values($factories)) . ')';

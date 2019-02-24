@@ -31,8 +31,6 @@ class MissionHandler implements APIInterface {
         'deleteOldData' => 'DELETE FROM `missions` WHERE `playerIndexUID` = :playerIndexUID',
     ];
 
-    private const UNWANTED_KEYS = ['title', 'descr', 'durHours', 'rewarditem', 'intervalDays', 'thumb'];
-
     public function __construct(PDO $pdo, int $playerIndexUID) {
         $this->pdo            = $pdo;
         $this->playerIndexUID = $playerIndexUID;
@@ -42,9 +40,16 @@ class MissionHandler implements APIInterface {
         $result = [];
 
         foreach($data as $dataset) {
-
             $result[] = [
-
+                $dataset['questID'], // missionID
+                $dataset['status'], // status
+                $dataset['progress'], // progress
+                $dataset['missiongoal'], // goal
+                $dataset['rewardamount'], // rewardAmount
+                $dataset['penalty'], // penalty
+                $dataset['cooldown'], // cooldown
+                $dataset['starttime'], // startTimestamp
+                $dataset['endtime'], // endTimestamp
             ];
         }
 
@@ -63,7 +68,7 @@ class MissionHandler implements APIInterface {
 
         $now = time();
 
-        $query = 'INSERT INTO `missions` (`playerIndexUID`, `timestamp`, ) VALUES ';
+        $query = 'INSERT INTO `missions` (`playerIndexUID`, `timestamp`, `missionID`, `status`, `progress`, `goal`, `rewardAmount`, `penalty`, `cooldown`, `startTimestamp`, `endTimestamp`) VALUES ';
 
         foreach($data as $dataset) {
             $query .= '(' . $this->playerIndexUID . ', ' . $now . ', ' . implode(', ', $dataset) . '), ';

@@ -30,6 +30,11 @@ class APICore {
     }
 
     protected function curlAPI(): array {
+        if($_SERVER['SERVER_NAME'] === 'localhost') {
+            $cachedResponse = (string) file_get_contents('./api/api-response/' . $this->query . '.json');
+            return json_decode($cachedResponse, true);
+        }
+
         $uri = $this->buildURI();
 
         try {

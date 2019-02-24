@@ -40,9 +40,7 @@ class APIHandler extends APICore {
         /** @var APICreditsHandler|FactoryHandler|WarehouseHandler|SpecialBuildingsHandler|HeadquarterHandler|MineDetailsHandler|TradeLogHandler|PlayerInfoHandler|MonetaryItemHandler|CombatLogHandler|MissionHandler|MineHandler $class */
         $class = new $className($this->pdo, $this->response['actor']);
 
-        $data = $class->transform($data);
-
-        $this->response['success'] = $class->save($data) && $this->updateLastSeenTimestamp();
+        $this->response['success'] = $class->save($class->transform($data)) && $this->updateLastSeenTimestamp();
 
         return $this->respond();
     }
