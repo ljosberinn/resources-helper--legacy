@@ -6,17 +6,17 @@ class APICore {
     protected $query;
 
     protected const API_MAP = [
-        0  => 'APICreditsHandler',
-        1  => 'FactoryHandler',
+        0  => 'APICreditsHandler', // done
+        1  => 'FactoryHandler', // done
         2  => 'WarehouseHandler',
-        3  => 'SpecialBuildingsHandler',
+        3  => 'SpecialBuildingsHandler', // done
         4  => 'HeadquarterHandler',
         5  => 'MineDetailsHandler',
-        6  => 'TradeLogHandler',
+        6  => 'TradeLogHandler', // done
         7  => 'PlayerInfoHandler',
         8  => 'MonetaryItemHandler',
         9  => 'CombatLogHandler',
-        10 => 'MissionHandler',
+        10 => 'MissionHandler', // done
         51 => 'MineHandler',
     ];
 

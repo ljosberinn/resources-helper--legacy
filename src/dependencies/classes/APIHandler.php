@@ -19,11 +19,9 @@ class APIHandler extends APICore {
 
         $db        = DB::getInstance();
         $this->pdo = $db->getConnection();
-
-        echo $this->handleQuery();
     }
 
-    private function handleQuery(): string {
+    public function handleQuery(): string {
         $this->response['actor'] = $this->setActor();
 
         if($this->response['actor'] === 0 || !$this->isValidKey() || !$this->queryExists()) {

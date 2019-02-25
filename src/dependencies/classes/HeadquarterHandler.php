@@ -29,10 +29,9 @@ class HeadquarterHandler implements APIInterface {
     private $playerIndexUID;
 
     private const QUERIES = [
-        'deleteOldData' => 'DELETE FROM `headquarter` WHERE `playerIndexUID`= :playerIndexUID',
+        'deleteOldData' => 'DELETE FROM `headquarters` WHERE `playerIndexUID`= :playerIndexUID',
+        'save'          => 'INSERT INTO `headquarters` (`playerIndexUID`, `timestamp`, `level`, `lat`, `lon`, `progress1`, `progress2`, `progress3`, `progress4`) VALUES(:playerIndexUID, :timestamp, :level, :lat, :lon, :progress1, :progress2, :progress3, :progress4)',
     ];
-
-    private const UNWANTED_KEYS = ['itemname1', 'itemname2', 'itemname3', 'itemname4'];
 
     public function __construct(PDO $pdo, int $playerIndexUID) {
         $this->pdo            = $pdo;
@@ -40,7 +39,19 @@ class HeadquarterHandler implements APIInterface {
     }
 
     public function transform(array $data): array {
-        return (array) $data[0];
+        $data = $data[0];
+
+        return [
+            'playerIndexUID' => $this->playerIndexUID,
+            'timestamp'      => time(),
+            'level'          => $data['lvl'],
+            'lat'            => $data['lat'],
+            'lon'            => $data['lon'],
+            'progress1'      => $data['progress1'],
+            'progress2'      => $data['progress2'],
+            'progress3'      => $data['progress3'],
+            'progress4'      => $data['progress4'],
+        ];
     }
 
     private function deleteOldData(): bool {
@@ -53,7 +64,7 @@ class HeadquarterHandler implements APIInterface {
             return false;
         }
 
-
-        return true;
+        $query = $this->pdo->prepare(self::QUERIES['save']);
+        return $query->execute($data);
     }
 }
