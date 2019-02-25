@@ -69,15 +69,27 @@ class WarehouseHandler implements APIInterface {
 
     private $playerIndexUID;
 
+    private $knownLuxuryGoods;
+
+    private const QUERIES = [
+        'deleteOldStandings'       => 'DELETE FROM `warehouseStandings` WHERE `playerIndexUID` = :playerIndexUID',
+        'deleteOldLevels'          => 'DELETE FROM `warehouseLevels` WHERE `playerIndexUID` = :playerIndexUID',
+        'getKnownLuxuryGoods'      => 'SELECT `luxuryGoodID` FROM `luxuryGoods` ORDER BY `luxuryGoodID` ASC',
+        'addNewLuxuryGood'         => 'INSERT INTO `luxuryGoods` (`luxuryGoodID`, `name`, `requirement`) VALUES(:luxuryGoodID, :name, :requirement)',
+        'addLuxuryGoodOwner'       => 'INSERT INTO `luxuryGoodOwner` (`playerIndexUID`, `luxuryGoodID`, `amount`) VALUES(:playerIndexUID, :luxuryGoodID, :amount)',
+        'deleteOldLuxuryGoodOwner' => 'DELETE FROM `luxuryGoodOwner` WHERE `playerIndexUID` = :playerIndexUID',
+    ];
+
     public function __construct(PDO $pdo, int $playerIndexUID) {
-        $this->pdo            = $pdo;
-        $this->playerIndexUID = $playerIndexUID;
+        $this->pdo              = $pdo;
+        $this->playerIndexUID   = $playerIndexUID;
+        $this->knownLuxuryGoods = $this->getKnownLuxuryGoods();
     }
 
     public function transform(array $data): array {
         $warehouses = [
-            'general' => [],
-            'luxury'  => [],
+            'level'     => [],
+            'standings' => [],
         ];
 
         foreach($data as $dataset) {
@@ -85,24 +97,101 @@ class WarehouseHandler implements APIInterface {
 
             if($this->isGeneralGood($itemID)) {
 
-                $warehouses['general'][$itemID] = [
-                    'level'  => (int) $dataset['level'],
-                    'amount' => (int) $dataset['amount'],
-                ];
+                $warehouses['level'][$itemID]    = $dataset['level'];
+                $warehouses['standing'][$itemID] = $dataset['amount'];
+
                 continue;
             }
 
-            $warehouses['luxury'][$itemID] = [
-                'level'  => (int) $dataset['level'],
-                'amount' => (int) $dataset['amount'],
-            ];
+            if(!in_array($itemID, $this->knownLuxuryGoods, true)) {
+                $this->addNewLuxuryGood($dataset);
+                $this->addLuxuryGoodOwner($dataset);
+            }
         }
 
         return $warehouses;
     }
 
+    private function deleteOldLuxuryGoodOwner(): bool {
+        $stmt = $this->pdo->prepare(self::QUERIES['deleteOldLuxuryGoodOwner']);
+        return $stmt->execute(['playerIndexUID' => $this->playerIndexUID]);
+    }
+
+    private function addNewLuxuryGood(array $dataset): void {
+        $stmt = $this->pdo->prepare(self::QUERIES['addNewLuxuryGood']);
+        $stmt->execute([
+            'luxuryItemID' => $dataset['itemID'],
+            'name'         => $dataset['itemname'],
+        ]);
+    }
+
+    private function addLuxuryGoodOwner(array $dataset): void {
+        if(!$this->deleteOldLuxuryGoodOwner()) {
+            return;
+        }
+
+        $stmt = $this->pdo->prepare(self::QUERIES['addLuxuryGoodOwner']);
+        $stmt->execute([
+            'playerIndexUID' => $this->playerIndexUID,
+            'luxuryGoodID'   => $dataset['itemID'],
+            'amount'         => $dataset['amount'],
+        ]);
+    }
+
+    private function getKnownLuxuryGoods(): array {
+        $luxuryGoods = [];
+
+        $stmt = $this->pdo->query(self::QUERIES['getKnownLuxuryGoods']);
+
+        if(!$stmt) {
+            return $luxuryGoods;
+        }
+
+        $knownLuxuryGoods = $stmt->fetchAll();
+
+        if(!$knownLuxuryGoods) {
+            return $luxuryGoods;
+        }
+
+        foreach($knownLuxuryGoods as $knownLuxuryGood) {
+            $luxuryGoods[] = $knownLuxuryGood['luxuryGoodID'];
+        }
+
+        return $luxuryGoods;
+    }
+
+    private function deleteOldData(): bool {
+        $params = ['playerIndexUID' => $this->playerIndexUID];
+
+        foreach(['deleteOldStandings', 'deleteOldLevels'] as $key) {
+            $stmt = $this->pdo->prepare(self::QUERIES[$key]);
+
+            if(!$stmt->execute($params)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public function save(array $data): bool {
-        // TODO: Implement save() method.
+        if(!$this->deleteOldData()) {
+            return false;
+        }
+
+        foreach([
+                    'warehouseStandings' => 'standing',
+                    'warehouseLevels'    => 'level',
+                ] as $tableName => $key) {
+            $query = 'INSERT INTO `' . $tableName . '` (playerIndexUID, `timestamp`, `';
+            $query .= implode('`, `', array_keys($data[$key])) . '`) VALUES(' . $this->playerIndexUID . ', ' . time() . ', ';
+            $query .= implode(', ', array_values($data[$key])) . ')';
+
+            if(!$this->pdo->query($query)) {
+                return false;
+            }
+        }
+
         return true;
     }
 
