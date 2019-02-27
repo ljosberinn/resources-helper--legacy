@@ -11,7 +11,7 @@ class APICore {
         2  => 'WarehouseHandler', // done
         3  => 'SpecialBuildingsHandler', // done
         4  => 'HeadquarterHandler', // done
-        5  => 'MineDetailsHandler',
+        5  => 'MineDetailsHandler', // done
         6  => 'TradeLogHandler', // done
         7  => 'PlayerInfoHandler', // done
         8  => 'MonetaryItemHandler',
