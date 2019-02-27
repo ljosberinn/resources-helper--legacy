@@ -2,12 +2,10 @@
 
 class User {
 
-    /** @var string */
-    private $key;
-    private $playerIndexUID = 0;
-
-    /** @var PDO $pdo */
     private $pdo;
+    private $key;
+
+    private $playerIndexUID = 0;
 
     private const QUERIES = [
         'exists'            => 'SELECT `uid` FROM `user` WHERE `apiKey` = :apiKey',

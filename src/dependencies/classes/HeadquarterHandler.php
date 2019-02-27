@@ -23,9 +23,7 @@ class HeadquarterHandler implements APIInterface {
      * }
      */
 
-    /** @var PDO $pdo */
     private $pdo;
-
     private $playerIndexUID;
 
     private const QUERIES = [

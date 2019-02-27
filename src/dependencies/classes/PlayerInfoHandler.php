@@ -21,9 +21,7 @@ class PlayerInfoHandler extends APICore implements APIInterface {
         'registerdate' => 'registered',
     ];
 
-    /** @var PDO $pdo */
     private $pdo;
-
     private $playerIndexUID;
 
     private const QUERIES = [

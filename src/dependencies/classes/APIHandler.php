@@ -11,7 +11,6 @@ class APIHandler extends APICore {
         'updateLastSeenTimestamp' => 'UPDATE `user` SET `lastSeen` = :lastSeen WHERE `playerIndexUID` = :playerIndexUID',
     ];
 
-    /** @var PDO */
     private $pdo;
 
     public function __construct() {

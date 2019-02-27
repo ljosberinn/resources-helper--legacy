@@ -18,9 +18,7 @@ class MonetaryItemHandler implements APIInterface {
         21 => 'Transport costs',
     ];
 
-    /** @var PDO $pdo */
     private $pdo;
-
     private $playerIndexUID;
 
     public function __construct(PDO $pdo, int $playerIndexUID) {

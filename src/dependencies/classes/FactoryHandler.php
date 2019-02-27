@@ -36,9 +36,7 @@ class FactoryHandler implements APIInterface {
         125 => 'TrucksFactory',
     ];
 
-    /** @var PDO $pdo */
     private $pdo;
-
     private $playerIndexUID;
 
     private const QUERIES = [

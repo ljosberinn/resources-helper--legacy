@@ -16,6 +16,11 @@ class TradeLogHandler implements APIInterface {
      * }
      */
 
+    private $playerIndexUID;
+    private $pdo;
+
+    private $currentlyIteratedUsers = [];
+
     private const VALID_TRADE_GOODS = [
         2,
         3,
@@ -74,13 +79,6 @@ class TradeLogHandler implements APIInterface {
         120,
         124,
     ];
-
-    private $currentlyIteratedUsers = [];
-
-    private $playerIndexUID;
-
-    /** @var PDO */
-    private $pdo;
 
     private const QUERIES = [
         'loadLastDatasetTimestamp' => 'SELECT `timestamp` FROM `tradeLog` WHERE `playerIndexUID` = :playerIndexUID ORDER BY `timestamp` DESC LIMIT 1',

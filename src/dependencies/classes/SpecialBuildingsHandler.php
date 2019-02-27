@@ -10,9 +10,7 @@ class SpecialBuildingsHandler implements APIInterface {
      * }
      */
 
-    /** @var PDO $pdo */
     private $pdo;
-
     private $playerIndexUID;
 
     private const POSSIBLE_SPECIAL_BUILDINGS = [

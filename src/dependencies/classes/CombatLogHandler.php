@@ -25,12 +25,10 @@ class CombatLogHandler implements APIInterface {
      * }
      */
 
-    private $currentlyIteratedUsers = [];
-
-    /** @var PDO $pdo */
     private $pdo;
-
     private $playerIndexUID;
+
+    private $currentlyIteratedUsers = [];
 
     public function __construct(PDO $pdo, int $playerIndexUID) {
         $this->pdo            = $pdo;

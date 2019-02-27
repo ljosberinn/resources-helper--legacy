@@ -2,7 +2,6 @@
 
 class PlayerIndex {
 
-    /** @var PDO $pdo */
     private $pdo;
 
     private const QUERIES = [
