@@ -32,7 +32,12 @@ class User {
 
     public function add(): int {
         $playerIndex = new PlayerIndex($this->pdo);
-        $playerName  = $playerIndex->escapeUserName((new APICore($this->key, 7))->getPlayerNameFromSource());
+
+        $APICore = new APICore();
+        $APICore->setQuery(7);
+        $APICore->setKey($this->key);
+
+        $playerName = $playerIndex->escapeUserName($APICore->getPlayerNameFromSource());
 
         if(empty($playerName)) {
             return 0;

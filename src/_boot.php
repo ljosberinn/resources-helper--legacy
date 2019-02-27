@@ -10,8 +10,10 @@ Debugger::$logSeverity = E_NOTICE | E_WARNING;
 Debugger::$strictMode  = true;
 
 spl_autoload_register(function($className) {
-    if(file_exists('dependencies/classes/' . $className . '.php')) {
-        require_once 'dependencies/classes/' . $className . '.php';
+    $path = __DIR__ . '/dependencies/classes/' . $className . '.php';
+
+    if(file_exists($path)) {
+        require_once $path;
     }
 });
 

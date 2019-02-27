@@ -31,7 +31,7 @@ class PlayerInfoHandler extends APICore implements APIInterface {
     ];
 
     public function __construct(PDO $pdo, int $playerIndexUID) {
-        parent::__construct('', 0);
+        parent::__construct();
         $this->pdo            = $pdo;
         $this->playerIndexUID = $playerIndexUID;
     }

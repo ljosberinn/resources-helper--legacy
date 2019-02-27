@@ -77,7 +77,7 @@ class WarehouseHandler implements APIInterface {
         'getKnownLuxuryGoods'      => 'SELECT `luxuryGoodID` FROM `luxuryGoods` ORDER BY `luxuryGoodID` ASC',
         'addNewLuxuryGood'         => 'INSERT INTO `luxuryGoods` (`luxuryGoodID`, `name`, `requirement`) VALUES(:luxuryGoodID, :name, :requirement)',
         'addLuxuryGoodOwner'       => 'INSERT INTO `luxuryGoodOwner` (`playerIndexUID`, `luxuryGoodID`, `amount`) VALUES(:playerIndexUID, :luxuryGoodID, :amount)',
-        'deleteOldLuxuryGoodOwner' => 'DELETE FROM `luxuryGoodOwner` WHERE `playerIndexUID` = :playerIndexUID',
+        'deleteOldLuxuryGoodOwner' => 'DELETE FROM `luxuryGoodOwner` WHERE `playerIndexUID` = :playerIndexUID AND `luxuryGoodID` = :luxuryGoodID',
     ];
 
     public function __construct(PDO $pdo, int $playerIndexUID) {
@@ -103,18 +103,22 @@ class WarehouseHandler implements APIInterface {
                 continue;
             }
 
+            $this->addLuxuryGoodOwner($dataset);
+
             if(!in_array($itemID, $this->knownLuxuryGoods, true)) {
                 $this->addNewLuxuryGood($dataset);
-                $this->addLuxuryGoodOwner($dataset);
             }
         }
 
         return $warehouses;
     }
 
-    private function deleteOldLuxuryGoodOwner(): bool {
+    private function deleteOldLuxuryGoodOwner(int $luxuryGoodID): bool {
         $stmt = $this->pdo->prepare(self::QUERIES['deleteOldLuxuryGoodOwner']);
-        return $stmt->execute(['playerIndexUID' => $this->playerIndexUID]);
+        return $stmt->execute([
+            'playerIndexUID' => $this->playerIndexUID,
+            'luxuryGoodID'   => $luxuryGoodID,
+        ]);
     }
 
     private function addNewLuxuryGood(array $dataset): void {
@@ -126,7 +130,7 @@ class WarehouseHandler implements APIInterface {
     }
 
     private function addLuxuryGoodOwner(array $dataset): void {
-        if(!$this->deleteOldLuxuryGoodOwner()) {
+        if(!$this->deleteOldLuxuryGoodOwner($dataset['itemID'])) {
             return;
         }
 

@@ -14,24 +14,24 @@ class APIHandler extends APICore {
     /** @var PDO */
     private $pdo;
 
-    public function __construct(string $key, int $query) {
-        parent::__construct($key, $query);
-
-        $db        = DB::getInstance();
-        $this->pdo = $db->getConnection();
+    public function __construct() {
+        parent::__construct();
     }
 
-    public function handleQuery(): string {
+    public function handleQuery(): array {
+        $db        = DB::getInstance();
+        $this->pdo = $db->getConnection();
+
         $this->response['actor'] = $this->setActor();
 
-        if($this->response['actor'] === 0 || !$this->isValidKey() || !$this->queryExists()) {
-            return $this->respond();
+        if($this->response['actor'] === 0) {
+            return $this->response;
         }
 
         $data = $this->curlAPI();
 
         if(empty($data)) {
-            return $this->respond();
+            return $this->response;
         }
 
         $className = self::API_MAP[$this->query];
@@ -40,17 +40,13 @@ class APIHandler extends APICore {
 
         $this->response['success'] = $class->save($class->transform($data)) && $this->updateLastSeenTimestamp();
 
-        return $this->respond();
+        return $this->response;
     }
 
     private function setActor(): int {
         $user = new User($this->pdo, $this->key);
 
         return $user->exists() ? $user->get() : $user->add();
-    }
-
-    private function respond(): string {
-        return (string) json_encode($this->response, JSON_NUMERIC_CHECK);
     }
 
     private function updateLastSeenTimestamp(): bool {

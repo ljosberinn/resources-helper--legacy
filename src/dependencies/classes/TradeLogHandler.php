@@ -141,8 +141,9 @@ class TradeLogHandler implements APIInterface {
     }
 
     public function save(array $data): bool {
+        $stmt = $this->pdo->prepare(self::QUERIES['save']);
+
         foreach($data as $dataset) {
-            $stmt = $this->pdo->prepare(self::QUERIES['save']);
             if(!$stmt->execute($dataset)) {
                 return false;
             }
