@@ -1,10 +1,10 @@
 {
   "scripts": {
-    "metrics": "php vendor/phpmetrics/phpmetrics/bin/phpmetrics --exclude-dir=\"vendor\",  --report-html=\"./build/metrics\" src",
-    "stan": "php vendor/phpstan/phpstan/bin/phpstan analyze src --level=7",
-    "mess-detector": "php vendor/phpmd/phpmd/src/bin/phpmd src/ html cleancode --ignore-violations-on-exit --strict --reportfile \"./build/phpmd.html\" --exclude vendor",
-    "phpcpd": "php vendor/sebastian/phpcpd/phpcpd --exclude vendor src",
-    "phpcf": "php vendor/wapmorgan/php-code-fixer/bin/phpcf --target 7.3 src --exclude vendor",
+    "metrics": "php vendor/phpmetrics/phpmetrics/bin/phpmetrics --exclude-dir=\"vendor\",  --report-html=\"./build/metrics\" www/public",
+    "stan": "php vendor/phpstan/phpstan/bin/phpstan analyze www/public --level=7",
+    "mess-detector": "php vendor/phpmd/phpmd/src/bin/phpmd www/public/ html cleancode --ignore-violations-on-exit --strict --reportfile \"./build/phpmd.html\" --exclude vendor",
+    "phpcpd": "php vendor/sebastian/phpcpd/phpcpd --exclude vendor www/public",
+    "phpcf": "php vendor/wapmorgan/php-code-fixer/bin/phpcf --target 7.3 www/public --exclude vendor",
     "analysis": "composer run phpcf && composer run stan && composer run metrics && composer run mess-detector && composer run phpcpd"
   },
   "require": {

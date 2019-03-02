@@ -1,11 +1,4 @@
 {
-  "name": "gerr.it/src",
-  "authors": [
-    {
-      "name": "ljosberinn",
-      "email": "admin@gerritalex.de"
-    }
-  ],
   "require": {
     "sentry/sentry": "2.0.0-beta1",
     "php-http/curl-client": "^1.7",
