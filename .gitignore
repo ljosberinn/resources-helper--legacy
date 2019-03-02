@@ -1,5 +1,6 @@
 /build/
+/analysis/
 /vendor/
-src/vendor/
-src/node_modules/
-/src/api/api-response/
+/node_modules/
+/public/vendor/
+/public/api/api-response/
