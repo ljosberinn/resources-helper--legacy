@@ -1,68 +1,31 @@
 import * as React from "react";
-import { ChangeEvent } from "react";
+import { ChangeEvent, FunctionComponent, useState } from "react";
 import { DEV_SETTINGS } from "../developmentSettings";
 
-export interface Props {
-  apiKey: string;
-}
+const APIKeyInput: FunctionComponent<{ apiKey?: string }> = ({ apiKey = "" }) => {
+  const [key, setKey] = useState(apiKey);
 
-interface State {
-  apiKey: string;
-}
+  return (
+    <label>
+      <input type={"text"} maxLength={45} placeholder={"API key"} defaultValue={apiKey}
+             onChange={e => setKey(extractChangeEventValue(e))}/>
+      <button type={"button"} onClick={() => dispatchQuery(key)}>Fetch</button>
+    </label>
+  );
+};
 
-class ApiKey extends React.Component<Props, State> {
+const dispatchQuery = (key: string) => isValidKey(key) ? queryAPI(key) : void 0;
 
-  constructor(props: Props) {
-    super(props);
-    this.state = { apiKey: props.apiKey || "" };
-  }
+const extractChangeEventValue = (event: ChangeEvent): string => (event.currentTarget as HTMLInputElement).value;
 
-  static isValidKey(apiKey: string): boolean {
-    return apiKey.length === 45 && /[a-zA-Z0-9]/.test(apiKey);
-  }
+const queryAPI = async (apiKey: string, query = 0) => {
+  const url = `${DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development}?query=${query}&key=${apiKey}`;
 
-  static extractChangeEventValue(event: ChangeEvent) {
-    const currentTarget = event.currentTarget as HTMLInputElement;
-    return currentTarget.value;
-  }
+  const data = await fetch(url);
+  const json = await data.json();
+  console.log(json);
+};
 
-  onChange(event: ChangeEvent) {
-    const apiKey = ApiKey.extractChangeEventValue(event);
-    this.setKey(apiKey);
-  }
+const isValidKey = (apiKey: string): boolean => apiKey.length === 45 && /[a-zA-Z0-9]/.test(apiKey);
 
-  setKey(apiKey: string) {
-    if (ApiKey.isValidKey(apiKey)) {
-      this.setState({ apiKey });
-    }
-  }
-
-  queryAPI = async () => {
-    const { apiKey } = this.state;
-    const query = 1;
-
-    const url = `${DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development}?query=${query}&key=${apiKey}`;
-
-    const data = await fetch(url);
-    const json = await data.json();
-    console.log(json);
-  };
-
-  componentDidMount = (): void => {
-    if (ApiKey.isValidKey(this.props.apiKey)) {
-      this.setKey(this.props.apiKey);
-    }
-  };
-
-  render() {
-    return (
-      <label>
-        <input type={"text"} maxLength={45} placeholder={"API key"} defaultValue={this.props.apiKey}
-               onChange={e => this.onChange(e)}/>
-        <button type={"button"} onClick={this.queryAPI}>Fetch</button>
-      </label>
-    );
-  }
-}
-
-export default ApiKey;
+export default APIKeyInput;
