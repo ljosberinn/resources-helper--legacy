@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'id'                 => 80,
     'scaling'            => 240,
     'dependantFactories' => [],
     'dependencies'       => [

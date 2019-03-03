@@ -21,11 +21,9 @@ if(!$queryExists || !$isValidQuery || !is_dir($dirName)) {
 $files = (array) scandir($dirName, SCANDIR_SORT_NONE);
 $files = array_slice($files, 2);
 
-foreach($files as $file) {
-    $data       = require $dirName . '/' . $file;
-    $data['id'] = (int) str_replace('.php', '', (string) $file);
-
-    $response[] = $data;
+foreach($files as $fileName) {
+    // e.g. ./static/factories/6.php
+    $response[] = require $dirName . '/' . $fileName;
 }
 
 echo json_encode($response, JSON_NUMERIC_CHECK);
