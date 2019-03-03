@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
-require_once '../_boot.php';
+/** @noinspection PhpIncludeInspection */
+require_once dirname(__DIR__, 2) . '/_boot.php';
 
 header('Content-type: application/json');
 
@@ -9,7 +10,7 @@ $response = [
     'actor'   => 0,
 ];
 
-if(isset($_GET['key'], $_GET['query'])) {
+if(isset($_GET['query'], $_GET['key'])) {
 
     [$query, $key] = [(int) $_GET['query'], $_GET['key']];
 

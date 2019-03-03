@@ -37,7 +37,7 @@ class APICore {
 
     protected function curlAPI(): array {
         if($_SERVER['SERVER_NAME'] === 'localhost') {
-            $cachedResponse = (string) file_get_contents('api-response/' . $this->query . '.json');
+            $cachedResponse = (string) file_get_contents(dirname(__DIR__, 2) . '/data/api/cache/' . $this->query . '.json');
             return json_decode($cachedResponse, true);
         }
 
