@@ -15,8 +15,8 @@ const APIKeyInput: FunctionComponent<{ apiKey?: string }> = ({ apiKey = "" }) =>
 };
 
 const dispatchQuery = (key: string) => isValidKey(key) ? queryAPI(key) : void 0;
-
 const extractChangeEventValue = (event: ChangeEvent): string => (event.currentTarget as HTMLInputElement).value;
+const isValidKey = (apiKey: string): boolean => apiKey.length === 45 && /[a-zA-Z0-9]/.test(apiKey);
 
 const queryAPI = async (apiKey: string, query = 0) => {
   const url = `${DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development}?query=${query}&key=${apiKey}`;
@@ -26,6 +26,5 @@ const queryAPI = async (apiKey: string, query = 0) => {
   console.log(json);
 };
 
-const isValidKey = (apiKey: string): boolean => apiKey.length === 45 && /[a-zA-Z0-9]/.test(apiKey);
 
 export default APIKeyInput;

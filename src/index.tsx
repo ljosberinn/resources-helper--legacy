@@ -1,10 +1,10 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 //import registerServiceWorker from './registerServiceWorker';
-import ApiKey from "./components/ApiKey";
+import App from "./App";
 
 ReactDOM.render(
-  <ApiKey apiKey={""}/>,
+  <App/>,
   document.getElementById("root") as HTMLElement
 );
 
