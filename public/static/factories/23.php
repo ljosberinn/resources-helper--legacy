@@ -5,7 +5,7 @@ return [
     'scaling'            => 1210,
     'dependantFactories' => [],
     'dependencies'       => [
-        1  => 1210 / 11 * 90,
-        20 => 880,
+        ['id' => 1, 'amount' => 1210 / 11 * 90],
+        ['id' => 20, 'amount' => 880],
     ],
 ];
