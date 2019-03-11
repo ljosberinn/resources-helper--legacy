@@ -1,15 +1,23 @@
-import { IUser } from "./user";
-import { IFactory } from "./factory";
-import { IHeadquarter } from "./headquarter";
-import { ISpecialBuilding } from "./specialBuildings";
-import { IMine } from "./mines";
+import { IUserState }            from './user';
+import { IFactory }              from './factory';
+import { IHeadquarterState }     from './headquarter';
+import { ISpecialBuildingState } from './specialBuildings';
+import { IMineState }            from './mines';
+
+interface ICompanyWorthState {
+  headquarter: number;
+  factories: number;
+  mines: number;
+  specialBuildings: number;
+}
 
 export interface IPreloadedState {
-  user: IUser;
+  user: IUserState;
   factories: IFactory[];
-  headquarter: IHeadquarter;
-  specialBuildings: ISpecialBuilding[];
-  mines: IMine[];
+  headquarter: IHeadquarterState;
+  specialBuildings: ISpecialBuildingState[];
+  mines: IMineState[];
+  companyWorth: ICompanyWorthState;
 }
 
 

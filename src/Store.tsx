@@ -1,10 +1,11 @@
-import { applyMiddleware, combineReducers, createStore, Store } from "redux";
-import { factories, headquarter, mines, preloadedState, specialBuildings, user } from "./reducers";
-import { connectRouter, routerMiddleware } from "connected-react-router";
-import { History } from "history";
-import { composeWithDevTools } from "redux-devtools-extension";
-import { IPreloadedState } from "./types";
-import createBrowserHistory from "history/createBrowserHistory";
+import { applyMiddleware, combineReducers, createStore, Store }                from 'redux';
+import { companyWorth, factories, headquarter, mines, specialBuildings, user } from './reducers';
+import { connectRouter, routerMiddleware }                                     from 'connected-react-router';
+import { History }                                                             from 'history';
+import { composeWithDevTools }                                                 from 'redux-devtools-extension';
+import { IPreloadedState }                                                     from './types';
+import createBrowserHistory                                                    from 'history/createBrowserHistory';
+import { preloadedState }                                                      from './constants';
 
 const rootReducer = (history: History) => combineReducers({
   router: connectRouter(history),
@@ -12,10 +13,11 @@ const rootReducer = (history: History) => combineReducers({
   factories,
   headquarter,
   mines,
-  specialBuildings
+  specialBuildings,
+  companyWorth
 });
 
-function configureStore(history: History, preloadedState: IPreloadedState): Store {
+const configureStore = (history: History, preloadedState: IPreloadedState): Store => {
 
   const composeEnhancers = composeWithDevTools({});
 
@@ -24,6 +26,6 @@ function configureStore(history: History, preloadedState: IPreloadedState): Stor
     preloadedState,
     composeEnhancers(applyMiddleware(routerMiddleware(history)))
   );
-}
+};
 
 export const store = configureStore(createBrowserHistory(), preloadedState);

@@ -3,7 +3,10 @@
 return [
     'id'                 => 34,
     'scaling'            => 3000,
-    'dependantFactories' => [],
+    'level'              => 0,
+    'dependantFactories' => [
+        85, // Goldsmith
+    ],
     'dependencies'       => [
         ['id' => 1, 'amount' => 3000 / 50 * 10000,],
         ['id' => 15, 'amount' => 480,],

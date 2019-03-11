@@ -1,73 +1,99 @@
-import { UserActionType, UserActions } from "../actions";
-import { IPreloadedState } from "../types";
+import { UserActions, UserActionType }                                         from '../actions/API';
+import { preloadedState, UserAPIState, UserPlayerInfoState, UserSettingState } from '../constants';
 
-export const preloadedState: IPreloadedState = {
-  user: {
-    isAPIUser: true,
-    APIKey: "bb4d6e66508b4dd58b61ff118acbffe958cba26f85be3",
-    settings: {
-      remembersAPIKey: false
-    },
-    playerInfo: {
-      userName: "",
-      level: 0,
-      rank: 0,
-      registered: 0
-    },
-    meta: {
-      lastAPICall: 0
-    }
-  },
-  factories: [],
-  mines: [],
-  specialBuildings: [],
-  headquarter: []
-};
-
-export function user(state = preloadedState, action: UserActionType) {
+const API = (state = UserAPIState, action: UserActionType) => {
   switch (action.type) {
     case UserActions.setAPIKey:
       return {
         ...state,
-        APIKey: action.APIKey
+        key: action.key
+      };
+  }
+
+  return state;
+};
+
+const Settings = (state = UserSettingState, action: UserActionType) => {
+  switch (action.type) {
+    case UserActions.changeUserSettings:
+      const newSettings = {
+        ...state
+      };
+
+      newSettings[action.settingName] = action.value;
+      return newSettings;
+  }
+
+  return state;
+};
+
+const PlayerInfo = (state = UserPlayerInfoState, action: UserActionType) => {
+  switch (action.type) {
+    case UserActions.changePlayerInfo:
+      const newPlayerInfo = {
+        ...state
+      };
+
+      newPlayerInfo[action.key] = action.value;
+      return newPlayerInfo;
+  }
+
+  return state;
+};
+
+const user = (state = preloadedState.user, action: UserActionType) => {
+  switch (action.type) {
+    case UserActions.setAPIKey:
+      return {
+        ...state,
+        API: API(state.API, action)
       };
     case UserActions.isAPIUser:
       return {
         ...state,
         isAPIUser: action.value
       };
+    case UserActions.changeUserSettings:
+      return {
+        ...state,
+        settings: Settings(state.settings, action)
+      };
+    case UserActions.changePlayerInfo: {
+      return {
+        ...state,
+        playerInfo: PlayerInfo(state.playerInfo, action)
+      };
+    }
   }
 
-  return {
-    isAPIUser: false,
-    APIKey: "",
-    settings: {
-      remembersAPIKey: false
-    },
-    playerInfo: {
-      userName: "",
-      level: 0,
-      rank: 0,
-      registered: 0
-    },
-    meta: {
-      lastAPICall: 0
-    }
-  };
-}
+  return state;
+};
 
-export function factories(state = preloadedState) {
-  return [];
-}
+const factories = (state = preloadedState.factories) => {
+  return state;
+};
 
-export function headquarter(state = preloadedState) {
-  return [];
-}
+const headquarter = (state = preloadedState.headquarter) => {
+  return state;
+};
 
-export function mines(state = preloadedState) {
-  return [];
-}
+const mines = (state = preloadedState.mines) => {
+  return state;
+};
 
-export function specialBuildings(state = preloadedState) {
-  return [];
-}
+const specialBuildings = (state = preloadedState.specialBuildings) => {
+  return state;
+};
+
+const companyWorth = (state = preloadedState.companyWorth) => {
+  return state;
+};
+
+export {
+  specialBuildings,
+  headquarter,
+  mines,
+  factories,
+  user,
+  companyWorth
+};

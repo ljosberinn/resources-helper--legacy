@@ -3,7 +3,12 @@
 return [
     'id'                 => 95,
     'scaling'            => 600,
-    'dependantFactories' => [],
+    'level'              => 0,
+    'dependantFactories' => [
+        101, // Arms factory
+        118, // Drone shipyard
+        125, // Truck plant
+    ],
     'dependencies'       => [
         ['id' => 1, 'amount' => 600 / 10 * 75000,],
         ['id' => 92, 'amount' => 1200,],

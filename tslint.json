@@ -7,11 +7,14 @@
     "exclude": [
       "config/**/*.js",
       "node_modules/**/*.ts",
-      "coverage/lcov-report/*.js"
+      "coverage/lcov-report/*.js",
+      "analysis/**/*.js",
+      "vendor/**/*.js",
+      "public/vendor/**/*.js"
     ]
   },
   "rules": {
     "arrow-return-shorthand": true,
-    "quotemark": true
+    "quotemark": false
   }
 }

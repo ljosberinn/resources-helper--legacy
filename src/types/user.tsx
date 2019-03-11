@@ -1,13 +1,13 @@
-export interface IUser {
+export interface IUserState {
   isAPIUser: boolean;
-  APIKey: string;
   settings: IUserSettings;
   playerInfo: IUserPlayerInfo;
-  meta: IUserMeta;
+  API: IUserAPIState;
 }
 
 interface IUserSettings {
   remembersAPIKey: boolean;
+  locale: string;
 }
 
 export interface IUserPlayerInfo {
@@ -17,6 +17,14 @@ export interface IUserPlayerInfo {
   registered: number;
 }
 
-interface IUserMeta {
+export interface IUserAPIState {
+  key: string;
   lastAPICall: number;
+  userAPIStatistics: IUserAPIStatistic[];
+}
+
+interface IUserAPIStatistic {
+  id: number;
+  lastCall: number;
+  amount: number;
 }

@@ -3,7 +3,11 @@
 return [
     'id'                 => 69,
     'scaling'            => 480,
-    'dependantFactories' => [],
+    'level'              => 0,
+    'dependantFactories' => [
+        76, // Medical technology Inc.
+        118, // Drone shipyard
+    ],
     'dependencies'       => [
         ['id' => 1, 'amount' => 480 / 8 * 5000,],
         ['id' => 58, 'amount' => 240,],

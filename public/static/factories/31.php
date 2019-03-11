@@ -1,8 +1,10 @@
 <?php
 
 return [
-    'id'                 => 31,
-    'scaling'            => 450,
+    'id'      => 31,
+    'scaling' => 450,
+    'level'   => 0,
+
     'dependantFactories' => [],
     'dependencies'       => [
         ['id' => 1, 'amount' => 450 / 1 * 350,],

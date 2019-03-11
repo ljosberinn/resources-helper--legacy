@@ -3,6 +3,7 @@
 return [
     'id'                 => 101,
     'scaling'            => 125,
+    'level'              => 0,
     'dependantFactories' => [],
     'dependencies'       => [
         ['id' => 1, 'amount' => 125 / 25 * 250000,],

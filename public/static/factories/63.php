@@ -3,7 +3,12 @@
 return [
     'id'                 => 63,
     'scaling'            => 1800,
-    'dependantFactories' => [],
+    'level'              => 0,
+    'dependantFactories' => [
+        95, // Battery factory
+        69, // Electronics factory
+        76, // Medical technology Inc.
+    ],
     'dependencies'       => [
         ['id' => 1, 'amount' => 1800 / 10 * 400,],
         ['id' => 10, 'amount' => 180,],

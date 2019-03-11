@@ -1,35 +1,32 @@
-import * as React from "react";
-import { ChangeEvent, FunctionComponent } from "react";
-import { IChangeUserAPIKeyAction, setAPIKey } from "../actions";
-import { store } from "../Store";
+import * as React                                                          from 'react';
+import { ChangeEvent, FunctionComponent }                                  from 'react';
+import { IChangeUserAPIKeyAction, IIsAPIUserAction, isAPIUser, setAPIKey } from '../actions/API';
+import { store }                                                           from '../Store';
 
 interface APIKeyInputProps {
-  APIKey: string;
-  setAPIKey: () => IChangeUserAPIKeyAction;
+  APIKey?: string;
+  setAPIKey?: () => IChangeUserAPIKeyAction;
+  isAPIUser?: () => IIsAPIUserAction
 }
 
+const validateKey = (e: ChangeEvent) => {
+  const key = extractChangeEventValue(e);
+
+  if (isValidKey(key)) {
+    store.dispatch(setAPIKey(key));
+  }
+};
+
 const APIKeyInput: FunctionComponent<APIKeyInputProps> = (props: APIKeyInputProps) => {
-
-  const validateKey = (e: ChangeEvent) => {
-    const key = extractChangeEventValue(e);
-
-    if (isValidKey(key)) {
-      store.dispatch(setAPIKey(key));
-    }
-  };
-
-  store.subscribe(() => {
-    localStorage.setItem("store", JSON.stringify(store.getState()));
-  });
 
   return (
     <div>
       <label>
-        <input type={"text"} maxLength={45} placeholder={"API key"} defaultValue={props.APIKey} dir={"auto"}
+        <input type={'text'} maxLength={45} placeholder={'API key'} defaultValue={props.APIKey} dir={'auto'}
                onChange={(e) => validateKey(e)}
         />
       </label>
-      <button>Button</button>
+      <button onClick={() => store.dispatch(isAPIUser(true))}>Button</button>
     </div>
   );
 };
