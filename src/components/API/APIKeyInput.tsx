@@ -1,21 +1,13 @@
 import * as React                                                          from 'react';
 import { ChangeEvent, FunctionComponent }                                  from 'react';
-import { IChangeUserAPIKeyAction, IIsAPIUserAction, isAPIUser, setAPIKey } from '../actions/API';
-import { store }                                                           from '../Store';
+import { IChangeUserAPIKeyAction, IIsAPIUserAction, isAPIUser, setAPIKey } from '../../actions/API';
+import { store }                                                           from '../../Store';
 
 interface APIKeyInputProps {
   APIKey?: string;
   setAPIKey?: () => IChangeUserAPIKeyAction;
   isAPIUser?: () => IIsAPIUserAction
 }
-
-const validateKey = (e: ChangeEvent) => {
-  const key = extractChangeEventValue(e);
-
-  if (isValidKey(key)) {
-    store.dispatch(setAPIKey(key));
-  }
-};
 
 const APIKeyInput: FunctionComponent<APIKeyInputProps> = (props: APIKeyInputProps) => {
 
@@ -29,6 +21,14 @@ const APIKeyInput: FunctionComponent<APIKeyInputProps> = (props: APIKeyInputProp
       <button onClick={() => store.dispatch(isAPIUser(true))}>Button</button>
     </div>
   );
+};
+
+const validateKey = (e: ChangeEvent) => {
+  const key = extractChangeEventValue(e);
+
+  if (isValidKey(key)) {
+    store.dispatch(setAPIKey(key));
+  }
 };
 
 const extractChangeEventValue = (event: ChangeEvent): string => (event.currentTarget as HTMLInputElement).value;

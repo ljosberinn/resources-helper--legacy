@@ -1,30 +1,11 @@
-import * as React       from 'react';
-import { IFactory }     from '../../types/factory';
-import { DEV_SETTINGS } from '../../developmentSettings';
-import Factory          from './Factory';
-import LoadingGears     from '../Shared/Loading';
-
-interface IState {
-  factories: IFactory[];
-}
-
-interface IFactoryLocalization {
-  tableColumns: string[];
-  factoryNames: string[];
-  inputPlaceholder: string;
-}
-
-const getFactoryData = async () => {
-  const response = await fetch(`${DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development}/static/?type=factories`);
-
-  return await response.json() as IFactory[];
-};
-
-const getLocalization = async (locale = 'en') => {
-  const response = await fetch(`${DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development}/static/?type=localization&locale=${locale}&component=factories`);
-
-  return await response.json() as IFactoryLocalization;
-};
+import * as React                          from 'react';
+import { IFactory }                        from '../../types/factory';
+import Factory                             from './Factory';
+import LoadingGears                        from '../Shared/Loading';
+import { IFactoryLocalization, IState }    from './interfaces';
+import { getFactoryData, getLocalization } from './helper';
+import { store }                           from '../../Store';
+import { setFactories }                    from '../../actions/Factories';
 
 class Factories extends React.Component {
   state = {
@@ -32,7 +13,6 @@ class Factories extends React.Component {
     factories   : [] as IFactory[],
     localization: {} as IFactoryLocalization,
   };
-
 
   public constructor(state: IState) {
     super(state);
@@ -42,6 +22,7 @@ class Factories extends React.Component {
     Promise.all([getLocalization(), getFactoryData()]).then(fulfilledPromises => {
       const [localization, factories] = fulfilledPromises;
 
+      store.dispatch(setFactories(factories));
       this.setState({ localization, factories, loading: false });
     });
   }
@@ -55,7 +36,6 @@ class Factories extends React.Component {
         <LoadingGears/>
       );
     }
-
     return (
       <table>
         <thead>

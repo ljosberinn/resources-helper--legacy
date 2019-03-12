@@ -5,8 +5,8 @@ import { Provider }                from 'react-redux';
 import { Route, Switch }           from 'react-router';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { store }                   from './Store';
-import API                         from './views/API';
-import Factories                   from './views/Factories/Factories';
+import API                         from './components/API';
+import Factories                   from './components/Factories/Factories';
 
 const Home = () => <h2>Home</h2>;
 

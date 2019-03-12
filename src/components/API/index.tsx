@@ -1,5 +1,5 @@
 import * as React  from 'react';
-import APIKeyInput from '../../components/APIKeyInput';
+import APIKeyInput from './APIKeyInput';
 
 const API = () => <div><APIKeyInput/></div>;
 

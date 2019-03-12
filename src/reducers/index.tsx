@@ -1,5 +1,6 @@
 import { UserActions, UserActionType }                                         from '../actions/API';
 import { preloadedState, UserAPIState, UserPlayerInfoState, UserSettingState } from '../constants';
+import { FactoryActions, FactoryActionType }                                   from '../actions/Factories';
 
 const API = (state = UserAPIState, action: UserActionType) => {
   switch (action.type) {
@@ -69,7 +70,24 @@ const user = (state = preloadedState.user, action: UserActionType) => {
   return state;
 };
 
-const factories = (state = preloadedState.factories) => {
+const factories = (state = preloadedState.factories, action: FactoryActionType) => {
+  switch (action.type) {
+    case FactoryActions.setFactoryLevel:
+      return state.map(factory => {
+        if (factory.id === action.factoryID) {
+
+          return {
+            ...factory,
+            level: action.level
+          };
+        }
+
+        return factory;
+      });
+    case FactoryActions.setFactories:
+      return [...action.factories];
+  }
+
   return state;
 };
 
