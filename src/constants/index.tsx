@@ -40,6 +40,7 @@ const CompanyWorthState = {
   factories       : 0,
   specialBuildings: 0,
   mines           : 0,
+  warehouses      : 0,
 };
 
 const UserState = {
@@ -56,6 +57,7 @@ const preloadedState: IPreloadedState = {
   mines           : [],
   specialBuildings: [],
   headquarter     : [],
+  warehouses      : [],
   companyWorth    : CompanyWorthState,
 };
 

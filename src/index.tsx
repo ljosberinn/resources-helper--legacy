@@ -7,6 +7,8 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { store }                   from './Store';
 import API                         from './components/API';
 import Factories                   from './components/Factories/Factories';
+import SpecialBuildings            from './components/Buildings/SpecialBuildings';
+
 
 const Home = () => <h2>Home</h2>;
 
@@ -22,7 +24,7 @@ ReactDOM.render(
         <Route path="/gd"/>
         <Route path="/flow"/>
         <Route path="/wh"/>
-        <Route path="/buildings"/>
+        <Route path="/buildings" component={SpecialBuildings}/>
         <Route path="/recycling"/>
         <Route path="/units"/>
         <Route path="/tu"/>

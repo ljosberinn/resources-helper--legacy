@@ -2,6 +2,7 @@
 
 return [
     'id'           => 123,
+    'level'        => 0,
     'dependencies' => [
         ['id' => 1, 'amount' => 2000000000,],
         ['id' => 124, 'amount' => 20000,],

@@ -2,9 +2,9 @@ import * as React                  from 'react';
 import { FunctionComponent }       from 'react';
 import { ChangeEvent }             from 'react';
 import { LevelProps }              from './interfaces';
-import { extractChangeEventValue } from './helper';
 import { store }                   from '../../Store';
 import { setFactoryLevel }         from '../../actions/Factories';
+import { extractChangeEventValue } from '../helper';
 
 const updateState = (e: ChangeEvent, factoryID: number) => {
   const level = parseInt(extractChangeEventValue(e));

@@ -9,6 +9,13 @@ interface ICompanyWorthState {
   factories: number;
   mines: number;
   specialBuildings: number;
+  warehouses: number;
+}
+
+interface IWarehousesState {
+  id: number;
+  level: number;
+  capacity: number;
 }
 
 export interface IPreloadedState {
@@ -18,6 +25,7 @@ export interface IPreloadedState {
   specialBuildings: ISpecialBuildingState[];
   mines: IMineState[];
   companyWorth: ICompanyWorthState;
+  warehouses: IWarehousesState[];
 }
 
 

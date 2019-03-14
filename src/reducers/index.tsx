@@ -1,53 +1,17 @@
-import { UserActions, UserActionType }                                         from '../actions/API';
-import { preloadedState, UserAPIState, UserPlayerInfoState, UserSettingState } from '../constants';
-import { FactoryActions, FactoryActionType }                                   from '../actions/Factories';
-
-const API = (state = UserAPIState, action: UserActionType) => {
-  switch (action.type) {
-    case UserActions.setAPIKey:
-      return {
-        ...state,
-        key: action.key
-      };
-  }
-
-  return state;
-};
-
-const Settings = (state = UserSettingState, action: UserActionType) => {
-  switch (action.type) {
-    case UserActions.changeUserSettings:
-      const newSettings = {
-        ...state
-      };
-
-      newSettings[action.settingName] = action.value;
-      return newSettings;
-  }
-
-  return state;
-};
-
-const PlayerInfo = (state = UserPlayerInfoState, action: UserActionType) => {
-  switch (action.type) {
-    case UserActions.changePlayerInfo:
-      const newPlayerInfo = {
-        ...state
-      };
-
-      newPlayerInfo[action.key] = action.value;
-      return newPlayerInfo;
-  }
-
-  return state;
-};
+import { UserActions, UserActionType }                       from '../actions/API';
+import { preloadedState }                                    from '../constants';
+import { FactoryActions, FactoryActionType }                 from '../actions/Factories';
+import { SpecialBuildingActions, SpecialBuildingActionType } from '../actions/Buildings';
 
 const user = (state = preloadedState.user, action: UserActionType) => {
   switch (action.type) {
     case UserActions.setAPIKey:
       return {
         ...state,
-        API: API(state.API, action)
+        API: {
+          ...state.API,
+          key: action.key,
+        }
       };
     case UserActions.isAPIUser:
       return {
@@ -57,12 +21,18 @@ const user = (state = preloadedState.user, action: UserActionType) => {
     case UserActions.changeUserSettings:
       return {
         ...state,
-        settings: Settings(state.settings, action)
+        settings: {
+          ...state.settings,
+          [action.settingName]: action.value
+        }
       };
     case UserActions.changePlayerInfo: {
       return {
         ...state,
-        playerInfo: PlayerInfo(state.playerInfo, action)
+        playerInfo: {
+          ...state.playerInfo,
+          [action.key]: action.value,
+        }
       };
     }
   }
@@ -72,7 +42,7 @@ const user = (state = preloadedState.user, action: UserActionType) => {
 
 const factories = (state = preloadedState.factories, action: FactoryActionType) => {
   switch (action.type) {
-    case FactoryActions.setFactoryLevel:
+    case FactoryActions.setLevel:
       return state.map(factory => {
         if (factory.id === action.factoryID) {
 
@@ -99,7 +69,28 @@ const mines = (state = preloadedState.mines) => {
   return state;
 };
 
-const specialBuildings = (state = preloadedState.specialBuildings) => {
+const specialBuildings = (state = preloadedState.specialBuildings, action: SpecialBuildingActionType) => {
+  switch (action.type) {
+    case SpecialBuildingActions.setLevel:
+      return state.map(specialBuilding => {
+        if (specialBuilding.id === action.buildingID) {
+
+          return {
+            ...specialBuilding,
+            level: action.level
+          };
+        }
+
+        return specialBuilding;
+      });
+    case SpecialBuildingActions.setBuildings:
+      return [...action.buildings];
+  }
+
+  return state;
+};
+
+const warehouses = (state = preloadedState.warehouses) => {
   return state;
 };
 
@@ -113,5 +104,6 @@ export {
   mines,
   factories,
   user,
+  warehouses,
   companyWorth
 };

@@ -1,11 +1,12 @@
-import * as React                          from 'react';
-import { IFactory }                        from '../../types/factory';
-import Factory                             from './Factory';
-import LoadingGears                        from '../Shared/Loading';
-import { IFactoryLocalization, IState }    from './interfaces';
-import { getFactoryData, getLocalization } from './helper';
-import { store }                           from '../../Store';
-import { setFactories }                    from '../../actions/Factories';
+import * as React                                   from 'react';
+import { IFactory }                                 from '../../types/factory';
+import Factory                                      from './Factory';
+import LoadingGears                                 from '../Shared/Loading';
+import { IFactoryLocalization, IFactoryClassState } from './interfaces';
+import { getFactoryData }                           from './helper';
+import { store }                                    from '../../Store';
+import { setFactories }                             from '../../actions/Factories';
+import { getLocalization }                          from '../helper';
 
 class Factories extends React.Component {
   state = {
@@ -14,12 +15,12 @@ class Factories extends React.Component {
     localization: {} as IFactoryLocalization,
   };
 
-  public constructor(state: IState) {
+  public constructor(state: IFactoryClassState) {
     super(state);
   }
 
   componentDidMount(): void {
-    Promise.all([getLocalization(), getFactoryData()]).then(fulfilledPromises => {
+    Promise.all([getLocalization('factories'), getFactoryData()]).then(fulfilledPromises => {
       const [localization, factories] = fulfilledPromises;
 
       store.dispatch(setFactories(factories));
