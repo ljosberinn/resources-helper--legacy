@@ -1,29 +1,20 @@
-import { ISpecialBuildingState } from '../../types/specialBuildings';
+import { ISpecialBuildingsLocalization } from '../../components/Buildings/interfaces';
+import { ISpecialBuildingState }         from '../../types/specialBuildings';
+import { action }                        from 'typesafe-actions';
 
 enum SpecialBuildingActions {
-  setLevel     = 'SET_BUILDING_LEVEL',
-  setBuildings = 'SET_BUILDINGS',
+  SET_LEVEL        = '@@buildings/SET_LEVEL',
+  SET_BUILDINGS    = '@@buildings/SET_BUILDINGS',
+  SET_LOCALIZATION = '@@buildings/SET_LOCALIZATION',
 }
 
-interface ISetBuildingLevelAction {
-  type: SpecialBuildingActions.setLevel,
-  level: number;
-  buildingID: number;
-}
-
-interface ISetBuildings {
-  type: SpecialBuildingActions.setBuildings;
-  buildings: ISpecialBuildingState[];
-}
-
-type SpecialBuildingActionType = ISetBuildingLevelAction | ISetBuildings;
-
-const setLevel = (level: number, buildingID: number): ISetBuildingLevelAction => ({ type: SpecialBuildingActions.setLevel, level, buildingID, });
-const setBuildings = (buildings: ISpecialBuildingState[]) => ({ type: SpecialBuildingActions.setBuildings, buildings: [...buildings] });
+const setLevel = (level: number, buildingID: number) => action(SpecialBuildingActions.SET_LEVEL, { level, buildingID });
+const setBuildings = (buildings: ISpecialBuildingState[]) => action(SpecialBuildingActions.SET_BUILDINGS, buildings);
+const setLocalization = (type: string, localization: ISpecialBuildingsLocalization) => action(SpecialBuildingActions.SET_LOCALIZATION, { type, localization });
 
 export {
   SpecialBuildingActions,
-  SpecialBuildingActionType,
   setLevel,
-  setBuildings
+  setBuildings,
+  setLocalization
 };

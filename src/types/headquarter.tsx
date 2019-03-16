@@ -1,3 +1,7 @@
-export interface IHeadquarterState {
+interface IHeadquarterState {
 
 }
+
+export {
+  IHeadquarterState
+};

@@ -1,5 +1,9 @@
-export interface IMineState {
+interface IMineState {
   id: number;
   basePrice: number;
   maxHourlyRate: number;
 }
+
+export {
+  IMineState
+};

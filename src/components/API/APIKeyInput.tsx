@@ -1,38 +1,47 @@
-import * as React                                                          from 'react';
-import { ChangeEvent, FunctionComponent }                                  from 'react';
-import { IChangeUserAPIKeyAction, IIsAPIUserAction, isAPIUser, setAPIKey } from '../../actions/API';
-import { store }                                                           from '../../Store';
+import * as React                  from 'react';
+import { FunctionComponent }       from 'react';
+import { connect }                 from 'react-redux';
+import { Dispatch }                from 'redux';
+import { setAPIKey }               from '../../actions/API';
+import { IPreloadedState }         from '../../types';
+import { extractChangeEventValue } from '../helper';
 
-interface APIKeyInputProps {
-  APIKey?: string;
-  setAPIKey?: () => IChangeUserAPIKeyAction;
-  isAPIUser?: () => IIsAPIUserAction
+interface PropsFromState {
+  APIKey: string;
 }
 
-const APIKeyInput: FunctionComponent<APIKeyInputProps> = (props: APIKeyInputProps) => {
+interface PropsFromDispatch {
+  setAPIKey: typeof setAPIKey;
+}
 
+type APIKeyInputProps = PropsFromState & PropsFromDispatch;
+
+const APIKeyInput: FunctionComponent<APIKeyInputProps> = props => {
   return (
     <div>
       <label>
         <input type={'text'} maxLength={45} placeholder={'API key'} defaultValue={props.APIKey} dir={'auto'}
-               onChange={(e) => validateKey(e)}
+               onChange={(e) => {
+                 const APIKey = extractChangeEventValue(e);
+
+                 if (isValidAPIKey(APIKey)) {
+                   props.setAPIKey(APIKey);
+                 }
+               }}
         />
       </label>
-      <button onClick={() => store.dispatch(isAPIUser(true))}>Button</button>
     </div>
   );
 };
+const isValidAPIKey = (APIKey: string) => APIKey.length === 45 && /[a-zA-Z0-9]/.test(APIKey);
 
-const validateKey = (e: ChangeEvent) => {
-  const key = extractChangeEventValue(e);
+const mapStateToProps = ({ user }: IPreloadedState) => ({
+  APIKey: user.API.key
+});
 
-  if (isValidKey(key)) {
-    store.dispatch(setAPIKey(key));
-  }
-};
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  setAPIKey: (APIKey: string) => dispatch(setAPIKey(APIKey))
+});
 
-const extractChangeEventValue = (event: ChangeEvent): string => (event.currentTarget as HTMLInputElement).value;
+export default connect(mapStateToProps, mapDispatchToProps)(APIKeyInput);
 
-const isValidKey = (key: string) => key.length === 45 && /[a-zA-Z0-9]/.test(key);
-
-export default APIKeyInput;

@@ -1,29 +1,20 @@
-import { IFactory } from '../../types/factory';
+import { IFactoryLocalization } from '../../components/Factories/interfaces';
+import { IFactory }             from '../../types/factory';
+import { action }               from 'typesafe-actions';
 
 enum FactoryActions {
-  setLevel     = 'SET_FACTORY_LEVEL',
-  setFactories = 'SET_FACTORIES',
+  SET_LEVEL        = '@@factories/SET_FACTORY_LEVEL',
+  SET_FACTORIES    = '@@factories/SET_FACTORIES',
+  SET_LOCALIZATION = '@@factories/SET_LOCALIZATION',
 }
 
-interface ISetFactoryLevelAction {
-  type: FactoryActions.setLevel,
-  level: number;
-  factoryID: number;
-}
-
-interface ISetFactories {
-  type: FactoryActions.setFactories;
-  factories: IFactory[];
-}
-
-type FactoryActionType = ISetFactoryLevelAction | ISetFactories;
-
-const setFactoryLevel = (level: number, factoryID: number): ISetFactoryLevelAction => ({ type: FactoryActions.setLevel, level, factoryID, });
-const setFactories = (factories: IFactory[]) => ({ type: FactoryActions.setFactories, factories: [...factories] });
+const setLevel = (level: number, factoryID: number) => action(FactoryActions.SET_LEVEL, { level, factoryID });
+const setFactories = (factories: IFactory[]) => action(FactoryActions.SET_FACTORIES, factories);
+const setLocalization = (type: string, localization: IFactoryLocalization) => action(FactoryActions.SET_LOCALIZATION, { localization, type });
 
 export {
   FactoryActions,
-  FactoryActionType,
-  setFactoryLevel,
-  setFactories
+  setLevel,
+  setFactories,
+  setLocalization
 };

@@ -1,5 +1,6 @@
 import * as React            from 'react';
 import { FunctionComponent } from 'react';
+import Dependencies          from './Dependencies';
 import Scaling               from './Scaling';
 import Level                 from './Level';
 import { FactoryProps }      from './interfaces';
@@ -12,10 +13,10 @@ const Factory: FunctionComponent<FactoryProps> = (props: FactoryProps) => {
     <tr>
       <td>{name}</td>
       <td>
-        <Level factoryID={data.id} level={data.level} key={data.id} placeholderText={placeholderText}/>
+        <Level id={data.id} level={data.level} key={data.id} placeholderText={placeholderText}/>
       </td>
-      <td><Scaling scaling={data.scaling} level={data.level}/></td>
-      <td>{data.dependencies.length}</td>
+      <td><Scaling id={data.id} scaling={data.scaling} level={data.level}/></td>
+      <td><Dependencies id={data.id} dependencies={data.dependencies} level={data.level}/></td>
       <td>Workload</td>
       <td>Turnover</td>
       <td>Turnover Increase per Upgrade</td>

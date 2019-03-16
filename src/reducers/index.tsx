@@ -1,102 +1,94 @@
-import { UserActions, UserActionType }                       from '../actions/API';
-import { preloadedState }                                    from '../constants';
-import { FactoryActions, FactoryActionType }                 from '../actions/Factories';
-import { SpecialBuildingActions, SpecialBuildingActionType } from '../actions/Buildings';
+import { Reducer }                from 'redux';
+import { UserActions }            from '../actions/API';
+import { preloadedState }         from '../constants';
+import { FactoryActions }         from '../actions/Factories';
+import { SpecialBuildingActions } from '../actions/Buildings';
+import { ICompanyWorthState }     from '../types/companyWorth';
+import { IFactory }               from '../types/factory';
+import { IHeadquarterState }      from '../types/headquarter';
+import { ILocalizationState }     from '../types/localization';
+import { IMarketPriceState }      from '../types/marketPrices';
+import { IMineState }             from '../types/mines';
+import { ISpecialBuildingState }  from '../types/specialBuildings';
+import { IUserState }             from '../types/user';
+import { IWarehouseState }        from '../types/warehouses';
 
-const user = (state = preloadedState.user, action: UserActionType) => {
+const user: Reducer<IUserState> = (state = preloadedState.user, action) => {
   switch (action.type) {
-    case UserActions.setAPIKey:
+    case UserActions.SET_API_KEY:
       return {
         ...state,
         API: {
           ...state.API,
-          key: action.key,
+          key: action.payload,
         }
       };
-    case UserActions.isAPIUser:
-      return {
-        ...state,
-        isAPIUser: action.value
-      };
-    case UserActions.changeUserSettings:
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          [action.settingName]: action.value
-        }
-      };
-    case UserActions.changePlayerInfo: {
-      return {
-        ...state,
-        playerInfo: {
-          ...state.playerInfo,
-          [action.key]: action.value,
-        }
-      };
-    }
   }
 
   return state;
 };
 
-const factories = (state = preloadedState.factories, action: FactoryActionType) => {
+const factories: Reducer<IFactory[]> = (state = preloadedState.factories, action) => {
   switch (action.type) {
-    case FactoryActions.setLevel:
+    case FactoryActions.SET_LEVEL:
       return state.map(factory => {
-        if (factory.id === action.factoryID) {
+        if (factory.id === action.payload.factoryID) {
 
           return {
             ...factory,
-            level: action.level
+            level: action.payload.level
           };
         }
 
         return factory;
       });
-    case FactoryActions.setFactories:
-      return [...action.factories];
+    case FactoryActions.SET_FACTORIES:
+      return action.payload;
   }
 
   return state;
 };
 
-const headquarter = (state = preloadedState.headquarter) => {
-  return state;
-};
-
-const mines = (state = preloadedState.mines) => {
-  return state;
-};
-
-const specialBuildings = (state = preloadedState.specialBuildings, action: SpecialBuildingActionType) => {
+const specialBuildings: Reducer<ISpecialBuildingState[]> = (state = preloadedState.specialBuildings, action) => {
   switch (action.type) {
-    case SpecialBuildingActions.setLevel:
+    case SpecialBuildingActions.SET_LEVEL:
       return state.map(specialBuilding => {
-        if (specialBuilding.id === action.buildingID) {
+        if (specialBuilding.id === action.payload.buildingID) {
 
           return {
             ...specialBuilding,
-            level: action.level
+            level: action.payload.level
           };
         }
 
         return specialBuilding;
       });
-    case SpecialBuildingActions.setBuildings:
-      return [...action.buildings];
+    case SpecialBuildingActions.SET_BUILDINGS:
+      return action.payload;
   }
 
   return state;
 };
 
-const warehouses = (state = preloadedState.warehouses) => {
-  return state;
-};
+const headquarter: Reducer<IHeadquarterState> = (state = preloadedState.headquarter, action) => state;
+const mines: Reducer<IMineState[]> = (state = preloadedState.mines, action) => state;
+const marketPrices: Reducer<IMarketPriceState[]> = (state = preloadedState.marketPrices, action) => state;
+const warehouses: Reducer<IWarehouseState[]> = (state = preloadedState.warehouses, action) => state;
+const companyWorth: Reducer<ICompanyWorthState> = (state = preloadedState.companyWorth, action) => state;
+const localization: Reducer<ILocalizationState> = (state = preloadedState.localization, action) => {
+  switch (action.type) {
+    case FactoryActions.SET_LOCALIZATION:
+    case SpecialBuildingActions.SET_LOCALIZATION:
+      return {
+        ...state,
+        [action.payload.type]: action.payload.localization
+      };
+  }
 
-const companyWorth = (state = preloadedState.companyWorth) => {
+
   return state;
 };
+const version: Reducer<string> = (state = preloadedState.version) => state;
 
 export {
   specialBuildings,
@@ -105,5 +97,8 @@ export {
   factories,
   user,
   warehouses,
-  companyWorth
+  companyWorth,
+  marketPrices,
+  localization,
+  version
 };

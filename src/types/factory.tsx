@@ -1,4 +1,4 @@
-export interface IFactory {
+interface IFactory {
   id: number;
   level: number;
   scaling: number;
@@ -10,3 +10,8 @@ interface IFactoryDependency {
   id: number;
   amount: number;
 }
+
+export {
+  IFactory,
+  IFactoryDependency
+};

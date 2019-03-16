@@ -1,5 +1,6 @@
-export interface IUserState {
+interface IUserState {
   isAPIUser: boolean;
+  isAuthenticated: boolean;
   settings: IUserSettings;
   playerInfo: IUserPlayerInfo;
   API: IUserAPIState;
@@ -10,14 +11,14 @@ interface IUserSettings {
   locale: string;
 }
 
-export interface IUserPlayerInfo {
+interface IUserPlayerInfo {
   userName: string;
   level: number;
   rank: number;
   registered: number;
 }
 
-export interface IUserAPIState {
+interface IUserAPIState {
   key: string;
   lastAPICall: number;
   userAPIStatistics: IUserAPIStatistic[];
@@ -28,3 +29,23 @@ interface IUserAPIStatistic {
   lastCall: number;
   amount: number;
 }
+
+interface IUserPlayerInfoState {
+  userName: string;
+  level: number;
+  rank: number;
+  registered: number;
+}
+
+interface IUserSettingState {
+  remembersAPIKey: boolean;
+  locale: string;
+}
+
+export {
+  IUserPlayerInfoState,
+  IUserSettingState,
+  IUserAPIState,
+  IUserPlayerInfo,
+  IUserState
+};
