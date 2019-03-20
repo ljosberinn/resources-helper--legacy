@@ -4,6 +4,4 @@ interface IMarketPriceState {
   player: number;
 }
 
-export {
-  IMarketPriceState
-};
+export { IMarketPriceState };

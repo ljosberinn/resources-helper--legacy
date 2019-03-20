@@ -1,25 +1,25 @@
+import { DEV_SETTINGS } from '../developmentSettings';
 import { IPreloadedState } from '../types';
-import { DEV_SETTINGS }    from '../developmentSettings';
-import { IMineState }      from '../types/mines';
+import { IMineState } from '../types/mines';
 
 const preloadedState: IPreloadedState = {
-  version         : '4.0.0',
-  user            : {
-    isAPIUser      : false,
+  version: '4.0.0',
+  user: {
+    isAPIUser: false,
     isAuthenticated: false,
-    settings       : {
+    settings: {
       remembersAPIKey: false,
-      locale         : 'en',
+      locale: 'en',
     },
-    playerInfo     : {
-      userName  : '',
-      level     : 0,
-      rank      : 0,
+    playerInfo: {
+      userName: '',
+      level: 0,
+      rank: 0,
       registered: 0,
     },
-    API            : {
-      key              : '',
-      lastAPICall      : 0,
+    API: {
+      key: '',
+      lastAPICall: 0,
       userAPIStatistics: [
         { id: 0, lastCall: 0, amount: 0 },
         { id: 1, lastCall: 0, amount: 0 },
@@ -33,28 +33,28 @@ const preloadedState: IPreloadedState = {
         { id: 8, lastCall: 0, amount: 0 },
         { id: 9, lastCall: 0, amount: 0 },
         { id: 10, lastCall: 0, amount: 0 },
-      ]
+      ],
     },
   },
-  factories       : [],
-  mines           : [],
+  factories: [],
+  mines: [],
   specialBuildings: [],
-  headquarter     : [],
-  warehouses      : [],
-  marketPrices    : [],
-  localization    : {
-    factories       : [],
+  headquarter: [],
+  warehouses: [],
+  marketPrices: [],
+  localization: {
+    factories: [],
     specialBuildings: [],
-    headquarter     : [],
-    mines           : [],
-    warehouses      : [],
+    headquarter: [],
+    mines: [],
+    warehouses: [],
   },
-  companyWorth    : {
-    headquarter     : 0,
-    factories       : 0,
+  companyWorth: {
+    headquarter: 0,
+    factories: 0,
     specialBuildings: 0,
-    mines           : 0,
-    warehouses      : 0,
+    mines: 0,
+    warehouses: 0,
   },
 };
 
@@ -62,9 +62,6 @@ const preloadedState: IPreloadedState = {
   const response = await fetch(`${DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development}/static/?type=mines`);
   const json: IMineState[] = await response.json();
   preloadedState.mines = json;
-
 })();
 
-export {
-  preloadedState
-};
+export { preloadedState };

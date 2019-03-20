@@ -4,6 +4,4 @@ interface IWarehouseState {
   capacity: number;
 }
 
-export {
-  IWarehouseState
-};
+export { IWarehouseState };

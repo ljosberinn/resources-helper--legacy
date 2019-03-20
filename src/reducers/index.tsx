@@ -1,17 +1,17 @@
-import { Reducer }                from 'redux';
-import { UserActions }            from '../actions/API';
-import { preloadedState }         from '../constants';
-import { FactoryActions }         from '../actions/Factories';
+import { Reducer } from 'redux';
+import { UserActions } from '../actions/API';
 import { SpecialBuildingActions } from '../actions/Buildings';
-import { ICompanyWorthState }     from '../types/companyWorth';
-import { IFactory }               from '../types/factory';
-import { IHeadquarterState }      from '../types/headquarter';
-import { ILocalizationState }     from '../types/localization';
-import { IMarketPriceState }      from '../types/marketPrices';
-import { IMineState }             from '../types/mines';
-import { ISpecialBuildingState }  from '../types/specialBuildings';
-import { IUserState }             from '../types/user';
-import { IWarehouseState }        from '../types/warehouses';
+import { FactoryActions } from '../actions/Factories';
+import { preloadedState } from '../constants';
+import { ICompanyWorthState } from '../types/companyWorth';
+import { IFactory } from '../types/factory';
+import { IHeadquarterState } from '../types/headquarter';
+import { ILocalizationState } from '../types/localization';
+import { IMarketPriceState } from '../types/marketPrices';
+import { IMineState } from '../types/mines';
+import { ISpecialBuildingState } from '../types/specialBuildings';
+import { IUserState } from '../types/user';
+import { IWarehouseState } from '../types/warehouses';
 
 const user: Reducer<IUserState> = (state = preloadedState.user, action) => {
   switch (action.type) {
@@ -21,7 +21,7 @@ const user: Reducer<IUserState> = (state = preloadedState.user, action) => {
         API: {
           ...state.API,
           key: action.payload,
-        }
+        },
       };
   }
 
@@ -33,10 +33,9 @@ const factories: Reducer<IFactory[]> = (state = preloadedState.factories, action
     case FactoryActions.SET_LEVEL:
       return state.map(factory => {
         if (factory.id === action.payload.factoryID) {
-
           return {
             ...factory,
-            level: action.payload.level
+            level: action.payload.level,
           };
         }
 
@@ -54,10 +53,9 @@ const specialBuildings: Reducer<ISpecialBuildingState[]> = (state = preloadedSta
     case SpecialBuildingActions.SET_LEVEL:
       return state.map(specialBuilding => {
         if (specialBuilding.id === action.payload.buildingID) {
-
           return {
             ...specialBuilding,
-            level: action.payload.level
+            level: action.payload.level,
           };
         }
 
@@ -81,24 +79,12 @@ const localization: Reducer<ILocalizationState> = (state = preloadedState.locali
     case SpecialBuildingActions.SET_LOCALIZATION:
       return {
         ...state,
-        [action.payload.type]: action.payload.localization
+        [action.payload.type]: action.payload.localization,
       };
   }
-
 
   return state;
 };
 const version: Reducer<string> = (state = preloadedState.version) => state;
 
-export {
-  specialBuildings,
-  headquarter,
-  mines,
-  factories,
-  user,
-  warehouses,
-  companyWorth,
-  marketPrices,
-  localization,
-  version
-};
+export { specialBuildings, headquarter, mines, factories, user, warehouses, companyWorth, marketPrices, localization, version };

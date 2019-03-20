@@ -6,11 +6,6 @@ interface ILocalizationState {
   warehouses: ILocalization[];
 }
 
-interface ILocalization {
+interface ILocalization {}
 
-}
-
-export {
-  ILocalizationState,
-  ILocalization
-};
+export { ILocalizationState, ILocalization };

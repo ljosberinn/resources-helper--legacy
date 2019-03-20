@@ -9,7 +9,4 @@ interface ISpecialBuildingDependency {
   amount: number;
 }
 
-export {
-  ISpecialBuildingState,
-  ISpecialBuildingDependency
-};
+export { ISpecialBuildingState, ISpecialBuildingDependency };

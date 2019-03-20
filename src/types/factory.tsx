@@ -11,7 +11,4 @@ interface IFactoryDependency {
   amount: number;
 }
 
-export {
-  IFactory,
-  IFactoryDependency
-};
+export { IFactory, IFactoryDependency };

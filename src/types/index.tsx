@@ -1,12 +1,12 @@
-import { ICompanyWorthState }    from './companyWorth';
-import { ILocalizationState }    from './localization';
-import { IMarketPriceState }     from './marketPrices';
-import { IUserState }            from './user';
-import { IFactory }              from './factory';
-import { IHeadquarterState }     from './headquarter';
+import { ICompanyWorthState } from './companyWorth';
+import { IFactory } from './factory';
+import { IHeadquarterState } from './headquarter';
+import { ILocalizationState } from './localization';
+import { IMarketPriceState } from './marketPrices';
+import { IMineState } from './mines';
 import { ISpecialBuildingState } from './specialBuildings';
-import { IMineState }            from './mines';
-import { IWarehouseState }       from './warehouses';
+import { IUserState } from './user';
+import { IWarehouseState } from './warehouses';
 
 export interface IPreloadedState {
   version: string;
@@ -20,9 +20,3 @@ export interface IPreloadedState {
   marketPrices: IMarketPriceState[];
   localization: ILocalizationState;
 }
-
-
-
-
-
-

@@ -7,7 +7,7 @@ export interface LevelProps {
 }
 
 export interface SpecialBuildingProps {
-  data: ISpecialBuildingState,
+  data: ISpecialBuildingState;
   name: string;
   placeholderText: string;
 }

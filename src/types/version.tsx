@@ -2,6 +2,4 @@ interface IVersionState {
   version: string;
 }
 
-export {
-  IVersionState
-};
+export { IVersionState };

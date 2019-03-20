@@ -6,6 +6,4 @@ interface ICompanyWorthState {
   warehouses: number;
 }
 
-export {
-  ICompanyWorthState
-};
+export { ICompanyWorthState };

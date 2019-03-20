@@ -42,10 +42,4 @@ interface IUserSettingState {
   locale: string;
 }
 
-export {
-  IUserPlayerInfoState,
-  IUserSettingState,
-  IUserAPIState,
-  IUserPlayerInfo,
-  IUserState
-};
+export { IUserPlayerInfoState, IUserSettingState, IUserAPIState, IUserPlayerInfo, IUserState };

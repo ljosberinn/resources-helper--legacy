@@ -6,7 +6,4 @@ enum UserActions {
 
 const setAPIKey = (APIKey: string) => action(UserActions.SET_API_KEY, APIKey);
 
-export {
-  UserActions,
-  setAPIKey,
-};
+export { UserActions, setAPIKey };

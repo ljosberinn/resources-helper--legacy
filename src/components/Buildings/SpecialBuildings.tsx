@@ -1,14 +1,14 @@
-import * as React                         from 'react';
-import { connect }                        from 'react-redux';
-import { Dispatch }                       from 'redux';
-import { saveState, store }               from '../../Store';
-import { IPreloadedState }                from '../../types';
-import LoadingGears                       from '../Shared/Loading';
-import { ISpecialBuildingState }          from '../../types/specialBuildings';
-import { setBuildings, setLocalization }  from '../../actions/Buildings';
+/*import * as React from 'react';
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
+import { setBuildings, setLocalization } from '../../actions/Buildings';
+import { saveState, store } from '../../Store';
+import { IPreloadedState } from '../../types';
+import { ISpecialBuildingState } from '../../types/specialBuildings';
 import { getLocalization, getStaticData } from '../helper';
-import SpecialBuilding                    from './SpecialBuilding';
-import { ISpecialBuildingsLocalization }  from './interfaces';
+import LoadingGears from '../Shared/Loading';
+import { ISpecialBuildingsLocalization } from './interfaces';
+import SpecialBuilding from './SpecialBuilding';
 
 interface PropsFromState {
   loading: boolean;
@@ -25,9 +25,9 @@ type SpecialBuildingsProps = PropsFromState & PropsFromDispatch;
 
 class SpecialBuildings extends React.Component<SpecialBuildingsProps> {
   public state = {
-    loading         : true,
+    loading: true,
     specialBuildings: [] as ISpecialBuildingState[],
-    localization    : {} as ISpecialBuildingsLocalization,
+    localization: {} as ISpecialBuildingsLocalization,
   };
 
   public componentDidMount(): void {
@@ -44,31 +44,26 @@ class SpecialBuildings extends React.Component<SpecialBuildingsProps> {
   }
 
   public render() {
-
     const { loading, localization, specialBuildings } = this.state;
 
     if (loading) {
-      return (
-        <LoadingGears/>
-      );
+      return <LoadingGears />;
     }
     return (
       <table>
         <thead>
-        <tr>
-          {
-            localization.tableColumns.map(th => <th key={localization.tableColumns.indexOf(th)}>{th}</th>)
-          }
-        </tr>
+          <tr>
+            {localization.tableColumns.map(th => (
+              <th key={localization.tableColumns.indexOf(th)}>{th}</th>
+            ))}
+          </tr>
         </thead>
         <tbody>
-        <React.Fragment>
-          {
-            specialBuildings.map(building => <SpecialBuilding key={building.id} data={building}
-                                                              name={localization.specialBuildingNames[building.id]}
-                                                              placeholderText={localization.inputPlaceholder}/>)
-          }
-        </React.Fragment>
+          <React.Fragment>
+            {specialBuildings.map(building => (
+              <SpecialBuilding data={building} name={localization.specialBuildingNames[building.id]} placeholderText={localization.inputPlaceholder} key={building.id} />
+            ))}
+          </React.Fragment>
         </tbody>
       </table>
     );
@@ -77,8 +72,11 @@ class SpecialBuildings extends React.Component<SpecialBuildingsProps> {
 
 const mapStateToProps = (state: IPreloadedState) => ({ ...state.specialBuildings });
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setBuildings   : (buildings: ISpecialBuildingState[]) => dispatch(setBuildings(buildings)) && saveState(),
+  setBuildings: (buildings: ISpecialBuildingState[]) => dispatch(setBuildings(buildings)),
   setLocalization: (type: string, localization: ISpecialBuildingsLocalization) => dispatch(setLocalization(type, localization)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SpecialBuildings);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SpecialBuildings);*/

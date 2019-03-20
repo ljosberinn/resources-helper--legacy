@@ -1,5 +1,5 @@
-import { IFactory }              from '../../types/factory';
-import { ISpecialBuildingState } from '../../types/specialBuildings';
+import { IFactory } from "../../types/factory";
+import { ISpecialBuildingState } from "../../types/specialBuildings";
 
 export interface IFactoryClassState {
   factories: IFactory[];

@@ -1,7 +1,7 @@
-import * as React                 from 'react';
-import { FunctionComponent }      from 'react';
-import { connect }                from 'react-redux';
-import { IPreloadedState }        from '../../types';
+import * as React from 'react';
+import { FunctionComponent } from 'react';
+import { connect } from 'react-redux';
+import { IPreloadedState } from '../../types';
 import { filterFactoryByPropsID } from '../helper';
 
 interface PropsFromState {

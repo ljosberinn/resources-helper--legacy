@@ -4,6 +4,4 @@ interface IMineState {
   maxHourlyRate: number;
 }
 
-export {
-  IMineState
-};
+export { IMineState };
