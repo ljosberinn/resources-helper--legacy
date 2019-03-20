@@ -87,4 +87,15 @@ const localization: Reducer<ILocalizationState> = (state = preloadedState.locali
 };
 const version: Reducer<string> = (state = preloadedState.version) => state;
 
-export { specialBuildings, headquarter, mines, factories, user, warehouses, companyWorth, marketPrices, localization, version };
+export {
+  specialBuildings,
+  headquarter,
+  mines,
+  factories,
+  user,
+  warehouses,
+  companyWorth,
+  marketPrices,
+  localization,
+  version,
+};

@@ -20,14 +20,12 @@ interface IUserPlayerInfo {
 
 interface IUserAPIState {
   key: string;
-  lastAPICall: number;
-  userAPIStatistics: IUserAPIStatistic[];
+  history: IUserAPIHistory;
 }
 
-interface IUserAPIStatistic {
-  id: number;
+interface IUserAPIHistory {
   lastCall: number;
-  amount: number;
+  lastQuery: number;
 }
 
 interface IUserPlayerInfoState {

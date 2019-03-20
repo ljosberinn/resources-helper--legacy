@@ -1,9 +1,9 @@
-import * as React from "react";
-import { Route, Switch } from "react-router-dom";
-import API from "./API/API";
+import * as React from 'react';
+import { Route, Switch } from 'react-router-dom';
+import API from './API/API';
 //import SpecialBuildings from "./Buildings/SpecialBuildings";
-import Factories from "./Factories/Factories";
-import Navigation from "./Navigation";
+import Factories from './Factories/Factories';
+import Navigation from './Navigation';
 
 const devComponent = () => <div>coming soon</div>;
 
@@ -31,7 +31,7 @@ const routes = {
   quality: devComponent,
   leaderboard: devComponent,
   changelog: devComponent,
-  discord: devComponent
+  discord: devComponent,
 };
 
 const Routes: React.FunctionComponent = () => (
@@ -42,7 +42,7 @@ const Routes: React.FunctionComponent = () => (
       {Object.entries(routes).map((entry, key) => {
         const [path, component] = entry;
 
-        return <Route key={key} path={`/${path}`} component={component} />;
+        return <Route path={`/${path}`} component={component} key={key} />;
       })}
       <Route component={() => <div>404</div>} />
     </Switch>

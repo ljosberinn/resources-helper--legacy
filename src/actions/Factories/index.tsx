@@ -8,8 +8,7 @@ enum FactoryActions {
   SET_LOCALIZATION = '@@factories/SET_LOCALIZATION',
 }
 
-const setLevel = (level: number, factoryID: number) =>
-  action(FactoryActions.SET_LEVEL, { level, factoryID });
+const setLevel = (level: number, factoryID: number) => action(FactoryActions.SET_LEVEL, { level, factoryID });
 const setFactories = (factories: IFactory[]) => action(FactoryActions.SET_FACTORIES, factories);
 const setLocalization = (type: string, localization: IFactoryLocalization) =>
   action(FactoryActions.SET_LOCALIZATION, { localization, type });

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FunctionComponent } from 'react';
+//import { FunctionComponent } from 'react';
 import { connect } from 'react-redux';
 import { IPreloadedState } from '../../types';
 import { filterFactoryByPropsID } from '../helper';
@@ -10,8 +10,13 @@ interface PropsFromState {
   scaling: number;
 }
 
-const Scaling: FunctionComponent<PropsFromState> = props => <React.Fragment>{(props.scaling * (Number.isNaN(props.level) ? 0 : props.level)).toLocaleString()}</React.Fragment>;
+const Scaling = (props: PropsFromState) => {
+  const value = props.scaling * (Number.isNaN(props.level) ? 0 : props.level);
 
-const mapStateToProps = ({ factories }: IPreloadedState, ownProps: PropsFromState) => filterFactoryByPropsID(factories, ownProps);
+  return <React.Fragment>{value}</React.Fragment>;
+};
+
+const mapStateToProps = ({ factories }: IPreloadedState, ownProps: PropsFromState) =>
+  filterFactoryByPropsID(factories, ownProps);
 
 export default connect(mapStateToProps)(Scaling);

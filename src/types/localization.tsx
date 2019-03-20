@@ -1,5 +1,7 @@
+import { IFactoryLocalization } from 'src/components/Factories/interfaces';
+
 interface ILocalizationState {
-  factories: ILocalization[];
+  factories: IFactoryLocalization;
   headquarter: ILocalization[];
   mines: ILocalization[];
   specialBuildings: ILocalization[];

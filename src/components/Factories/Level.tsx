@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { FunctionComponent } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { setLevel } from '../../actions/Factories';
@@ -18,25 +17,21 @@ interface PropsFromDispatch {
 
 type LevelProps = PropsFromState & PropsFromDispatch;
 
-const Level: FunctionComponent<LevelProps> = props => {
-  const { level, placeholderText } = props;
+const getLevelAttributes = (props: LevelProps) => ({
+  type: 'number',
+  placeholder: props.placeholderText,
+  defaultValue: props.level.toString(),
+  min: 0,
+  max: 5000,
+  onFocus: (e: React.FocusEvent<HTMLInputElement>) => e.target.select(),
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+    const level = parseInt(e.target.value);
 
-  return (
-    <input
-      type={'number'}
-      placeholder={placeholderText}
-      defaultValue={level.toString()}
-      min={0}
-      max={5000}
-      onFocus={e => e.target.select()}
-      onChange={e => {
-        const level = parseInt(e.target.value);
+    props.setLevel(level, props.id);
+  },
+});
 
-        props.setLevel(level, props.id);
-      }}
-    />
-  );
-};
+const Level = (props: LevelProps) => <input {...getLevelAttributes(props)} />;
 
 const mapStateToProps = ({ factories }: IPreloadedState, ownProps: PropsFromState) => {
   const { level, id } = factories.find(factory => factory.id === ownProps.id) as IFactory;
@@ -46,6 +41,7 @@ const mapStateToProps = ({ factories }: IPreloadedState, ownProps: PropsFromStat
     id,
   };
 };
+
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   setLevel: (level: number, factoryID: number) => dispatch(setLevel(level, factoryID)),
 });

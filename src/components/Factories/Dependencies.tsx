@@ -23,6 +23,7 @@ const Dependencies: FunctionComponent<PropsFromState> = props => {
   );
 };
 
-const mapStateToProps = ({ factories }: IPreloadedState, ownProps: PropsFromState) => filterFactoryByPropsID(factories, ownProps);
+const mapStateToProps = ({ factories }: IPreloadedState, ownProps: PropsFromState) =>
+  filterFactoryByPropsID(factories, ownProps);
 
 export default connect(mapStateToProps)(Dependencies);

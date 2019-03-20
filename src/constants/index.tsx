@@ -19,21 +19,10 @@ const preloadedState: IPreloadedState = {
     },
     API: {
       key: '',
-      lastAPICall: 0,
-      userAPIStatistics: [
-        { id: 0, lastCall: 0, amount: 0 },
-        { id: 1, lastCall: 0, amount: 0 },
-        { id: 2, lastCall: 0, amount: 0 },
-        { id: 3, lastCall: 0, amount: 0 },
-        { id: 4, lastCall: 0, amount: 0 },
-        { id: 5, lastCall: 0, amount: 0 },
-        { id: 51, lastCall: 0, amount: 0 },
-        { id: 6, lastCall: 0, amount: 0 },
-        { id: 7, lastCall: 0, amount: 0 },
-        { id: 8, lastCall: 0, amount: 0 },
-        { id: 9, lastCall: 0, amount: 0 },
-        { id: 10, lastCall: 0, amount: 0 },
-      ],
+      history: {
+        lastCall: 0,
+        lastQuery: 0,
+      },
     },
   },
   factories: [],
@@ -43,7 +32,7 @@ const preloadedState: IPreloadedState = {
   warehouses: [],
   marketPrices: [],
   localization: {
-    factories: [],
+    factories: { tableColumns: [], factoryNames: [], inputPlaceholder: '' },
     specialBuildings: [],
     headquarter: [],
     mines: [],
@@ -59,7 +48,9 @@ const preloadedState: IPreloadedState = {
 };
 
 (async () => {
-  const response = await fetch(`${DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development}/static/?type=mines`);
+  const response = await fetch(
+    `${DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development}/static/?type=mines`,
+  );
   const json: IMineState[] = await response.json();
   preloadedState.mines = json;
 })();

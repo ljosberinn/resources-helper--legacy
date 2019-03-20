@@ -1,12 +1,23 @@
-import { connectRouter, routerMiddleware } from "connected-react-router";
-import { History } from "history";
-import createBrowserHistory from "history/createBrowserHistory";
-import { applyMiddleware, combineReducers, createStore, Store } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
-import { preloadedState } from "./constants";
-import { DEV_SETTINGS } from "./developmentSettings";
-import { companyWorth, factories, headquarter, localization, marketPrices, mines, specialBuildings, user, version, warehouses } from "./reducers";
-import { IPreloadedState } from "./types";
+import { connectRouter, routerMiddleware } from 'connected-react-router';
+import { History } from 'history';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import { persistReducer, persistStore } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import { DEV_SETTINGS } from './developmentSettings';
+import {
+  companyWorth,
+  factories,
+  headquarter,
+  localization,
+  marketPrices,
+  mines,
+  specialBuildings,
+  user,
+  version,
+  warehouses,
+} from './reducers';
+import { IPreloadedState } from './types';
 
 const rootReducer = (history: History) =>
   combineReducers({
@@ -20,33 +31,28 @@ const rootReducer = (history: History) =>
     companyWorth,
     marketPrices,
     localization,
-    version
+    version,
   });
 
-const getLocalStorageVersion = () => "rhelper" + DEV_SETTINGS.version.split(".").join("");
+const getLocalStorageVersion = () => 'rhelper' + DEV_SETTINGS.version.split('.').join('');
 
-const saveState = () => {
-  const { router, ...currentStore } = store.getState();
-
-  localStorage.setItem(getLocalStorageVersion(), JSON.stringify(currentStore));
+const persistedStoreConfig = {
+  key: getLocalStorageVersion(),
+  storage: storage,
+  blacklist: ['router'],
 };
 
-const loadState = (state: IPreloadedState) => {
-  const previousState = localStorage.getItem(getLocalStorageVersion());
-
-  if (previousState !== null) {
-    return JSON.parse(previousState) as IPreloadedState;
-  }
-
-  return state;
-};
-
-const configureStore = (history: History, preloadedState: IPreloadedState): Store => {
+export const configureStore = (history: History, preloadedState: IPreloadedState) => {
   const composeEnhancers = composeWithDevTools({});
 
-  return createStore(rootReducer(history), preloadedState, composeEnhancers(applyMiddleware(routerMiddleware(history))));
+  const reducer = rootReducer(history);
+  const persistedReducer = persistReducer(persistedStoreConfig, reducer);
+
+  const middlewares = [routerMiddleware(history)];
+  const enhancers = [applyMiddleware(...middlewares)];
+
+  const store = createStore(persistedReducer, preloadedState, composeEnhancers(...enhancers));
+  const persistor = persistStore(store);
+
+  return { store, persistor };
 };
-
-const store = configureStore(createBrowserHistory(), loadState(preloadedState));
-
-export { store, saveState };

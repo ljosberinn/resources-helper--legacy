@@ -9,7 +9,7 @@ interface IProps {
 }
 
 const FactoryTable: React.FunctionComponent<IProps> = ({ localization, factories }) => (
-  <table>
+  <table style={{ width: '100%' }}>
     <thead>
       <tr>
         {localization.tableColumns.map(th => (
