@@ -1,8 +1,6 @@
-import { DEV_SETTINGS } from '../developmentSettings';
 import { IPreloadedState } from '../types';
-import { IMineState } from '../types/mines';
 
-const preloadedState: IPreloadedState = {
+export const preloadedState: IPreloadedState = {
   version: '4.0.0',
   user: {
     isAPIUser: false,
@@ -25,19 +23,12 @@ const preloadedState: IPreloadedState = {
       },
     },
   },
-  factories: [],
+  factories: {},
   mines: [],
   specialBuildings: [],
   headquarter: [],
   warehouses: [],
   marketPrices: [],
-  localization: {
-    factories: { tableColumns: [], factoryNames: [], inputPlaceholder: '' },
-    specialBuildings: [],
-    headquarter: [],
-    mines: [],
-    warehouses: [],
-  },
   companyWorth: {
     headquarter: 0,
     factories: 0,
@@ -46,13 +37,3 @@ const preloadedState: IPreloadedState = {
     warehouses: 0,
   },
 };
-
-(async () => {
-  const response = await fetch(
-    `${DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development}/static/?type=mines`,
-  );
-  const json: IMineState[] = await response.json();
-  preloadedState.mines = json;
-})();
-
-export { preloadedState };

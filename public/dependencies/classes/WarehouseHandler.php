@@ -133,7 +133,7 @@ class WarehouseHandler implements APIInterface {
                     'warehouseStandings' => 'standing',
                     'warehouseLevels'    => 'level',
                 ] as $tableName => $key) {
-            $query = 'INSERT INTO `' . $tableName . '` (playerIndexUID, `timestamp`, `';
+            $query = 'INSERT INTO `' . $tableName . '` (`playerIndexUID`, `timestamp`, `';
             $query .= implode('`, `', array_keys($data[$key])) . '`) VALUES(' . $this->playerIndexUID . ', ' . time() . ', ';
             $query .= implode(', ', array_values($data[$key])) . ')';
 

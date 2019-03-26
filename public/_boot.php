@@ -11,7 +11,6 @@ Debugger::$strictMode  = true;
 
 spl_autoload_register(function($className) {
     $path = __DIR__ . '/dependencies/classes/' . $className . '.php';
-
     if(file_exists($path)) {
         require_once $path;
     }
@@ -28,13 +27,11 @@ ob_start(function($buffer) {
         '/(\s)+/s',          // shorten multiple whitespace sequences
         '/<!--(.|\s)*?-->/', // Remove HTML comments
     ];
-
     $replace = [
         '>',
         '<',
         '\\1',
         '',
     ];
-
     return preg_replace($search, $replace, $buffer);
 });

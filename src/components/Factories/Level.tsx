@@ -1,13 +1,12 @@
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { setLevel } from '../../actions/Factories';
 import { IPreloadedState } from '../../types';
-import { IFactory } from '../../types/factory';
+import { filterFactoryByPropsID } from '../helperFunctions';
 
 interface PropsFromState {
   level: number;
-  placeholderText: string;
   id: number;
 }
 
@@ -19,7 +18,7 @@ type LevelProps = PropsFromState & PropsFromDispatch;
 
 const getLevelAttributes = (props: LevelProps) => ({
   type: 'number',
-  placeholder: props.placeholderText,
+  placeholder: 'PH',
   defaultValue: props.level.toString(),
   min: 0,
   max: 5000,
@@ -31,22 +30,21 @@ const getLevelAttributes = (props: LevelProps) => ({
   },
 });
 
-const Level = (props: LevelProps) => <input {...getLevelAttributes(props)} />;
+const ConnectedLevel = (props: LevelProps) => <input {...getLevelAttributes(props)} />;
 
 const mapStateToProps = ({ factories }: IPreloadedState, ownProps: PropsFromState) => {
-  const { level, id } = factories.find(factory => factory.id === ownProps.id) as IFactory;
+  const { level, id } = filterFactoryByPropsID(factories, ownProps);
 
-  return {
-    level,
-    id,
-  };
+  return { level, id };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   setLevel: (level: number, factoryID: number) => dispatch(setLevel(level, factoryID)),
 });
 
-export default connect(
+const preconnect = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Level);
+);
+
+export const Level = preconnect(ConnectedLevel);

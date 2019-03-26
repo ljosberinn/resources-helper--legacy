@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'id'                 => 118,
-    'scaling'            => 1,
-    'level'              => 0,
-    'dependantFactories' => [],
-    'dependencies'       => [
+    'id'                     => 118,
+    'scaling'                => 1,
+    'level'                  => 0,
+    'dependantFactories'     => [],
+    'productionDependencies' => [
         ['id' => 1, 'amount' => 1 / 1 * 25000000,],
         ['id' => 66, 'amount' => 25,],
         ['id' => 51, 'amount' => 50,],

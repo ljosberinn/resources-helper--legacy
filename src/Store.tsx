@@ -9,7 +9,6 @@ import {
   companyWorth,
   factories,
   headquarter,
-  localization,
   marketPrices,
   mines,
   specialBuildings,
@@ -30,7 +29,6 @@ const rootReducer = (history: History) =>
     warehouses,
     companyWorth,
     marketPrices,
-    localization,
     version,
   });
 

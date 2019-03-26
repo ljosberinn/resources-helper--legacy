@@ -1,79 +1,88 @@
-import * as React from 'react';
+import React, { SetStateAction, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { setFactories, setLocalization } from '../../actions/Factories';
-import { IPreloadedState } from '../../types';
+import { setFactories } from '../../actions/Factories';
 import { store } from '../../index';
-import { IFactory } from '../../types/factory';
-import { getLocalization, getStaticData } from '../helper';
-import LoadingGears from '../Shared/Loading';
-import FactoryTable from './FactoryTable';
-import { IFactoryLocalization } from './interfaces';
+import { IPreloadedState } from '../../types';
+import { IFactories } from '../../types/factory';
+import { evaluateLoadingAnimationTimeout, getStaticData } from '../helperFunctions';
+import { Loading } from '../Shared/Loading';
+import { FactoryTable } from './FactoryTable';
 
 interface PropsFromState {
-  loading: boolean;
-  factories: IFactory[];
-  localization: IFactoryLocalization;
+  hasError: boolean;
+  errorType: string;
+  factories: IFactories;
 }
 
 interface PropsFromDispatch {
   setFactories: typeof setFactories;
-  setLocalization: typeof setLocalization;
 }
 
 type FactoriesProps = PropsFromState & PropsFromDispatch;
 
 const getFactoryData = (
+  currentStore: IPreloadedState,
   props: FactoriesProps,
-  setLocalization: React.Dispatch<React.SetStateAction<IFactoryLocalization>>,
-  setFactories: React.Dispatch<React.SetStateAction<IFactory[]>>,
-): void => {
-  const currentStore = store.getState();
+  setFactories: React.Dispatch<SetStateAction<IFactories>>,
+  setError: React.Dispatch<SetStateAction<boolean>>,
+  setErrorType: React.Dispatch<SetStateAction<string>>,
+) => {
+  const loadingStart = new Date().getMilliseconds();
 
-  Promise.all([getLocalization(currentStore, 'factories'), getStaticData(currentStore, 'factories')]).then(
-    fulfilledPromises => {
-      const [localization, factories] = fulfilledPromises;
+  Promise.resolve(getStaticData(currentStore, 'factories', setError, setErrorType)).then(factories => {
+    const timePassed = new Date().getMilliseconds() - loadingStart;
 
-      setTimeout(() => {
-        props.setFactories(factories);
-        props.setLocalization('factories', localization);
+    setTimeout(() => {
+      // Redux
+      props.setFactories(factories);
 
-        setLocalization(localization);
-        setFactories(factories);
-      }, 750);
-    },
-  );
+      // Hooks
+      setFactories(factories);
+    }, evaluateLoadingAnimationTimeout(timePassed));
+  });
 };
 
-const Factories: React.FunctionComponent<FactoriesProps> = props => {
-  const { factories, localization } = store.getState();
+const ConnectedFactory = (props: FactoriesProps) => {
+  const currentStore = store.getState();
+  const { factories } = currentStore;
 
-  const [factoryData, setFactories] = React.useState<IFactory[]>(factories);
-  const [factoryLocalization, setLocalization] = React.useState<IFactoryLocalization>(localization.factories);
+  const [factoryData, setFactories] = useState(factories);
+  const [hasError, setError] = useState(false);
+  const [errorType, setErrorType] = useState('');
 
-  const isUninitialized = factoryData.length === 0 && factoryLocalization.factoryNames.length === 0;
+  const isLoading = Object.keys(factories).length === 0;
 
-  React.useEffect(() => {
-    if (isUninitialized) {
-      getFactoryData(props, setLocalization, setFactories);
+  useEffect(() => {
+    if (isLoading && !hasError) {
+      getFactoryData(currentStore, props, setFactories, setError, setErrorType);
     }
-  }, [factoryData, factoryLocalization]);
+  }, [factoryData]);
 
-  if (isUninitialized) {
-    return <LoadingGears />;
+  if (hasError) {
+    if (errorType === 'AbortError') {
+      return <p>Server unavailable</p>;
+    }
+
+    return <p>Error</p>;
   }
 
-  return <FactoryTable localization={factoryLocalization} factories={factoryData} />;
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  return <FactoryTable factories={factoryData} />;
 };
 
-const mapStateToProps = (state: IPreloadedState) => ({ ...state.factories });
+const mapStateToProps = (state: IPreloadedState) => ({ factories: state.factories, loading: true });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setFactories: (factories: IFactory[]) => dispatch(setFactories(factories)),
-  setLocalization: (type: string, localization: IFactoryLocalization) => dispatch(setLocalization(type, localization)),
+  setFactories: (factories: IFactories) => dispatch(setFactories(factories)),
 });
 
-export default connect(
+const preconnect = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Factories);
+);
+
+export const Factories = preconnect(ConnectedFactory);

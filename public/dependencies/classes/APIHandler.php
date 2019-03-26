@@ -17,9 +17,17 @@ class APIHandler extends APICore {
         parent::__construct();
     }
 
-    public function handleQuery(): array {
+    private function getDBInstance(): bool {
         $db        = DB::getInstance();
         $this->pdo = $db->getConnection();
+
+        return $this->pdo instanceof PDO;
+    }
+
+    public function handleQuery(): array {
+        if(!$this->getDBInstance()) {
+            return $this->response;
+        }
 
         $this->response['actor'] = $this->setActor();
 
@@ -27,17 +35,24 @@ class APIHandler extends APICore {
             return $this->response;
         }
 
-        $data = $this->curlAPI();
+        $data = $this->isHeavyQuery ? $this->handleHeavyQuery() : $this->curlAPI();
 
         if(empty($data)) {
             return $this->response;
         }
 
         $className = self::API_MAP[$this->query];
-        /** @var APICreditsHandler|FactoryHandler|WarehouseHandler|SpecialBuildingsHandler|HeadquarterHandler|MineDetailsHandler|TradeLogHandler|PlayerInfoHandler|MonetaryItemHandler|CombatLogHandler|MissionHandler|MineHandler $class */
-        $class = new $className($this->pdo, $this->response['actor']);
+        $class     = new $className($this->pdo, $this->response['actor']);
 
-        $this->response['success'] = $class->save($class->transform($data)) && $this->updateLastSeenTimestamp();
+        if(!$this->isHeavyQuery) {
+            /** @var APICreditsHandler|FactoryHandler|WarehouseHandler|SpecialBuildingsHandler|HeadquarterHandler|TradeLogHandler|PlayerInfoHandler|MonetaryItemHandler|CombatLogHandler|MissionHandler|MineHandler $class */
+            $data = $class->transform($data);
+        } else {
+            /** @var MineDetailsHandler $class */
+        }
+
+        $this->response['success'] = $class->save($data) && $this->updateLastSeenTimestamp();
+
 
         return $this->response;
     }

@@ -15,12 +15,16 @@ class DB {
         $DB_USER = (string) getenv('DB_USER');
         $DB_PASS = (string) getenv('DB_PASS');
 
-        $this->database = new PDO('mysql:host=' . getenv('DB_HOST') . ';dbname=' . getenv('DB_NAME') . ';charset=utf8', $DB_USER, $DB_PASS, [
-            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES   => false,
-            PDO::ATTR_PERSISTENT         => true,
-        ]);
+        try {
+            $this->database = new PDO('mysql:host=' . getenv('DB_HOST') . ';dbname=' . getenv('DB_NAME') . ';charset=utf8', $DB_USER, $DB_PASS, [
+                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES   => false,
+                //PDO::ATTR_PERSISTENT         => true,
+            ]);
+        } catch(PDOException $error) {
+
+        }
     }
 
     public static function getInstance(): DB {
@@ -31,7 +35,7 @@ class DB {
         return self::$instance;
     }
 
-    public function getConnection(): PDO {
+    public function getConnection() {
         return $this->database;
     }
 

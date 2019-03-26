@@ -1,39 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="MessDetector">
-    <phpmd_settings>
-      <MessDetectorConfiguration tool_path="$PROJECT_DIR$/vendor/phpmd/phpmd/src/bin/phpmd" />
-    </phpmd_settings>
-  </component>
-  <component name="PhpDebugIgnoredPathsSettings">
-    <skipped_paths>
-      <skipped_path path="$PROJECT_DIR$/src/vendor" />
-    </skipped_paths>
-  </component>
   <component name="PhpIncludePathManager">
     <include_path>
-      <path value="$PROJECT_DIR$/src/vendor/clue/stream-filter" />
-      <path value="$PROJECT_DIR$/src/vendor/composer" />
-      <path value="$PROJECT_DIR$/src/vendor/ramsey/uuid" />
-      <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-ctype" />
-      <path value="$PROJECT_DIR$/src/vendor/ocramius/package-versions" />
-      <path value="$PROJECT_DIR$/src/vendor/symfony/options-resolver" />
-      <path value="$PROJECT_DIR$/src/vendor/psr/http-factory" />
-      <path value="$PROJECT_DIR$/src/vendor/psr/http-message" />
-      <path value="$PROJECT_DIR$/src/vendor/paragonie/random_compat" />
-      <path value="$PROJECT_DIR$/src/vendor/php-http/discovery" />
-      <path value="$PROJECT_DIR$/src/vendor/php-http/httplug" />
-      <path value="$PROJECT_DIR$/src/vendor/php-http/message" />
-      <path value="$PROJECT_DIR$/src/vendor/php-http/promise" />
-      <path value="$PROJECT_DIR$/src/vendor/php-http/client-common" />
-      <path value="$PROJECT_DIR$/src/vendor/php-http/curl-client" />
-      <path value="$PROJECT_DIR$/src/vendor/php-http/message-factory" />
-      <path value="$PROJECT_DIR$/src/vendor/jean85/pretty-package-versions" />
-      <path value="$PROJECT_DIR$/src/vendor/zendframework/zend-diactoros" />
-      <path value="$PROJECT_DIR$/src/vendor/sentry/sentry" />
-      <path value="$PROJECT_DIR$/src/vendor/vlucas/phpdotenv" />
-      <path value="$PROJECT_DIR$/src/vendor/phpoption/phpoption" />
+      <path value="$PROJECT_DIR$/../../php/PEAR" />
+      <path value="$PROJECT_DIR$/public" />
+      <path value="$PROJECT_DIR$/vendor/phpmetrics/phpmetrics" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/version" />
+      <path value="$PROJECT_DIR$/vendor/wapmorgan/php-code-fixer" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/phpcpd" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/finder-facade" />
+      <path value="$PROJECT_DIR$/vendor/dephpend/dephpend" />
+      <path value="$PROJECT_DIR$/vendor/ocramius/package-versions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/finder" />
+      <path value="$PROJECT_DIR$/vendor/theseer/fdomdocument" />
+      <path value="$PROJECT_DIR$/vendor/symfony/config" />
+      <path value="$PROJECT_DIR$/vendor/symfony/filesystem" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/vendor/symfony/contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/vendor/symfony/dependency-injection" />
+      <path value="$PROJECT_DIR$/vendor/phpstan/phpdoc-parser" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-timer" />
+      <path value="$PROJECT_DIR$/vendor/pdepend/pdepend" />
+      <path value="$PROJECT_DIR$/vendor/phpstan/phpstan" />
+      <path value="$PROJECT_DIR$/vendor/docopt/docopt" />
+      <path value="$PROJECT_DIR$/vendor/jean85/pretty-package-versions" />
+      <path value="$PROJECT_DIR$/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/vendor/phpmd/phpmd" />
+      <path value="$PROJECT_DIR$/vendor/nette/bootstrap" />
+      <path value="$PROJECT_DIR$/vendor/nette/finder" />
+      <path value="$PROJECT_DIR$/vendor/nette/neon" />
+      <path value="$PROJECT_DIR$/vendor/nette/utils" />
+      <path value="$PROJECT_DIR$/vendor/nette/robot-loader" />
+      <path value="$PROJECT_DIR$/vendor/nette/di" />
+      <path value="$PROJECT_DIR$/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/vendor/nette/php-generator" />
+      <path value="$PROJECT_DIR$/vendor/psr/container" />
     </include_path>
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />
+  <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />
 </project>

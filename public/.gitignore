@@ -1,2 +1,4 @@
 /vendor/
-/api/api-response/
+/data/api/cache/
+
+.env

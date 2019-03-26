@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-class MineDetailsHandler implements APIInterface {
+class MineDetailsHandler implements APIHeavyInterface {
 
     /*
      * {
@@ -37,42 +37,37 @@ class MineDetailsHandler implements APIInterface {
         'save'          => 'INSERT INTO `mineDetails` (`playerIndexUID`, `resourceID`, `lat`, `lon`, `built`, `quality`, `techQuality`, `techRate`, `rawRate`, `techFactor`, `isInHQ`, `def1`, `def2`, `def3`, `lastAttack`, `attackPenalty`, `attacks`, `attacksLost`) VALUES(:playerIndexUID, :resourceID, :lat, :lon, :built, :quality, :techQuality, :techRate, :rawRate, :techFactor, :isInHQ, :def1, :def2, :def3, :lastAttack, :attackPenalty, :attacks, :attacksLost)',
     ];
 
+    private const DATASET_SIZE = 475;
+    private const DATASET_END_STRING = ',{"m';
+    private const SAVE_BLUEPRINT = [
+        'resourceID' => 'resourceID',
+        'lat'        => 'lat',
+        'lon'        => 'lon',
+        'built'      => 'builddate',
+
+        'quality'     => 'quality',
+        'techQuality' => 'qualityInclTU',
+        'techRate'    => 'fullrate',
+        'rawRate'     => 'rawrate',
+        'techFactor'  => 'techfactor',
+        'isInHQ'      => 'HQboost',
+
+        'def1'          => 'def1',
+        'def2'          => 'def2',
+        'def3'          => 'def3',
+        'lastAttack'    => 'lastenemyaction',
+        'attackPenalty' => 'attackpenalty',
+        'attacks'       => 'attackcount',
+        'attacksLost'   => 'attacklost',
+    ];
+
     public function __construct(PDO $pdo, int $playerIndexUID) {
         $this->pdo            = $pdo;
         $this->playerIndexUID = $playerIndexUID;
     }
 
-    public function transform(array $data): array {
-        $mines = [];
-
-        foreach($data as $dataset) {
-
-            $mines[] = [
-                'playerIndexUID' => $this->playerIndexUID,
-
-                'resourceID' => $dataset['resourceID'],
-                'lat'        => $dataset['lat'],
-                'lon'        => $dataset['lon'],
-                'built'      => $dataset['builddate'],
-
-                'quality'     => $dataset['quality'],
-                'techQuality' => $dataset['qualityInclTU'],
-                'techRate'    => $dataset['fullrate'],
-                'rawRate'     => $dataset['rawrate'],
-                'techFactor'  => $dataset['techfactor'],
-                'isInHQ'      => $dataset['HQboost'] > 1 ? 1 : 0,
-
-                'def1'          => $dataset['def1'],
-                'def2'          => $dataset['def2'],
-                'def3'          => $dataset['def3'],
-                'lastAttack'    => $dataset['lastenemyaction'],
-                'attackPenalty' => $dataset['attackpenalty'],
-                'attacks'       => $dataset['attackcount'],
-                'attacksLost'   => $dataset['attacklost'],
-            ];
-        }
-
-        return $mines;
+    public function transform(string $filePath): string {
+        return $filePath;
     }
 
     private function deleteOldData(): bool {
@@ -82,19 +77,21 @@ class MineDetailsHandler implements APIInterface {
         ]);
     }
 
-    public function save(array $data): bool {
+    public function save(string $filePath): bool {
         if(!$this->deleteOldData()) {
             return false;
         }
 
         $stmt = $this->pdo->prepare(self::QUERIES['save']);
 
-        foreach($data as $dataset) {
-            if(!$stmt->execute($dataset)) {
-                return false;
-            }
-        }
+        $JSONParser = new JSONParser($filePath);
+        $JSONParser->setPlayerIndexUID($this->playerIndexUID)
+                   ->setBlueprint(self::SAVE_BLUEPRINT)
+                   ->setDatasetEndString(self::DATASET_END_STRING)
+                   ->setDatasetSize(self::DATASET_SIZE)
+                   ->setFileSize((int) filesize($filePath))
+                   ->storeSaveQuery($stmt);
 
-        return true;
+        return $JSONParser->parse();
     }
 }

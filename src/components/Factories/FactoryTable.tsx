@@ -1,35 +1,22 @@
-import * as React from 'react';
-import { IFactoryLocalization } from './interfaces';
-import { IFactory } from '../../types/factory';
-import Factory from './Factory';
+import React, { Fragment } from "react";
+import Factory from "./Factory";
+import { IFactories } from "../../types/factory";
 
-interface IProps {
-  localization: IFactoryLocalization;
-  factories: IFactory[];
+interface IFactoryTableProps {
+  factories: IFactories;
 }
 
-const FactoryTable: React.FunctionComponent<IProps> = ({ localization, factories }) => (
-  <table style={{ width: '100%' }}>
+export const FactoryTable = ({ factories }: IFactoryTableProps) => (
+  <table style={{ width: "100%" }}>
     <thead>
-      <tr>
-        {localization.tableColumns.map(th => (
-          <th key={localization.tableColumns.indexOf(th)}>{th}</th>
-        ))}
-      </tr>
+      <tr />
     </thead>
     <tbody>
-      <React.Fragment>
-        {factories.map(factory => (
-          <Factory
-            data={factory}
-            name={localization.factoryNames[factory.id]}
-            placeholderText={localization.inputPlaceholder}
-            key={factory.id}
-          />
+      <Fragment>
+        {Object.values(factories).map((factory) => (
+          <Factory data={factory} key={factory.id} />
         ))}
-      </React.Fragment>
+      </Fragment>
     </tbody>
   </table>
 );
-
-export default FactoryTable;

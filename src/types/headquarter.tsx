@@ -1,3 +1,0 @@
-interface IHeadquarterState {}
-
-export { IHeadquarterState };

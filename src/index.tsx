@@ -1,14 +1,17 @@
+import * as Sentry from '@sentry/browser';
 import { createBrowserHistory } from 'history';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import Main from './components/main';
+import React from 'react';
+import { render } from 'react-dom';
+import { RHelper } from './components/RHelper';
 import { preloadedState } from './constants';
 import { configureStore } from './Store';
 
+Sentry.init({
+  dsn: 'https://7b1b186565cf49e282d282f55c8e615c@sentry.io/1422548',
+});
+
 const history = createBrowserHistory();
 
-const { store, persistor } = configureStore(history, preloadedState);
+export const { store, persistor } = configureStore(history, preloadedState);
 
-ReactDOM.render(<Main store={store} history={history} />, document.getElementById('root') as HTMLElement);
-
-export { store, persistor };
+render(<RHelper store={store} history={history} />, document.getElementById('root') as HTMLElement);

@@ -1,32 +1,13 @@
-import * as React from 'react';
-import { FunctionComponent } from 'react';
-import Dependencies from './Dependencies';
-import { FactoryProps } from './interfaces';
-import Level from './Level';
-import Scaling from './Scaling';
+import React, { Fragment, memo } from 'react';
+import { FactoryProps } from '../../types/factory';
+import { FactoryDetails } from './FactoryDetails';
+import { FactoryOverview } from './FactoryOverview';
 
-const Factory: FunctionComponent<FactoryProps> = (props: FactoryProps) => {
-  const { data, name, placeholderText } = props;
-
-  return (
-    <tr>
-      <td>{name}</td>
-      <td>
-        <Level id={data.id} level={data.level} placeholderText={placeholderText} />
-      </td>
-      <td>
-        <Scaling id={data.id} scaling={data.scaling} level={data.level} />
-      </td>
-      <td>
-        <Dependencies id={data.id} dependencies={data.dependencies} level={data.level} />
-      </td>
-      <td>Workload</td>
-      <td>Turnover</td>
-      <td>Turnover Increase per Upgrade</td>
-      <td>Upgrade Cost</td>
-      <td>ROI</td>
-    </tr>
-  );
-};
+const Factory = memo((props: FactoryProps) => (
+  <Fragment>
+    <FactoryOverview {...props} />
+    <FactoryDetails {...props} />
+  </Fragment>
+));
 
 export default Factory;

@@ -89,7 +89,6 @@ class FactoryHandler implements APIInterface {
         $query .= implode('`, `', array_keys($factories)) . '`) VALUES (' . $this->playerIndexUID . ', ' . time() . ', ';
         $query .= implode(', ', array_values($factories)) . ')';
 
-
         if($this->pdo->query($query)) {
             return true;
         }
