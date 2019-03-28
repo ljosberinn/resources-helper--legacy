@@ -121,10 +121,6 @@ class JSONParser {
             $dataset = json_decode($dataset, true);
 
             if($this->isTradeLog) {
-                if($dataset === NULL) {
-                    echo $bytes . ' END STRING: ' . $endString . ' // DATA: ' . $data;
-                    die;
-                }
                 [$dataset, $escapedUserName] = $this->alterDatasetForTradeLog($dataset);
 
                 if(empty($dataset) || empty($escapedUserName)) {
@@ -134,7 +130,11 @@ class JSONParser {
 
             $dataset = $this->mergeWithBlueprint($dataset, $escapedUserName ?? '');
 
-            $this->saveStmt->execute($dataset);
+            $saveProcess = $this->saveStmt->execute($dataset);
+
+            if(!$saveProcess) {
+                return false;
+            }
         }
 
         unlink($this->file);
@@ -143,7 +143,7 @@ class JSONParser {
     }
 
     /**
-     * reduce leftovers if it contains more than 10 other datasets
+     * reduce leftovers if it contains more than 1 other datasets
      *
      * @param string $endString
      */
