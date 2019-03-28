@@ -57,7 +57,7 @@ class APICore {
 
     final public function looseCurlAPI(string $uri): array {
         try {
-            if($_SERVER['SERVER_NAME'] === 'localhost') {
+            if($this->key && $this->query && $_SERVER['SERVER_NAME'] === 'localhost') {
                 return $this->hitCache();
             }
 
