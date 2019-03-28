@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-class TradeLogHandler implements APIInterface {
+class TradeLogHandler implements APIHeavyInterface {
 
     /*
      * {
@@ -20,6 +20,17 @@ class TradeLogHandler implements APIInterface {
     private $pdo;
 
     private $currentlyIteratedUsers = [];
+
+    private const DATASET_SIZE = 200;
+    private const DATASET_END_STRING = ',{"t';
+    private const SAVE_BLUEPRINT = [
+        'timestamp'      => 'ts',
+        'event'          => 'event',
+        'itemID'         => 'itemID',
+        'amount'         => 'amount',
+        'pricePerUnit'   => 'ppstk',
+        'transportation' => 'transcost',
+    ];
 
     private const VALID_TRADE_GOODS = [
         2,
@@ -90,46 +101,15 @@ class TradeLogHandler implements APIInterface {
         $this->playerIndexUID = $playerIndexUID;
     }
 
-    public function transform(array $data): array {
-        $result = [];
-
-        $userIndex = new PlayerIndex($this->pdo);
-
-        $lastDatasetTimestamp = $this->loadLastDatasetTimestamp();
-
-        foreach($data as $dataset) {
-            $dataset['itemID'] = (int) $dataset['itemID'];
-            $dataset['ts']     = (int) $dataset['ts'];
-
-            if($lastDatasetTimestamp > $dataset['ts'] || !$this->isValidTradeGood($dataset['itemID'])) {
-                continue;
-            }
-
-            $escapedUserName = $userIndex->escapeUserName($dataset['username']);
-
-            // disallow pure unicode-character players due to indistinguishability
-            if(empty($escapedUserName)) {
-                continue;
-            }
-
-            $result[] = [
-                'timestamp'       => $dataset['ts'],
-                'playerIndexUID'  => $this->playerIndexUID,
-                'businessPartner' => $this->getPlayerID($userIndex, $escapedUserName, $dataset['ts']),
-                'event'           => $dataset['event'] === 'buy' ? 1 : 0,
-                'itemID'          => $dataset['itemID'],
-                'amount'          => $dataset['amount'],
-                'pricePerUnit'    => $dataset['ppstk'],
-                'transportation'  => $dataset['transcost'],
-            ];
-        }
-
-        return $result;
+    public function transform(string $filePath): string {
+        return $filePath;
     }
 
     private function loadLastDatasetTimestamp(): int {
         $stmt = $this->pdo->prepare(self::QUERIES['loadLastDatasetTimestamp']);
-        $stmt->execute(['playerIndexUID' => $this->playerIndexUID,]);
+        $stmt->execute([
+            'playerIndexUID' => $this->playerIndexUID,
+        ]);
 
         if($stmt->rowCount() === 1) {
             return $stmt->fetch()['timestamp'];
@@ -138,39 +118,23 @@ class TradeLogHandler implements APIInterface {
         return 0;
     }
 
-    public function save(array $data): bool {
+    public function save(string $filePath): bool {
         $stmt = $this->pdo->prepare(self::QUERIES['save']);
 
-        foreach($data as $dataset) {
-            if(!$stmt->execute($dataset)) {
-                return false;
-            }
-        }
+        $fileSize = (int) filesize($filePath);
 
-        return true;
+        $JSONParser = new JSONParser($filePath, 'TradeLog', $this->pdo, $this->loadLastDatasetTimestamp());
+        $JSONParser->storeSaveQuery($stmt)
+                   ->setFileSize($fileSize)
+                   ->setDatasetSize(self::DATASET_SIZE)
+                   ->setDatasetEndString(self::DATASET_END_STRING)
+                   ->setBlueprint(self::SAVE_BLUEPRINT)
+                   ->setPlayerIndexUID($this->playerIndexUID);
+
+        return $JSONParser->parse();
     }
 
     private function isValidTradeGood(int $tradeGood): bool {
         return in_array($tradeGood, self::VALID_TRADE_GOODS, true);
-    }
-
-    private function getPlayerID(PlayerIndex $userIndex, string $escapedUserName, int $lastSeen = 0): int {
-        if(isset($this->currentlyIteratedUsers[$escapedUserName])) {
-            return $this->currentlyIteratedUsers[$escapedUserName];
-        }
-
-        $userUID = $userIndex->getPlayerIDByName($escapedUserName);
-
-        if($userUID === 0) {
-            $userUID = $userIndex->addPlayer($escapedUserName, $lastSeen);
-
-            $this->currentlyIteratedUsers[$escapedUserName] = $userUID;
-            return $userUID;
-        }
-
-        $userIndex->updateLastSeenTimestampByPlayerID($userUID, $lastSeen);
-
-        $this->currentlyIteratedUsers[$escapedUserName] = $userUID;
-        return $userUID;
     }
 }

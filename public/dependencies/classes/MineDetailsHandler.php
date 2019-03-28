@@ -37,7 +37,7 @@ class MineDetailsHandler implements APIHeavyInterface {
         'save'          => 'INSERT INTO `mineDetails` (`playerIndexUID`, `resourceID`, `lat`, `lon`, `built`, `quality`, `techQuality`, `techRate`, `rawRate`, `techFactor`, `isInHQ`, `def1`, `def2`, `def3`, `lastAttack`, `attackPenalty`, `attacks`, `attacksLost`) VALUES(:playerIndexUID, :resourceID, :lat, :lon, :built, :quality, :techQuality, :techRate, :rawRate, :techFactor, :isInHQ, :def1, :def2, :def3, :lastAttack, :attackPenalty, :attacks, :attacksLost)',
     ];
 
-    private const DATASET_SIZE = 475;
+    private const DATASET_SIZE = 497;
     private const DATASET_END_STRING = ',{"m';
     private const SAVE_BLUEPRINT = [
         'resourceID' => 'resourceID',
@@ -84,7 +84,7 @@ class MineDetailsHandler implements APIHeavyInterface {
 
         $stmt = $this->pdo->prepare(self::QUERIES['save']);
 
-        $JSONParser = new JSONParser($filePath);
+        $JSONParser = new JSONParser($filePath, 'MineDetails');
         $JSONParser->setPlayerIndexUID($this->playerIndexUID)
                    ->setBlueprint(self::SAVE_BLUEPRINT)
                    ->setDatasetEndString(self::DATASET_END_STRING)

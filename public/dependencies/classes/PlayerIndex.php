@@ -7,7 +7,7 @@ class PlayerIndex {
     private const QUERIES = [
         'updateLastSeenTimestampByPlayerID' => 'UPDATE `playerIndex` SET `lastSeen` = :lastSeen WHERE `uid` = :uid AND `lastSeen` < :lastSeen2',
         'getPlayerIDByName'                 => 'SELECT `uid` FROM `playerIndex`  WHERE `userName` = :userName',
-        'addPlayer'                         => 'INSERT INTO `playerIndex` (`userName`, `lastSeen`) VALUES(:userName, :lastSeen)',
+        'addPlayer'                         => 'INSERT INTO `playerIndex` (`userName`, `lastSeen`, `firstSeen`) VALUES(:userName, :lastSeen, :firstSeen)',
     ];
 
     public function __construct(PDO $pdo) {
@@ -54,9 +54,13 @@ class PlayerIndex {
 
     public function addPlayer(string $userName, $lastSeen = 0): int {
         $stmt = $this->pdo->prepare(self::QUERIES['addPlayer']);
+
+        $timestamp = $lastSeen > 0 ? $lastSeen : time();
+
         $stmt->execute([
-            'userName' => $userName,
-            'lastSeen' => $lastSeen > 0 ? $lastSeen : time(),
+            'userName'  => $userName,
+            'lastSeen'  => $timestamp,
+            'firstSeen' => $timestamp,
         ]);
 
         return (int) $this->pdo->lastInsertId();

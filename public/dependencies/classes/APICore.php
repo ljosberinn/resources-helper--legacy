@@ -8,17 +8,17 @@ class APICore {
     protected $API_PATH;
 
     protected const API_MAP = [
-        0  => 'APICreditsHandler', // done
-        1  => 'FactoryHandler', // done
-        2  => 'WarehouseHandler', // done
-        3  => 'SpecialBuildingsHandler', // done
-        4  => 'HeadquarterHandler', // done
-        5  => 'MineDetailsHandler', // done - TODO: local file parsing
-        6  => 'TradeLogHandler', // done - TODO: local file parsing
-        7  => 'PlayerInfoHandler', // done
+        0  => 'APICreditsHandler',          // done
+        1  => 'FactoryHandler',             // done
+        2  => 'WarehouseHandler',           // done
+        3  => 'SpecialBuildingsHandler',    // done
+        4  => 'HeadquarterHandler',         // done
+        5  => 'MineDetailsHandler',         // done
+        6  => 'TradeLogHandler',            // done
+        7  => 'PlayerInfoHandler',          // done
         8  => 'MonetaryItemHandler',
         9  => 'CombatLogHandler',
-        10 => 'MissionHandler', // done
+        10 => 'MissionHandler',             // done
         51 => 'MineHandler',
     ];
 

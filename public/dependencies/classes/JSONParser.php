@@ -2,24 +2,59 @@
 
 class JSONParser {
 
+    /** @var int $datasetSize */
     private $fileSize;
+
+    /** @var int $datasetSize */
     private $datasetSize;
+
+    /** @var string $datasetEndString */
     private $datasetEndString;
+
+    /** @var array $blueprint */
     private $blueprint;
+
     /** @var PDOStatement $saveStmt */
     private $saveStmt;
+
+    /** @var resource $stream */
     private $stream;
+
+    /** @var string $file */
     private $file;
+
+    /** @var int $playerIndexUID */
     private $playerIndexUID;
+
+    private $isTradeLog;
+    //private $isMineDetails = false;
+
+    // TRADE LOG SPECIFIC
+    /** @var PlayerIndex $userIndex */
+    private $userIndex;
+    /** @var int $lastDatasetTimestamp */
+    private $lastDatasetTimestamp;
+    private $currentlyIteratedUsers = [];
 
     private $leftovers = '';
 
     private const FILE_END_STRING = ']';
 
-    public function __construct(string $filePath) {
-        $this->file = $filePath;
+    public function __construct(string $filePath, string $validator, PDO $pdo = NULL, int $lastDatasetTimestamp = 0) {
+        $this->file       = $filePath;
+        $this->isTradeLog = $validator === 'TradeLog';
+        //$this->isMineDetails = $validator === 'MineDetails';
 
-        $this->stream = file_exists($filePath) ? fopen($filePath, 'rb') : false;
+        if($this->isTradeLog && $pdo !== NULL) {
+            $this->userIndex            = new PlayerIndex($pdo);
+            $this->lastDatasetTimestamp = $lastDatasetTimestamp;
+        }
+
+        $stream = fopen($filePath, 'rb');
+
+        if(is_resource($stream)) {
+            $this->stream = $stream;
+        }
     }
 
     final public function setDatasetSize(int $datasetSize): self {
@@ -27,6 +62,10 @@ class JSONParser {
         return $this;
     }
 
+    /**
+     * @example ,{"t would signal the end of a dataset of the TradeLog
+     * @return JSONParser
+     */
     final public function setDatasetEndString(string $datasetEnd): self {
         $this->datasetEndString = $datasetEnd;
         return $this;
@@ -53,7 +92,7 @@ class JSONParser {
     }
 
     final public function parse(): bool {
-        if(!$this->stream) {
+        if($this->stream === NULL) {
             return false;
         }
 
@@ -66,9 +105,9 @@ class JSONParser {
             // get trailing data from previous iteration to have a full new dataset
             $data = $this->leftovers;
 
-            $data .= stream_get_contents($this->stream, $this->datasetSize, (int) $bytes);
+            $data .= stream_get_contents($this->stream, $this->datasetSize, $bytes);
 
-            if($bytes + $this->datasetSize >= $this->fileSize) {
+            if(($bytes + $this->datasetSize) >= $this->fileSize) {
                 $endString = self::FILE_END_STRING;
             }
 
@@ -81,7 +120,19 @@ class JSONParser {
             $dataset = substr($data, 0, $datasetEnding);
             $dataset = json_decode($dataset, true);
 
-            $dataset = $this->mergeWithBlueprint($dataset);
+            if($this->isTradeLog) {
+                if($dataset === NULL) {
+                    echo $bytes . ' END STRING: ' . $endString . ' // DATA: ' . $data;
+                    die;
+                }
+                [$dataset, $escapedUserName] = $this->alterDatasetForTradeLog($dataset);
+
+                if(empty($dataset) || empty($escapedUserName)) {
+                    continue;
+                }
+            }
+
+            $dataset = $this->mergeWithBlueprint($dataset, $escapedUserName ?? '');
 
             $this->saveStmt->execute($dataset);
         }
@@ -97,7 +148,7 @@ class JSONParser {
      * @param string $endString
      */
     private function reduceLeftovers(string $endString): void {
-        if(substr_count($this->leftovers, $endString) < 10) {
+        if(substr_count($this->leftovers, $endString) < 1) {
             return;
         }
 
@@ -106,7 +157,17 @@ class JSONParser {
 
             $dataset = substr($this->leftovers, 0, $datasetEnding);
             $dataset = json_decode($dataset, true);
-            $dataset = $this->mergeWithBlueprint($dataset);
+
+            if($this->isTradeLog) {
+                [$dataset, $escapedUserName] = $this->alterDatasetForTradeLog($dataset);
+
+                if(empty($dataset) || empty($escapedUserName)) {
+                    $this->leftovers = substr($this->leftovers, $datasetEnding + 1);
+                    continue;
+                }
+            }
+
+            $dataset = $this->mergeWithBlueprint($dataset, $escapedUserName ?? '');
 
             $this->saveStmt->execute($dataset);
 
@@ -114,12 +175,16 @@ class JSONParser {
         }
     }
 
-    private function mergeWithBlueprint(array $dataset): array {
+    private function mergeWithBlueprint(array $dataset, string $userName = ''): array {
         $validDataset = [
             'playerIndexUID' => $this->playerIndexUID,
         ];
 
         $dataset = $this->applyBlueprintExemptions($dataset);
+
+        if($this->isTradeLog) {
+            $validDataset['businessPartner'] = $this->getPlayerID($userName, $dataset['ts']);
+        }
 
         foreach($this->blueprint as $key => $index) {
             $validDataset[$key] = $dataset[$index];
@@ -129,10 +194,53 @@ class JSONParser {
     }
 
     private function applyBlueprintExemptions(array $dataset): array {
+        // $this->validatorIsMineDetails
         if(isset($dataset['HQBoost'])) {
             $dataset['HQBoost'] = $dataset['HQBoost'] > 1 ? 1 : 0;
         }
 
+        // $this->validatorIsTradeLog
+        if(isset($dataset['event'])) {
+            $dataset['event'] = $dataset['event'] === 'buy' ? 1 : 0;
+        }
+
         return $dataset;
+    }
+
+    private function getPlayerID(string $escapedUserName, int $lastSeen = 0): int {
+        if(isset($this->currentlyIteratedUsers[$escapedUserName])) {
+            return $this->currentlyIteratedUsers[$escapedUserName];
+        }
+
+        $userUID = $this->userIndex->getPlayerIDByName($escapedUserName);
+
+        if($userUID === 0) {
+            $userUID = $this->userIndex->addPlayer($escapedUserName, $lastSeen);
+
+            $this->currentlyIteratedUsers[$escapedUserName] = $userUID;
+            return $userUID;
+        }
+
+        $this->userIndex->updateLastSeenTimestampByPlayerID($userUID, $lastSeen);
+
+        $this->currentlyIteratedUsers[$escapedUserName] = $userUID;
+        return $userUID;
+    }
+
+    private function alterDatasetForTradeLog(array $dataset) {
+        $dataset['ts'] = (int) $dataset['ts'];
+
+        // only continue TradLog where we last left off
+        if($this->lastDatasetTimestamp >= $dataset['ts']) {
+            return [
+                [],
+                '',
+            ];
+        }
+
+        return [
+            $dataset,
+            $this->userIndex->escapeUserName($dataset['username']),
+        ];
     }
 }
