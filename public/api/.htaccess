@@ -1,3 +1,6 @@
-
 Header set Access-Control-Allow-Origin "*"
-Header set Access-Control-Allow-Methods "GET"
+Header set Access-Control-Allow-Methods "GET POST"
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
