@@ -11,6 +11,7 @@ class APIHandler extends APICore {
         'updateLastSeenTimestamp' => 'UPDATE `user` SET `lastSeen` = :lastSeen WHERE `playerIndexUID` = :playerIndexUID',
     ];
 
+    /** @var PDO $pdo */
     private $pdo;
 
     public function __construct() {
@@ -26,18 +27,21 @@ class APIHandler extends APICore {
 
     public function handleQuery(): array {
         if(!$this->getDBInstance()) {
+            $response['error'] = 'internal error';
             return $this->response;
         }
 
         $this->response['actor'] = $this->setActor();
 
         if($this->response['actor'] === 0) {
+            $response['error'] = 'invalid name';
             return $this->response;
         }
 
         $data = $this->isHeavyQuery ? $this->handleHeavyQuery() : $this->curlAPI();
 
         if(empty($data)) {
+            $response['error'] = 'API failure';
             return $this->response;
         }
 
@@ -53,7 +57,6 @@ class APIHandler extends APICore {
 
         $this->response['success'] = $class->save($data) && $this->updateLastSeenTimestamp();
 
-
         return $this->response;
     }
 
@@ -65,6 +68,7 @@ class APIHandler extends APICore {
 
     private function updateLastSeenTimestamp(): bool {
         $stmt = $this->pdo->prepare(self::QUERIES['updateLastSeenTimestamp']);
+
         return $stmt->execute([
             'lastSeen'       => time(),
             'playerIndexUID' => $this->response['actor'],

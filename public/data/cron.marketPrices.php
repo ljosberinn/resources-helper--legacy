@@ -2,6 +2,11 @@
 
 require_once dirname(__DIR__, 1) . '/_boot.php';
 
+header('Content-type: application/json');
+
 $marketPrices = new MarketPrices();
 
-print_r($marketPrices->getPrices());
+echo json_encode([
+    'success' => $marketPrices->save($marketPrices->transformPrices($marketPrices->getPrices())),
+]);
+
