@@ -5,6 +5,10 @@ import { render } from 'react-dom';
 import { RHelper } from './components/RHelper';
 import { preloadedState } from './constants';
 import { configureStore } from './Store';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { Loading } from './components/Shared/Loading';
+import { ConnectedRouter } from 'connected-react-router';
 
 Sentry.init({
   dsn: 'https://7b1b186565cf49e282d282f55c8e615c@sentry.io/1422548',
@@ -14,4 +18,13 @@ const history = createBrowserHistory();
 
 export const { store, persistor } = configureStore(history, preloadedState);
 
-render(<RHelper store={store} history={history} />, document.getElementById('root') as HTMLElement);
+render(
+  <Provider store={store}>
+    <PersistGate loading={<Loading />} persistor={persistor}>
+      <ConnectedRouter history={history}>
+        <RHelper store={store} />
+      </ConnectedRouter>
+    </PersistGate>
+  </Provider>,
+  document.getElementById('root') as HTMLElement,
+);

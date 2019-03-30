@@ -6,7 +6,7 @@ class Login extends Authentication {
     private $user;
 
     private const QUERIES = [
-        'isRegisteredUser' => 'SELECT * FROM `user` WHERE `mail` = :mail',
+        'isRegisteredUser' => 'SELECT `apiKey`, `mail`, `pageRegistration`, `playerIndexUID`, `playerLevel`, `points`, `rank`, `registered`, `remainingAPICredits`, `password` FROM `user` WHERE `mail` = :mail',
     ];
 
     public function __construct(string $mail, string $password) {

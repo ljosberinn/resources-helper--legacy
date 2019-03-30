@@ -1,3 +1,4 @@
+import { AuthenticationActions } from './../actions/Authentication/index';
 import { Reducer } from 'redux';
 import { FactoryActions } from '../actions/Factories';
 import { preloadedState } from '../constants';
@@ -35,7 +36,34 @@ export const factories: Reducer<IFactories> = (state = preloadedState.factories,
   return state;
 };
 
-export const user: Reducer<IUserState> = (state = preloadedState.user, action) => state;
+export const user: Reducer<IUserState> = (state = preloadedState.user, action) => {
+  switch (action.type) {
+    case AuthenticationActions.LOGIN:
+      return {
+        ...state,
+        isAPIUser: action.payload.apiKey.length === 45,
+        isAuthenticated: true,
+        API: {
+          ...state.API,
+          key: action.payload.apiKey,
+        },
+        playerInfo: {
+          ...state.playerInfo,
+          level: action.payload.playerLevel,
+          rank: action.payload.rank,
+          registered: action.payload.registered,
+        },
+      };
+    case AuthenticationActions.LOGOUT:
+      return {
+        ...state,
+        isAuthenticated: false,
+      };
+  }
+
+  return state;
+};
+
 export const specialBuildings: Reducer<ISpecialBuildingState[]> = (state = preloadedState.specialBuildings, action) =>
   state;
 export const headquarter: Reducer<IHeadquarterState> = (state = preloadedState.headquarter, action) => state;

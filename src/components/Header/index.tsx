@@ -1,8 +1,12 @@
 import React from 'react';
 import { Navigation } from './../Navigation';
 
-export const Header = () => (
+interface HeaderProps {
+  isAuthenticated: boolean;
+}
+
+export const Header = ({ isAuthenticated }: HeaderProps) => (
   <header>
-    <Navigation />
+    <Navigation isAuthenticated={isAuthenticated} />
   </header>
 );

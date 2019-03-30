@@ -1,26 +1,40 @@
 import React, { memo } from 'react';
 
-const navElements = {
-  Login: { href: 'signup', component: 'Login' },
-  API: { href: 'api', component: 'API' },
-  Mines: { href: 'mines', component: 'Mines' },
-  Factories: { href: 'factories', component: 'Factories' },
-  'Material Flow': { href: 'flow', component: 'Login' },
-  Warehouses: { href: 'wh', component: 'Warehouses' },
-  'Special Buildings': { href: 'buildings', component: 'Buildings' },
-  Recycling: { href: 'recycling', component: 'Recycling' },
-  Units: { href: 'units', component: 'Units' },
-};
+const navElements = [
+  { displayName: 'Login', href: 'login', requiresGuest: true, requiresLogin: false },
+  { displayName: 'Registration', href: 'register', requiresGuest: true, requiresLogin: false },
 
-export const Navigation = memo(() => (
+  { displayName: 'Dashboard', href: 'dashboard', requiresGuest: false, requiresLogin: false },
+  { displayName: 'API', href: 'api', requiresGuest: false, requiresLogin: false },
+
+  { displayName: 'Mines', href: 'mines', requiresGuest: false, requiresLogin: false },
+  { displayName: 'Factories', href: 'factories', requiresGuest: false, requiresLogin: false },
+  { displayName: 'Material Flow', href: 'flow', requiresGuest: false, requiresLogin: false },
+  { displayName: 'Warehouses', href: 'warehouses', requiresGuest: false, requiresLogin: false },
+  { displayName: 'Special Buildings', href: 'buildings', requiresGuest: false, requiresLogin: false },
+  { displayName: 'Recycling', href: 'recycling', requiresGuest: false, requiresLogin: false },
+  { displayName: 'Units', href: 'units', requiresGuest: false, requiresLogin: false },
+
+  { displayName: 'Logout', href: 'logout', requiresGuest: false, requiresLogin: true },
+];
+
+interface INavigationProps {
+  isAuthenticated: boolean;
+}
+
+export const Navigation = memo(({ isAuthenticated }: INavigationProps) => (
   <nav>
     <ul>
-      {Object.entries(navElements).map(([title, meta], key) => {
-        const { href } = meta;
+      {Object.entries(navElements).map(([key, { displayName, href, requiresGuest, requiresLogin }]) => {
+        const invisible = (isAuthenticated && requiresGuest) || (!isAuthenticated && requiresLogin);
+
+        if (invisible) {
+          return null;
+        }
 
         return (
           <li key={key}>
-            <a href={`/${href}`}>{title}</a>
+            <a href={`/${href}`}>{displayName}</a>
           </li>
         );
       })}

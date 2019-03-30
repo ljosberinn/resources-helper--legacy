@@ -4,7 +4,7 @@ $response = [];
 
 header('Content-type: application/json');
 
-$dirName = dirname(__DIR__, 2) . '/static';
+$dirName = dirname(__DIR__, 1) . '/static';
 
 $staticDirectories = (array) scandir($dirName . '/', SCANDIR_SORT_ASCENDING);
 $staticDirectories = array_slice($staticDirectories, 2);

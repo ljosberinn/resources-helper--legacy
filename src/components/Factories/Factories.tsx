@@ -1,8 +1,8 @@
-import React, { SetStateAction, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
+import { store } from '../..';
 import { setFactories } from '../../actions/Factories';
-import { store } from '../../index';
 import { IPreloadedState } from '../../types';
 import { IFactories } from '../../types/factory';
 import { evaluateLoadingAnimationTimeout, getStaticData } from '../helperFunctions';
@@ -21,28 +21,6 @@ interface PropsFromDispatch {
 
 type FactoriesProps = PropsFromState & PropsFromDispatch;
 
-const getFactoryData = (
-  currentStore: IPreloadedState,
-  props: FactoriesProps,
-  setFactories: React.Dispatch<SetStateAction<IFactories>>,
-  setError: React.Dispatch<SetStateAction<boolean>>,
-  setErrorType: React.Dispatch<SetStateAction<string>>,
-) => {
-  const loadingStart = new Date().getMilliseconds();
-
-  Promise.resolve(getStaticData(currentStore, 'factories', setError, setErrorType)).then(factories => {
-    const timePassed = new Date().getMilliseconds() - loadingStart;
-
-    setTimeout(() => {
-      // Redux
-      props.setFactories(factories);
-
-      // Hooks
-      setFactories(factories);
-    }, evaluateLoadingAnimationTimeout(timePassed));
-  });
-};
-
 const ConnectedFactory = (props: FactoriesProps) => {
   const currentStore = store.getState();
   const { factories } = currentStore;
@@ -55,7 +33,23 @@ const ConnectedFactory = (props: FactoriesProps) => {
 
   useEffect(() => {
     if (isLoading && !hasError) {
-      getFactoryData(currentStore, props, setFactories, setError, setErrorType);
+      const getFactoryData = (currentStore: IPreloadedState, props: FactoriesProps) => {
+        const loadingStart = new Date().getMilliseconds();
+
+        Promise.resolve(getStaticData(currentStore, 'factories', setError, setErrorType)).then(factories => {
+          const timePassed = new Date().getMilliseconds() - loadingStart;
+
+          setTimeout(() => {
+            // Redux
+            props.setFactories(factories);
+
+            // Hooks
+            setFactories(factories);
+          }, evaluateLoadingAnimationTimeout(timePassed));
+        });
+      };
+
+      getFactoryData(currentStore, props);
     }
   }, [factoryData]);
 
