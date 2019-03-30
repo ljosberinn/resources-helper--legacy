@@ -3,6 +3,7 @@ import { action } from 'typesafe-actions';
 export enum AuthenticationActions {
   LOGIN = '@@authentication/LOGIN',
   LOGOUT = '@@authentication/LOGOUT',
+  REGISTER = '@@authentication/REGISTER',
 }
 
 export interface LoginResponse {

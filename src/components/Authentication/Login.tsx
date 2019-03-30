@@ -1,15 +1,13 @@
-import React, { FormEvent, useState, ChangeEvent } from 'react';
+import React, { FormEvent, useState, ChangeEvent, memo } from 'react';
 import { DEV_SETTINGS } from '../../developmentSettings';
 import { login, LoginResponse } from '../../actions/Authentication';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-
-const htmlPattern = '^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{4,}$';
-const regExp = new RegExp(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/);
+import { regExp, htmlPattern } from './Shared';
 
 const authenticationURL = `${DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development}/auth/login`;
 
-interface ILoginParams {
+interface ILoginPayload {
   mail: string;
   password: string;
 }
@@ -19,16 +17,16 @@ interface PropsFromDispatch {
   login: typeof login;
 }
 
-type LoginProps = PropsFromState & PropsFromDispatch;
+type LoginType = PropsFromState & PropsFromDispatch;
 
-export const ConnectedLogin = (props: LoginProps) => {
+const ConnectedLogin = memo((props: LoginType) => {
   const [mail, setMail] = useState('admin@gerritalex.de');
   const [password, setPassword] = useState('resourcesHelper1992');
-  const [isSubmitting, setSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(false);
 
-  const validateLogin = async (payload: ILoginParams) => {
-    setSubmitting(true);
+  const validateLogin = async (payload: ILoginPayload) => {
+    setIsSubmitting(true);
 
     const body = new FormData();
 
@@ -40,7 +38,7 @@ export const ConnectedLogin = (props: LoginProps) => {
       body,
     });
 
-    setSubmitting(false);
+    setIsSubmitting(false);
 
     if (response.ok) {
       if (error) {
@@ -98,7 +96,7 @@ export const ConnectedLogin = (props: LoginProps) => {
       {error ? <p>Invalid data provided.</p> : void 0}
     </form>
   );
-};
+});
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   login: (response: LoginResponse) => dispatch(login(response)),

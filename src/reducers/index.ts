@@ -39,9 +39,12 @@ export const factories: Reducer<IFactories> = (state = preloadedState.factories,
 export const user: Reducer<IUserState> = (state = preloadedState.user, action) => {
   switch (action.type) {
     case AuthenticationActions.LOGIN:
+      const keyLength = action.payload.apiKey.length;
+      const isAPIUser = keyLength > 0 ? keyLength === 45 : false;
+
       return {
         ...state,
-        isAPIUser: action.payload.apiKey.length === 45,
+        isAPIUser,
         isAuthenticated: true,
         API: {
           ...state.API,
