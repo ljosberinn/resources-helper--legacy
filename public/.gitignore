@@ -1,4 +1,4 @@
 /vendor/
-/data/api/cache/
+/api/game/cache/
 
 .env
