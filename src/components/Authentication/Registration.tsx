@@ -16,17 +16,27 @@ interface RegistrationError {
 
 export const Registration = memo(() => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [hasError, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
+
   const [mail, setMail] = useState('');
   const [password, setPassword] = useState('');
+  const [repeatedPassword, setRepeatedPassword] = useState('');
+
+  const [isValidPasswordRepetition, setPasswordRepetitionValidation] = useState(false);
 
   const handleMailChange = (e: ChangeEvent<HTMLInputElement>) => setMail(e.target.value);
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const password = e.target.value;
-    if (regExp.test(password)) {
-      setPassword(password);
-    }
+    const upcomingPassword = e.target.value;
+    setPassword(upcomingPassword);
+    setPasswordRepetitionValidation(repeatedPassword === upcomingPassword);
+  };
+
+  const handlePasswordRepetitionChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const repetitionPassword = e.target.value;
+    setRepeatedPassword(repetitionPassword);
+    setPasswordRepetitionValidation(repetitionPassword === password);
   };
 
   const validateRegistration = async (payload: IRegistrationPayload) => {
@@ -68,6 +78,15 @@ export const Registration = memo(() => {
     await validateRegistration({ mail, password });
   };
 
+  const submittable =
+    mail.length > 0 &&
+    password.length > 0 &&
+    regExp.test(password) &&
+    regExp.test(repeatedPassword) &&
+    !isSubmitting &&
+    !hasError &&
+    isValidPasswordRepetition;
+
   return (
     <form onSubmit={handleSubmit}>
       <input
@@ -77,21 +96,34 @@ export const Registration = memo(() => {
         name={'mail'}
         onChange={handleMailChange}
         disabled={isSubmitting}
-        defaultValue={mail}
       />
       <input
         type={'password'}
+        placeholder={'password'}
         pattern={htmlPattern}
         required
         name={'password'}
         onChange={handlePasswordChange}
         disabled={isSubmitting}
-        defaultValue={password}
       />
-      <button type="submit" disabled={isSubmitting}>
+      <input
+        type={'password'}
+        placeholder={'repeat password'}
+        pattern={htmlPattern}
+        required
+        name={'password-repetition'}
+        onChange={handlePasswordRepetitionChange}
+        disabled={isSubmitting}
+      />
+      <button type="submit" disabled={!submittable}>
         Register
       </button>
-      {hasError ? <p>{errorText}</p> : void 0}
+
+      {hasError ? <p>{errorText}</p> : null}
+
+      {password.length > 0 && repeatedPassword.length > 0 && !isValidPasswordRepetition ? (
+        <p>Passwords not matching</p>
+      ) : null}
     </form>
   );
 });
