@@ -7,7 +7,7 @@ const getStaticData = async (
   state: IPreloadedState,
   component: string,
   setError: Dispatch<SetStateAction<boolean>>,
-  setErrorType: Dispatch<SetStateAction<string>>,
+  setErrorType: Dispatch<SetStateAction<null>>,
 ) => {
   // @ts-ignore
   if (state[component].length > 0) {
@@ -23,7 +23,7 @@ const getStaticData = async (
 const abortableAsyncFetch = async (
   url: string,
   setError: Dispatch<SetStateAction<boolean>>,
-  setErrorType: Dispatch<SetStateAction<string>>,
+  setErrorType: Dispatch<SetStateAction<null>>,
 ) => {
   try {
     const controller = new AbortController();

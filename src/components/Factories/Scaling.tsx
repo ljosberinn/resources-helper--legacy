@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, memo } from 'react';
 import { connect } from 'react-redux';
 import { IPreloadedState } from '../../types';
 import { filterFactoryByPropsID } from '../helperFunctions';
@@ -9,11 +9,11 @@ interface PropsFromState {
   scaling: number;
 }
 
-const ConnectedScaling = (props: PropsFromState) => {
-  const value = props.scaling * (Number.isNaN(props.level) ? 0 : props.level);
+const ConnectedScaling = memo(({ level, scaling }: PropsFromState) => {
+  const value = scaling * (Number.isNaN(level) ? 0 : level);
 
   return <Fragment>{value}</Fragment>;
-};
+});
 
 const mapStateToProps = ({ factories }: IPreloadedState, ownProps: PropsFromState) =>
   filterFactoryByPropsID(factories, ownProps);
@@ -21,3 +21,4 @@ const mapStateToProps = ({ factories }: IPreloadedState, ownProps: PropsFromStat
 const preconnect = connect(mapStateToProps);
 
 export const Scaling = preconnect(ConnectedScaling);
+ConnectedScaling.displayName = 'Scaling';

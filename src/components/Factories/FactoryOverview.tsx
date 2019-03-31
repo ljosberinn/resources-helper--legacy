@@ -17,43 +17,41 @@ interface PropsFromDispatch {
 
 type IFactoryOverview = PropsFromState & PropsFromDispatch;
 
-const toggleDetails = (
-  event: MouseEvent<HTMLButtonElement>,
-  id: number,
-  dispatchFactoryDetailsVisibility: typeof toggleFactoryDetailsVisibility,
-) => {
-  const parentTR = event.currentTarget.closest('tr') as HTMLTableRowElement;
-  const detailsTR = parentTR.nextElementSibling as HTMLTableRowElement;
+const ConnectedFactoryOverview = memo(({ data, toggleFactoryDetailsVisibility }: IFactoryOverview) => {
+  const { id, level, scaling } = data;
 
-  detailsTR.hidden = !detailsTR.hidden;
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
+    const parentTR = e.currentTarget.closest('tr') as HTMLTableRowElement;
+    const detailsTR = parentTR.nextElementSibling as HTMLTableRowElement;
 
-  dispatchFactoryDetailsVisibility(id);
-};
+    detailsTR.hidden = !detailsTR.hidden;
 
-const ConnectedFactoryOverview = ({ data, toggleFactoryDetailsVisibility }: IFactoryOverview) => (
-  <tr>
-    <td>ID {data.id}</td>
-    <td>
-      <Level id={data.id} level={data.level} />
-    </td>
-    <td>
-      <Scaling id={data.id} scaling={data.scaling} level={data.level} />
-    </td>
-    <td>
-      <ProductionDependencies {...data} />
-    </td>
-    <td>Workload</td>
-    <td>Turnover</td>
-    <td>Turnover Increase per Upgrade</td>
-    <td>Upgrade Cost</td>
-    <td>GD Order Indicator</td>
-    <td>
-      <button onClick={(e: MouseEvent<HTMLButtonElement>) => toggleDetails(e, data.id, toggleFactoryDetailsVisibility)}>
-        Details
-      </button>
-    </td>
-  </tr>
-);
+    toggleFactoryDetailsVisibility(id);
+  };
+
+  return (
+    <tr>
+      <td>ID {id}</td>
+      <td>
+        <Level id={id} level={level} />
+      </td>
+      <td>
+        <Scaling id={id} scaling={scaling} level={level} />
+      </td>
+      <td>
+        <ProductionDependencies {...data} />
+      </td>
+      <td>Workload</td>
+      <td>Turnover</td>
+      <td>Turnover Increase per Upgrade</td>
+      <td>Upgrade Cost</td>
+      <td>GD Order Indicator</td>
+      <td>
+        <button onClick={handleClick}>Details</button>
+      </td>
+    </tr>
+  );
+});
 
 const mapStateToProps = ({ factories }: IPreloadedState, { data }: PropsFromState) =>
   filterFactoryByPropsID(factories, data);
@@ -68,3 +66,4 @@ const preconnect = connect(
 );
 
 export const FactoryOverview = preconnect(ConnectedFactoryOverview);
+ConnectedFactoryOverview.displayName = 'FactoryOverview';

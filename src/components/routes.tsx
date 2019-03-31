@@ -17,6 +17,7 @@ export const Routes = ({ state }: IRoutesProps) => (
     <main>
       <Switch>
         <Route exact path="/" component={devComponent} />
+        <Route exact path="/factories" component={Factories} />
         {state.user.isAuthenticated ? (
           <Route exact path="/logout" component={Logout} />
         ) : (
@@ -25,7 +26,6 @@ export const Routes = ({ state }: IRoutesProps) => (
             <Route exact path="/register" component={Registration} />
           </Fragment>
         )}
-        <Route exact path="/factories" component={Factories} />
         <Route component={() => <div>404</div>} />
       </Switch>
     </main>

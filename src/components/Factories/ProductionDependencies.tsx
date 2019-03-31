@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, memo } from 'react';
 import { connect } from 'react-redux';
 import { IPreloadedState } from '../../types';
 import { IFactoryDependency } from '../../types/factory';
@@ -10,15 +10,24 @@ interface PropsFromState {
   productionDependencies: IFactoryDependency[];
 }
 
-const ConnectedProductionDependencies = ({ productionDependencies, level, id }: PropsFromState) => (
-  <Fragment>
-    {productionDependencies.map(dependency => (
-      <span key={dependency.id}>
-        <i className={`icon-${dependency.id}`} /> {(dependency.amount * level).toLocaleString()}
-      </span>
-    ))}
-  </Fragment>
-);
+const calcDependencyAmount = (amount: number, level: number) =>
+  (amount * (Number.isNaN(level) ? 0 : level)).toLocaleString();
+
+const ConnectedProductionDependencies = memo(({ productionDependencies, level }: PropsFromState) => {
+  return (
+    <Fragment>
+      {productionDependencies.map(dependency => {
+        const { id, amount } = dependency;
+
+        return (
+          <span key={id}>
+            <i className={`icon-${id}`} /> {calcDependencyAmount(amount, level)}
+          </span>
+        );
+      })}
+    </Fragment>
+  );
+});
 
 const mapStateToProps = ({ factories }: IPreloadedState, ownProps: PropsFromState) =>
   filterFactoryByPropsID(factories, { id: ownProps.id });
@@ -26,3 +35,4 @@ const mapStateToProps = ({ factories }: IPreloadedState, ownProps: PropsFromStat
 const preconnect = connect(mapStateToProps);
 
 export const ProductionDependencies = preconnect(ConnectedProductionDependencies);
+ConnectedProductionDependencies.displayName = 'ProuctionDependencies';

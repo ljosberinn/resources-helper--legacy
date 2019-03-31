@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { store } from '../..';
@@ -21,13 +21,12 @@ interface PropsFromDispatch {
 
 type FactoriesProps = PropsFromState & PropsFromDispatch;
 
-const ConnectedFactory = (props: FactoriesProps) => {
+const ConnectedFactory = memo((props: FactoriesProps) => {
   const currentStore = store.getState();
-  const { factories } = currentStore;
 
-  const [factoryData, setFactories] = useState(factories);
+  const [factories, setFactories] = useState(currentStore.factories);
   const [hasError, setError] = useState(false);
-  const [errorType, setErrorType] = useState('');
+  const [errorType, setErrorType] = useState(null);
 
   const isLoading = Object.keys(factories).length === 0;
 
@@ -51,7 +50,7 @@ const ConnectedFactory = (props: FactoriesProps) => {
 
       getFactoryData(currentStore, props);
     }
-  }, [factoryData]);
+  }, [factories]);
 
   if (hasError) {
     if (errorType === 'AbortError') {
@@ -65,8 +64,8 @@ const ConnectedFactory = (props: FactoriesProps) => {
     return <Loading />;
   }
 
-  return <FactoryTable factories={factoryData} />;
-};
+  return <FactoryTable factories={factories} />;
+});
 
 const mapStateToProps = (state: IPreloadedState) => ({ factories: state.factories, loading: true });
 
@@ -80,3 +79,4 @@ const preconnect = connect(
 );
 
 export const Factories = preconnect(ConnectedFactory);
+ConnectedFactory.displayName = 'ConnectedFactory';

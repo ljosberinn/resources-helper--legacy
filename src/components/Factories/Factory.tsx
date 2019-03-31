@@ -11,3 +11,4 @@ const Factory = memo((props: FactoryProps) => (
 ));
 
 export default Factory;
+Factory.displayName = 'Factory';

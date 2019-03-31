@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent, FocusEvent, memo } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { setLevel } from '../../actions/Factories';
@@ -16,21 +16,26 @@ interface PropsFromDispatch {
 
 type LevelProps = PropsFromState & PropsFromDispatch;
 
-const getLevelAttributes = (props: LevelProps) => ({
-  type: 'number',
-  placeholder: 'PH',
-  defaultValue: props.level.toString(),
-  min: 0,
-  max: 5000,
-  onFocus: (e: React.FocusEvent<HTMLInputElement>) => e.target.select(),
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+const ConnectedLevel = memo((props: LevelProps) => {
+  const handleFocus = (e: FocusEvent<HTMLInputElement>) => e.target.select();
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const level = parseInt(e.target.value);
 
     props.setLevel(level, props.id);
-  },
-});
+  };
 
-const ConnectedLevel = (props: LevelProps) => <input {...getLevelAttributes(props)} />;
+  return (
+    <input
+      type={'number'}
+      placeholder={'PH'}
+      defaultValue={props.level.toString()}
+      min={0}
+      max={5000}
+      onFocus={handleFocus}
+      onChange={handleChange}
+    />
+  );
+});
 
 const mapStateToProps = ({ factories }: IPreloadedState, ownProps: PropsFromState) => {
   const { level, id } = filterFactoryByPropsID(factories, ownProps);
@@ -48,3 +53,4 @@ const preconnect = connect(
 );
 
 export const Level = preconnect(ConnectedLevel);
+ConnectedLevel.displayName = 'Level';
