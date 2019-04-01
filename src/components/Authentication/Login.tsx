@@ -7,11 +7,6 @@ import { regExp, htmlPattern } from './Shared';
 
 const authenticationURL = `${DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development}/auth/login`;
 
-interface ILoginPayload {
-  mail: string;
-  password: string;
-}
-
 interface PropsFromState {}
 interface PropsFromDispatch {
   login: typeof login;
@@ -20,17 +15,17 @@ interface PropsFromDispatch {
 type LoginType = PropsFromState & PropsFromDispatch;
 
 const ConnectedLogin = memo((props: LoginType) => {
-  const [mail, setMail] = useState('admin@gerritalex.de');
-  const [password, setPassword] = useState('resourcesHelper1992');
+  const [mail, setMail] = useState('some@mail.tld');
+  const [password, setPassword] = useState('validPassword123');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(false);
 
-  const validateLogin = async (payload: ILoginPayload) => {
+  const validateLogin = async () => {
     setIsSubmitting(true);
 
     const body = new FormData();
 
-    Object.entries(payload).forEach(([key, value]) => body.append(key, value));
+    Object.entries({ mail, password }).forEach(([key, value]) => body.append(key, value));
 
     const response = await fetch(authenticationURL, {
       credentials: 'same-origin',
@@ -56,44 +51,31 @@ const ConnectedLogin = memo((props: LoginType) => {
     setError(true);
   };
 
-  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const password = e.target.value;
-    if (regExp.test(password)) {
-      setPassword(password);
-    }
-  };
-
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
   const handleMailChange = (e: ChangeEvent<HTMLInputElement>) => setMail(e.target.value);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    await validateLogin({ mail, password });
+    await validateLogin();
   };
+
+  const disabled = !(regExp.test(password) && mail.length > 2 && !isSubmitting);
 
   return (
     <form onSubmit={handleSubmit}>
+      <input type="email" placeholder="mail" required onChange={handleMailChange} disabled={isSubmitting} defaultValue={mail} />
       <input
-        type={'email'}
-        placeholder={'mail'}
-        required
-        name={'mail'}
-        onChange={handleMailChange}
-        disabled={isSubmitting}
-        defaultValue={mail}
-      />
-      <input
-        type={'password'}
+        type="password"
         pattern={htmlPattern}
         required
-        name={'password'}
         onChange={handlePasswordChange}
         disabled={isSubmitting}
         defaultValue={password}
       />
-      <button type="submit" disabled={isSubmitting}>
+      <button type="submit" disabled={disabled}>
         Login
       </button>
-      {error ? <p>Invalid data provided.</p> : void 0}
+      {error ? <p>Invalid data provided.</p> : null}
     </form>
   );
 });

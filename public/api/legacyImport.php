@@ -12,6 +12,7 @@ $legacyDB = [
     'pass'   => (string) getenv('LEGACY_DB_PASS'),
     'dbname' => getenv('LEGACY_DB_NAME'),
 ];
+
 try {
     $legacyDB = new PDO('mysql:host=' . $legacyDB['server'] . ';dbname=' . $legacyDB['dbname'] . ';charset=utf8', $legacyDB['user'], $legacyDB['pass'], [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -39,7 +40,7 @@ if(empty($response)) {
     die;
 }
 
-if(!$response) {
+if(!is_array($response)) {
     echo json_encode($DB_ERROR);
     die;
 }

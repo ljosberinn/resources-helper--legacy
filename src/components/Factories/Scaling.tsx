@@ -9,14 +9,11 @@ interface PropsFromState {
   scaling: number;
 }
 
-const ConnectedScaling = memo(({ level, scaling }: PropsFromState) => {
-  const value = scaling * (Number.isNaN(level) ? 0 : level);
+const calcScaling = (level: number, scaling: number) => scaling * (Number.isNaN(level) ? 0 : level);
 
-  return <Fragment>{value}</Fragment>;
-});
+const ConnectedScaling = memo(({ level, scaling }: PropsFromState) => <Fragment>{calcScaling(level, scaling)}</Fragment>);
 
-const mapStateToProps = ({ factories }: IPreloadedState, ownProps: PropsFromState) =>
-  filterFactoryByPropsID(factories, ownProps);
+const mapStateToProps = ({ factories }: IPreloadedState, ownProps: PropsFromState) => filterFactoryByPropsID(factories, ownProps);
 
 const preconnect = connect(mapStateToProps);
 

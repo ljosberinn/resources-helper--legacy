@@ -26,8 +26,8 @@ const ConnectedLevel = memo((props: LevelProps) => {
 
   return (
     <input
-      type={'number'}
-      placeholder={'PH'}
+      type="number"
+      placeholder="PH"
       defaultValue={props.level.toString()}
       min={0}
       max={5000}

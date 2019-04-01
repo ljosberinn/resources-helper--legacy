@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@sentry/browser": "^4.6.5",
+    "@sentry/browser": "^4.6.6",
     "connected-react-router": "^6.3.2",
     "history": "^4.9.0",
     "react": "^16.8.4",
@@ -22,7 +22,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "https": "set HTTPS=true&&npm start"
   },
   "eslintConfig": {
     "extends": "react-app"

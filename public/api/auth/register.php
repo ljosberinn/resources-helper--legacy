@@ -21,17 +21,24 @@ if(!$registration->isValidData()) {
     die;
 }
 
-header('Content-type: application/json');
+$mailExists       = $registration->mailExists();
+$isSecurePassword = $registration->isSecurePassword();
 
-if($registration->mailExists()) {
+if($mailExists || !$isSecurePassword) {
+    header('Content-type: application/json');
     header($badRequest);
-    echo json_encode(['error' => 'mail in use']);
-    die;
-}
 
-if(!$registration->isSecurePassword()) {
-    header($badRequest);
-    echo json_encode(['error' => 'password insecure']);
+    $response = ['error' => ''];
+
+    if($mailExists) {
+        $response['error'] = 'mail in use';
+    }
+
+    if($response['error'] === '' && !$isSecurePassword) {
+        $response['error'] = 'password insecure';
+    }
+
+    echo json_encode($response);
     die;
 }
 

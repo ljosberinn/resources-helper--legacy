@@ -78,52 +78,42 @@ export const Registration = memo(() => {
     await validateRegistration({ mail, password });
   };
 
-  const submittable =
+  const disabled = !(
     mail.length > 0 &&
     password.length > 0 &&
     regExp.test(password) &&
     regExp.test(repeatedPassword) &&
     !isSubmitting &&
     !hasError &&
-    isValidPasswordRepetition;
+    isValidPasswordRepetition
+  );
 
   return (
     <form onSubmit={handleSubmit}>
+      <input type="email" placeholder="mail" required onChange={handleMailChange} disabled={isSubmitting} />
       <input
-        type={'email'}
-        placeholder={'mail'}
-        required
-        name={'mail'}
-        onChange={handleMailChange}
-        disabled={isSubmitting}
-      />
-      <input
-        type={'password'}
-        placeholder={'password'}
+        type="password"
+        placeholder="password"
         pattern={htmlPattern}
         required
-        name={'password'}
         onChange={handlePasswordChange}
         disabled={isSubmitting}
       />
       <input
-        type={'password'}
-        placeholder={'repeat password'}
+        type="password"
+        placeholder="repeat password"
         pattern={htmlPattern}
         required
-        name={'password-repetition'}
         onChange={handlePasswordRepetitionChange}
         disabled={isSubmitting}
       />
-      <button type="submit" disabled={!submittable}>
+      <button type="submit" disabled={disabled}>
         Register
       </button>
 
       {hasError ? <p>{errorText}</p> : null}
 
-      {password.length > 0 && repeatedPassword.length > 0 && !isValidPasswordRepetition ? (
-        <p>Passwords not matching</p>
-      ) : null}
+      {password.length > 0 && repeatedPassword.length > 0 && !isValidPasswordRepetition ? <p>Passwords not matching</p> : null}
     </form>
   );
 });
