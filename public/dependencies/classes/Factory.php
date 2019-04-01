@@ -18,18 +18,14 @@ class Factory {
     }
 
     public function getFactories(): array {
-        $factories = [];
+        $factories = $this->getStaticFactoryData();
+        $factories = $this->mergeFactoriesWithDependencies($factories);
+        $factories = $this->mergeFactoriesWithDependants($factories);
 
-        foreach($this->getStaticFactoryData() as $factory) {
-            $factories[$factory['uid']] = [
-                'scaling'                => $factory['scaling'],
-                'dependantFactories'     => [],
-                'productionDependencies' => [],
-                'level'                  => 0,
-                'hasDetailsVisible'      => false,
-            ];
-        }
+        return $factories;
+    }
 
+    private function mergeFactoriesWithDependencies(array $factories): array {
         foreach($this->getFactoryProductionDependencies() as $productionDependency) {
             $factories[$productionDependency['factoryUID']]['productionDependencies'][] = [
                 'id'     => $productionDependency['dependency'],
@@ -37,6 +33,10 @@ class Factory {
             ];
         }
 
+        return $factories;
+    }
+
+    private function mergeFactoriesWithDependants(array $factories): array {
         foreach($this->getDependantFactories() as $dependantFactory) {
             $factories[$dependantFactory['factoryUID']]['dependantFactories'][] = $dependantFactory['dependantFactoryUID'];
         }
@@ -67,11 +67,21 @@ class Factory {
     private function getStaticFactoryData(): array {
         $stmt = $this->pdo->query(self::QUERIES['getStaticFactoryData']);
 
+        $factories = [];
+
         if($stmt && $stmt->rowCount() > 0) {
-            return (array) $stmt->fetchAll();
+            foreach((array) $stmt->fetchAll() as $factory) {
+                $factories[$factory['uid']] = [
+                    'scaling'                => $factory['scaling'],
+                    'dependantFactories'     => [],
+                    'productionDependencies' => [],
+                    'level'                  => 0,
+                    'hasDetailsVisible'      => false,
+                ];
+            }
         }
 
-        return [];
+        return $factories;
     }
 
     public function getUserFactories(int $playerIndexUID): array {
