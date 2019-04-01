@@ -4,8 +4,9 @@
     <data-source source="LOCAL" name="MySQL - db12844686-helper@wp447.webpack.hosteurope.de" uuid="a975be56-c668-42b8-b68e-02953076e5be">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
+      <remarks>liveDB</remarks>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://wp447.webpack.hosteurope.de:3306/db12844686-helper</jdbc-url>
+      <jdbc-url>jdbc:mysql://wp447.webpack.hosteurope.de:3306/db12844686-helper?serverTimezone=GMT</jdbc-url>
       <driver-properties>
         <property name="autoReconnect" value="true" />
         <property name="zeroDateTimeBehavior" value="convertToNull" />
@@ -14,6 +15,7 @@
         <property name="characterSetResults" value="utf8" />
         <property name="yearIsDateType" value="false" />
       </driver-properties>
+      <code-style-scheme-name>CS_MPUNKT_PHP</code-style-scheme-name>
     </data-source>
   </component>
 </project>

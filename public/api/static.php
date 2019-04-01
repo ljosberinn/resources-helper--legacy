@@ -1,41 +1,28 @@
 <?php declare (strict_types=1);
 
-$response = [];
+require_once '../_boot.php';
 
-header('Content-type: application/json');
+$allowedTypes = ['factories', 'specialBuildings', 'mines'];
 
-$dirName = dirname(__DIR__, 1) . '/static';
-
-$staticDirectories = (array) scandir($dirName . '/', SCANDIR_SORT_ASCENDING);
-$staticDirectories = array_slice($staticDirectories, 2);
-
-$queryExists  = isset($_GET['type']);
-$isValidQuery = in_array($_GET['type'], $staticDirectories, true);
-$dirName      .= '/' . $_GET['type'];
-
-if(!$queryExists || !$isValidQuery || !is_dir($dirName)) {
-    echo json_encode($response);
+if(!isset($_GET['type']) || !in_array($_GET['type'], $allowedTypes, true)) {
+    header('HTTP/1.0 403 Forbidden');
     die;
 }
 
-$files = (array) scandir($dirName, SCANDIR_SORT_ASCENDING);
-$files = array_slice($files, 2);
+$type = $_GET['type'];
 
-$additionalKeys = [
-    'hasDetailsVisible' => false,
-];
+header('Content-type: application/json');
 
-foreach($files as $fileName) {
-    // e.g. ./static/factories/6.php
-    $index = substr((string) $fileName, 0, -4);
-
-    $data = require $dirName . '/' . $fileName;
-
-    foreach($additionalKeys as $additionalKey => $baseValue) {
-        $data[$additionalKey] = $baseValue;
-    }
-
-    $response[$index] = $data;
+if($type === 'factories') {
+    echo json_encode((new Factory())->getFactories());
+    die;
 }
 
-echo json_encode($response, JSON_NUMERIC_CHECK);
+if($type === 'specialBuildings') {
+    echo json_encode((new SpecialBuilding())->getSpecialBuildings());
+    die;
+}
+
+if($type === 'mines') {
+    echo json_encode((new Mine())->getMines());
+}

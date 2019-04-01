@@ -2,40 +2,99 @@
 
 class Factory {
 
-    private $level;
-    private $scaling;
+    /** @var PDO $pdo */
+    private $pdo;
 
-    private $dependencies;
-    private $dependantFactories;
+    private const QUERIES = [
+        'getStaticFactoryData'             => 'SELECT * FROM `staticFactories`',
+        'getFactoryProductionDependencies' => 'SELECT `factoryUID`, `dependency`, `amount` FROM `staticFactoryProductionDependencies`',
+        'getDependantFactories'            => 'SELECT `factoryUID`, `dependantFactoryUID` FROM `staticDependantFactories`',
+        'getUserFactories'                 => 'SELECT `timestamp`, `6`, `23`, `25`, `29`, `31`, `33`, `34`, `37`, `39`, `52`, `61`, `63`, `68`, `69`, `76`, `80`, `85`, `91`, `95`, `101`, `118`, `125` FROM `factories` WHERE `playerIndexUID` = :playerIndexUID',
+    ];
 
-    public function __construct(int $type, int $level = 1) {
-        $this->level = $level;
-
-        $factoryName = FactoryHandler::getNameByID($type);
-        $factoryData = $this->getFactoryData($factoryName);
-
-        $this->dependencies       = $factoryData['dependencies'];
-        $this->scaling            = $factoryData['scaling'];
-        $this->dependantFactories = $factoryData['dependantFactories'];
-
-        $this->scaleToLevel();
+    public function __construct() {
+        $db        = DB::getInstance();
+        $this->pdo = $db->getConnection();
     }
 
-    private function getFactoryData(string $factoryName): array {
-        /** @noinspection PhpIncludeInspection */
-        return require './static/factories/' . $factoryName . '.php';
-    }
+    public function getFactories(): array {
+        $factories = [];
 
-    private function scaleToLevel(): void {
-        foreach($this->dependencies as $dependency => $amount) {
-            $this->dependencies[$dependency] = $amount * $this->level;
+        foreach($this->getStaticFactoryData() as $factory) {
+            $factories[$factory['uid']] = [
+                'scaling'                => $factory['scaling'],
+                'dependantFactories'     => [],
+                'productionDependencies' => [],
+                'level'                  => 0,
+                'hasDetailsVisible'      => false,
+            ];
         }
 
-        $this->scaling *= $this->level;
+        foreach($this->getFactoryProductionDependencies() as $productionDependency) {
+            $factories[$productionDependency['factoryUID']]['productionDependencies'][] = [
+                'id'     => $productionDependency['dependency'],
+                'amount' => $productionDependency['amount'],
+            ];
+        }
+
+        foreach($this->getDependantFactories() as $dependantFactory) {
+            $factories[$dependantFactory['factoryUID']]['dependantFactories'][] = $dependantFactory['dependantFactoryUID'];
+        }
+
+        return $factories;
     }
 
-    public function getDependencies(): array {
-        return $this->dependencies;
+    private function getDependantFactories(): array {
+        $stmt = $this->pdo->query(self::QUERIES['getDependantFactories']);
+
+        if($stmt && $stmt->rowCount() > 0) {
+            return (array) $stmt->fetchAll();
+        }
+
+        return [];
     }
 
+    private function getFactoryProductionDependencies(): array {
+        $stmt = $this->pdo->query(self::QUERIES['getFactoryProductionDependencies']);
+
+        if($stmt && $stmt->rowCount() > 0) {
+            return (array) $stmt->fetchAll();
+        }
+
+        return [];
+    }
+
+    private function getStaticFactoryData(): array {
+        $stmt = $this->pdo->query(self::QUERIES['getStaticFactoryData']);
+
+        if($stmt && $stmt->rowCount() > 0) {
+            return (array) $stmt->fetchAll();
+        }
+
+        return [];
+    }
+
+    public function getUserFactories(int $playerIndexUID): array {
+        $factories           = $this->getFactories();
+        $lastUpdateTimestamp = 0;
+
+        $stmt = $this->pdo->prepare(self::QUERIES['getUserFactories']);
+        $stmt->execute(['playerIndexUID' => $playerIndexUID]);
+
+        if($stmt->rowCount() === 1) {
+            $userFactories = $stmt->fetch();
+
+            foreach($userFactories as $column => $value) {
+                if($column === 'timestamp') {
+                    $lastUpdateTimestamp = $value;
+                    continue;
+                }
+
+                $factories[$column]['level'] = $value;
+            }
+        }
+
+
+        return [$factories, $lastUpdateTimestamp];
+    }
 }

@@ -8,6 +8,7 @@ class PlayerIndex {
         'updateLastSeenTimestampByPlayerID' => 'UPDATE `playerIndex` SET `lastSeen` = :lastSeen WHERE `uid` = :uid AND `lastSeen` < :lastSeen2',
         'getPlayerIDByName'                 => 'SELECT `uid` FROM `playerIndex`  WHERE `userName` = :userName',
         'addPlayer'                         => 'INSERT INTO `playerIndex` (`userName`, `lastSeen`, `firstSeen`) VALUES(:userName, :lastSeen, :firstSeen)',
+        'getPlayerNameByID'                 => 'SELECT `userName` FROM `playerIndex` WHERE `uid` = :playerIndexUID',
     ];
 
     public function __construct(PDO $pdo) {
@@ -22,6 +23,19 @@ class PlayerIndex {
             'uid'       => $uid,
             'lastSeen2' => $timestamp,
         ]);
+    }
+
+    public function getPlayerNameByID(int $playerIndexUID): string {
+        $stmt = $this->pdo->prepare(self::QUERIES['getPlayerNameByID']);
+        $stmt->execute([
+            'playerIndexUID' => $playerIndexUID,
+        ]);
+
+        if($stmt->rowCount() === 1) {
+            return $stmt->fetch()['userName'];
+        }
+
+        return '';
     }
 
     public function getPlayerIDByName(string $userName): int {
