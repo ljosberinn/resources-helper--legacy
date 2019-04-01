@@ -27,6 +27,7 @@ class SpecialBuilding {
                     $specialBuildings[$specialBuilding['specialBuildingUID']] = [
                         'dependencies' => [],
                         'level'        => 0,
+                        'id'           => $specialBuilding['specialBuildingUID'],
                     ];
                 }
 

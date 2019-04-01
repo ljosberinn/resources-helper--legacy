@@ -15,8 +15,8 @@ interface PropsFromDispatch {
 type LoginType = PropsFromState & PropsFromDispatch;
 
 const ConnectedLogin = memo((props: LoginType) => {
-  const [mail, setMail] = useState('some@mail.tld');
-  const [password, setPassword] = useState('validPassword123');
+  const [mail, setMail] = useState('admin@gerritalex.de');
+  const [password, setPassword] = useState('resourcesHelper1992');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(false);
 
@@ -41,9 +41,10 @@ const ConnectedLogin = memo((props: LoginType) => {
       }
 
       const json = (await response.json()) as LoginResponse;
-      props.login(json);
+      console.table(json);
+      //props.login(json);
 
-      location.href = '/dashboard';
+      //location.href = '/dashboard';
 
       return;
     }
@@ -63,7 +64,14 @@ const ConnectedLogin = memo((props: LoginType) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="email" placeholder="mail" required onChange={handleMailChange} disabled={isSubmitting} defaultValue={mail} />
+      <input
+        type="email"
+        placeholder="mail"
+        required
+        onChange={handleMailChange}
+        disabled={isSubmitting}
+        defaultValue={mail}
+      />
       <input
         type="password"
         pattern={htmlPattern}

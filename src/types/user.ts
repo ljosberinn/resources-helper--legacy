@@ -1,5 +1,5 @@
+import { specialBuildings } from './../reducers/index';
 export interface IUserState {
-  isAPIUser: boolean;
   isAuthenticated: boolean;
   settings: IUserSettings;
   playerInfo: IUserPlayerInfo;
@@ -19,13 +19,19 @@ export interface IUserPlayerInfo {
 }
 
 export interface IUserAPIState {
+  isAPIUser: boolean;
   key: string;
-  history: IUserAPIHistory;
+  lastUpdates: IUserAPIUpdateHistory;
 }
 
-export interface IUserAPIHistory {
-  lastCall: number;
-  lastQuery: number;
+export interface IUserAPIUpdateHistory {
+  factories: number;
+  specialBuildings: number;
+  mines: number;
+  warehouses: number;
+  tradeLog: number;
+  combatLog: number;
+  headquarter: number;
 }
 
 export interface IUserPlayerInfoState {

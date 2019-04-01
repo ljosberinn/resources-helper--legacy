@@ -3,7 +3,6 @@ import { IPreloadedState } from '../types';
 export const preloadedState: IPreloadedState = {
   version: '4.0.0',
   user: {
-    isAPIUser: false,
     isAuthenticated: false,
     settings: {
       remembersAPIKey: false,
@@ -16,10 +15,16 @@ export const preloadedState: IPreloadedState = {
       registered: 0,
     },
     API: {
+      isAPIUser: false,
       key: '',
-      history: {
-        lastCall: 0,
-        lastQuery: 0,
+      lastUpdates: {
+        factories: 0,
+        specialBuildings: 0,
+        mines: 0,
+        warehouses: 0,
+        tradeLog: 0,
+        combatLog: 0,
+        headquarter: 0,
       },
     },
   },

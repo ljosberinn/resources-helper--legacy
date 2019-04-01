@@ -72,6 +72,7 @@ class Factory {
         if($stmt && $stmt->rowCount() > 0) {
             foreach((array) $stmt->fetchAll() as $factory) {
                 $factories[$factory['uid']] = [
+                    'id'                     => $factory['uid'],
                     'scaling'                => $factory['scaling'],
                     'dependantFactories'     => [],
                     'productionDependencies' => [],

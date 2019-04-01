@@ -1,4 +1,5 @@
 import { action } from 'typesafe-actions';
+import { IFactories } from '../../types/factory';
 
 export enum AuthenticationActions {
   LOGIN = '@@authentication/LOGIN',
@@ -7,15 +8,18 @@ export enum AuthenticationActions {
 }
 
 export interface LoginResponse {
-  apiKey: string;
-  mail: string;
-  pageRegistration: number;
-  playerIndexUID: number;
-  playerLevel: number;
-  points: number;
-  rank: number;
-  registered: number;
-  remainingAPICredits: number;
+  user: {
+    apiKey: string;
+    mail: string;
+    pageRegistration: number;
+    playerIndexUID: number;
+    playerLevel: number;
+    points: number;
+    rank: number;
+    registered: number;
+    remainingAPICredits: number;
+  };
+  factories: IFactories;
 }
 
 export const login = (response: LoginResponse) => action(AuthenticationActions.LOGIN, response);

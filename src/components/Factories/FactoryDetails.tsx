@@ -1,9 +1,11 @@
 import React, { memo } from 'react';
-import { FactoryProps } from '../../types/factory';
+import { IFactory } from '../../types/factory';
 
-interface PropsFromState extends FactoryProps {}
+interface IFactoryDetailsProps {
+  data: IFactory;
+}
 
-export const FactoryDetails = memo(({ data }: PropsFromState) => (
+export const FactoryDetails = memo(({ data }: IFactoryDetailsProps) => (
   <tr hidden={!data.hasDetailsVisible}>
     <td>ROI</td>
     <td>GD Information</td>

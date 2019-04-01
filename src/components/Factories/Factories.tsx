@@ -64,14 +64,14 @@ const ConnectedFactory = memo((props: FactoriesProps) => {
     return <Loading />;
   }
 
-  return <FactoryTable factories={factories} />;
+  return <FactoryTable />;
 });
 
 const mapStateToProps = (state: IPreloadedState) => ({ factories: state.factories, loading: true });
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setFactories: (factories: IFactories) => dispatch(setFactories(factories)),
-});
+const mapDispatchToProps = {
+  setFactories,
+};
 
 const preconnect = connect(
   mapStateToProps,

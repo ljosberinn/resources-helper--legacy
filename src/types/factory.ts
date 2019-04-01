@@ -1,3 +1,5 @@
+import { setLevel, toggleFactoryDetailsVisibility } from '../actions/Factories';
+
 export interface IFactory {
   id: number;
   level: number;
@@ -13,6 +15,8 @@ export interface IFactories {
 
 export interface FactoryProps {
   data: IFactory;
+  setLevel: typeof setLevel;
+  toggleFactoryDetailsVisibility: typeof toggleFactoryDetailsVisibility;
 }
 
 export interface IFactoryDependency {

@@ -6,7 +6,7 @@ import { FactoryOverview } from './FactoryOverview';
 const Factory = memo((props: FactoryProps) => (
   <Fragment>
     <FactoryOverview {...props} />
-    <FactoryDetails {...props} />
+    <FactoryDetails data={props.data} />
   </Fragment>
 ));
 
