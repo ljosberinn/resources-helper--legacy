@@ -1,4 +1,3 @@
-import { specialBuildings } from './../reducers/index';
 export interface IUserState {
   isAuthenticated: boolean;
   settings: IUserSettings;

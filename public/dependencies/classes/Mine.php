@@ -54,7 +54,7 @@ class Mine {
         if($stmt->rowCount() > 0) {
 
             $map = [
-                'id',
+                'resourceID',
                 'sumTechRate',
                 'sumRawRate',
                 'sumDef1',

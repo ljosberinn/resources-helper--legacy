@@ -1,7 +1,6 @@
 import React, { FormEvent, useState, ChangeEvent, memo } from 'react';
 import { DEV_SETTINGS } from '../../developmentSettings';
 import { login, LoginResponse } from '../../actions/Authentication';
-import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { regExp, htmlPattern } from './Shared';
 
@@ -41,8 +40,8 @@ const ConnectedLogin = memo((props: LoginType) => {
       }
 
       const json = (await response.json()) as LoginResponse;
-      console.table(json);
-      //props.login(json);
+      console.log({ json });
+      props.login(json);
 
       //location.href = '/dashboard';
 
@@ -88,9 +87,9 @@ const ConnectedLogin = memo((props: LoginType) => {
   );
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  login: (response: LoginResponse) => dispatch(login(response)),
-});
+const mapDispatchToProps = {
+  login,
+};
 
 const preconnect = connect(
   null,
