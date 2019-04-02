@@ -1,16 +1,23 @@
 import { setLevel, toggleFactoryDetailsVisibility } from '../actions/Factories';
 
+
+export interface IFactories {
+  [key: string]: IFactory;
+}
+
 export interface IFactory {
   id: number;
   level: number;
   scaling: number;
   dependantFactories: readonly number[];
-  productionDependencies:  IFactoryDependency[];
+  requirements: IFactoryRequirements[];
   hasDetailsVisible: boolean;
 }
 
-export interface IFactories {
-  [key: string]: IFactory;
+export interface IFactoryRequirements {
+  id: number;
+  amount: number;
+  currentAmount: number;
 }
 
 export interface FactoryProps {
@@ -19,7 +26,3 @@ export interface FactoryProps {
   toggleFactoryDetailsVisibility: typeof toggleFactoryDetailsVisibility;
 }
 
-export interface IFactoryDependency {
-  id: number;
-  amount: number;
-}

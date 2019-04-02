@@ -6,10 +6,10 @@ class Factory {
     private $pdo;
 
     private const QUERIES = [
-        'getStaticFactoryData'             => 'SELECT * FROM `staticFactories`',
-        'getFactoryProductionDependencies' => 'SELECT `factoryUID`, `dependency`, `amount` FROM `staticFactoryProductionDependencies`',
-        'getDependantFactories'            => 'SELECT `factoryUID`, `dependantFactoryUID` FROM `staticDependantFactories`',
-        'getUserFactories'                 => 'SELECT `timestamp`, `6`, `23`, `25`, `29`, `31`, `33`, `34`, `37`, `39`, `52`, `61`, `63`, `68`, `69`, `76`, `80`, `85`, `91`, `95`, `101`, `118`, `125` FROM `factories` WHERE `playerIndexUID` = :playerIndexUID',
+        'getStaticFactoryData'   => 'SELECT * FROM `staticFactories`',
+        'getFactoryRequirements' => 'SELECT `factoryUID`, `requirement`, `amount` FROM `staticFactoryRequirements`',
+        'getDependantFactories'  => 'SELECT `factoryUID`, `dependantFactoryUID` FROM `staticDependantFactories`',
+        'getUserFactories'       => 'SELECT `timestamp`, `6`, `23`, `25`, `29`, `31`, `33`, `34`, `37`, `39`, `52`, `61`, `63`, `68`, `69`, `76`, `80`, `85`, `91`, `95`, `101`, `118`, `125` FROM `factories` WHERE `playerIndexUID` = :playerIndexUID',
     ];
 
     public function __construct() {
@@ -26,10 +26,11 @@ class Factory {
     }
 
     private function mergeFactoriesWithDependencies(array $factories): array {
-        foreach($this->getFactoryProductionDependencies() as $productionDependency) {
-            $factories[$productionDependency['factoryUID']]['productionDependencies'][] = [
-                'id'     => $productionDependency['dependency'],
-                'amount' => $productionDependency['amount'],
+        foreach($this->getFactoryRequirements() as $productionDependency) {
+            $factories[$productionDependency['factoryUID']]['requirements'][] = [
+                'id'            => $productionDependency['requirement'],
+                'amount'        => $productionDependency['amount'],
+                'currentAmount' => $productionDependency['amount'],
             ];
         }
 
@@ -54,8 +55,8 @@ class Factory {
         return [];
     }
 
-    private function getFactoryProductionDependencies(): array {
-        $stmt = $this->pdo->query(self::QUERIES['getFactoryProductionDependencies']);
+    private function getFactoryRequirements(): array {
+        $stmt = $this->pdo->query(self::QUERIES['getFactoryRequirements']);
 
         if($stmt && $stmt->rowCount() > 0) {
             return (array) $stmt->fetchAll();
@@ -72,12 +73,12 @@ class Factory {
         if($stmt && $stmt->rowCount() > 0) {
             foreach((array) $stmt->fetchAll() as $factory) {
                 $factories[$factory['uid']] = [
-                    'id'                     => $factory['uid'],
-                    'scaling'                => $factory['scaling'],
-                    'dependantFactories'     => [],
-                    'productionDependencies' => [],
-                    'level'                  => 0,
-                    'hasDetailsVisible'      => false,
+                    'id'                 => $factory['uid'],
+                    'scaling'            => $factory['scaling'],
+                    'dependantFactories' => [],
+                    'requirements'       => [],
+                    'level'              => 0,
+                    'hasDetailsVisible'  => false,
                 ];
             }
         }
@@ -103,9 +104,26 @@ class Factory {
 
                 $factories[$column]['level'] = $value;
             }
+
+            $factories = $this->scaleRequirementsToLevel($factories);
         }
 
-
         return [$factories, $lastUpdateTimestamp];
+    }
+
+    private function scaleRequirementsToLevel(array $factories): array {
+        foreach($factories as &$factory) {
+            if($factory['level'] === 1) {
+                continue;
+            }
+
+            foreach($factory['requirements'] as &$requirement) {
+                $requirement['currentAmount'] = $requirement['amount'] * $factory['level'];
+            }
+
+            unset($requirement);
+        }
+
+        return $factories;
     }
 }

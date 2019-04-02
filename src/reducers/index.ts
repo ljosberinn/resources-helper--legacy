@@ -13,6 +13,14 @@ import { IFactories } from './../types/factory';
 
 export const factories: Reducer<IFactories> = (state = preloadedState.factories, action) => {
   switch (action.type) {
+    case FactoryActions.ADJUST_REQUIREMENTS_TO_LEVEL:
+      return {
+        ...state,
+        [action.payload.factoryID]: {
+          ...state[action.payload.factoryID],
+          requirements: action.payload.newRequirements,
+        },
+      };
     case AuthenticationActions.LOGIN:
       return {
         ...action.payload.factories,

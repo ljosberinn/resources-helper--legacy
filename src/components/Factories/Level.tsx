@@ -1,18 +1,31 @@
 import React, { ChangeEvent, FocusEvent } from 'react';
-import { setLevel } from '../../actions/Factories';
+import { setLevel, adjustRequirementsToLevel } from '../../actions/Factories';
+import { IFactoryRequirements } from '../../types/factory';
 
 interface ILevelProps {
   level: number;
   id: number;
+  requirements: IFactoryRequirements[];
   setLevel: typeof setLevel;
+  adjustRequirementsToLevel: typeof adjustRequirementsToLevel;
 }
 
-export const Level = ({ level, id, setLevel }: ILevelProps) => {
+const scaleRequirements = (requirements: IFactoryRequirements[], level: number) => {
+  return requirements.map(requirement => {
+    return {
+      ...requirement,
+      currentAmount: requirement.amount * level,
+    };
+  });
+};
+
+export const Level = ({ level, id, requirements, setLevel, adjustRequirementsToLevel }: ILevelProps) => {
   const handleFocus = (e: FocusEvent<HTMLInputElement>) => e.target.select();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const level = parseInt(e.target.value);
 
     setLevel(level, id);
+    adjustRequirementsToLevel(id, scaleRequirements(requirements, level));
   };
 
   return (
