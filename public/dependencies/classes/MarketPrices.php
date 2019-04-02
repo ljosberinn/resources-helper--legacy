@@ -70,6 +70,24 @@ class MarketPrices extends APICore {
         24  => 58,
     ];
 
+    private const ALLOWED_EXPORT_TYPES = ['xml', 'csv', 'json'];
+    private const ALLOWED_EXPORT_RANGES = [1, 24, 48, 72, 96, 120, 144, 168,];
+
+    private const EXPORT_HEADER = [
+        'xml'  => [
+            'Content-type: text/xml',
+            'Content-type: application/octet-stream',
+            'Content-disposition: attachment; filename=rhelper4-prices-export.xml',
+        ],
+        'csv'  => [
+            'Content-type: text/csv',
+            'Content-type: application/octet-stream',
+            'Content-disposition: attachment; filename=rhelper4-prices-export.csv',
+        ],
+        'json' => [
+            'Content-type: application/json',
+        ],
+    ];
 
     /** @var PDO $pdo */
     private $pdo;
@@ -77,14 +95,17 @@ class MarketPrices extends APICore {
     /** @var PDOStatement */
     private $stmt;
 
+    private $exportType;
+    /** @var int $exportRange */
+    private $exportRange;
+
     public function __construct() {
         parent::__construct();
 
         if(!$this->getDBInstance()) {
+            echo json_encode(['error' => 'Database connection could not be established']);
             die;
         }
-
-        $this->stmt = $this->pdo->prepare(self::QUERIES['save']);
     }
 
     private function getDBInstance(): bool {
@@ -116,6 +137,8 @@ class MarketPrices extends APICore {
             return false;
         }
 
+        $this->stmt = $this->pdo->prepare(self::QUERIES['save']);
+
         return $this->stmt->execute($prices);
     }
 
@@ -133,5 +156,96 @@ class MarketPrices extends APICore {
         }
 
         return 0;
+    }
+
+    public function setExportType(string $type): void {
+        if(in_array($type, self::ALLOWED_EXPORT_TYPES, true)) {
+            $this->exportType = $type;
+            return;
+        }
+
+        $this->exportType = 'json';
+    }
+
+    public function setExportTimespan(int $timespan): void {
+        if(in_array($timespan, self::ALLOWED_EXPORT_RANGES, true)) {
+            $this->exportRange = $timespan;
+            return;
+        }
+
+        $this->exportRange = 72;
+    }
+
+    private function createTimestamp(): int {
+        $date = new DateTime();
+
+        try {
+            $interval = new DateInterval('PT' . $this->exportRange . 'H');
+            $date->sub($interval);
+
+            return $date->getTimestamp();
+        } catch(Exception $error) {
+            /** @noinspection SummerTimeUnsafeTimeManipulationInspection */
+            return time() - $this->exportRange * 86400;
+        }
+    }
+
+    private function buildExportQuery(): string {
+        $sql = 'SELECT ';
+
+        foreach(array_keys(self::ID_MAP) as $key) {
+            $sql .= ' ROUND(AVG(player_' . $key . ')) as player_' . $key . ', ROUND(AVG(ai_' . $key . ')) as ai_' . $key . ', ';
+        }
+
+        $sql = substr($sql, 0, -2);
+        $sql .= ' FROM `marketPrices` WHERE `timestamp` >= :timestamp';
+
+        return $sql;
+    }
+
+    public function export(): string {
+        foreach(self::EXPORT_HEADER[$this->exportType] as $header) {
+            header($header);
+        }
+
+        $stmt = $this->pdo->prepare($this->buildExportQuery());
+        $stmt->execute(['timestamp' => $this->createTimestamp()]);
+
+        $data = $stmt->fetch();
+
+        if($this->exportType === 'json') {
+            return $this->generateJSON($data);
+        }
+
+        if($this->exportType === 'xml') {
+            return $this->generateXML($data);
+        }
+
+        if($this->exportType === 'csv') {
+            return $this->generateCSV($data);
+        }
+
+        return (string) json_encode(['error' => 'invalid output type, only CSV, XML and JSON are supported']);
+    }
+
+    private function generateJSON(array $data): string {
+        $prices = [];
+
+        foreach(array_keys(self::ID_MAP) as $id) {
+            $prices[$id] = [
+                'ai'     => $data['ai_' . $id],
+                'player' => $data['player_' . $id],
+            ];
+        }
+
+        return (string) json_encode($prices, JSON_NUMERIC_CHECK);
+    }
+
+    private function generateXML(array $data): string {
+        return '';
+    }
+
+    private function generateCSV(array $data): string {
+        return '';
     }
 }

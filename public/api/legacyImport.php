@@ -62,9 +62,7 @@ foreach($response as $dataset) {
     }
 }
 
-?>
-<script>
-  setTimeout(() => {
-    location.reload();
-  }, 500);
-</script>
+echo json_encode([
+    'success'     => 1,
+    'newDatasets' => count($response),
+]);
