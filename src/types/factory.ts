@@ -4,8 +4,8 @@ export interface IFactory {
   id: number;
   level: number;
   scaling: number;
-  dependantFactories: number[];
-  productionDependencies: IFactoryDependency[];
+  dependantFactories: readonly number[];
+  productionDependencies:  IFactoryDependency[];
   hasDetailsVisible: boolean;
 }
 

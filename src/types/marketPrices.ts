@@ -1,5 +1,8 @@
 export interface IMarketPriceState {
-  id: number;
+  [key: string]: IMarketPriceDataset;
+}
+
+interface IMarketPriceDataset {
   ai: number;
   player: number;
 }
