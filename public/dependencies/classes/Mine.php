@@ -22,7 +22,9 @@ class Mine {
 
         if($stmt && $stmt->rowCount() > 0) {
             foreach((array) $stmt->fetchAll() as $mine) {
-                $mines[$mine['uid']] = [
+                $mines[] = [
+                    'resourceID'       => $mine['uid'],
+                    'amount'           => 0,
                     'basePrice'        => $mine['basePrice'],
                     'maxHourlyRate'    => $mine['maxHourlyRate'] / 10,
                     'sumTechRate'      => 0,
@@ -54,7 +56,7 @@ class Mine {
         if($stmt->rowCount() > 0) {
 
             $map = [
-                'resourceID',
+                'amount',
                 'sumTechRate',
                 'sumRawRate',
                 'sumDef1',
@@ -72,8 +74,18 @@ class Mine {
             foreach((array) $stmt->fetchAll() as $dataset) {
                 $lastUpdateTimestamp = $lastUpdateTimestamp > 0 ? $lastUpdateTimestamp : $dataset['timestamp'];
 
-                foreach($map as $index) {
-                    $mines[$dataset['resourceID']][$index] = $dataset[$index];
+                $resourceID = $dataset['resourceID'];
+                $index      = -1;
+
+                foreach($mines as $key => $mine) {
+                    if($mine['resourceID'] === $resourceID) {
+                        $index = $key;
+                        break;
+                    }
+                }
+
+                foreach($map as $key) {
+                    $mines[$index][$key] = $dataset[$key];
                 }
             }
         }

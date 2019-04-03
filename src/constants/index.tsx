@@ -28,7 +28,7 @@ export const preloadedState: IPreloadedState = {
       },
     },
   },
-  factories: {},
+  factories: [],
   mines: [],
   specialBuildings: [],
   headquarter: [],

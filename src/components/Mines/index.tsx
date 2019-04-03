@@ -1,56 +1,55 @@
 import React, { useEffect, useState, memo } from 'react';
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
 import { store } from '../..';
-import { setFactories } from '../../actions/Factories';
+import { setMines } from '../../actions/Mines';
 import { IPreloadedState } from '../../types';
-import { IFactories } from '../../types/factory';
+import { IMineState } from '../../types/mines';
 import { evaluateLoadingAnimationTimeout, getStaticData } from '../helperFunctions';
 import { Loading } from '../Shared/Loading';
-import { FactoryTable } from './FactoryTable';
+import { MineTable } from './MineTable';
 
 interface PropsFromState {
   hasError: boolean;
   errorType: string;
-  factories: IFactories;
+  mines: IMineState[];
 }
 
 interface PropsFromDispatch {
-  setFactories: typeof setFactories;
+  setMines: typeof setMines;
 }
 
-type FactoriesProps = PropsFromState & PropsFromDispatch;
+type MinesProps = PropsFromState & PropsFromDispatch;
 
-const ConnectedFactory = memo((props: FactoriesProps) => {
+const ConnectedMines = memo((props: MinesProps) => {
   const currentStore = store.getState();
 
-  const [factories, setFactories] = useState(currentStore.factories);
+  const [mines, setMines] = useState(currentStore.mines);
   const [hasError, setError] = useState(false);
   const [errorType, setErrorType] = useState(null);
 
-  const isLoading = Object.keys(factories).length === 0;
+  const isLoading = Object.keys(mines).length === 0;
 
   useEffect(() => {
     if (isLoading && !hasError) {
-      const getFactoryData = (currentStore: IPreloadedState, props: FactoriesProps) => {
+      const getMineData = (currentStore: IPreloadedState, props: MinesProps) => {
         const loadingStart = new Date().getMilliseconds();
 
-        Promise.resolve(getStaticData(currentStore, 'factories', setError, setErrorType)).then(factories => {
+        Promise.resolve(getStaticData(currentStore, 'mines', setError, setErrorType)).then(mines => {
           const timePassed = new Date().getMilliseconds() - loadingStart;
 
           setTimeout(() => {
             // Redux
-            props.setFactories(factories);
+            props.setMines(mines);
 
             // Hooks
-            setFactories(factories);
+            setMines(mines);
           }, evaluateLoadingAnimationTimeout(timePassed));
         });
       };
 
-      getFactoryData(currentStore, props);
+      getMineData(currentStore, props);
     }
-  }, [factories]);
+  }, [mines]);
 
   if (hasError) {
     if (errorType === 'AbortError') {
@@ -64,13 +63,13 @@ const ConnectedFactory = memo((props: FactoriesProps) => {
     return <Loading />;
   }
 
-  return <FactoryTable />;
+  return <MineTable />;
 });
 
-const mapStateToProps = (state: IPreloadedState) => ({ factories: state.factories, loading: true });
+const mapStateToProps = (state: IPreloadedState) => ({ mines: state.mines, loading: true });
 
 const mapDispatchToProps = {
-  setFactories,
+  setMines,
 };
 
 const preconnect = connect(
@@ -78,5 +77,5 @@ const preconnect = connect(
   mapDispatchToProps,
 );
 
-export const Factories = preconnect(ConnectedFactory);
-ConnectedFactory.displayName = 'ConnectedFactory';
+export const Mines = preconnect(ConnectedMines);
+ConnectedMines.displayName = 'ConnectedMines';

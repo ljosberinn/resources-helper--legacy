@@ -1,11 +1,11 @@
 import React, { memo } from 'react';
 import Factory from './Factory';
-import { IFactories, IFactoryRequirements } from '../../types/factory';
+import { IFactory, IFactoryRequirements } from '../../types/factory';
 import { connect } from 'react-redux';
 import { setLevel, toggleFactoryDetailsVisibility, adjustRequirementsToLevel } from '../../actions/Factories';
 import { IMineState } from '../../types/mines';
 interface PropsFromState {
-  factories: IFactories;
+  factories: IFactory[];
   mines: IMineState[];
 }
 
@@ -17,9 +17,8 @@ interface PropsFromDispatch {
 
 type FactoryTableType = PropsFromState & PropsFromDispatch;
 
-export const ConnectedFactoryTable = memo((Props: FactoryTableType) => {
-  const { factories, mines } = Props;
-  const mineData = Object.values(mines);
+export const ConnectedFactoryTable = memo((props: FactoryTableType) => {
+  const { factories, mines, toggleFactoryDetailsVisibility, adjustRequirementsToLevel, setLevel } = props;
 
   const getRelevantMines = (requirements: IFactoryRequirements[]): IMineState[] => {
     const requirementIDs: number[] = requirements.reduce((result: number[], { id }) => {
@@ -31,7 +30,7 @@ export const ConnectedFactoryTable = memo((Props: FactoryTableType) => {
       return result;
     }, []);
 
-    return mineData.filter(({ resourceID }) => requirementIDs.includes(resourceID));
+    return mines.filter(({ resourceID }) => requirementIDs.includes(resourceID));
   };
 
   return (
@@ -40,13 +39,13 @@ export const ConnectedFactoryTable = memo((Props: FactoryTableType) => {
         <tr />
       </thead>
       <tbody>
-        {Object.values(factories).map(factory => (
+        {factories.map(factory => (
           <Factory
             mines={getRelevantMines(factory.requirements)}
             factory={factory}
-            setLevel={Props.setLevel}
-            toggleFactoryDetailsVisibility={Props.toggleFactoryDetailsVisibility}
-            adjustRequirementsToLevel={Props.adjustRequirementsToLevel}
+            setLevel={setLevel}
+            toggleFactoryDetailsVisibility={toggleFactoryDetailsVisibility}
+            adjustRequirementsToLevel={adjustRequirementsToLevel}
             key={factory.id}
           />
         ))}

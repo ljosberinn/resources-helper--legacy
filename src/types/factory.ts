@@ -1,10 +1,6 @@
 import { setLevel, toggleFactoryDetailsVisibility } from '../actions/Factories';
 
 
-export interface IFactories {
-  [key: string]: IFactory;
-}
-
 export interface IFactory {
   id: number;
   level: number;

@@ -1,5 +1,5 @@
 import { action } from 'typesafe-actions';
-import { IFactories } from '../../types/factory';
+import { IFactory } from '../../types/factory';
 import { IMineState } from '../../types/mines';
 import { IUserState } from '../../types/user';
 import { ISpecialBuildingState } from '../../types/specialBuildings';
@@ -11,7 +11,7 @@ export enum AuthenticationActions {
 }
 
 export interface LoginResponse {
-  factories: IFactories;
+  factories: IFactory[];
   mines: IMineState;
   user: IUserState;
   specialBuildings: ISpecialBuildingState;

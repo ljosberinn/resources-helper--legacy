@@ -25,9 +25,28 @@ class Factory {
         return $factories;
     }
 
+    private function findFactoryByID(array $factories, int $id): int {
+        $index = -1;
+
+        foreach($factories as $key => $factory) {
+            if($factory['id'] === $id) {
+                $index = (int) $key;
+                break;
+            }
+        }
+
+        if($index === -1) {
+            throw new RuntimeException('unknown factoryID');
+        }
+
+        return $index;
+    }
+
     private function mergeFactoriesWithDependencies(array $factories): array {
         foreach($this->getFactoryRequirements() as $productionDependency) {
-            $factories[$productionDependency['factoryUID']]['requirements'][] = [
+            $index = $this->findFactoryByID($factories, $productionDependency['factoryUID']);
+
+            $factories[$index]['requirements'][] = [
                 'id'            => $productionDependency['requirement'],
                 'amount'        => $productionDependency['amount'],
                 'currentAmount' => $productionDependency['amount'],
@@ -39,7 +58,9 @@ class Factory {
 
     private function mergeFactoriesWithDependants(array $factories): array {
         foreach($this->getDependantFactories() as $dependantFactory) {
-            $factories[$dependantFactory['factoryUID']]['dependantFactories'][] = $dependantFactory['dependantFactoryUID'];
+            $index = $this->findFactoryByID($factories, $dependantFactory['factoryUID']);
+
+            $factories[$index]['dependantFactories'][] = $dependantFactory['dependantFactoryUID'];
         }
 
         return $factories;
@@ -72,7 +93,7 @@ class Factory {
 
         if($stmt && $stmt->rowCount() > 0) {
             foreach((array) $stmt->fetchAll() as $factory) {
-                $factories[$factory['uid']] = [
+                $factories[] = [
                     'id'                 => $factory['uid'],
                     'scaling'            => $factory['scaling'],
                     'dependantFactories' => [],
@@ -102,7 +123,9 @@ class Factory {
                     continue;
                 }
 
-                $factories[$column]['level'] = $value;
+                $index = $this->findFactoryByID($factories, $column);
+
+                $factories[$index]['level'] = $value;
             }
 
             $factories = $this->scaleRequirementsToLevel($factories);

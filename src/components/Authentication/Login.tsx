@@ -43,7 +43,7 @@ const ConnectedLogin = memo((props: LoginType) => {
       console.log({ json });
       props.login(json);
 
-      //location.href = '/dashboard';
+      //location.href = '/factories';
 
       return;
     }

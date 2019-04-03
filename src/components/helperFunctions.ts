@@ -1,7 +1,8 @@
 import { Dispatch, SetStateAction } from 'react';
 import { DEV_SETTINGS } from '../developmentSettings';
 import { IPreloadedState } from '../types';
-import { IFactories, IFactory } from '../types/factory';
+import { IFactory } from '../types/factory';
+import { IMineState } from '../types/mines';
 
 const getStaticData = async (
   state: IPreloadedState,
@@ -40,7 +41,7 @@ const abortableAsyncFetch = async (
     const json = await response.json();
     clearTimeout(timeout);
 
-    return json as IFactory[];
+    return json as IFactory[] | IMineState[];
   } catch (error) {
     setErrorType(error.name);
     setError(true);
@@ -48,12 +49,18 @@ const abortableAsyncFetch = async (
   }
 };
 
-const filterFactoryByPropsID = (factories: IFactories, props: { id: number }) =>
-  Object.values(factories).find(factory => factory.id === props.id) as IFactory;
+const filterFactoryByPropsID = (factories: IFactory[], props: { id: number }) =>
+  factories.find(factory => factory.id === props.id) as IFactory;
 
 // resolve timeout either instantly if loading took longer than LOADING_THRESHOLD
 // or resolve it after LOADING_THRESHOLD - timePassed
 const evaluateLoadingAnimationTimeout = (timePassed: number, LOADING_THRESHOLD: number = 750) =>
   timePassed > LOADING_THRESHOLD ? 5 : LOADING_THRESHOLD - timePassed;
 
-export { getStaticData, filterFactoryByPropsID, evaluateLoadingAnimationTimeout };
+const calculationOrder : readonly number[] = [
+  6, 23, 25, 29, 33, 37, 39, 63, 91, 52, 34, 80, // primary order, relying exclusively on mines
+  61, 29, 68, 85, 95, // secondary order, relying both on mines and products
+  101, 69, 76, 125, 118 // tertiary order, relying exclusively on products
+];
+
+export { getStaticData, filterFactoryByPropsID, evaluateLoadingAnimationTimeout, calculationOrder };

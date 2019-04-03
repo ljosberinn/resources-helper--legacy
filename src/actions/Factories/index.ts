@@ -1,5 +1,5 @@
 import { action } from 'typesafe-actions';
-import { IFactories, IFactoryRequirements } from '../../types/factory';
+import { IFactory, IFactoryRequirements } from '../../types/factory';
 
 export enum FactoryActions {
   SET_LEVEL = '@@factories/SET_FACTORY_LEVEL',
@@ -9,7 +9,7 @@ export enum FactoryActions {
 }
 
 export const setLevel = (level: number, factoryID: number) => action(FactoryActions.SET_LEVEL, { level, factoryID });
-export const setFactories = (factories: IFactories) => action(FactoryActions.SET_FACTORIES, factories);
+export const setFactories = (factories: IFactory[]) => action(FactoryActions.SET_FACTORIES, factories);
 export const toggleFactoryDetailsVisibility = (factoryID: number) =>
   action(FactoryActions.TOGGLE_DETAILS, { factoryID });
 export const adjustRequirementsToLevel = (factoryID: number, newRequirements: IFactoryRequirements[]) =>

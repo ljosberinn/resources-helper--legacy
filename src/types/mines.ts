@@ -4,6 +4,7 @@ export interface IMineState {
   avgQuality: number;
   avgTechFactor: number;
   avgTechedQuality: number;
+  amount: number;
   basePrice: number;
   maxHourlyRate: number;
   resourceID: number;

@@ -1,5 +1,5 @@
 import { ICompanyWorthState } from './companyWorth';
-import { IFactories } from './factory';
+import { IFactory } from './factory';
 import { IHeadquarterState } from './headquarter';
 import { IMarketPriceState } from './marketPrices';
 import { IMineState } from './mines';
@@ -10,7 +10,7 @@ import { IWarehouseState } from './warehouses';
 export interface IPreloadedState {
   version: string;
   user: IUserState;
-  factories: IFactories;
+  factories: IFactory[];
   headquarter: IHeadquarterState;
   specialBuildings: ISpecialBuildingState[];
   mines: IMineState[];

@@ -9,38 +9,46 @@ import { IMineState } from '../types/mines';
 import { ISpecialBuildingState } from '../types/specialBuildings';
 import { IUserState } from '../types/user';
 import { IWarehouseState } from '../types/warehouses';
-import { IFactories } from './../types/factory';
+import { IFactory } from './../types/factory';
+import { MineActions } from '../actions/Mines';
 
-export const factories: Reducer<IFactories> = (state = preloadedState.factories, action) => {
+export const factories: Reducer<IFactory[]> = (state = preloadedState.factories, action) => {
   switch (action.type) {
     case FactoryActions.ADJUST_REQUIREMENTS_TO_LEVEL:
-      return {
-        ...state,
-        [action.payload.factoryID]: {
-          ...state[action.payload.factoryID],
+      return state.map(factory => {
+        if (factory.id !== action.payload.factoryID) {
+          return factory;
+        }
+
+        return {
+          ...factory,
           requirements: action.payload.newRequirements,
-        },
-      };
+        };
+      });
     case AuthenticationActions.LOGIN:
-      return {
-        ...action.payload.factories,
-      };
+      return action.payload.factories;
     case FactoryActions.TOGGLE_DETAILS:
-      return {
-        ...state,
-        [action.payload.factoryID]: {
-          ...state[action.payload.factoryID],
-          hasDetailsVisible: !state[action.payload.factoryID].hasDetailsVisible,
-        },
-      };
+      return state.map(factory => {
+        if (factory.id !== action.payload.factoryID) {
+          return factory;
+        }
+
+        return {
+          ...factory,
+          hasDetailsVisible: !factory.hasDetailsVisible,
+        };
+      });
     case FactoryActions.SET_LEVEL:
-      return {
-        ...state,
-        [action.payload.factoryID]: {
-          ...state[action.payload.factoryID],
+      return state.map(factory => {
+        if (factory.id !== action.payload.factoryID) {
+          return factory;
+        }
+
+        return {
+          ...factory,
           level: action.payload.level,
-        },
-      };
+        };
+      });
     case FactoryActions.SET_FACTORIES:
       return action.payload;
   }
@@ -78,9 +86,32 @@ export const specialBuildings: Reducer<ISpecialBuildingState[]> = (state = prelo
 export const mines: Reducer<IMineState[]> = (state = preloadedState.mines, action) => {
   switch (action.type) {
     case AuthenticationActions.LOGIN:
-      return {
-        ...action.payload.mines,
-      };
+      return [...action.payload.mines];
+    case MineActions.SET_MINES:
+      return action.payload;
+
+    case MineActions.SET_TECHED_MINING_RATE:
+      return state.map(mine => {
+        if (mine.resourceID !== action.payload.id) {
+          return mine;
+        }
+
+        return {
+          ...mine,
+          sumRawRate: action.payload.techedRate,
+        };
+      });
+    case MineActions.SET_AMOUNT:
+      return state.map(mine => {
+        if (mine.resourceID !== action.payload.id) {
+          return mine;
+        }
+
+        return {
+          ...mine,
+          amount: action.payload.amount,
+        };
+      });
   }
 
   return state;
