@@ -10,7 +10,8 @@ export const preloadedState: IPreloadedState = {
       prices: {
         type: 'json',
         range: 72,
-      }
+        lastUpdate: 0,
+      },
     },
     playerInfo: {
       userName: '',
@@ -46,5 +47,3 @@ export const preloadedState: IPreloadedState = {
     warehouses: 0,
   },
 };
-
-

@@ -4,10 +4,19 @@ import { store } from '../..';
 import { setMines } from '../../actions/Mines';
 import { IPreloadedState } from '../../types';
 import { IMineState } from '../../types/mines';
-import { evaluateLoadingAnimationTimeout, getStaticData, getPrices } from '../helperFunctions';
+import {
+  evaluateLoadingAnimationTimeout,
+  getStaticData,
+  getPrices,
+  getElapsedLoadingTime,
+  pricesUpdateRequired,
+} from '../helperFunctions';
 import { Loading } from '../Shared/Loading';
 import { MineTable } from './MineTable';
-import { setPrices } from '../../actions/MarketPrices';
+import { setPrices, setLastUpdate } from '../../actions/MarketPrices';
+import { IMarketPriceState } from '../../types/marketPrices';
+import { useAsyncEffect } from '../Authentication/Hooks';
+import { async } from 'q';
 
 interface PropsFromState {
   hasError: boolean;
@@ -18,42 +27,35 @@ interface PropsFromState {
 interface PropsFromDispatch {
   setMines: typeof setMines;
   setPrices: typeof setPrices;
+  setLastUpdate: typeof setLastUpdate;
 }
 
 type MinesProps = PropsFromState & PropsFromDispatch;
 
 const ConnectedMines = memo((props: MinesProps) => {
-  const currentStore = store.getState();
+  const { user, mines, marketPrices } = store.getState();
 
   const [hasError, setError] = useState(false);
   const [errorType, setErrorType] = useState(null);
 
-  const isLoading = currentStore.mines.length === 0;
+  const isLoading = mines.length === 0;
 
-  useEffect(() => {
+  useAsyncEffect(async () => {
     if (isLoading && !hasError) {
-      const getMineData = (currentStore: IPreloadedState, props: MinesProps) => {
-        const loadingStart = new Date().getMilliseconds();
+      (async () => {
+        const loadingStart = new Date().getTime();
 
-        const promises = [
-          getStaticData(currentStore, 'mines', setError, setErrorType),
-          getPrices(currentStore.user.settings.prices.range),
-        ];
+        const mines = (await getStaticData('mines', setError, setErrorType)) as IMineState[];
+        const prices = (await getPrices({ user, marketPrices })) as IMarketPriceState;
 
-        Promise.all(promises).then(([mines, prices]) => {
-          const timePassed = new Date().getMilliseconds() - loadingStart;
-
-          setTimeout(() => {
-            // Redux
-            props.setMines(mines);
-            props.setPrices(prices);
-          }, evaluateLoadingAnimationTimeout(timePassed));
-        });
-      };
-
-      getMineData(currentStore, props);
+        setTimeout(() => {
+          props.setPrices(prices);
+          props.setLastUpdate(new Date().getTime());
+          props.setMines(mines);
+        }, evaluateLoadingAnimationTimeout(getElapsedLoadingTime(loadingStart)));
+      })();
     }
-  }, [currentStore.mines, currentStore.marketPrices]);
+  }, [mines, marketPrices]);
 
   if (hasError) {
     if (errorType === 'AbortError') {
@@ -75,6 +77,7 @@ const mapStateToProps = (state: IPreloadedState) => ({ mines: state.mines, loadi
 const mapDispatchToProps = {
   setMines,
   setPrices,
+  setLastUpdate,
 };
 
 const preconnect = connect(

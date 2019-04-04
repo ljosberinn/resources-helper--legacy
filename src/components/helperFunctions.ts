@@ -1,30 +1,43 @@
 import { Dispatch, SetStateAction } from 'react';
 import { DEV_SETTINGS } from '../developmentSettings';
-import { IPreloadedState } from '../types';
 import { IFactory } from '../types/factory';
 import { IMineState } from '../types/mines';
 import { IMarketPriceState } from '../types/marketPrices';
+import { IUserState } from '../types/user';
+import { store } from '..';
 
 const uri = DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development;
 
-const getPrices = async (range: number) => await abortableAsyncFetch(`${uri}/prices?range=${range}`);
+export const pricesUpdateRequired = (lastUpdate: number) => (new Date().getTime() > new Date(lastUpdate).getTime() - 60 * 60 * 1000);
 
-const getStaticData = async (
-  state: IPreloadedState,
+export const getPrices = async ({ user, marketPrices }: { user: IUserState, marketPrices: IMarketPriceState }) => {
+
+  if (pricesUpdateRequired(user.settings.prices.lastUpdate)) {
+    const prices = await abortableAsyncFetch(`${uri}/prices?range=${user.settings.prices.range}`);
+    return await prices;
+  }
+
+  if(Object.keys(marketPrices).length !== 0) {
+    return await marketPrices;
+  }
+};
+
+export const getStaticData = async (
   component: string,
   setError: Dispatch<SetStateAction<boolean>>,
   setErrorType: Dispatch<SetStateAction<null>>,
 ) => {
+  const currentStore = store.getState();
   // @ts-ignore
-  if (state[component].length > 0) {
+  if (currentStore[component].length > 0) {
     // @ts-ignore
-    return await state[component];
+    return await currentStore[component];
   }
 
   return await abortableAsyncFetch(`${uri}/static?type=${component}`, setError, setErrorType);
 };
 
-const abortableAsyncFetch = async (
+export const abortableAsyncFetch = async (
   url: string,
   setError: Dispatch<SetStateAction<boolean>>|null = null,
   setErrorType: Dispatch<SetStateAction<null>>|null = null,
@@ -33,7 +46,7 @@ const abortableAsyncFetch = async (
     const controller = new AbortController();
     const { signal } = controller;
 
-    const timeout = setTimeout(() => controller.abort(), 5000);
+    const timeout = setTimeout(() => controller.abort(), 3000);
     const response = await fetch(url, { signal });
 
     if (!response.ok) {
@@ -44,7 +57,7 @@ const abortableAsyncFetch = async (
     const json = await response.json();
     clearTimeout(timeout);
 
-    return json as IFactory[] | IMineState[] |IMarketPriceState[];
+    return json as IFactory[] | IMineState[] | IMarketPriceState;
   } catch (error) {
     if(setErrorType) {
       setErrorType(error.name);
@@ -58,12 +71,14 @@ const abortableAsyncFetch = async (
   }
 };
 
-const filterFactoryByPropsID = (factories: IFactory[], props: { id: number }) =>
+export const filterFactoryByPropsID = (factories: IFactory[], props: { id: number }) =>
   factories.find(factory => factory.id === props.id) as IFactory;
+
+export const getElapsedLoadingTime = (start: number) => new Date().getTime() - start;
 
 // resolve timeout either instantly if loading took longer than LOADING_THRESHOLD
 // or resolve it after LOADING_THRESHOLD - timePassed
-const evaluateLoadingAnimationTimeout = (timePassed: number, LOADING_THRESHOLD: number = 750) =>
+export const evaluateLoadingAnimationTimeout = (timePassed: number, LOADING_THRESHOLD: number = 750) =>
   timePassed > LOADING_THRESHOLD ? 5 : LOADING_THRESHOLD - timePassed;
 
 const calculationOrder : readonly number[] = [
@@ -72,12 +87,11 @@ const calculationOrder : readonly number[] = [
   101, 69, 76, 125, 118 // tertiary order, relying exclusively on products
 ];
 
-const getMineAmountSum = (mines: IMineState[]) => mines.reduce((sum, currentMine) => sum + currentMine.amount, 0);
+export const getMineAmountSum = (mines: IMineState[]) => mines.reduce((sum, currentMine) => sum + currentMine.amount, 0);
 
-const getHourlyMineIncome = (mines: IMineState[], marketPrices: IMarketPriceState) =>
+export const getHourlyMineIncome = (mines: IMineState[], marketPrices: IMarketPriceState) =>
   mines.reduce((sum, mine) => sum + mine.sumTechRate * marketPrices[mine.resourceID].player, 0).toLocaleString();
 
-const getFactoryUpgradeSum = (factories: IFactory[]) =>
+export const getFactoryUpgradeSum = (factories: IFactory[]) =>
   factories.reduce((sum, factory) => sum + factory.level, 0);
 
-export { getStaticData, filterFactoryByPropsID, evaluateLoadingAnimationTimeout, calculationOrder, getMineAmountSum, getFactoryUpgradeSum, getPrices, getHourlyMineIncome };

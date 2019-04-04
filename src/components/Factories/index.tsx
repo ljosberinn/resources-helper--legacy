@@ -2,12 +2,14 @@ import React, { useEffect, useState, memo } from 'react';
 import { connect } from 'react-redux';
 import { store } from '../..';
 import { setFactories } from '../../actions/Factories';
-import { setPrices } from '../../actions/MarketPrices';
+import { setPrices, setLastUpdate } from '../../actions/MarketPrices';
 import { IPreloadedState } from '../../types';
-import { evaluateLoadingAnimationTimeout, getStaticData, getPrices } from '../helperFunctions';
+import { evaluateLoadingAnimationTimeout, getStaticData, getPrices, getElapsedLoadingTime } from '../helperFunctions';
 import { Loading } from '../Shared/Loading';
 import { FactoryTable } from './FactoryTable';
 import { IFactory } from '../../types/factory';
+import { useAsyncEffect } from '../Authentication/Hooks';
+import { IMarketPriceState } from '../../types/marketPrices';
 
 interface PropsFromState {
   hasError: boolean;
@@ -18,45 +20,34 @@ interface PropsFromState {
 interface PropsFromDispatch {
   setFactories: typeof setFactories;
   setPrices: typeof setPrices;
+  setLastUpdate: typeof setLastUpdate;
 }
 
 type FactoriesProps = PropsFromState & PropsFromDispatch;
 
 const ConnectedFactory = memo((props: FactoriesProps) => {
-  const currentStore = store.getState();
+  const { user, marketPrices, factories } = store.getState();
 
   const [hasError, setError] = useState(false);
   const [errorType, setErrorType] = useState(null);
 
-  const isLoading = currentStore.factories.length === 0;
+  const isLoading = factories.length === 0;
 
-  useEffect(() => {
+  useAsyncEffect(async () => {
     if (isLoading && !hasError) {
-      const getFactoryData = (currentStore: IPreloadedState, props: FactoriesProps) => {
-        const loadingStart = new Date().getMilliseconds();
+      (async () => {
+        const loadingStart = new Date().getTime();
 
-        const promises = [
-          getStaticData(currentStore, 'factories', setError, setErrorType),
-          getPrices(currentStore.user.settings.prices.range),
-        ];
+        const factories = (await getStaticData('factories', setError, setErrorType)) as IFactory[];
+        const prices = (await getPrices({ user, marketPrices })) as IMarketPriceState;
 
-        Promise.all(promises).then(([factories, prices]) => {
-          const timePassed = new Date().getMilliseconds() - loadingStart;
-
-          setTimeout(() => {
-            // Redux
-            props.setPrices(prices);
-            props.setFactories(factories);
-
-            // Hooks
-            //setFactories(factories);
-          }, evaluateLoadingAnimationTimeout(timePassed));
-        });
-      };
-
-      getFactoryData(currentStore, props);
+        setTimeout(() => {
+          props.setPrices(prices);
+          props.setFactories(factories);
+        }, evaluateLoadingAnimationTimeout(getElapsedLoadingTime(loadingStart)));
+      })();
     }
-  }, [currentStore.factories]);
+  }, [factories, marketPrices]);
 
   if (hasError) {
     if (errorType === 'AbortError') {
@@ -78,6 +69,7 @@ const mapStateToProps = (state: IPreloadedState) => ({ factories: state.factorie
 const mapDispatchToProps = {
   setFactories,
   setPrices,
+  setLastUpdate,
 };
 
 const preconnect = connect(

@@ -22,8 +22,6 @@ type MineTableType = PropsFromState & PropsFromDispatch;
 const ConnectedMineTable = memo((props: MineTableType) => {
   const { setMineCount, setTechedMiningRate, mines, marketPrices } = props;
 
-
-
   return (
     <table>
       <thead>

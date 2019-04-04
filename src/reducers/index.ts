@@ -59,6 +59,17 @@ export const factories: Reducer<IFactory[]> = (state = preloadedState.factories,
 
 export const user: Reducer<IUserState> = (state = preloadedState.user, action) => {
   switch (action.type) {
+    case MarketPriceActions.SET_LAST_UPDATE:
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          prices: {
+            ...state.settings.prices,
+            lastUpdate: action.payload,
+          },
+        },
+      };
     case AuthenticationActions.LOGIN:
       return {
         ...action.payload.user,
