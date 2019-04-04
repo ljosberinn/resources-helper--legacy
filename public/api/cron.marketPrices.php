@@ -7,6 +7,6 @@ header('Content-type: application/json');
 $marketPrices = new MarketPrices();
 
 echo json_encode([
-    'success' => $marketPrices->save($marketPrices->transformPrices($marketPrices->getPrices())),
+    'success' => $marketPrices->save($marketPrices->transformPrices($marketPrices->curlPrices())),
 ]);
 

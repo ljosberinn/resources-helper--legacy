@@ -17,25 +17,29 @@ class SpecialBuilding {
     }
 
     public function getSpecialBuildings(): array {
-        $specialBuildings = [];
+        $initialSpecialBuildings = $specialBuildings = [];
 
         $stmt = $this->pdo->query(self::QUERIES['getSpecialBuildings']);
 
         if($stmt && $stmt->rowCount() > 0) {
             foreach((array) $stmt->fetchAll() as $specialBuilding) {
-                if(!isset($specialBuildings[$specialBuilding['specialBuildingUID']])) {
-                    $specialBuildings[$specialBuilding['specialBuildingUID']] = [
+                if(!isset($initialSpecialBuildings[$specialBuilding['specialBuildingUID']])) {
+                    $initialSpecialBuildings[$specialBuilding['specialBuildingUID']] = [
                         'dependencies' => [],
                         'level'        => 0,
                         'id'           => $specialBuilding['specialBuildingUID'],
                     ];
                 }
 
-                $specialBuildings[$specialBuilding['specialBuildingUID']]['dependencies'][] = [
+                $initialSpecialBuildings[$specialBuilding['specialBuildingUID']]['dependencies'][] = [
                     'id'     => $specialBuilding['dependency'],
                     'amount' => $specialBuilding['amount'],
                 ];
             }
+        }
+
+        foreach($initialSpecialBuildings as $index => $specialBuilding) {
+            $specialBuildings[] = $specialBuilding;
         }
 
         return $specialBuildings;

@@ -3,6 +3,7 @@ import { IFactory } from '../../types/factory';
 import { IMineState } from '../../types/mines';
 import { IUserState } from '../../types/user';
 import { ISpecialBuildingState } from '../../types/specialBuildings';
+import { IMarketPriceState } from '../../types/marketPrices';
 
 export enum AuthenticationActions {
   LOGIN = '@@authentication/LOGIN',
@@ -15,6 +16,7 @@ export interface LoginResponse {
   mines: IMineState;
   user: IUserState;
   specialBuildings: ISpecialBuildingState;
+  marketPrices: IMarketPriceState;
 }
 
 export const login = (response: LoginResponse) => action(AuthenticationActions.LOGIN, response);

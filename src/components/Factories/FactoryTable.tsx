@@ -4,6 +4,7 @@ import { IFactory, IFactoryRequirements } from '../../types/factory';
 import { connect } from 'react-redux';
 import { setLevel, toggleFactoryDetailsVisibility, adjustRequirementsToLevel } from '../../actions/Factories';
 import { IMineState } from '../../types/mines';
+import { getFactoryUpgradeSum } from '../helperFunctions';
 interface PropsFromState {
   factories: IFactory[];
   mines: IMineState[];
@@ -50,6 +51,11 @@ export const ConnectedFactoryTable = memo((props: FactoryTableType) => {
           />
         ))}
       </tbody>
+      <tfoot>
+        <tr>
+          <td>{getFactoryUpgradeSum(factories)}</td>
+        </tr>
+      </tfoot>
     </table>
   );
 });

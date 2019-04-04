@@ -4,9 +4,10 @@ import { store } from '../..';
 import { setMines } from '../../actions/Mines';
 import { IPreloadedState } from '../../types';
 import { IMineState } from '../../types/mines';
-import { evaluateLoadingAnimationTimeout, getStaticData } from '../helperFunctions';
+import { evaluateLoadingAnimationTimeout, getStaticData, getPrices } from '../helperFunctions';
 import { Loading } from '../Shared/Loading';
 import { MineTable } from './MineTable';
+import { setPrices } from '../../actions/MarketPrices';
 
 interface PropsFromState {
   hasError: boolean;
@@ -16,6 +17,7 @@ interface PropsFromState {
 
 interface PropsFromDispatch {
   setMines: typeof setMines;
+  setPrices: typeof setPrices;
 }
 
 type MinesProps = PropsFromState & PropsFromDispatch;
@@ -23,33 +25,35 @@ type MinesProps = PropsFromState & PropsFromDispatch;
 const ConnectedMines = memo((props: MinesProps) => {
   const currentStore = store.getState();
 
-  const [mines, setMines] = useState(currentStore.mines);
   const [hasError, setError] = useState(false);
   const [errorType, setErrorType] = useState(null);
 
-  const isLoading = Object.keys(mines).length === 0;
+  const isLoading = currentStore.mines.length === 0;
 
   useEffect(() => {
     if (isLoading && !hasError) {
       const getMineData = (currentStore: IPreloadedState, props: MinesProps) => {
         const loadingStart = new Date().getMilliseconds();
 
-        Promise.resolve(getStaticData(currentStore, 'mines', setError, setErrorType)).then(mines => {
+        const promises = [
+          getStaticData(currentStore, 'mines', setError, setErrorType),
+          getPrices(currentStore.user.settings.prices.range),
+        ];
+
+        Promise.all(promises).then(([mines, prices]) => {
           const timePassed = new Date().getMilliseconds() - loadingStart;
 
           setTimeout(() => {
             // Redux
             props.setMines(mines);
-
-            // Hooks
-            setMines(mines);
+            props.setPrices(prices);
           }, evaluateLoadingAnimationTimeout(timePassed));
         });
       };
 
       getMineData(currentStore, props);
     }
-  }, [mines]);
+  }, [currentStore.mines, currentStore.marketPrices]);
 
   if (hasError) {
     if (errorType === 'AbortError') {
@@ -70,6 +74,7 @@ const mapStateToProps = (state: IPreloadedState) => ({ mines: state.mines, loadi
 
 const mapDispatchToProps = {
   setMines,
+  setPrices,
 };
 
 const preconnect = connect(

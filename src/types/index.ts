@@ -16,5 +16,5 @@ export interface IPreloadedState {
   mines: IMineState[];
   companyWorth: ICompanyWorthState;
   warehouses: IWarehouseState[];
-  marketPrices: IMarketPriceState[];
+  marketPrices: IMarketPriceState;
 }

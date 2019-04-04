@@ -3,6 +3,11 @@ import { DEV_SETTINGS } from '../developmentSettings';
 import { IPreloadedState } from '../types';
 import { IFactory } from '../types/factory';
 import { IMineState } from '../types/mines';
+import { IMarketPriceState } from '../types/marketPrices';
+
+const uri = DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development;
+
+const getPrices = async (range: number) => await abortableAsyncFetch(`${uri}/prices?range=${range}`);
 
 const getStaticData = async (
   state: IPreloadedState,
@@ -16,15 +21,13 @@ const getStaticData = async (
     return await state[component];
   }
 
-  const uri = DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development;
-
   return await abortableAsyncFetch(`${uri}/static?type=${component}`, setError, setErrorType);
 };
 
 const abortableAsyncFetch = async (
   url: string,
-  setError: Dispatch<SetStateAction<boolean>>,
-  setErrorType: Dispatch<SetStateAction<null>>,
+  setError: Dispatch<SetStateAction<boolean>>|null = null,
+  setErrorType: Dispatch<SetStateAction<null>>|null = null,
 ) => {
   try {
     const controller = new AbortController();
@@ -41,10 +44,16 @@ const abortableAsyncFetch = async (
     const json = await response.json();
     clearTimeout(timeout);
 
-    return json as IFactory[] | IMineState[];
+    return json as IFactory[] | IMineState[] |IMarketPriceState[];
   } catch (error) {
-    setErrorType(error.name);
-    setError(true);
+    if(setErrorType) {
+      setErrorType(error.name);
+    }
+
+    if (setError) {
+      setError(true);
+    }
+
     return [];
   }
 };
@@ -63,4 +72,12 @@ const calculationOrder : readonly number[] = [
   101, 69, 76, 125, 118 // tertiary order, relying exclusively on products
 ];
 
-export { getStaticData, filterFactoryByPropsID, evaluateLoadingAnimationTimeout, calculationOrder };
+const getMineAmountSum = (mines: IMineState[]) => mines.reduce((sum, currentMine) => sum + currentMine.amount, 0);
+
+const getHourlyMineIncome = (mines: IMineState[], marketPrices: IMarketPriceState) =>
+  mines.reduce((sum, mine) => sum + mine.sumTechRate * marketPrices[mine.resourceID].player, 0).toLocaleString();
+
+const getFactoryUpgradeSum = (factories: IFactory[]) =>
+  factories.reduce((sum, factory) => sum + factory.level, 0);
+
+export { getStaticData, filterFactoryByPropsID, evaluateLoadingAnimationTimeout, calculationOrder, getMineAmountSum, getFactoryUpgradeSum, getPrices, getHourlyMineIncome };

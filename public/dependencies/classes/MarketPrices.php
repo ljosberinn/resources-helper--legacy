@@ -70,7 +70,10 @@ class MarketPrices extends APICore {
         24  => 58,
     ];
 
+    private const DEFAULT_EXPORT_TYPE = 'json';
     private const ALLOWED_EXPORT_TYPES = ['xml', 'csv', 'json'];
+
+    private const DEFAULT_EXPORT_RANGE = 72;
     private const ALLOWED_EXPORT_RANGES = [1, 24, 48, 72, 96, 120, 144, 168,];
 
     private const EXPORT_HEADER = [
@@ -95,7 +98,7 @@ class MarketPrices extends APICore {
     /** @var PDOStatement */
     private $stmt;
 
-    private $exportType;
+    private $exportType = 'json';
     /** @var int $exportRange */
     private $exportRange;
 
@@ -115,7 +118,7 @@ class MarketPrices extends APICore {
         return $this->pdo instanceof PDO;
     }
 
-    public function getPrices(): array {
+    public function curlPrices(): array {
         return $this->looseCurlAPI(self::MARKET_PRICE_URI);
     }
 
@@ -164,16 +167,16 @@ class MarketPrices extends APICore {
             return;
         }
 
-        $this->exportType = 'json';
+        $this->exportType = self::DEFAULT_EXPORT_TYPE;
     }
 
-    public function setExportTimespan(int $timespan): void {
-        if(in_array($timespan, self::ALLOWED_EXPORT_RANGES, true)) {
-            $this->exportRange = $timespan;
+    public function setExportRange(int $range): void {
+        if(in_array($range, self::ALLOWED_EXPORT_RANGES, true)) {
+            $this->exportRange = $range;
             return;
         }
 
-        $this->exportRange = 72;
+        $this->exportRange = self::DEFAULT_EXPORT_RANGE;
     }
 
     private function createTimestamp(): int {
@@ -201,6 +204,24 @@ class MarketPrices extends APICore {
         $sql .= ' FROM `marketPrices` WHERE `timestamp` >= :timestamp';
 
         return $sql;
+    }
+
+    public function getArray(): array {
+        $stmt = $this->pdo->prepare($this->buildExportQuery());
+        $stmt->execute(['timestamp' => $this->createTimestamp()]);
+
+        $prices = [];
+
+        $data = $stmt->fetch();
+
+        foreach(array_keys(self::ID_MAP) as $id) {
+            $prices[$id] = [
+                'ai'     => $data['ai_' . $id],
+                'player' => $data['player_' . $id],
+            ];
+        }
+
+        return $prices;
     }
 
     public function export(): string {

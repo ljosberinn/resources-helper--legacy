@@ -2,12 +2,13 @@ import React, { Fragment } from 'react';
 import { Footer } from './Footer';
 import { Header } from './Header';
 import { Routes } from './Routes';
+import { Store } from 'redux';
 
-interface IRHelperProps {
-  store: any;
+interface RHelperProps {
+  store: Store;
 }
 
-export const RHelper = ({ store }: IRHelperProps) => {
+export const RHelper = ({ store }: RHelperProps) => {
   const state = store.getState();
 
   return (

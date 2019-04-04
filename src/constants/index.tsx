@@ -7,6 +7,10 @@ export const preloadedState: IPreloadedState = {
     settings: {
       remembersAPIKey: false,
       locale: 'en',
+      prices: {
+        type: 'json',
+        range: 72,
+      }
     },
     playerInfo: {
       userName: '',
@@ -33,7 +37,7 @@ export const preloadedState: IPreloadedState = {
   specialBuildings: [],
   headquarter: [],
   warehouses: [],
-  marketPrices: [],
+  marketPrices: {},
   companyWorth: {
     headquarter: 0,
     factories: 0,
@@ -42,3 +46,5 @@ export const preloadedState: IPreloadedState = {
     warehouses: 0,
   },
 };
+
+

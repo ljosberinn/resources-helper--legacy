@@ -8,8 +8,8 @@ interface IWorkload {
 }
 
 const calcWorkload = (factory: IFactory, mines: IMineState[]) =>
-  mines
-    .map(mine => {
+  Math.min(
+    ...mines.map(mine => {
       const index = factory.requirements.findIndex(requirement => requirement.id === mine.resourceID);
 
       if (index === -1) {
@@ -19,11 +19,7 @@ const calcWorkload = (factory: IFactory, mines: IMineState[]) =>
       const { currentAmount } = factory.requirements[index];
 
       return (mine.sumTechRate / currentAmount) * 100;
-    })
-    .reduce((lowestValue, nextValue) => (nextValue < lowestValue ? (lowestValue = nextValue) : lowestValue), Infinity);
+    }),
+  ).toFixed(2);
 
-export const Workload = ({ factory, mines }: IWorkload) => {
-  const workload = calcWorkload(factory, mines);
-
-  return <Fragment>{workload === Infinity ? 0 : workload.toFixed(2)}%</Fragment>;
-};
+export const Workload = ({ factory, mines }: IWorkload) => <Fragment>{calcWorkload(factory, mines)}%</Fragment>;

@@ -2,8 +2,9 @@ import React, { useEffect, useState, memo } from 'react';
 import { connect } from 'react-redux';
 import { store } from '../..';
 import { setFactories } from '../../actions/Factories';
+import { setPrices } from '../../actions/MarketPrices';
 import { IPreloadedState } from '../../types';
-import { evaluateLoadingAnimationTimeout, getStaticData } from '../helperFunctions';
+import { evaluateLoadingAnimationTimeout, getStaticData, getPrices } from '../helperFunctions';
 import { Loading } from '../Shared/Loading';
 import { FactoryTable } from './FactoryTable';
 import { IFactory } from '../../types/factory';
@@ -16,6 +17,7 @@ interface PropsFromState {
 
 interface PropsFromDispatch {
   setFactories: typeof setFactories;
+  setPrices: typeof setPrices;
 }
 
 type FactoriesProps = PropsFromState & PropsFromDispatch;
@@ -23,33 +25,38 @@ type FactoriesProps = PropsFromState & PropsFromDispatch;
 const ConnectedFactory = memo((props: FactoriesProps) => {
   const currentStore = store.getState();
 
-  const [factories, setFactories] = useState(currentStore.factories);
   const [hasError, setError] = useState(false);
   const [errorType, setErrorType] = useState(null);
 
-  const isLoading = factories.length === 0;
+  const isLoading = currentStore.factories.length === 0;
 
   useEffect(() => {
     if (isLoading && !hasError) {
       const getFactoryData = (currentStore: IPreloadedState, props: FactoriesProps) => {
         const loadingStart = new Date().getMilliseconds();
 
-        Promise.resolve(getStaticData(currentStore, 'factories', setError, setErrorType)).then(factories => {
+        const promises = [
+          getStaticData(currentStore, 'factories', setError, setErrorType),
+          getPrices(currentStore.user.settings.prices.range),
+        ];
+
+        Promise.all(promises).then(([factories, prices]) => {
           const timePassed = new Date().getMilliseconds() - loadingStart;
 
           setTimeout(() => {
             // Redux
+            props.setPrices(prices);
             props.setFactories(factories);
 
             // Hooks
-            setFactories(factories);
+            //setFactories(factories);
           }, evaluateLoadingAnimationTimeout(timePassed));
         });
       };
 
       getFactoryData(currentStore, props);
     }
-  }, [factories]);
+  }, [currentStore.factories]);
 
   if (hasError) {
     if (errorType === 'AbortError') {
@@ -70,6 +77,7 @@ const mapStateToProps = (state: IPreloadedState) => ({ factories: state.factorie
 
 const mapDispatchToProps = {
   setFactories,
+  setPrices,
 };
 
 const preconnect = connect(

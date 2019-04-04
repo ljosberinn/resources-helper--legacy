@@ -9,6 +9,10 @@ class Login extends Authentication {
         'settings'        => [
             'remembersAPIKey' => false,
             'locale'          => 'en',
+            'price'           => [
+                'type'  => 'json',
+                'range' => 72,
+            ],
         ],
         'playerInfo'      => [
             'userName'   => '',
@@ -62,6 +66,11 @@ class Login extends Authentication {
 
         $playerIndexUID = $this->probablyUser['playerIndexUID'];
 
+        [$factories, $lastFactoryUpdate] = (new Factory())->getUserFactories($playerIndexUID);
+        [$mines, $lastMineUpdate] = (new Mine())->getUserMines($playerIndexUID);
+        [$specialBuildings, $lastSpecialBuildingUpdate] = (new SpecialBuilding())->getUserSpecialBuildings($playerIndexUID);
+        [$warehouses, $lastWarehouseUpdate] = (new Warehouse())->getUserWarehouses($playerIndexUID);
+
         $user['API']['key']                 = $this->probablyUser['apiKey'];
         $user['API']['isAPIUser']           = strlen($this->probablyUser['apiKey']) === 45;
         $user['API']['remainingAPICredits'] = $this->probablyUser['remainingAPICredits'];
@@ -72,24 +81,21 @@ class Login extends Authentication {
         $user['playerInfo']['registered'] = $this->probablyUser['registered'];
         $user['playerInfo']['userName']   = (new PlayerIndex($this->pdo))->getPlayerNameByID($playerIndexUID);
 
-        [$factories, $lastFactoryUpdate] = (new Factory())->getUserFactories($playerIndexUID);
-        [$mines, $lastMineUpdate] = (new Mine())->getUserMines($playerIndexUID);
-        [$specialBuildings, $lastSpecialBuildingUpdate] = (new SpecialBuilding())->getUserSpecialBuildings($playerIndexUID);
-        [$warehouses, $lastWarehouseUpdate] = (new Warehouse())->getUserWarehouses($playerIndexUID);
-
         $user['API']['lastUpdates']['factories']        = $lastFactoryUpdate;
         $user['API']['lastUpdates']['mines']            = $lastMineUpdate;
         $user['API']['lastUpdates']['specialBuildings'] = $lastSpecialBuildingUpdate;
         $user['API']['lastUpdates']['warehouses']       = $lastWarehouseUpdate;
 
-        $response = [
+        $marketPrices = new MarketPrices();
+        $marketPrices->setExportRange(72);
+
+        return [
             'user'             => $user,
             'factories'        => $factories,
             'specialBuildings' => $specialBuildings,
             'mines'            => $mines,
             'warehouses'       => $warehouses,
+            'marketPrices'     => $marketPrices->getArray(),
         ];
-
-        return $response;
     }
 }

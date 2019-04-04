@@ -13,16 +13,18 @@ $type = $_GET['type'];
 
 header('Content-type: application/json');
 
+$response = [];
+
 if($type === 'factories') {
-    echo json_encode((new Factory())->getFactories());
-    die;
+    $response = (new Factory())->getFactories();
 }
 
 if($type === 'specialBuildings') {
-    echo json_encode((new SpecialBuilding())->getSpecialBuildings());
-    die;
+    $response = (new SpecialBuilding())->getSpecialBuildings();
 }
 
 if($type === 'mines') {
-    echo json_encode((new Mine())->getMines());
+    $response = (new Mine())->getMines();
 }
+
+echo json_encode($response);

@@ -1,3 +1,4 @@
+import { MarketPriceActions } from './../actions/MarketPrices/index';
 import { AuthenticationActions } from './../actions/Authentication/index';
 import { Reducer } from 'redux';
 import { FactoryActions } from '../actions/Factories';
@@ -98,7 +99,7 @@ export const mines: Reducer<IMineState[]> = (state = preloadedState.mines, actio
 
         return {
           ...mine,
-          sumRawRate: action.payload.techedRate,
+          sumTechRate: action.payload.techedRate,
         };
       });
     case MineActions.SET_AMOUNT:
@@ -130,6 +131,15 @@ export const warehouses: Reducer<IWarehouseState[]> = (state = preloadedState.wa
 
 export const headquarter: Reducer<IHeadquarterState> = (state = preloadedState.headquarter, action) => state;
 
-export const marketPrices: Reducer<IMarketPriceState[]> = (state = preloadedState.marketPrices, action) => state;
+export const marketPrices: Reducer<IMarketPriceState> = (state = preloadedState.marketPrices, action) => {
+  switch (action.type) {
+    case AuthenticationActions.LOGIN:
+      return action.payload.marketPrices;
+    case MarketPriceActions.SET_PRICES:
+      return action.payload;
+  }
+
+  return state;
+};
 export const companyWorth: Reducer<ICompanyWorthState> = (state = preloadedState.companyWorth, action) => state;
 export const version: Reducer<string> = (state = preloadedState.version) => state;

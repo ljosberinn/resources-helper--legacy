@@ -1,14 +1,14 @@
-import React, { memo, ChangeEvent, useEffect, useState } from 'react';
+import React, { memo } from 'react';
 import { connect } from 'react-redux';
 import { setMineCount, setMines, setTechedMiningRate } from '../../actions/Mines';
 import { IMineState } from '../../types/mines';
-import { getStaticData, evaluateLoadingAnimationTimeout } from '../helperFunctions';
-import { IPreloadedState } from '../../types';
-import { store } from '../..';
-import { Loading } from '../Shared/Loading';
+import { getMineAmountSum, getHourlyMineIncome } from '../helperFunctions';
+import { Mine } from './Mine';
+import { IMarketPriceState } from '../../types/marketPrices';
 
 interface PropsFromState {
   mines: IMineState[];
+  marketPrices: IMarketPriceState;
 }
 
 interface PropsFromDispatch {
@@ -19,52 +19,10 @@ interface PropsFromDispatch {
 
 type MineTableType = PropsFromState & PropsFromDispatch;
 
-const getMineAmountSum = (mines: IMineState[]) => mines.reduce((sum, currentMine) => sum + currentMine.amount, 0);
-
 const ConnectedMineTable = memo((props: MineTableType) => {
-  const { setMineCount, setTechedMiningRate } = props;
+  const { setMineCount, setTechedMiningRate, mines, marketPrices } = props;
 
-  const currentStore = store.getState();
 
-  const [mines, setMines] = useState(currentStore.mines);
-  const [hasError, setError] = useState(false);
-  const [errorType, setErrorType] = useState(null);
-
-  const isLoading = mines.length === 0;
-
-  useEffect(() => {
-    if (isLoading && !hasError) {
-      const getMineData = (currentStore: IPreloadedState, props: MineTableType) => {
-        const loadingStart = new Date().getMilliseconds();
-
-        Promise.resolve(getStaticData(currentStore, 'mines', setError, setErrorType)).then(mines => {
-          const timePassed = new Date().getMilliseconds() - loadingStart;
-
-          setTimeout(() => {
-            // Redux
-            props.setMines(mines);
-
-            // Hooks
-            setMines(mines);
-          }, evaluateLoadingAnimationTimeout(timePassed));
-        });
-      };
-
-      getMineData(currentStore, props);
-    }
-  }, [mines]);
-
-  if (hasError) {
-    if (errorType === 'AbortError') {
-      return <p>Server unavailable</p>;
-    }
-
-    return <p>Error</p>;
-  }
-
-  if (isLoading) {
-    return <Loading />;
-  }
 
   return (
     <table>
@@ -72,56 +30,27 @@ const ConnectedMineTable = memo((props: MineTableType) => {
         <tr />
       </thead>
       <tbody>
-        {Object.values(mines).map(mine => {
-          const updateTechedMiningRate = (e: ChangeEvent<HTMLInputElement>) => {
-            const miningRate = parseInt(e.target.value);
-
-            setTechedMiningRate(mine.resourceID, Number.isNaN(miningRate) ? 0 : miningRate);
-          };
-
-          const updateMineCount = (e: ChangeEvent<HTMLInputElement>) => {
-            const mineCount = parseInt(e.target.value);
-
-            setMineCount(mine.resourceID, Number.isNaN(mineCount) ? 0 : mineCount);
-          };
-
-          return (
-            <tr key={mine.resourceID}>
-              <td>ID {mine.resourceID}</td>
-              <td>
-                <input
-                  type="number"
-                  min="0"
-                  max="200000000"
-                  onChange={updateTechedMiningRate}
-                  defaultValue={mine.sumTechRate.toString()}
-                  placeholder="rate/hr"
-                />
-              </td>
-              <td>
-                <input
-                  type="number"
-                  min="0"
-                  max="35000"
-                  onChange={updateMineCount}
-                  defaultValue={mine.amount.toString()}
-                  placeholder="mine amount"
-                />
-              </td>
-            </tr>
-          );
-        })}
+        {mines.map(mine => (
+          <Mine
+            mine={mine}
+            marketPrices={marketPrices}
+            setMineCount={setMineCount}
+            setTechedMiningRate={setTechedMiningRate}
+            key={mine.resourceID}
+          />
+        ))}
       </tbody>
       <tfoot>
         <tr>
           <td>{getMineAmountSum(mines)}</td>
+          <td>{getHourlyMineIncome(mines, marketPrices)}</td>
         </tr>
       </tfoot>
     </table>
   );
 });
 
-const mapStateToProps = ({ mines }: MineTableType) => ({ mines });
+const mapStateToProps = ({ mines, marketPrices }: MineTableType) => ({ mines, marketPrices });
 
 const mapDispatchToProps = {
   setMineCount,

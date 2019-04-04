@@ -6,9 +6,20 @@ export interface IUserState {
 }
 
 export interface IUserSettings {
+  prices: IUserPriceSettings;
   remembersAPIKey: boolean;
-  locale: string;
+  locale: UserSettingLocales;
 }
+
+export type UserSettingLocales = 'en' | 'de' | 'fr' | 'jp' | 'cz' | 'es' | 'ru' | 'cn';
+
+export interface IUserPriceSettings {
+  range: UserPriceSettingRange;
+  type: UserPriceSettingType;
+}
+
+export type UserPriceSettingRange = 1 | 24 | 48 | 72 | 96 | 120 | 144 | 168;
+export type UserPriceSettingType = 'xml' | 'json' | 'csv';
 
 export interface IUserPlayerInfo {
   userName: string;
@@ -38,9 +49,4 @@ export interface IUserPlayerInfoState {
   level: number;
   rank: number;
   registered: number;
-}
-
-export interface IUserSettingState {
-  remembersAPIKey: boolean;
-  locale: string;
 }
