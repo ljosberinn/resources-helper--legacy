@@ -27,51 +27,38 @@ foreach(HOOKS as $hook) {
 
 $zipArchive = new ZipArchive();
 
-if($zipArchive->open(ZIP) && $zipArchive->extractTo(getcwd()) && $zipArchive->close()) {
-
-    $unzippedFolderName = str_replace('.', '', substr(ZIP, 0, -4));
-
-    $installedHooks = 1;
-
-    foreach(HOOKS as $index => $hook) {
-        $currentHookPath = implode('/', [$unzippedFolderName, $hook]);
-        $nextHookPath    = implode('/', [GIT_PATH, 'hooks', $hook]);
-
-        if(!rename('./' . $currentHookPath, $nextHookPath)) {
-            notify('Hook ' . $hook . ' could not be moved, aborting');
-            die;
-        }
-
-        notify($index . ' - Hook ' . $hook . ' installed.');
-        ++$installedHooks;
-    }
-
-    notify($installedHooks . ' Hooks successfully installed, cleaning up...');
-
-    if(!unlink(ZIP)) {
-        notify('Could not remove the zip, please do so manually');
-        die;
-    }
-
-    if(!unlink('install_githooks.php')) {
-        notify('Could not remove this file, please do so manually');
-        die;
-    }
-
-    if(!rmdir($unzippedFolderName)) {
-        notify('Could not remove folder `' . $unzippedFolderName . '`, please do so manually');
-        die;
-    }
-
-    notify("Cleaned up, you're good to go.");
-
-    if(!empty(FINISHERS)) {
-        notify("Please run these to install dependencies:\r\n\r\n" . implode(' && ', FINISHERS));
-    }
+if(!$zipArchive->open(ZIP) && $zipArchive->extractTo(getcwd()) && $zipArchive->close()) {
+    notify('An error occured during unzipping. Please try manually.');
     die;
 }
 
-notify('An error occured during unzipping. Please try manually.');
+$unzippedFolderName = str_replace('.', '', substr(ZIP, 0, -4));
+
+$installedHooks = 0;
+
+foreach(HOOKS as $index => $hook) {
+    $currentHookPath = implode('/', [$unzippedFolderName, $hook]);
+    $nextHookPath    = implode('/', [GIT_PATH, 'hooks', $hook]);
+
+    if(!rename('./' . $currentHookPath, $nextHookPath)) {
+        notify('Hook ' . $hook . ' could not be moved, aborting.');
+        die;
+    }
+
+    ++$installedHooks;
+    notify($index . ' - Hook ' . $hook . ' installed.');
+}
+
+notify($installedHooks . ' Hooks successfully installed, cleaning up...');
+
+if(!rmdir($unzippedFolderName)) {
+    notify('Could not remove folder `' . $unzippedFolderName . '`, please do so manually');
+    die;
+}
+
+if(!empty(FINISHERS)) {
+    notify("Please run the following command as final step:\r\n\r\n" . implode(' && ', FINISHERS));
+}
 
 function notify(string $words): void {
     echo "\r\n" . $words . "\r\n";

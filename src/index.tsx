@@ -10,6 +10,12 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { Loading } from './components/Shared/Loading';
 import { ConnectedRouter } from 'connected-react-router';
 
+if (process.env.NODE_ENV !== 'production') {
+  const { whyDidYouUpdate } = require('why-did-you-update');
+
+  whyDidYouUpdate(React);
+}
+
 Sentry.init({
   dsn: 'https://7b1b186565cf49e282d282f55c8e615c@sentry.io/1422548',
 });
