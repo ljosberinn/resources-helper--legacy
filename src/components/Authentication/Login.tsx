@@ -4,10 +4,11 @@ import { login, LoginResponse } from '../../actions/Authentication';
 import { connect } from 'react-redux';
 import { regExp, htmlPattern } from './Shared';
 import { push } from 'connected-react-router';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 const authenticationURL = `${DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development}/auth/login`;
 
-interface PropsFromState {}
+interface PropsFromState extends RouteComponentProps {}
 interface PropsFromDispatch {
   login: typeof login;
   push: typeof push;
@@ -45,7 +46,7 @@ const ConnectedLogin = memo((props: LoginType) => {
       console.log({ json });
 
       props.login(json);
-      props.push('/factories');
+      props.history.push('/factories');
 
       return;
     }
@@ -99,4 +100,4 @@ const preconnect = connect(
   mapDispatchToProps,
 );
 
-export const Login = preconnect(ConnectedLogin);
+export const Login = withRouter(preconnect(ConnectedLogin));

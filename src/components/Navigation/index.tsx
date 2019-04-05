@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { Link } from 'react-router-dom';
 
 const navElements = [
   { displayName: 'Login', href: 'login', requiresGuest: true, requiresLogin: false },
@@ -34,7 +35,7 @@ export const Navigation = memo(({ isAuthenticated }: INavigationProps) => (
 
         return (
           <li key={key}>
-            <a href={`/${href}`}>{displayName}</a>
+            <Link to={`/${href}`}>{displayName}</Link>
           </li>
         );
       })}
