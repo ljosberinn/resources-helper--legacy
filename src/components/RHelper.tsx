@@ -19,3 +19,5 @@ export const RHelper = ({ store }: RHelperProps) => {
     </Fragment>
   );
 };
+
+RHelper.whyDidYouRender = true;

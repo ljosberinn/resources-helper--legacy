@@ -1,4 +1,4 @@
-import React, { useEffect, useState, memo } from 'react';
+import React, { useState, memo } from 'react';
 import { connect } from 'react-redux';
 import { store } from '../..';
 import { setMines } from '../../actions/Mines';
@@ -9,14 +9,12 @@ import {
   getStaticData,
   getPrices,
   getElapsedLoadingTime,
-  pricesUpdateRequired,
 } from '../helperFunctions';
 import { Loading } from '../Shared/Loading';
 import { MineTable } from './MineTable';
 import { setPrices, setLastUpdate } from '../../actions/MarketPrices';
 import { IMarketPriceState } from '../../types/marketPrices';
-import { useAsyncEffect } from '../Authentication/Hooks';
-import { async } from 'q';
+import { useAsyncEffect } from '../Hooks';
 
 interface PropsFromState {
   hasError: boolean;

@@ -11,9 +11,8 @@ import { Loading } from './components/Shared/Loading';
 import { ConnectedRouter } from 'connected-react-router';
 
 if (process.env.NODE_ENV !== 'production') {
-  const { whyDidYouUpdate } = require('why-did-you-update');
-
-  whyDidYouUpdate(React);
+  const whyDidYouRender = require('@welldone-software/why-did-you-render');
+  whyDidYouRender(React, { trackHooks: true });
 }
 
 Sentry.init({

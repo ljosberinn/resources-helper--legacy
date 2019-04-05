@@ -7,3 +7,7 @@ export const Footer = memo(() => (
     </a>
   </footer>
 ));
+
+Footer.displayName = 'Footer';
+//@ts-ignore
+Footer.whyDidYouRender = true;

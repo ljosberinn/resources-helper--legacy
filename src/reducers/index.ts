@@ -140,7 +140,7 @@ export const warehouses: Reducer<IWarehouseState[]> = (state = preloadedState.wa
   return state;
 };
 
-export const headquarter: Reducer<IHeadquarterState> = (state = preloadedState.headquarter, action) => state;
+export const headquarter: Reducer<IHeadquarterState> = (state = preloadedState.headquarter) => state;
 
 export const marketPrices: Reducer<IMarketPriceState> = (state = preloadedState.marketPrices, action) => {
   switch (action.type) {
@@ -152,5 +152,5 @@ export const marketPrices: Reducer<IMarketPriceState> = (state = preloadedState.
 
   return state;
 };
-export const companyWorth: Reducer<ICompanyWorthState> = (state = preloadedState.companyWorth, action) => state;
+export const companyWorth: Reducer<ICompanyWorthState> = (state = preloadedState.companyWorth) => state;
 export const version: Reducer<string> = (state = preloadedState.version) => state;

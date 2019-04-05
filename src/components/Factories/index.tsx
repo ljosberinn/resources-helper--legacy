@@ -1,4 +1,4 @@
-import React, { useEffect, useState, memo } from 'react';
+import React, { useState, memo } from 'react';
 import { connect } from 'react-redux';
 import { store } from '../..';
 import { setFactories } from '../../actions/Factories';
@@ -8,7 +8,7 @@ import { evaluateLoadingAnimationTimeout, getStaticData, getPrices, getElapsedLo
 import { Loading } from '../Shared/Loading';
 import { FactoryTable } from './FactoryTable';
 import { IFactory } from '../../types/factory';
-import { useAsyncEffect } from '../Authentication/Hooks';
+import { useAsyncEffect } from '../Hooks';
 import { IMarketPriceState } from '../../types/marketPrices';
 
 interface PropsFromState {

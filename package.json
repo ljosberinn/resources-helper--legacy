@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "@sentry/browser": "^5.0.5",
-    "@types/why-did-you-update": "0.0.10",
     "connected-react-router": "^6.3.2",
     "history": "^4.9.0",
     "react": "^16.8.6",
@@ -37,8 +36,8 @@
     "@types/react-dom": "16.8.3",
     "@types/react-redux": "^7.0.6",
     "@types/react-router-dom": "^4.3.1",
-    "redux-devtools-extension": "^2.13.8",
-    "why-did-you-update": "^1.0.6"
+    "@welldone-software/why-did-you-render": "^3.0.1",
+    "redux-devtools-extension": "^2.13.8"
   },
   "browserslist": [
     ">0.2%",

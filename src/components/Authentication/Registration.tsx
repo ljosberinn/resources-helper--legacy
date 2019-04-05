@@ -1,4 +1,4 @@
-import React, { useState, memo, ChangeEvent, FormEvent } from 'react';
+import React, { useState,  ChangeEvent, FormEvent } from 'react';
 import { regExp, htmlPattern } from './Shared';
 import { DEV_SETTINGS } from '../../developmentSettings';
 
@@ -14,7 +14,7 @@ interface RegistrationError {
   error: string;
 }
 
-export const Registration = memo(() => {
+export const Registration:React.FunctionComponent<IRegistrationPayload> =() => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [hasError, setError] = useState(false);
@@ -116,4 +116,4 @@ export const Registration = memo(() => {
       {password.length > 0 && repeatedPassword.length > 0 && !isValidPasswordRepetition ? <p>Passwords not matching</p> : null}
     </form>
   );
-});
+};

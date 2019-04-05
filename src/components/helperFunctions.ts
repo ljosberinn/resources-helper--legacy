@@ -81,11 +81,11 @@ export const getElapsedLoadingTime = (start: number) => new Date().getTime() - s
 export const evaluateLoadingAnimationTimeout = (timePassed: number, LOADING_THRESHOLD: number = 750) =>
   timePassed > LOADING_THRESHOLD ? 5 : LOADING_THRESHOLD - timePassed;
 
-const calculationOrder : readonly number[] = [
+/*const calculationOrder : readonly number[] = [
   6, 23, 25, 29, 33, 37, 39, 63, 91, 52, 34, 80, // primary order, relying exclusively on mines
   61, 29, 68, 85, 95, // secondary order, relying both on mines and products
   101, 69, 76, 125, 118 // tertiary order, relying exclusively on products
-];
+];*/
 
 export const getMineAmountSum = (mines: IMineState[]) => mines.reduce((sum, currentMine) => sum + currentMine.amount, 0);
 

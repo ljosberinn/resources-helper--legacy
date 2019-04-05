@@ -33,3 +33,5 @@ export const Routes = ({ state }: IRoutesProps) => (
     </main>
   </Fragment>
 );
+
+Routes.whyDidYouRender = true;
