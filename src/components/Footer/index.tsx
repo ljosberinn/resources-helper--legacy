@@ -10,4 +10,6 @@ export const Footer = memo(() => (
 
 Footer.displayName = 'Footer';
 //@ts-ignore
-Footer.whyDidYouRender = true;
+Footer.whyDidYouRender = {
+  customName: 'Footer',
+};

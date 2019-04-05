@@ -12,7 +12,7 @@ import { ConnectedRouter } from 'connected-react-router';
 
 if (process.env.NODE_ENV !== 'production') {
   const whyDidYouRender = require('@welldone-software/why-did-you-render');
-  whyDidYouRender(React, { trackHooks: true });
+  whyDidYouRender(React);
 }
 
 Sentry.init({
