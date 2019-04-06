@@ -12,6 +12,49 @@ class Factory {
         'getUserFactories'       => 'SELECT `timestamp`, `6`, `23`, `25`, `29`, `31`, `33`, `34`, `37`, `39`, `52`, `61`, `63`, `68`, `69`, `76`, `80`, `85`, `91`, `95`, `101`, `118`, `125` FROM `factories` WHERE `playerIndexUID` = :playerIndexUID',
     ];
 
+    private const MINE_INDEPENDANT_FACTORIES = [
+        69,
+        76,
+        95,
+        101,
+        118,
+        125,
+    ];
+
+    /* these factories rely exclusively on mines */
+    private const PRIMARY_ORDER = [
+        6,  // Concrete factory, product ID = 7
+        23, // Fertilizer factory, product ID = 22
+        25, // Brick factory, product ID = 24
+        31, // Ironworks, product ID = 30
+        33, // Aluminium factory, product ID = 32
+        34, // Silver refinery, product ID = 35
+        37, // Copper refinery, product ID = 36
+        39, // Oil refinery, product ID = 38
+        52, // Titanium refinery, product ID = 51
+        63, // Plastic factory, product ID = 58
+        80, // Gold refinery, product ID = 79
+        91, // Lithium refinery, product ID = 92
+    ];
+
+    /* these factories rely both on mines and products */
+    private const SECONDARY_ORDER = [
+        29, // Insecticide factory, product ID = 28
+        61, // Glacier's workshop, product ID = 60
+        68, // Silicon refinery, product ID = 67
+        69, // Electronics factory, product ID = 66
+        85, // Goldsmith, product ID = 84
+    ];
+
+    /* these factories rely exclusively on products of other factories */
+    private const TERTIARY_ORDER = [
+        76,  // Medical technology Inc., product ID = 75
+        95,  // Battery factory, product ID = 93
+        101, // Arms factory, product ID = 87
+        118, // Drone shipyard, product ID = 117
+        125  // Trucks, product ID = 124
+    ];
+
     public function __construct() {
         $db        = DB::getInstance();
         $this->pdo = $db->getConnection();
@@ -36,7 +79,7 @@ class Factory {
         }
 
         if($index === -1) {
-            throw new RuntimeException('unknown factoryID');
+            throw new RuntimeException('unknown factoryID ' . $id);
         }
 
         return $index;
@@ -47,9 +90,10 @@ class Factory {
             $index = $this->findFactoryByID($factories, $productionDependency['factoryUID']);
 
             $factories[$index]['requirements'][] = [
-                'id'            => $productionDependency['requirement'],
-                'amount'        => $productionDependency['amount'],
-                'currentAmount' => $productionDependency['amount'],
+                'id'                    => $productionDependency['requirement'],
+                'amountPerLevel'        => $productionDependency['amount'],
+                'currentRequiredAmount' => $productionDependency['amount'],
+                'currentGivenAmount'    => 0,
             ];
         }
 
@@ -93,7 +137,7 @@ class Factory {
 
         if($stmt && $stmt->rowCount() > 0) {
             foreach((array) $stmt->fetchAll() as $factory) {
-                $factories[] = [
+                $dataset = [
                     'id'                 => $factory['uid'],
                     'scaling'            => $factory['scaling'],
                     'dependantFactories' => [],
@@ -101,13 +145,19 @@ class Factory {
                     'level'              => 0,
                     'hasDetailsVisible'  => false,
                 ];
+
+                if(!in_array($factory['uid'], self::MINE_INDEPENDANT_FACTORIES, true)) {
+                    $dataset['relevantMines'] = [];
+                }
+
+                $factories[] = $dataset;
             }
         }
 
         return $factories;
     }
 
-    public function getUserFactories(int $playerIndexUID): array {
+    public function getUserFactories(int $playerIndexUID, array $mines): array {
         $factories           = $this->getFactories();
         $lastUpdateTimestamp = 0;
 
@@ -128,23 +178,57 @@ class Factory {
                 $factories[$index]['level'] = $value;
             }
 
-            $factories = $this->scaleRequirementsToLevel($factories);
+            $factories = $this->scaleRequirementsToLevel($factories, $this->flattenMines($mines));
         }
 
         return [$factories, $lastUpdateTimestamp];
     }
 
-    private function scaleRequirementsToLevel(array $factories): array {
-        foreach($factories as &$factory) {
+    private function flattenMines(array $mines): array {
+        $flattenedMines = [];
+
+        foreach($mines as $mine) {
+            $flattenedMines[$mine['resourceID']] = $mine['sumTechRate'];
+        }
+
+        return $flattenedMines;
+    }
+
+    private function scaleRequirementsToLevel(array $factories, array $mines): array {
+        $mineUIDS = array_keys($mines);
+
+        $calculationOrder = array_merge(self::PRIMARY_ORDER, self::SECONDARY_ORDER, self::TERTIARY_ORDER);
+
+        foreach($calculationOrder as $factoryID) {
+            $index = $this->findFactoryByID($factories, $factoryID);
+
+            $factory = $factories[$index];
+
             if($factory['level'] === 1) {
                 continue;
             }
 
             foreach($factory['requirements'] as &$requirement) {
-                $requirement['currentAmount'] = $requirement['amount'] * $factory['level'];
+                $requirement['currentRequiredAmount'] = $requirement['amountPerLevel'] * $factory['level'];
+
+                if($requirement['id'] === 1) {
+                    continue;
+                }
+
+                // requirement is a mine
+                if(in_array($requirement['id'], $mineUIDS, true)) {
+                    $requirement['currentGivenAmount'] = $mines[$requirement['id']];
+                    continue;
+                }
+
+                // requirement is another factory
+                $otherFactoryIndex                 = $this->findFactoryByID($factories, $requirement['id']);
+                $requirement['currentGivenAmount'] = $factories[$otherFactoryIndex]['level'] * $factories[$otherFactoryIndex]['scaling'];
             }
 
             unset($requirement);
+
+            $factories[$index] = $factory;
         }
 
         return $factories;

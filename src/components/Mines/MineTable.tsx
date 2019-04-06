@@ -29,13 +29,7 @@ const ConnectedMineTable = memo((props: MineTableType) => {
       </thead>
       <tbody>
         {mines.map(mine => (
-          <Mine
-            mine={mine}
-            marketPrices={marketPrices}
-            setMineCount={setMineCount}
-            setTechedMiningRate={setTechedMiningRate}
-            key={mine.resourceID}
-          />
+          <Mine {...{ mine, marketPrices, setMineCount, setTechedMiningRate, key: mine.resourceID }} />
         ))}
       </tbody>
       <tfoot>
@@ -63,3 +57,5 @@ const preconnect = connect(
 
 export const MineTable = preconnect(ConnectedMineTable);
 MineTable.displayName = 'MineTable';
+//@ts-ignore
+MineTable.whyDidYouRender = true;

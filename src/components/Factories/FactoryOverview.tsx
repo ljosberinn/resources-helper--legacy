@@ -1,46 +1,61 @@
 import React, { memo } from 'react';
-import { Requirements } from './Requirements';
 import { Level } from './Level';
-import { Scaling } from './Scaling';
 import { DetailsToggler } from './DetailsToggler';
-import { Workload } from './Workload';
 import { IFactory } from '../../types/factory';
-import { IMineState } from '../../types/mines';
 import { setLevel, toggleFactoryDetailsVisibility, adjustRequirementsToLevel } from '../../actions/Factories';
 
 export interface FactoryProps {
   factory: IFactory;
-  mines: IMineState[];
   setLevel: typeof setLevel;
   toggleFactoryDetailsVisibility: typeof toggleFactoryDetailsVisibility;
   adjustRequirementsToLevel: typeof adjustRequirementsToLevel;
 }
 
+const calcWorkload = (factory: IFactory) =>
+  Math.min(
+    ...factory.requirements
+      .filter(requirement => requirement.id !== 1)
+      .map(requirement => requirement.currentGivenAmount / requirement.currentRequiredAmount),
+  );
+
+const calcScaling = (level: number, scaling: number) => scaling * (Number.isNaN(level) ? 0 : level);
+
 export const FactoryOverview = memo(
-  ({ factory, mines, setLevel, toggleFactoryDetailsVisibility, adjustRequirementsToLevel }: FactoryProps) => {
+  ({ factory, setLevel, toggleFactoryDetailsVisibility, adjustRequirementsToLevel }: FactoryProps) => {
     const { id, level, requirements, scaling } = factory;
+
+    const workload = calcWorkload(factory);
+    const producedQuantity = calcScaling(level, scaling);
 
     return (
       <tr>
         <td>ID {id}</td>
         <td>
-          <Level id={id} level={level} requirements={requirements} setLevel={setLevel} adjustRequirementsToLevel={adjustRequirementsToLevel} />
+          <Level
+            {...{
+              id,
+              level,
+              requirements,
+              setLevel,
+              adjustRequirementsToLevel,
+            }}
+          />
         </td>
+        <td>{producedQuantity.toLocaleString()}</td>
         <td>
-          <Scaling id={id} scaling={scaling} level={level} />
+          {Object.values(requirements).map(dependency => (
+            <span key={dependency.id}>
+              <i className={`icon-${dependency.id}`} /> {dependency.currentRequiredAmount.toLocaleString()} <br />
+            </span>
+          ))}
         </td>
-        <td>
-          <Requirements {...factory} />
-        </td>
-        <td>
-          <Workload factory={factory} mines={mines} />
-        </td>
-        <td>Turnover</td>
+        <td>{(workload * 100).toFixed(2).toString()}%</td>
+        <td>{workload}</td>
         <td>Turnover Increase per Upgrade</td>
         <td>Upgrade Cost</td>
         <td>GD Order Indicator</td>
         <td>
-          <DetailsToggler id={id} toggleFactoryDetailsVisibility={toggleFactoryDetailsVisibility} />
+          <DetailsToggler {...{ id, toggleFactoryDetailsVisibility }} />
         </td>
       </tr>
     );
@@ -48,3 +63,5 @@ export const FactoryOverview = memo(
 );
 
 FactoryOverview.displayName = 'FactoryOverview';
+//@ts-ignore
+FactoryOverview.whyDidYouRender = true;

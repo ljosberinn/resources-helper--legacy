@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, memo } from 'react';
 import { IMineState } from '../../types/mines';
 import { setTechedMiningRate, setMineCount } from '../../actions/Mines';
 import { IMarketPriceState } from '../../types/marketPrices';
@@ -10,7 +10,7 @@ interface MineProps {
   setMineCount: typeof setMineCount;
 }
 
-export const Mine = ({ mine, marketPrices, setTechedMiningRate, setMineCount }: MineProps) => {
+export const Mine = memo(({ mine, marketPrices, setTechedMiningRate, setMineCount }: MineProps) => {
   const updateTechedMiningRate = (e: ChangeEvent<HTMLInputElement>) => {
     const miningRate = parseInt(e.target.value);
 
@@ -24,7 +24,7 @@ export const Mine = ({ mine, marketPrices, setTechedMiningRate, setMineCount }: 
   };
 
   return (
-    <tr key={mine.resourceID}>
+    <tr>
       <td>ID {mine.resourceID}</td>
       <td>
         <input
@@ -49,4 +49,8 @@ export const Mine = ({ mine, marketPrices, setTechedMiningRate, setMineCount }: 
       <td>{(mine.sumTechRate * marketPrices[mine.resourceID].player).toLocaleString()}</td>
     </tr>
   );
-};
+});
+
+Mine.displayName = 'Mine';
+//@ts-ignore
+Mine.whyDidYouRender = true;

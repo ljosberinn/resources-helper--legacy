@@ -14,4 +14,3 @@ export const toggleFactoryDetailsVisibility = (factoryID: number) =>
   action(FactoryActions.TOGGLE_DETAILS, { factoryID });
 export const adjustRequirementsToLevel = (factoryID: number, newRequirements: IFactoryRequirements[]) =>
   action(FactoryActions.ADJUST_REQUIREMENTS_TO_LEVEL, { factoryID, newRequirements });
-

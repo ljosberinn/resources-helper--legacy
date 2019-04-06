@@ -10,6 +10,8 @@ import { FactoryTable } from './FactoryTable';
 import { IFactory } from '../../types/factory';
 import { useAsyncEffect } from '../Hooks';
 import { IMarketPriceState } from '../../types/marketPrices';
+import { setMines } from '../../actions/Mines';
+import { IMineState } from '../../types/mines';
 
 interface PropsFromState {
   hasError: boolean;
@@ -21,12 +23,13 @@ interface PropsFromDispatch {
   setFactories: typeof setFactories;
   setPrices: typeof setPrices;
   setLastUpdate: typeof setLastUpdate;
+  setMines: typeof setMines;
 }
 
 type FactoriesProps = PropsFromState & PropsFromDispatch;
 
 const ConnectedFactory = memo((props: FactoriesProps) => {
-  const { user, marketPrices, factories } = store.getState();
+  const { user, marketPrices, factories, mines } = store.getState();
 
   const [hasError, setError] = useState(false);
   const [errorType, setErrorType] = useState(null);
@@ -39,15 +42,17 @@ const ConnectedFactory = memo((props: FactoriesProps) => {
         const loadingStart = new Date().getTime();
 
         const factories = (await getStaticData('factories', setError, setErrorType)) as IFactory[];
+        const mines = (await getStaticData('mines', setError, setErrorType)) as IMineState[];
         const prices = (await getPrices({ user, marketPrices })) as IMarketPriceState;
 
         setTimeout(() => {
           props.setPrices(prices);
+          props.setMines(mines);
           props.setFactories(factories);
         }, evaluateLoadingAnimationTimeout(getElapsedLoadingTime(loadingStart)));
       })();
     }
-  }, [factories, marketPrices]);
+  }, [factories, mines, marketPrices]);
 
   if (hasError) {
     if (errorType === 'AbortError') {
@@ -64,11 +69,12 @@ const ConnectedFactory = memo((props: FactoriesProps) => {
   return <FactoryTable />;
 });
 
-const mapStateToProps = (state: IPreloadedState) => ({ factories: state.factories, loading: true });
+const mapStateToProps = (state: IPreloadedState) => ({ factories: state.factories });
 
 const mapDispatchToProps = {
   setFactories,
   setPrices,
+  setMines,
   setLastUpdate,
 };
 

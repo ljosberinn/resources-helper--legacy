@@ -13,8 +13,9 @@ export type FactoryIDs = 6 | 23 | 25 | 29 | 31 | 33 | 34 | 37 | 39 | 52 | 61 | 6
 
 export interface IFactoryRequirements {
   id: number;
-  amount: number;
-  currentAmount: number;
+  amountPerLevel: number;
+  currentRequiredAmount: number;
+  currentGivenAmount: number;
 }
 
 export interface FactoryProps {

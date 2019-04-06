@@ -1,10 +1,11 @@
-import React, { memo } from 'react';
+import React from 'react';
 import Factory from './Factory';
-import { IFactory, IFactoryRequirements } from '../../types/factory';
+import { IFactory } from '../../types/factory';
 import { connect } from 'react-redux';
 import { setLevel, toggleFactoryDetailsVisibility, adjustRequirementsToLevel } from '../../actions/Factories';
 import { IMineState } from '../../types/mines';
 import { getFactoryUpgradeSum } from '../helperFunctions';
+
 interface PropsFromState {
   factories: IFactory[];
   mines: IMineState[];
@@ -18,21 +19,8 @@ interface PropsFromDispatch {
 
 type FactoryTableType = PropsFromState & PropsFromDispatch;
 
-export const ConnectedFactoryTable = memo((props: FactoryTableType) => {
-  const { factories, mines, toggleFactoryDetailsVisibility, adjustRequirementsToLevel, setLevel } = props;
-
-  const getRelevantMines = (requirements: IFactoryRequirements[]): IMineState[] => {
-    const requirementIDs: number[] = requirements.reduce((result: number[], { id }) => {
-      // ignore cash requirement
-      if (id > 1) {
-        result.push(id);
-      }
-
-      return result;
-    }, []);
-
-    return mines.filter(({ resourceID }) => requirementIDs.includes(resourceID));
-  };
+export const ConnectedFactoryTable = (props: FactoryTableType) => {
+  const { factories, toggleFactoryDetailsVisibility, adjustRequirementsToLevel, setLevel } = props;
 
   return (
     <table>
@@ -42,12 +30,13 @@ export const ConnectedFactoryTable = memo((props: FactoryTableType) => {
       <tbody>
         {factories.map(factory => (
           <Factory
-            mines={getRelevantMines(factory.requirements)}
-            factory={factory}
-            setLevel={setLevel}
-            toggleFactoryDetailsVisibility={toggleFactoryDetailsVisibility}
-            adjustRequirementsToLevel={adjustRequirementsToLevel}
-            key={factory.id}
+            {...{
+              factory,
+              setLevel,
+              toggleFactoryDetailsVisibility,
+              adjustRequirementsToLevel,
+              key: factory.id,
+            }}
           />
         ))}
       </tbody>
@@ -58,7 +47,7 @@ export const ConnectedFactoryTable = memo((props: FactoryTableType) => {
       </tfoot>
     </table>
   );
-});
+};
 
 const mapStateToProps = ({ factories, mines }: FactoryTableType) => ({ factories, mines });
 

@@ -66,8 +66,8 @@ class Login extends Authentication {
 
         $playerIndexUID = $this->probablyUser['playerIndexUID'];
 
-        [$factories, $lastFactoryUpdate] = (new Factory())->getUserFactories($playerIndexUID);
         [$mines, $lastMineUpdate] = (new Mine())->getUserMines($playerIndexUID);
+        [$factories, $lastFactoryUpdate] = (new Factory())->getUserFactories($playerIndexUID, $mines);
         [$specialBuildings, $lastSpecialBuildingUpdate] = (new SpecialBuilding())->getUserSpecialBuildings($playerIndexUID);
         [$warehouses, $lastWarehouseUpdate] = (new Warehouse())->getUserWarehouses($playerIndexUID);
 

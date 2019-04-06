@@ -1,3 +1,5 @@
+import { FactoryIDs } from './factory';
+
 export interface IMineState {
   avgHQBoost: number;
   avgPenalty: number;
@@ -15,6 +17,7 @@ export interface IMineState {
   sumDef3: number;
   sumRawRate: number;
   sumTechRate: number;
+  dependantFactories: FactoryIDs[];
 }
 
 type ResourceIDs = 2 | 3 | 8 | 10 | 12 | 13 | 14 | 15 | 20 | 26 | 49 | 53 | 81 | 90;

@@ -14,7 +14,7 @@ const scaleRequirements = (requirements: IFactoryRequirements[], level: number) 
   return requirements.map(requirement => {
     return {
       ...requirement,
-      currentAmount: requirement.amount * level,
+      currentRequiredAmount: requirement.amountPerLevel * level,
     };
   });
 };
@@ -23,6 +23,9 @@ export const Level = ({ level, id, requirements, setLevel, adjustRequirementsToL
   const handleFocus = (e: FocusEvent<HTMLInputElement>) => e.target.select();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const level = parseInt(e.target.value);
+    if (Number.isNaN(level)) {
+      return;
+    }
 
     setLevel(level, id);
     adjustRequirementsToLevel(id, scaleRequirements(requirements, level));

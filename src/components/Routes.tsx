@@ -13,11 +13,51 @@ interface IRoutesProps {
   state: IPreloadedState;
 }
 
+const routes = [
+  {
+    path: '/',
+    component: devComponent,
+    requiresAuth: false,
+  },
+  {
+    path: '/factories',
+    component: Factories,
+    requiresAuth: false,
+  },
+  {
+    path: '/mines',
+    component: Mines,
+    requiresAuth: false,
+  },
+  {
+    path: '/logout',
+    component: Logout,
+    requiresAuth: true,
+  },
+  {
+    path: '/login',
+    component: Login,
+    requiresAuth: false,
+  },
+  {
+    path: '/register',
+    component: Registration,
+    requiresAuth: false,
+  },
+];
+
 export const Routes = ({ state }: IRoutesProps) => (
   <Fragment>
     <main>
       <Switch>
-        <Route exact path="/" component={devComponent} />
+        {routes.map((route, index) => {
+          if (!state.user.isAuthenticated && route.requiresAuth) {
+            return null;
+          }
+
+          return <Route path={route.path} component={route.component} exact={true} key={index} />;
+        })}
+        {/*<Route exact path="/" component={devComponent} />
         <Route exact path="/factories" component={Factories} />
         <Route exact path="/mines" component={Mines} />
         {state.user.isAuthenticated ? (
@@ -28,7 +68,7 @@ export const Routes = ({ state }: IRoutesProps) => (
             <Route exact path="/register" component={Registration} />
           </Fragment>
         )}
-        <Route component={() => <div>404</div>} />
+        <Route component={() => <div>404</div>} />*/}
       </Switch>
     </main>
   </Fragment>
