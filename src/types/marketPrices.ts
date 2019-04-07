@@ -2,7 +2,7 @@ export interface IMarketPriceState {
   [key: string]: IMarketPriceDataset;
 }
 
-interface IMarketPriceDataset {
+export interface IMarketPriceDataset {
   ai: number;
   player: number;
 }

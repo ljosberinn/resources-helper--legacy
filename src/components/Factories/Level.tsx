@@ -10,14 +10,12 @@ interface ILevelProps {
   adjustRequirementsToLevel: typeof adjustRequirementsToLevel;
 }
 
-const scaleRequirements = (requirements: IFactoryRequirements[], level: number) => {
-  return requirements.map(requirement => {
-    return {
-      ...requirement,
-      currentRequiredAmount: requirement.amountPerLevel * level,
-    };
-  });
-};
+// replaces reducer
+const scaleRequirements = (requirements: IFactoryRequirements[], level: number) =>
+  requirements.map(requirement => ({
+    ...requirement,
+    currentRequiredAmount: requirement.amountPerLevel * level,
+  }));
 
 export const Level = ({ level, id, requirements, setLevel, adjustRequirementsToLevel }: ILevelProps) => {
   const handleFocus = (e: FocusEvent<HTMLInputElement>) => e.target.select();
@@ -26,6 +24,9 @@ export const Level = ({ level, id, requirements, setLevel, adjustRequirementsToL
     if (Number.isNaN(level)) {
       return;
     }
+
+    // TODO:
+    // somehow cascade level change to dependant factories
 
     setLevel(level, id);
     adjustRequirementsToLevel(id, scaleRequirements(requirements, level));

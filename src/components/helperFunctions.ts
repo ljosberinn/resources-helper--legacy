@@ -1,3 +1,4 @@
+import { FactoryIDs } from './../types/factory';
 import { Dispatch, SetStateAction } from 'react';
 import { DEV_SETTINGS } from '../developmentSettings';
 import { IFactory } from '../types/factory';
@@ -8,18 +9,16 @@ import { store } from '..';
 
 const uri = DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development;
 
-export const pricesUpdateRequired = (lastUpdate: number) => (new Date().getTime() > new Date(lastUpdate).getTime() - 60 * 60 * 1000);
+export const pricesUpdateRequired = (lastUpdate: number) =>
+  new Date().getTime() > new Date(lastUpdate).getTime() - 60 * 60 * 1000;
 
-export const getPrices = async ({ user, marketPrices }: { user: IUserState, marketPrices: IMarketPriceState }) => {
-
+export const getPrices = async ({ user, marketPrices }: { user: IUserState; marketPrices: IMarketPriceState }) => {
   if (pricesUpdateRequired(user.settings.prices.lastUpdate)) {
     const prices = await abortableAsyncFetch(`${uri}/prices?range=${user.settings.prices.range}`);
     return await prices;
   }
 
-  if(Object.keys(marketPrices).length !== 0) {
-    return await marketPrices;
-  }
+  return await marketPrices;
 };
 
 export const getStaticData = async (
@@ -39,8 +38,8 @@ export const getStaticData = async (
 
 export const abortableAsyncFetch = async (
   url: string,
-  setError: Dispatch<SetStateAction<boolean>>|null = null,
-  setErrorType: Dispatch<SetStateAction<null>>|null = null,
+  setError: Dispatch<SetStateAction<boolean>> | null = null,
+  setErrorType: Dispatch<SetStateAction<null>> | null = null,
 ) => {
   try {
     const controller = new AbortController();
@@ -59,7 +58,7 @@ export const abortableAsyncFetch = async (
 
     return json as IFactory[] | IMineState[] | IMarketPriceState;
   } catch (error) {
-    if(setErrorType) {
+    if (setErrorType) {
       setErrorType(error.name);
     }
 
@@ -81,17 +80,38 @@ export const getElapsedLoadingTime = (start: number) => new Date().getTime() - s
 export const evaluateLoadingAnimationTimeout = (timePassed: number, LOADING_THRESHOLD: number = 750) =>
   timePassed > LOADING_THRESHOLD ? 5 : LOADING_THRESHOLD - timePassed;
 
-/*const calculationOrder : readonly number[] = [
-  6, 23, 25, 29, 33, 37, 39, 63, 91, 52, 34, 80, // primary order, relying exclusively on mines
-  61, 29, 68, 85, 95, // secondary order, relying both on mines and products
-  101, 69, 76, 125, 118 // tertiary order, relying exclusively on products
-];*/
+export const calculationOrder: FactoryIDs[] = [
+  6,
+  23,
+  25,
+  31,
+  33,
+  34,
+  37,
+  39,
+  52,
+  63,
+  80,
+  91,
+  // secondary order, relying on mines and products
+  29,
+  61,
+  68,
+  69,
+  85,
+  // tertiary order, relying on products of other factories
+  76,
+  95,
+  101,
+  118,
+  125,
+];
 
-export const getMineAmountSum = (mines: IMineState[]) => mines.reduce((sum, currentMine) => sum + currentMine.amount, 0);
+export const getMineAmountSum = (mines: IMineState[]) =>
+  mines.reduce((sum, currentMine) => sum + currentMine.amount, 0);
 
 export const getHourlyMineIncome = (mines: IMineState[], marketPrices: IMarketPriceState) =>
   mines.reduce((sum, mine) => sum + mine.sumTechRate * marketPrices[mine.resourceID].player, 0).toLocaleString();
 
 export const getFactoryUpgradeSum = (factories: IFactory[]) =>
   factories.reduce((sum, factory) => sum + factory.level, 0);
-

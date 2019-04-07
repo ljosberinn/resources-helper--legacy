@@ -17,6 +17,8 @@ interface PropsFromState {
   hasError: boolean;
   errorType: string;
   factories: IFactory[];
+  mines: IMineState[];
+  marketPrices: IMarketPriceState;
 }
 
 interface PropsFromDispatch {
@@ -66,10 +68,14 @@ const ConnectedFactory = memo((props: FactoriesProps) => {
     return <Loading />;
   }
 
-  return <FactoryTable />;
+  return <FactoryTable marketPrices={marketPrices} />;
 });
 
-const mapStateToProps = (state: IPreloadedState) => ({ factories: state.factories });
+const mapStateToProps = (state: IPreloadedState) => ({
+  factories: state.factories,
+  mines: state.mines,
+  marketPrices: state.marketPrices,
+});
 
 const mapDispatchToProps = {
   setFactories,
@@ -85,3 +91,5 @@ const preconnect = connect(
 
 export const Factories = preconnect(ConnectedFactory);
 ConnectedFactory.displayName = 'ConnectedFactory';
+//@ts-ignore
+ConnectedFactory.whyDidYouRender = true;

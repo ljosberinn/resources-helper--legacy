@@ -68,11 +68,11 @@ class Factory {
         return $factories;
     }
 
-    private function findFactoryByID(array $factories, int $id): int {
+    private function findFactoryByID(array $factories, int $id, bool $product = false): int {
         $index = -1;
 
         foreach($factories as $key => $factory) {
-            if($factory['id'] === $id) {
+            if($factory[$product ? 'productID' : 'id'] === $id) {
                 $index = (int) $key;
                 break;
             }
@@ -139,6 +139,7 @@ class Factory {
             foreach((array) $stmt->fetchAll() as $factory) {
                 $dataset = [
                     'id'                 => $factory['uid'],
+                    'productID'          => $factory['productID'],
                     'scaling'            => $factory['scaling'],
                     'dependantFactories' => [],
                     'requirements'       => [],
@@ -221,8 +222,8 @@ class Factory {
                     continue;
                 }
 
-                // requirement is another factory
-                $otherFactoryIndex                 = $this->findFactoryByID($factories, $requirement['id']);
+                // requirement is another factories product
+                $otherFactoryIndex                 = $this->findFactoryByID($factories, $requirement['id'], true);
                 $requirement['currentGivenAmount'] = $factories[$otherFactoryIndex]['level'] * $factories[$otherFactoryIndex]['scaling'];
             }
 
