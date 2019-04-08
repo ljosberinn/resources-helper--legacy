@@ -31,6 +31,7 @@ class Login extends Authentication {
                 'warehouses'       => 0,
                 'tradeLog'         => 0,
                 'combatLog'        => 0,
+                'marketPrices'     => 0,
             ],
         ],
     ];
@@ -71,20 +72,21 @@ class Login extends Authentication {
         [$specialBuildings, $lastSpecialBuildingUpdate] = (new SpecialBuilding())->getUserSpecialBuildings($playerIndexUID);
         [$warehouses, $lastWarehouseUpdate] = (new Warehouse())->getUserWarehouses($playerIndexUID);
 
-        $user['API']['key']                 = $this->probablyUser['apiKey'];
-        $user['API']['isAPIUser']           = strlen($this->probablyUser['apiKey']) === 45;
-        $user['API']['remainingAPICredits'] = $this->probablyUser['remainingAPICredits'];
-
         $user['playerInfo']['level']      = $this->probablyUser['playerLevel'];
         $user['playerInfo']['points']     = $this->probablyUser['points'];
         $user['playerInfo']['rank']       = $this->probablyUser['rank'];
         $user['playerInfo']['registered'] = $this->probablyUser['registered'];
         $user['playerInfo']['userName']   = (new PlayerIndex($this->pdo))->getPlayerNameByID($playerIndexUID);
 
+        $user['API']['key']                 = $this->probablyUser['apiKey'];
+        $user['API']['isAPIUser']           = strlen($this->probablyUser['apiKey']) === 45;
+        $user['API']['remainingAPICredits'] = $this->probablyUser['remainingAPICredits'];
+
         $user['API']['lastUpdates']['factories']        = $lastFactoryUpdate;
         $user['API']['lastUpdates']['mines']            = $lastMineUpdate;
         $user['API']['lastUpdates']['specialBuildings'] = $lastSpecialBuildingUpdate;
         $user['API']['lastUpdates']['warehouses']       = $lastWarehouseUpdate;
+        $user['API']['lastUpdates']['marketPrices']     = time();
 
         $marketPrices = new MarketPrices();
         $marketPrices->setExportRange(72);

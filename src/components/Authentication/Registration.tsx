@@ -1,6 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent, memo } from 'react';
 import { regExp, htmlPattern } from './Shared';
 import { DEV_SETTINGS } from '../../developmentSettings';
+import { DebounceInput } from 'react-debounce-input';
 
 const authenticationURL = `${DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development}/auth/register`;
 
@@ -91,21 +92,25 @@ export const Registration = memo(() => {
   return (
     <form onSubmit={handleSubmit}>
       <input type="email" placeholder="mail" required onChange={handleMailChange} disabled={isSubmitting} />
-      <input
+      <DebounceInput
         type="password"
         placeholder="password"
         pattern={htmlPattern}
         required
         onChange={handlePasswordChange}
         disabled={isSubmitting}
+        debounceTimeout={300}
+        minLength={3}
       />
-      <input
+      <DebounceInput
         type="password"
         placeholder="repeat password"
         pattern={htmlPattern}
         required
         onChange={handlePasswordRepetitionChange}
         disabled={isSubmitting}
+        debounceTimeout={300}
+        minLength={3}
       />
       <button type="submit" disabled={disabled}>
         Register

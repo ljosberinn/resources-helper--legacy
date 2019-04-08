@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { connect } from 'react-redux';
 import { setMineCount, setMines, setTechedMiningRate } from '../../actions/Mines';
 import { IMineState } from '../../types/mines';
-import { getMineAmountSum, getHourlyMineIncome } from '../helperFunctions';
+import { getMineAmountSum, getHourlyMineIncome, mineOrder, getMineByID } from '../helperFunctions';
 import { Mine } from './Mine';
 import { IMarketPriceState } from '../../types/marketPrices';
 
@@ -25,15 +25,33 @@ const ConnectedMineTable = memo((props: MineTableType) => {
   return (
     <table>
       <thead>
-        <tr />
+        <tr>
+          {[
+            'Mine type',
+            'Your rate per hour',
+            'Your amount of mines',
+            'Worth @ 100% condition',
+            'Mine price',
+            '100% quality income',
+            'ROI 100%',
+            '505%',
+            '505% in your HQ',
+          ].map((text, index) => (
+            <th key={index}>{text}</th>
+          ))}
+        </tr>
       </thead>
       <tbody>
-        {mines.map(mine => (
-          <Mine {...{ mine, marketPrices, setMineCount, setTechedMiningRate, key: mine.resourceID }} />
-        ))}
+        {mineOrder.map(mineID => {
+          const mine = getMineByID(mines, mineID);
+
+          return <Mine {...{ mines, mine, marketPrices, setMineCount, setTechedMiningRate, key: mineID }} />;
+        })}
       </tbody>
       <tfoot>
         <tr>
+          <td />
+          <td />
           <td>{getMineAmountSum(mines)}</td>
           <td>{getHourlyMineIncome(mines, marketPrices)}</td>
         </tr>

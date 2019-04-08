@@ -1,18 +1,43 @@
 import { setLevel, toggleFactoryDetailsVisibility } from '../actions/Factories';
+import { ResourceIDs } from './mines';
 
 export interface IFactory {
   readonly id: FactoryIDs;
   readonly productID: ProductIDs;
-  readonly scaling: number;
+  readonly scaling: FactoryScalings;
   readonly dependantFactories: FactoryIDs[];
 
   level: number;
-  productionRequirements: IFactoryRequirements[];
+  productionRequirements: IFactoryProductionRequirements[];
   upgradeRequirements: IFactoryUpgradeRequirements[];
   hasDetailsVisible: boolean;
 }
 
 interface IFactoryUpgradeRequirements {}
+
+export type FactoryScalings =
+  | 2100
+  | 1210
+  | 80
+  | 3500
+  | 450
+  | 320
+  | 3000
+  | 270
+  | 640
+  | 320
+  | 640
+  | 1800
+  | 120
+  | 480
+  | 400
+  | 240
+  | 100
+  | 750
+  | 600
+  | 125
+  | 1
+  | 100;
 
 export type ProductIDs =
   | 7
@@ -62,8 +87,8 @@ export type FactoryIDs =
   | 118
   | 125;
 
-export interface IFactoryRequirements {
-  readonly id: number;
+export interface IFactoryProductionRequirements {
+  readonly id: ResourceIDs | ProductIDs | 1;
   readonly amountPerLevel: number;
 
   currentRequiredAmount: number;

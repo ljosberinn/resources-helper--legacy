@@ -1,5 +1,6 @@
+import { FactoryIDs } from './../../types/factory';
 import { action } from 'typesafe-actions';
-import { IFactory, IFactoryRequirements } from '../../types/factory';
+import { IFactory, IFactoryProductionRequirements } from '../../types/factory';
 
 export enum FactoryActions {
   SET_LEVEL = '@@factories/SET_FACTORY_LEVEL',
@@ -8,9 +9,15 @@ export enum FactoryActions {
   ADJUST_PRODUCTION_REQUIREMENTS_TO_LEVEL = '@@factories/ADJUST_REQUIREMENTS_TO_LEVEL',
 }
 
-export const setLevel = (level: number, factoryID: number) => action(FactoryActions.SET_LEVEL, { level, factoryID });
+export const setLevel = (level: number, factoryID: FactoryIDs) =>
+  action(FactoryActions.SET_LEVEL, { level, factoryID });
+
 export const setFactories = (factories: IFactory[]) => action(FactoryActions.SET_FACTORIES, factories);
-export const toggleFactoryDetailsVisibility = (factoryID: number) =>
+
+export const toggleFactoryDetailsVisibility = (factoryID: FactoryIDs) =>
   action(FactoryActions.TOGGLE_DETAILS, { factoryID });
-export const adjustProductionRequirementsToLevel = (factoryID: number, newRequirements: IFactoryRequirements[]) =>
-  action(FactoryActions.ADJUST_PRODUCTION_REQUIREMENTS_TO_LEVEL, { factoryID, newRequirements });
+
+export const adjustProductionRequirementsToLevel = (
+  factoryID: FactoryIDs,
+  newRequirements: IFactoryProductionRequirements[],
+) => action(FactoryActions.ADJUST_PRODUCTION_REQUIREMENTS_TO_LEVEL, { factoryID, newRequirements });

@@ -1,23 +1,30 @@
 import React, { ChangeEvent, FocusEvent } from 'react';
 import { setLevel, adjustProductionRequirementsToLevel } from '../../actions/Factories';
-import { IFactoryRequirements } from '../../types/factory';
+import { IFactoryProductionRequirements, FactoryIDs } from '../../types/factory';
+import { DebounceInput } from 'react-debounce-input';
 
 interface ILevelProps {
   level: number;
-  id: number;
-  productionRequirements: IFactoryRequirements[];
+  id: FactoryIDs;
+  productionRequirements: IFactoryProductionRequirements[];
   setLevel: typeof setLevel;
   adjustProductionRequirementsToLevel: typeof adjustProductionRequirementsToLevel;
 }
 
 // replaces reducer
-const scaleRequirements = (requirements: IFactoryRequirements[], level: number) =>
+const scaleRequirements = (requirements: IFactoryProductionRequirements[], level: number) =>
   requirements.map(requirement => ({
     ...requirement,
     currentRequiredAmount: requirement.amountPerLevel * level,
   }));
 
-export const Level = ({ level, id, productionRequirements, setLevel, adjustProductionRequirementsToLevel }: ILevelProps) => {
+export const Level = ({
+  level,
+  id,
+  productionRequirements,
+  setLevel,
+  adjustProductionRequirementsToLevel,
+}: ILevelProps) => {
   const handleFocus = (e: FocusEvent<HTMLInputElement>) => e.target.select();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const level = parseInt(e.target.value);
@@ -33,14 +40,15 @@ export const Level = ({ level, id, productionRequirements, setLevel, adjustProdu
   };
 
   return (
-    <input
+    <DebounceInput
       type="number"
       placeholder="PH"
-      defaultValue={level.toString()}
+      value={level.toString()}
       min={0}
       max={5000}
       onFocus={handleFocus}
       onChange={handleChange}
+      debounceTimeout={300}
     />
   );
 };

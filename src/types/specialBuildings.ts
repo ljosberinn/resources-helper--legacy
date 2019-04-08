@@ -7,7 +7,7 @@ export interface ISpecialBuildingState {
 type SpecialBuildingIDs = 59 | 62 | 65 | 71 | 72 | 86 | 97 | 116 | 119 | 121 | 122 | 123 | 126 | 127;
 
 export interface ISpecialBuildingDependency {
-  id: SpecialBuilingDependencyIDs;
+  readonly id: SpecialBuilingDependencyIDs;
   amount: number;
 }
 

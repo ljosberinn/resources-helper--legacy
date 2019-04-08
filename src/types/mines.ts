@@ -7,9 +7,9 @@ export interface IMineState {
   avgTechFactor: number;
   avgTechedQuality: number;
   amount: number;
-  basePrice: MinePrices;
-  maxHourlyRate: MaxMineRates;
-  resourceID: ResourceIDs;
+  readonly basePrice: MinePrices;
+  readonly maxHourlyRate: MaxMineRates;
+  readonly resourceID: ResourceIDs;
   sumAttacks: number;
   sumAttacksLost: number;
   sumDef1: number;
@@ -17,11 +17,11 @@ export interface IMineState {
   sumDef3: number;
   sumRawRate: number;
   sumTechRate: number;
-  dependantFactories: FactoryIDs[];
+  readonly dependantFactories: FactoryIDs[];
 }
 
-type ResourceIDs = 2 | 3 | 8 | 10 | 12 | 13 | 14 | 15 | 20 | 26 | 49 | 53 | 81 | 90;
-type MinePrices =
+export type ResourceIDs = 2 | 3 | 8 | 10 | 12 | 13 | 14 | 15 | 20 | 26 | 49 | 53 | 81 | 90;
+export type MinePrices =
   | 1000000
   | 5000000
   | 50000000
@@ -36,4 +36,4 @@ type MinePrices =
   | 200000000
   | 2000000000
   | 800000000;
-type MaxMineRates = 1530 | 542 | 510 | 306 | 306 | 382 | 2040 | 673 | 510 | 408 | 281 | 765 | 1275 | 2040;
+export type MaxMineRates = 1530 | 542 | 510 | 306 | 306 | 382 | 2040 | 673 | 510 | 408 | 281 | 765 | 1275 | 2040;

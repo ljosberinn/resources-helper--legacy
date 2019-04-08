@@ -1,30 +1,12 @@
-import { FactoryIDs } from './../types/factory';
+import { FactoryIDs, ProductIDs } from './../types/factory';
 import { Dispatch, SetStateAction } from 'react';
 import { DEV_SETTINGS } from '../developmentSettings';
 import { IFactory } from '../types/factory';
-import { IMineState } from '../types/mines';
+import { IMineState, ResourceIDs } from '../types/mines';
 import { IMarketPriceState } from '../types/marketPrices';
-import { IUserState } from '../types/user';
 import { store } from '..';
 
 const uri = DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development;
-
-export const pricesUpdateRequired = (lastUpdate: number) => new Date().getTime() > lastUpdate + 60 * 60 * 1000;
-
-export const getMarketPrices = async ({
-  user,
-  marketPrices,
-}: {
-  user: IUserState;
-  marketPrices: IMarketPriceState[];
-}) => {
-  if (pricesUpdateRequired(user.settings.prices.lastUpdate)) {
-    const prices = await abortableAsyncFetch(`${uri}/prices?range=${user.settings.prices.range}`);
-    return await prices;
-  }
-
-  return await marketPrices;
-};
 
 export const getStaticData = async (
   component: string,
@@ -109,10 +91,12 @@ export const calculationOrder: FactoryIDs[] = [
   125,
 ];
 
-export const getMineByID = (mines: IMineState[], id: number) =>
+export const mineOrder: ResourceIDs[] = [2, 20, 3, 13, 8, 10, 53, 26, 12, 90, 49, 15, 14, 81];
+
+export const getMineByID = (mines: IMineState[], id: ResourceIDs) =>
   mines.find(mine => mine.resourceID === id) as IMineState;
 
-export const getPricesByID = (marketPrices: IMarketPriceState[], id: number) =>
+export const getPricesByID = (marketPrices: IMarketPriceState[], id: ResourceIDs | FactoryIDs | ProductIDs) =>
   marketPrices.find(price => price.id === id) as IMarketPriceState;
 
 export const getFactoryByID = (factories: IFactory[], id: FactoryIDs) =>

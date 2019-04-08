@@ -224,6 +224,7 @@ class JSONParser {
         $this->userIndex->updateLastSeenTimestampByPlayerID($userUID, $lastSeen);
 
         $this->currentlyIteratedUsers[$escapedUserName] = $userUID;
+
         return $userUID;
     }
 

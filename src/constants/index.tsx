@@ -10,7 +10,6 @@ export const preloadedState: IPreloadedState = {
       prices: {
         type: 'json',
         range: 72,
-        lastUpdate: 0,
       },
     },
     playerInfo: {
@@ -30,6 +29,7 @@ export const preloadedState: IPreloadedState = {
         tradeLog: 0,
         combatLog: 0,
         headquarter: 0,
+        marketPrices: 0,
       },
     },
   },

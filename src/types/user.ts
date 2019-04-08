@@ -16,7 +16,6 @@ export type UserSettingLocales = 'en' | 'de' | 'fr' | 'jp' | 'cz' | 'es' | 'ru' 
 export interface IUserPriceSettings {
   range: UserPriceSettingRange;
   type: UserPriceSettingType;
-  lastUpdate: number;
 }
 
 export type UserPriceSettingRange = 1 | 24 | 48 | 72 | 96 | 120 | 144 | 168;
@@ -43,6 +42,7 @@ export interface IUserAPIUpdateHistory {
   tradeLog: number;
   combatLog: number;
   headquarter: number;
+  marketPrices: number;
 }
 
 export interface IUserPlayerInfoState {

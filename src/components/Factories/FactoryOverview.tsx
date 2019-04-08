@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { Level } from './Level';
 import { DetailsToggler } from './DetailsToggler';
-import { IFactory, IFactoryRequirements } from '../../types/factory';
+import { IFactory, IFactoryProductionRequirements, FactoryScalings } from '../../types/factory';
 import { setLevel, toggleFactoryDetailsVisibility, adjustProductionRequirementsToLevel } from '../../actions/Factories';
 import { IMarketPriceState } from '../../types/marketPrices';
 import { getPricesByID } from '../helperFunctions';
@@ -14,25 +14,28 @@ export interface FactoryProps {
   adjustProductionRequirementsToLevel: typeof adjustProductionRequirementsToLevel;
 }
 
-const getWorkload = (factory: IFactory) =>
-  Math.min(
+const getWorkload = (factory: IFactory) => {
+  const minWorkload = Math.min(
     ...factory.productionRequirements
       .filter(requirement => requirement.id !== 1)
       .map(requirement => requirement.currentGivenAmount / requirement.currentRequiredAmount),
   );
 
-const getScaling = (level: number, scaling: number) => scaling * (Number.isNaN(level) ? 0 : level);
+  return Number.isNaN(minWorkload) ? 0.0 : minWorkload;
+};
+
+const getScaling = (level: number, scaling: FactoryScalings) => scaling * (Number.isNaN(level) ? 0 : level);
 
 const getTurnoverPerHour = (workload: number, producedQuantity: number, price: number) =>
   Math.round((workload > 1 ? 1 : workload) * producedQuantity * price).toLocaleString();
 
-const getTurnoverPerUpgrade = (scaling: number, price: number) => (scaling * price).toLocaleString();
+const getTurnoverPerUpgrade = (scaling: FactoryScalings, price: number) => (scaling * price).toLocaleString();
 
 const getRequirementCostPerHour = (
-  productionRequirements: IFactoryRequirements[],
+  productionRequirements: IFactoryProductionRequirements[],
   marketPrices: IMarketPriceState[],
-) => {
-  return Math.round(
+) =>
+  Math.round(
     productionRequirements.reduce((sum, requirement) => {
       /* cash requirement*/
       if (requirement.id === 1) {
@@ -43,7 +46,6 @@ const getRequirementCostPerHour = (
       return sum + requirement.currentRequiredAmount * (player > 0 ? player : ai);
     }, 0),
   ).toLocaleString();
-};
 
 export const FactoryOverview = memo(
   ({

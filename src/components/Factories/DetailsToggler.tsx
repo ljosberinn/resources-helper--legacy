@@ -1,8 +1,9 @@
 import React, { MouseEvent } from 'react';
 import { toggleFactoryDetailsVisibility } from '../../actions/Factories';
+import { FactoryIDs } from '../../types/factory';
 
 interface IDetailsTogglerProps {
-  id: number;
+  id: FactoryIDs;
   toggleFactoryDetailsVisibility: typeof toggleFactoryDetailsVisibility;
 }
 

@@ -8,6 +8,7 @@ class Factory {
     private const QUERIES = [
         'getStaticFactoryData'      => 'SELECT * FROM `staticFactories`',
         'getProductionRequirements' => 'SELECT `factoryUID`, `requirement`, `amount` FROM `staticFactoryRequirements`',
+        'getUpgradeRequirements'    => 'SELECT `factoryUID`, `requirement`, `amount` FROM `staticFactoryUpgradeRequirements`',
         'getDependantFactories'     => 'SELECT `factoryUID`, `dependantFactoryUID` FROM `staticDependantFactories`',
         'getUserFactories'          => 'SELECT `timestamp`, `6`, `23`, `25`, `29`, `31`, `33`, `34`, `37`, `39`, `52`, `61`, `63`, `68`, `69`, `76`, `80`, `85`, `91`, `95`, `101`, `118`, `125` FROM `factories` WHERE `playerIndexUID` = :playerIndexUID',
     ];
@@ -68,11 +69,11 @@ class Factory {
         return $factories;
     }
 
-    private function findFactoryByID(array $factories, int $id, bool $product = false): int {
+    private function findFactoryByKey(array $factories, int $id, string $column): int {
         $index = -1;
 
         foreach($factories as $key => $factory) {
-            if($factory[$product ? 'productID' : 'id'] === $id) {
+            if($factory[$column] === $id) {
                 $index = (int) $key;
                 break;
             }
@@ -87,7 +88,7 @@ class Factory {
 
     private function mergeFactoriesWithDependencies(array $factories): array {
         foreach($this->getProductionRequirements() as $productionDependency) {
-            $index = $this->findFactoryByID($factories, $productionDependency['factoryUID']);
+            $index = $this->findFactoryByKey($factories, $productionDependency['factoryUID'], 'id');
 
             $factories[$index]['productionRequirements'][] = [
                 'id'                    => $productionDependency['requirement'],
@@ -102,7 +103,7 @@ class Factory {
 
     private function mergeFactoriesWithDependants(array $factories): array {
         foreach($this->getDependantFactories() as $dependantFactory) {
-            $index = $this->findFactoryByID($factories, $dependantFactory['factoryUID']);
+            $index = $this->findFactoryByKey($factories, $dependantFactory['factoryUID'], 'id');
 
             $factories[$index]['dependantFactories'][] = $dependantFactory['dependantFactoryUID'];
         }
@@ -112,6 +113,16 @@ class Factory {
 
     private function getDependantFactories(): array {
         $stmt = $this->pdo->query(self::QUERIES['getDependantFactories']);
+
+        if($stmt && $stmt->rowCount() > 0) {
+            return (array) $stmt->fetchAll();
+        }
+
+        return [];
+    }
+
+    private function getUpgradeRequirements(): array {
+        $stmt = $this->pdo->query(self::QUERIES['getUpgradeRequirements']);
 
         if($stmt && $stmt->rowCount() > 0) {
             return (array) $stmt->fetchAll();
@@ -135,25 +146,27 @@ class Factory {
 
         $factories = [];
 
-        if($stmt && $stmt->rowCount() > 0) {
-            foreach((array) $stmt->fetchAll() as $factory) {
-                $dataset = [
-                    'id'                     => $factory['uid'],
-                    'productID'              => $factory['productID'],
-                    'scaling'                => $factory['scaling'],
-                    'dependantFactories'     => [],
-                    'productionRequirements' => [],
-                    'upgradeRequirements'    => [],
-                    'level'                  => 0,
-                    'hasDetailsVisible'      => false,
-                ];
+        if(!$stmt || $stmt->rowCount() <= 0) {
+            return $factories;
+        }
 
-                if(!in_array($factory['uid'], self::MINE_INDEPENDENT_FACTORIES, true)) {
-                    $dataset['relevantMines'] = [];
-                }
+        foreach((array) $stmt->fetchAll() as $factory) {
+            $dataset = [
+                'id'                     => $factory['uid'],
+                'productID'              => $factory['productID'],
+                'scaling'                => $factory['scaling'],
+                'dependantFactories'     => [],
+                'productionRequirements' => [],
+                'upgradeRequirements'    => [],
+                'level'                  => 0,
+                'hasDetailsVisible'      => false,
+            ];
 
-                $factories[] = $dataset;
+            if(!in_array($factory['uid'], self::MINE_INDEPENDENT_FACTORIES, true)) {
+                $dataset['relevantMines'] = [];
             }
+
+            $factories[] = $dataset;
         }
 
         return $factories;
@@ -175,7 +188,7 @@ class Factory {
                     continue;
                 }
 
-                $index = $this->findFactoryByID($factories, $column);
+                $index = $this->findFactoryByKey($factories, $column, 'id');
 
                 $factories[$index]['level'] = $value;
             }
@@ -202,7 +215,7 @@ class Factory {
         $calculationOrder = array_merge(self::PRIMARY_ORDER, self::SECONDARY_ORDER, self::TERTIARY_ORDER);
 
         foreach($calculationOrder as $factoryID) {
-            $index = $this->findFactoryByID($factories, $factoryID);
+            $index = $this->findFactoryByKey($factories, $factoryID, 'id');
 
             $factory = $factories[$index];
 
@@ -224,7 +237,7 @@ class Factory {
                 }
 
                 // requirement is another factories product
-                $otherFactoryIndex                 = $this->findFactoryByID($factories, $requirement['id'], true);
+                $otherFactoryIndex                 = $this->findFactoryByKey($factories, $requirement['id'], 'productID');
                 $requirement['currentGivenAmount'] = $factories[$otherFactoryIndex]['level'] * $factories[$otherFactoryIndex]['scaling'];
             }
 
