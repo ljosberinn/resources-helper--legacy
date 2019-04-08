@@ -7,9 +7,12 @@ export interface IFactory {
   readonly dependantFactories: FactoryIDs[];
 
   level: number;
-  requirements: IFactoryRequirements[];
+  productionRequirements: IFactoryRequirements[];
+  upgradeRequirements: IFactoryUpgradeRequirements[];
   hasDetailsVisible: boolean;
 }
+
+interface IFactoryUpgradeRequirements {}
 
 export type ProductIDs =
   | 7

@@ -35,7 +35,7 @@ class Mine {
         return $relations;
     }
 
-    public function getMines(): array {
+    public function get(): array {
         $mines = [];
 
         $stmt = $this->pdo->query(self::QUERIES['getMines']);
@@ -70,7 +70,7 @@ class Mine {
     }
 
     public function getUserMines(int $playerIndexUID): array {
-        $mines               = $this->getMines();
+        $mines               = $this->get();
         $lastUpdateTimestamp = 0;
 
         $stmt = $this->pdo->prepare(self::QUERIES['getUserMines']);

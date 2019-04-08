@@ -2,13 +2,20 @@ import React, { ChangeEvent, memo } from 'react';
 import { IMineState } from '../../types/mines';
 import { setTechedMiningRate, setMineCount } from '../../actions/Mines';
 import { IMarketPriceState } from '../../types/marketPrices';
+import { getPricesByID } from '../helperFunctions';
 
 interface MineProps {
   mine: IMineState;
-  marketPrices: IMarketPriceState;
+  marketPrices: IMarketPriceState[];
   setTechedMiningRate: typeof setTechedMiningRate;
   setMineCount: typeof setMineCount;
 }
+
+const getMineIncomePerHour = (marketPrices: IMarketPriceState[], { sumTechRate, resourceID }: IMineState) => {
+  const { ai, player } = getPricesByID(marketPrices, resourceID);
+
+  return sumTechRate * (player > 0 ? player : ai);
+};
 
 export const Mine = memo(({ mine, marketPrices, setTechedMiningRate, setMineCount }: MineProps) => {
   const updateTechedMiningRate = (e: ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +53,7 @@ export const Mine = memo(({ mine, marketPrices, setTechedMiningRate, setMineCoun
           placeholder="mine amount"
         />
       </td>
-      <td>{(mine.sumTechRate * marketPrices[mine.resourceID].player).toLocaleString()}</td>
+      <td>{getMineIncomePerHour(marketPrices, mine).toLocaleString()}</td>
     </tr>
   );
 });

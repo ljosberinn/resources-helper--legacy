@@ -215,7 +215,8 @@ class MarketPrices extends APICore {
         $data = $stmt->fetch();
 
         foreach(array_keys(self::ID_MAP) as $id) {
-            $prices[$id] = [
+            $prices[] = [
+                'id'     => $id,
                 'ai'     => $data['ai_' . $id],
                 'player' => $data['player_' . $id],
             ];
@@ -253,7 +254,8 @@ class MarketPrices extends APICore {
         $prices = [];
 
         foreach(array_keys(self::ID_MAP) as $id) {
-            $prices[$id] = [
+            $prices[] = [
+                'id'     => $id,
                 'ai'     => $data['ai_' . $id],
                 'player' => $data['player_' . $id],
             ];

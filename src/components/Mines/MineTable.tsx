@@ -8,7 +8,7 @@ import { IMarketPriceState } from '../../types/marketPrices';
 
 interface PropsFromState {
   mines: IMineState[];
-  marketPrices: IMarketPriceState;
+  marketPrices: IMarketPriceState[];
 }
 
 interface PropsFromDispatch {

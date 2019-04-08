@@ -15,7 +15,7 @@ import { MineActions } from '../actions/Mines';
 
 export const factories: Reducer<IFactory[]> = (state = preloadedState.factories, action) => {
   switch (action.type) {
-    case FactoryActions.ADJUST_REQUIREMENTS_TO_LEVEL:
+    case FactoryActions.ADJUST_PRODUCTION_REQUIREMENTS_TO_LEVEL:
       return state.map(factory => {
         if (factory.id !== action.payload.factoryID) {
           return factory;
@@ -23,7 +23,7 @@ export const factories: Reducer<IFactory[]> = (state = preloadedState.factories,
 
         return {
           ...factory,
-          requirements: action.payload.newRequirements,
+          productionRequirements: action.payload.newRequirements,
         };
       });
     case AuthenticationActions.LOGIN:
@@ -142,7 +142,7 @@ export const warehouses: Reducer<IWarehouseState[]> = (state = preloadedState.wa
 
 export const headquarter: Reducer<IHeadquarterState> = (state = preloadedState.headquarter) => state;
 
-export const marketPrices: Reducer<IMarketPriceState> = (state = preloadedState.marketPrices, action) => {
+export const marketPrices: Reducer<IMarketPriceState[]> = (state = preloadedState.marketPrices, action) => {
   switch (action.type) {
     case AuthenticationActions.LOGIN:
       return action.payload.marketPrices;

@@ -21,7 +21,7 @@ if(!$login->isValidData() || !$login->isRegisteredUser() || !$login->isCorrectPa
 
 header('Content-type: application/json');
 
-echo json_encode($login->login());
+echo json_encode($login->login(), JSON_NUMERIC_CHECK);
 
 
 

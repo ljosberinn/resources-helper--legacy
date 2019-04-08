@@ -38,7 +38,7 @@ export const preloadedState: IPreloadedState = {
   specialBuildings: [],
   headquarter: [],
   warehouses: [],
-  marketPrices: {},
+  marketPrices: [],
   companyWorth: {
     headquarter: 0,
     factories: 0,

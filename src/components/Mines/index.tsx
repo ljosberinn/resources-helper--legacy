@@ -4,15 +4,10 @@ import { store } from '../..';
 import { setMines } from '../../actions/Mines';
 import { IPreloadedState } from '../../types';
 import { IMineState } from '../../types/mines';
-import {
-  evaluateLoadingAnimationTimeout,
-  getStaticData,
-  getPrices,
-  getElapsedLoadingTime,
-} from '../helperFunctions';
+import { evaluateLoadingAnimationTimeout, getStaticData, getElapsedLoadingTime } from '../helperFunctions';
 import { Loading } from '../Shared/Loading';
 import { MineTable } from './MineTable';
-import { setPrices, setLastUpdate } from '../../actions/MarketPrices';
+import { setPrices } from '../../actions/MarketPrices';
 import { IMarketPriceState } from '../../types/marketPrices';
 import { useAsyncEffect } from '../Hooks';
 
@@ -25,35 +20,31 @@ interface PropsFromState {
 interface PropsFromDispatch {
   setMines: typeof setMines;
   setPrices: typeof setPrices;
-  setLastUpdate: typeof setLastUpdate;
 }
 
 type MinesProps = PropsFromState & PropsFromDispatch;
 
 const ConnectedMines = memo((props: MinesProps) => {
-  const { user, mines, marketPrices } = store.getState();
+  const { mines, marketPrices } = store.getState();
 
   const [hasError, setError] = useState(false);
   const [errorType, setErrorType] = useState(null);
-
-  const isLoading = mines.length === 0;
+  const [isLoading, setIsLoading] = useState(mines.length === 0 || marketPrices.length === 0);
 
   useAsyncEffect(async () => {
     if (isLoading && !hasError) {
-      (async () => {
-        const loadingStart = new Date().getTime();
+      const loadingStart = new Date().getTime();
 
-        const mines = (await getStaticData('mines', setError, setErrorType)) as IMineState[];
-        const prices = (await getPrices({ user, marketPrices })) as IMarketPriceState;
+      const mines = (await getStaticData('mines', setError, setErrorType)) as IMineState[];
+      const prices = (await getStaticData('marketPrices', setError, setErrorType)) as IMarketPriceState[];
 
-        setTimeout(() => {
-          props.setPrices(prices);
-          props.setLastUpdate(new Date().getTime());
-          props.setMines(mines);
-        }, evaluateLoadingAnimationTimeout(getElapsedLoadingTime(loadingStart)));
-      })();
+      setTimeout(() => {
+        props.setPrices(prices);
+        props.setMines(mines);
+        setIsLoading(false);
+      }, evaluateLoadingAnimationTimeout(getElapsedLoadingTime(loadingStart)));
     }
-  }, [mines, marketPrices]);
+  }, []);
 
   if (hasError) {
     if (errorType === 'AbortError') {
@@ -70,12 +61,11 @@ const ConnectedMines = memo((props: MinesProps) => {
   return <MineTable />;
 });
 
-const mapStateToProps = (state: IPreloadedState) => ({ mines: state.mines, loading: true });
+const mapStateToProps = (state: IPreloadedState) => ({ mines: state.mines });
 
 const mapDispatchToProps = {
   setMines,
   setPrices,
-  setLastUpdate,
 };
 
 const preconnect = connect(

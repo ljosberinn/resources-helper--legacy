@@ -6,13 +6,13 @@ class Factory {
     private $pdo;
 
     private const QUERIES = [
-        'getStaticFactoryData'   => 'SELECT * FROM `staticFactories`',
-        'getFactoryRequirements' => 'SELECT `factoryUID`, `requirement`, `amount` FROM `staticFactoryRequirements`',
-        'getDependantFactories'  => 'SELECT `factoryUID`, `dependantFactoryUID` FROM `staticDependantFactories`',
-        'getUserFactories'       => 'SELECT `timestamp`, `6`, `23`, `25`, `29`, `31`, `33`, `34`, `37`, `39`, `52`, `61`, `63`, `68`, `69`, `76`, `80`, `85`, `91`, `95`, `101`, `118`, `125` FROM `factories` WHERE `playerIndexUID` = :playerIndexUID',
+        'getStaticFactoryData'      => 'SELECT * FROM `staticFactories`',
+        'getProductionRequirements' => 'SELECT `factoryUID`, `requirement`, `amount` FROM `staticFactoryRequirements`',
+        'getDependantFactories'     => 'SELECT `factoryUID`, `dependantFactoryUID` FROM `staticDependantFactories`',
+        'getUserFactories'          => 'SELECT `timestamp`, `6`, `23`, `25`, `29`, `31`, `33`, `34`, `37`, `39`, `52`, `61`, `63`, `68`, `69`, `76`, `80`, `85`, `91`, `95`, `101`, `118`, `125` FROM `factories` WHERE `playerIndexUID` = :playerIndexUID',
     ];
 
-    private const MINE_INDEPENDANT_FACTORIES = [
+    private const MINE_INDEPENDENT_FACTORIES = [
         69,
         76,
         95,
@@ -60,7 +60,7 @@ class Factory {
         $this->pdo = $db->getConnection();
     }
 
-    public function getFactories(): array {
+    public function get(): array {
         $factories = $this->getStaticFactoryData();
         $factories = $this->mergeFactoriesWithDependencies($factories);
         $factories = $this->mergeFactoriesWithDependants($factories);
@@ -86,10 +86,10 @@ class Factory {
     }
 
     private function mergeFactoriesWithDependencies(array $factories): array {
-        foreach($this->getFactoryRequirements() as $productionDependency) {
+        foreach($this->getProductionRequirements() as $productionDependency) {
             $index = $this->findFactoryByID($factories, $productionDependency['factoryUID']);
 
-            $factories[$index]['requirements'][] = [
+            $factories[$index]['productionRequirements'][] = [
                 'id'                    => $productionDependency['requirement'],
                 'amountPerLevel'        => $productionDependency['amount'],
                 'currentRequiredAmount' => $productionDependency['amount'],
@@ -120,8 +120,8 @@ class Factory {
         return [];
     }
 
-    private function getFactoryRequirements(): array {
-        $stmt = $this->pdo->query(self::QUERIES['getFactoryRequirements']);
+    private function getProductionRequirements(): array {
+        $stmt = $this->pdo->query(self::QUERIES['getProductionRequirements']);
 
         if($stmt && $stmt->rowCount() > 0) {
             return (array) $stmt->fetchAll();
@@ -138,16 +138,17 @@ class Factory {
         if($stmt && $stmt->rowCount() > 0) {
             foreach((array) $stmt->fetchAll() as $factory) {
                 $dataset = [
-                    'id'                 => $factory['uid'],
-                    'productID'          => $factory['productID'],
-                    'scaling'            => $factory['scaling'],
-                    'dependantFactories' => [],
-                    'requirements'       => [],
-                    'level'              => 0,
-                    'hasDetailsVisible'  => false,
+                    'id'                     => $factory['uid'],
+                    'productID'              => $factory['productID'],
+                    'scaling'                => $factory['scaling'],
+                    'dependantFactories'     => [],
+                    'productionRequirements' => [],
+                    'upgradeRequirements'    => [],
+                    'level'                  => 0,
+                    'hasDetailsVisible'      => false,
                 ];
 
-                if(!in_array($factory['uid'], self::MINE_INDEPENDANT_FACTORIES, true)) {
+                if(!in_array($factory['uid'], self::MINE_INDEPENDENT_FACTORIES, true)) {
                     $dataset['relevantMines'] = [];
                 }
 
@@ -159,7 +160,7 @@ class Factory {
     }
 
     public function getUserFactories(int $playerIndexUID, array $mines): array {
-        $factories           = $this->getFactories();
+        $factories           = $this->get();
         $lastUpdateTimestamp = 0;
 
         $stmt = $this->pdo->prepare(self::QUERIES['getUserFactories']);
@@ -209,7 +210,7 @@ class Factory {
                 continue;
             }
 
-            foreach($factory['requirements'] as &$requirement) {
+            foreach($factory['productionRequirements'] as &$requirement) {
                 $requirement['currentRequiredAmount'] = $requirement['amountPerLevel'] * $factory['level'];
 
                 if($requirement['id'] === 1) {

@@ -1,6 +1,5 @@
 import React from 'react';
 import { logout } from '../../actions/Authentication';
-import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
@@ -24,8 +23,8 @@ export const ConnectedLogout = (props: LogoutProps) => {
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  logout: () => dispatch(logout()),
+const mapDispatchToProps = () => ({
+  logout,
 });
 
 const preconnect = connect(

@@ -2,20 +2,21 @@ import React, { memo } from 'react';
 import { Level } from './Level';
 import { DetailsToggler } from './DetailsToggler';
 import { IFactory, IFactoryRequirements } from '../../types/factory';
-import { setLevel, toggleFactoryDetailsVisibility, adjustRequirementsToLevel } from '../../actions/Factories';
+import { setLevel, toggleFactoryDetailsVisibility, adjustProductionRequirementsToLevel } from '../../actions/Factories';
 import { IMarketPriceState } from '../../types/marketPrices';
+import { getPricesByID } from '../helperFunctions';
 
 export interface FactoryProps {
   factory: IFactory;
   setLevel: typeof setLevel;
-  marketPrices: IMarketPriceState;
+  marketPrices: IMarketPriceState[];
   toggleFactoryDetailsVisibility: typeof toggleFactoryDetailsVisibility;
-  adjustRequirementsToLevel: typeof adjustRequirementsToLevel;
+  adjustProductionRequirementsToLevel: typeof adjustProductionRequirementsToLevel;
 }
 
 const getWorkload = (factory: IFactory) =>
   Math.min(
-    ...factory.requirements
+    ...factory.productionRequirements
       .filter(requirement => requirement.id !== 1)
       .map(requirement => requirement.currentGivenAmount / requirement.currentRequiredAmount),
   );
@@ -27,28 +28,34 @@ const getTurnoverPerHour = (workload: number, producedQuantity: number, price: n
 
 const getTurnoverPerUpgrade = (scaling: number, price: number) => (scaling * price).toLocaleString();
 
-const getRequirementCostPerHour = (requirements: IFactoryRequirements[], marketPrices: IMarketPriceState) =>
-  Math.round(
-    requirements.reduce(
-      (sum, requirement) =>
-        // cash requirement
-        requirement.id === 1
-          ? sum + requirement.currentRequiredAmount
-          : // material requirement
-            sum +
-            requirement.currentRequiredAmount *
-              (marketPrices[requirement.id].player > 0
-                ? marketPrices[requirement.id].player
-                : marketPrices[requirement.id].ai),
-      0,
-    ),
+const getRequirementCostPerHour = (
+  productionRequirements: IFactoryRequirements[],
+  marketPrices: IMarketPriceState[],
+) => {
+  return Math.round(
+    productionRequirements.reduce((sum, requirement) => {
+      /* cash requirement*/
+      if (requirement.id === 1) {
+        return sum + requirement.currentRequiredAmount;
+      }
+      const { ai, player } = getPricesByID(marketPrices, requirement.id);
+      // material requirement
+      return sum + requirement.currentRequiredAmount * (player > 0 ? player : ai);
+    }, 0),
   ).toLocaleString();
+};
 
 export const FactoryOverview = memo(
-  ({ marketPrices, factory, setLevel, toggleFactoryDetailsVisibility, adjustRequirementsToLevel }: FactoryProps) => {
-    const { id, level, requirements, scaling } = factory;
+  ({
+    marketPrices,
+    factory,
+    setLevel,
+    toggleFactoryDetailsVisibility,
+    adjustProductionRequirementsToLevel,
+  }: FactoryProps) => {
+    const { id, level, productionRequirements, scaling } = factory;
 
-    const price = marketPrices[factory.productID];
+    const price = getPricesByID(marketPrices, factory.productID);
 
     const currentPrice = price.player > 0 ? price.player : price.ai;
 
@@ -64,15 +71,15 @@ export const FactoryOverview = memo(
             {...{
               id,
               level,
-              requirements,
+              productionRequirements,
               setLevel,
-              adjustRequirementsToLevel,
+              adjustProductionRequirementsToLevel,
             }}
           />
         </td>
         <td>{producedQuantity.toLocaleString()}</td>
         <td>
-          {Object.values(requirements).map(requirement => (
+          {Object.values(productionRequirements).map(requirement => (
             <span key={requirement.id}>
               <i className={`icon-${requirement.id}`} /> {requirement.currentRequiredAmount.toLocaleString()} <br />
             </span>
@@ -81,7 +88,7 @@ export const FactoryOverview = memo(
         <td>{(workload * 100).toFixed(2).toString()}%</td>
         <td title={price.player > 0 ? price.player.toLocaleString() : price.ai.toLocaleString()}>{turnoverPerHour}</td>
         <td>{getTurnoverPerUpgrade(scaling, currentPrice)}</td>
-        <td>{getRequirementCostPerHour(requirements, marketPrices)}</td>
+        <td>{getRequirementCostPerHour(productionRequirements, marketPrices)}</td>
         <td>GD Order Indicator</td>
         <td>
           <DetailsToggler {...{ id, toggleFactoryDetailsVisibility }} />

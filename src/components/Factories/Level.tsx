@@ -1,13 +1,13 @@
 import React, { ChangeEvent, FocusEvent } from 'react';
-import { setLevel, adjustRequirementsToLevel } from '../../actions/Factories';
+import { setLevel, adjustProductionRequirementsToLevel } from '../../actions/Factories';
 import { IFactoryRequirements } from '../../types/factory';
 
 interface ILevelProps {
   level: number;
   id: number;
-  requirements: IFactoryRequirements[];
+  productionRequirements: IFactoryRequirements[];
   setLevel: typeof setLevel;
-  adjustRequirementsToLevel: typeof adjustRequirementsToLevel;
+  adjustProductionRequirementsToLevel: typeof adjustProductionRequirementsToLevel;
 }
 
 // replaces reducer
@@ -17,7 +17,7 @@ const scaleRequirements = (requirements: IFactoryRequirements[], level: number) 
     currentRequiredAmount: requirement.amountPerLevel * level,
   }));
 
-export const Level = ({ level, id, requirements, setLevel, adjustRequirementsToLevel }: ILevelProps) => {
+export const Level = ({ level, id, productionRequirements, setLevel, adjustProductionRequirementsToLevel }: ILevelProps) => {
   const handleFocus = (e: FocusEvent<HTMLInputElement>) => e.target.select();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const level = parseInt(e.target.value);
@@ -29,7 +29,7 @@ export const Level = ({ level, id, requirements, setLevel, adjustRequirementsToL
     // somehow cascade level change to dependant factories
 
     setLevel(level, id);
-    adjustRequirementsToLevel(id, scaleRequirements(requirements, level));
+    adjustProductionRequirementsToLevel(id, scaleRequirements(productionRequirements, level));
   };
 
   return (

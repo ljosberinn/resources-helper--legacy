@@ -9,10 +9,15 @@ import { store } from '..';
 
 const uri = DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development;
 
-export const pricesUpdateRequired = (lastUpdate: number) =>
-  new Date().getTime() > new Date(lastUpdate).getTime() - 60 * 60 * 1000;
+export const pricesUpdateRequired = (lastUpdate: number) => new Date().getTime() > lastUpdate + 60 * 60 * 1000;
 
-export const getPrices = async ({ user, marketPrices }: { user: IUserState; marketPrices: IMarketPriceState }) => {
+export const getMarketPrices = async ({
+  user,
+  marketPrices,
+}: {
+  user: IUserState;
+  marketPrices: IMarketPriceState[];
+}) => {
   if (pricesUpdateRequired(user.settings.prices.lastUpdate)) {
     const prices = await abortableAsyncFetch(`${uri}/prices?range=${user.settings.prices.range}`);
     return await prices;
@@ -33,7 +38,7 @@ export const getStaticData = async (
     return await currentStore[component];
   }
 
-  return await abortableAsyncFetch(`${uri}/static?type=${component}`, setError, setErrorType);
+  return await abortableAsyncFetch(`${uri}/${component}`, setError, setErrorType);
 };
 
 export const abortableAsyncFetch = async (
@@ -70,9 +75,6 @@ export const abortableAsyncFetch = async (
   }
 };
 
-export const filterFactoryByPropsID = (factories: IFactory[], props: { id: number }) =>
-  factories.find(factory => factory.id === props.id) as IFactory;
-
 export const getElapsedLoadingTime = (start: number) => new Date().getTime() - start;
 
 // resolve timeout either instantly if loading took longer than LOADING_THRESHOLD
@@ -107,11 +109,26 @@ export const calculationOrder: FactoryIDs[] = [
   125,
 ];
 
+export const getMineByID = (mines: IMineState[], id: number) =>
+  mines.find(mine => mine.resourceID === id) as IMineState;
+
+export const getPricesByID = (marketPrices: IMarketPriceState[], id: number) =>
+  marketPrices.find(price => price.id === id) as IMarketPriceState;
+
+export const getFactoryByID = (factories: IFactory[], id: FactoryIDs) =>
+  factories.find(factory => factory.id === id) as IFactory;
+
 export const getMineAmountSum = (mines: IMineState[]) =>
   mines.reduce((sum, currentMine) => sum + currentMine.amount, 0);
 
-export const getHourlyMineIncome = (mines: IMineState[], marketPrices: IMarketPriceState) =>
-  mines.reduce((sum, mine) => sum + mine.sumTechRate * marketPrices[mine.resourceID].player, 0).toLocaleString();
+export const getHourlyMineIncome = (mines: IMineState[], marketPrices: IMarketPriceState[]) =>
+  mines
+    .reduce((sum, mine) => {
+      const { ai, player } = getPricesByID(marketPrices, mine.resourceID);
+
+      return sum + mine.sumTechRate * (player > 0 ? player : ai);
+    }, 0)
+    .toLocaleString();
 
 export const getFactoryUpgradeSum = (factories: IFactory[]) =>
   factories.reduce((sum, factory) => sum + factory.level, 0);

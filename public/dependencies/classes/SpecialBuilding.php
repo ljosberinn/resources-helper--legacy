@@ -16,7 +16,7 @@ class SpecialBuilding {
         $this->pdo = $db->getConnection();
     }
 
-    public function getSpecialBuildings(): array {
+    public function get(): array {
         $initialSpecialBuildings = $specialBuildings = [];
 
         $stmt = $this->pdo->query(self::QUERIES['getSpecialBuildings']);
@@ -46,7 +46,7 @@ class SpecialBuilding {
     }
 
     public function getUserSpecialBuildings(int $playerIndexUID): array {
-        $specialBuildings    = $this->getSpecialBuildings();
+        $specialBuildings    = $this->get();
         $lastUpdateTimestamp = 0;
 
         $stmt = $this->pdo->prepare(self::QUERIES['getUserSpecialBuildings']);
