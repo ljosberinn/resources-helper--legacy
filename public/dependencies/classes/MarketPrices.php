@@ -10,64 +10,64 @@ class MarketPrices extends APICore {
     ];
 
     public const ID_MAP = [
-        57  => 1,
-        115 => 2,
-        70  => 3,
-        74  => 4,
-        32  => 5,
-        93  => 6,
-        12  => 7,
-        7   => 8,
-        120 => 9,
-        22  => 10,
-        13  => 11,
-        66  => 12,
-        78  => 13,
-        99  => 14,
-        38  => 15,
-        41  => 16,
-        103 => 17,
-        60  => 18,
-        79  => 19,
-        14  => 20,
-        49  => 21,
-        28  => 22,
-        20  => 23,
-        102 => 24,
-        3   => 25,
-        8   => 26,
-        58  => 27,
-        77  => 28,
-        36  => 29,
-        26  => 30,
-        55  => 31,
-        124 => 32,
         2   => 33,
-        92  => 34,
-        90  => 35,
-        75  => 36,
-        104 => 37,
-        53  => 38,
-        42  => 39,
-        81  => 40,
+        3   => 25,
+        7   => 8,
+        8   => 26,
         10  => 41,
-        40  => 42,
-        117 => 43,
-        84  => 44,
-        35  => 45,
+        12  => 7,
+        13  => 11,
+        14  => 20,
         15  => 46,
-        67  => 47,
+        20  => 23,
+        22  => 10,
+        24  => 58,
+        26  => 30,
+        28  => 22,
         30  => 48,
+        32  => 5,
+        35  => 45,
+        36  => 29,
+        38  => 15,
+        40  => 42,
+        41  => 16,
+        42  => 39,
+        43  => 57,
         44  => 49,
         45  => 50,
         46  => 51,
         48  => 52,
+        49  => 21,
         51  => 53,
+        53  => 38,
+        55  => 31,
+        57  => 1,
+        58  => 27,
+        60  => 18,
+        66  => 12,
+        67  => 47,
+        70  => 3,
+        74  => 4,
+        75  => 36,
+        77  => 28,
+        78  => 13,
+        79  => 19,
+        81  => 40,
+        84  => 44,
+        87  => 56,
+        90  => 35,
+        92  => 34,
+        93  => 6,
         96  => 54,
         98  => 55,
-        87  => 56,
-        43  => 57,
-        24  => 58,
+        99  => 14,
+        102 => 24,
+        103 => 17,
+        104 => 37,
+        115 => 2,
+        117 => 43,
+        120 => 9,
+        124 => 32,
     ];
 
     private const DEFAULT_EXPORT_TYPE = 'json';
@@ -101,6 +101,8 @@ class MarketPrices extends APICore {
     private $exportType = 'json';
     /** @var int $exportRange */
     private $exportRange;
+
+    private $data;
 
     public function __construct() {
         parent::__construct();
@@ -233,42 +235,82 @@ class MarketPrices extends APICore {
         $stmt = $this->pdo->prepare($this->buildExportQuery());
         $stmt->execute(['timestamp' => $this->createTimestamp()]);
 
-        $data = $stmt->fetch();
+        $this->data = $stmt->fetch();
 
         if($this->exportType === 'json') {
-            return $this->generateJSON($data);
+            return $this->generateJSON();
         }
 
         if($this->exportType === 'xml') {
-            return $this->generateXML($data);
+            return $this->generateXML();
         }
 
         if($this->exportType === 'csv') {
-            return $this->generateCSV($data);
+            return $this->generateCSV();
         }
 
         return (string) json_encode(['error' => 'invalid output type, only CSV, XML and JSON are supported']);
     }
 
-    private function generateJSON(array $data): string {
+    private function generateJSON(): string {
         $prices = [];
 
         foreach(array_keys(self::ID_MAP) as $id) {
             $prices[] = [
                 'id'     => $id,
-                'ai'     => $data['ai_' . $id],
-                'player' => $data['player_' . $id],
+                'ai'     => $this->data['ai_' . $id],
+                'player' => $this->data['player_' . $id],
             ];
         }
 
         return (string) json_encode($prices, JSON_NUMERIC_CHECK);
     }
 
-    private function generateXML(array $data): string {
-        return '';
+    private function generateXML(): string {
+        $XMLWriter = new XMLWriter();
+        $XMLWriter->openMemory();
+
+        $XMLWriter->setIndent(true);
+        $XMLWriter->setIndentString('    ');
+
+        $XMLWriter->startDocument('1.9', 'UTF-8');
+
+        $XMLWriter->startElement('prices');
+        $XMLWriter->writeAttribute('range', (string) $this->exportRange);
+        $XMLWriter->writeAttribute('exported', (string) time());
+
+        foreach(array_keys(self::ID_MAP) as $id) {
+            $XMLWriter->startElement('price');
+
+            $XMLWriter->startElement('id');
+            $XMLWriter->text((string) $id);
+            $XMLWriter->endElement();
+
+            $XMLWriter->startElement('ai');
+            $XMLWriter->text($this->data['ai_' . $id]);
+            $XMLWriter->endElement();
+
+            $XMLWriter->startElement('player');
+            $XMLWriter->text($this->data['player_' . $id]);
+            $XMLWriter->endElement();
+
+            $XMLWriter->endElement();
+        }
+
+        $XMLWriter->endElement();
+        $XMLWriter->endDocument();
+
+        return $XMLWriter->outputMemory(true);
     }
 
-    private function generateCSV(array $data): string {
-        return '';
+    private function generateCSV(): string {
+
+        $csv = "id,ai,player\r\n";
+
+        foreach(array_keys(self::ID_MAP) as $id) {
+            $csv .= $id . ',' . $this->data['ai_' . $id] . ',' . $this->data['player_' . $id] . "\r\n";
+        }
+
+        return $csv;
     }
 }
