@@ -18,7 +18,7 @@ const getMineIncomePerHour = ({ ai, player }: IMarketPriceState, { sumTechRate }
 };
 
 const getPerfectIncome = (maxHourlyRate: MaxMineRates, { ai, player }: IMarketPriceState) =>
-  (player > 0 ? player : ai) * maxHourlyRate;
+  Math.round((player > 0 ? player : ai) * maxHourlyRate);
 
 const getMineROI = (nextMinePrice: number, perfectIncome: number, factor = 1) =>
   (nextMinePrice / perfectIncome / 24 / factor).toFixed(2).toLocaleString();

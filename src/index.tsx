@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/browser';
 import { createBrowserHistory } from 'history';
-import React from 'react';
+import React, { StrictMode } from 'react';
 import { render } from 'react-dom';
 import { RHelper } from './components/RHelper';
 import { preloadedState } from './constants';
@@ -24,12 +24,14 @@ const history = createBrowserHistory();
 export const { store, persistor } = configureStore(history, preloadedState);
 
 render(
-  <Provider store={store}>
-    <PersistGate loading={<Loading />} persistor={persistor}>
-      <ConnectedRouter history={history}>
-        <RHelper store={store} />
-      </ConnectedRouter>
-    </PersistGate>
-  </Provider>,
+  <StrictMode>
+    <Provider store={store}>
+      <PersistGate loading={<Loading />} persistor={persistor}>
+        <ConnectedRouter history={history}>
+          <RHelper store={store} />
+        </ConnectedRouter>
+      </PersistGate>
+    </Provider>
+  </StrictMode>,
   document.getElementById('root') as HTMLElement,
 );
