@@ -14,7 +14,7 @@ return [
             'Amortisierung',
         ],
         'en' => [
-            'Factory',
+            'Factories',
             'Factory Level',
             'Product',
             'Dependencies',

@@ -4,4 +4,4 @@ require_once '../_boot.php';
 
 header('Content-type: application/json');
 
-echo json_encode((new Factory())->get());
+echo json_encode((new Factories())->get());

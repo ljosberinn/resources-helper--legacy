@@ -4,4 +4,4 @@ require_once '../_boot.php';
 
 header('Content-type: application/json');
 
-echo json_encode((new Mine())->get());
+echo json_encode((new Mines())->get());
