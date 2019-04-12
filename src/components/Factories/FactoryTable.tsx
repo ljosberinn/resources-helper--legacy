@@ -6,12 +6,11 @@ import { getFactoryUpgradeSum, calculationOrder, getFactoryByID } from '../helpe
 import { FactoryOverview } from './FactoryOverview';
 import { FactoryDetails } from './FactoryDetails';
 import { IMarketPriceState } from '../../types/marketPrices';
-
+import { Table } from 'rbx';
 interface PropsFromState {
   factories: IFactory[];
   marketPrices: IMarketPriceState[];
 }
-
 interface PropsFromDispatch {
   setLevel: typeof setLevel;
   toggleFactoryDetailsVisibility: typeof toggleFactoryDetailsVisibility;
@@ -27,11 +26,28 @@ export const ConnectedFactoryTable = ({
   adjustProductionRequirementsToLevel,
   setLevel,
 }: FactoryTableType) => (
-  <table>
-    <thead>
-      <tr />
-    </thead>
-    <tbody>
+  <Table hoverable narrow striped fullwidth>
+    <Table.Head>
+      <Table.Row>
+        {[
+          'factoryID',
+          'factoryLevel',
+          'production/h',
+          'dependencies',
+          'workload',
+          'profit/h',
+          'profit increase/upgrade',
+          'upgradeCost',
+          'GD Order Indicator',
+          '',
+        ].map(text => (
+          <Table.Heading>
+            <abbr title={text}>{text}</abbr>
+          </Table.Heading>
+        ))}
+      </Table.Row>
+    </Table.Head>
+    <Table.Body>
       {calculationOrder.map(factoryID => {
         const factory = getFactoryByID(factories, factoryID);
         return (
@@ -50,13 +66,13 @@ export const ConnectedFactoryTable = ({
           </Fragment>
         );
       })}
-    </tbody>
-    <tfoot>
-      <tr>
-        <td>{getFactoryUpgradeSum(factories)}</td>
-      </tr>
-    </tfoot>
-  </table>
+    </Table.Body>
+    <Table.Foot>
+      <Table.Row>
+        <Table.Cell>{getFactoryUpgradeSum(factories)}</Table.Cell>
+      </Table.Row>
+    </Table.Foot>
+  </Table>
 );
 
 const mapStateToProps = ({ factories, marketPrices }: FactoryTableType) => ({ factories, marketPrices });

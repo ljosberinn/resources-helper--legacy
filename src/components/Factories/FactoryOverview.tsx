@@ -5,7 +5,7 @@ import { IFactory, IFactoryProductionRequirements, FactoryScalings } from '../..
 import { setLevel, toggleFactoryDetailsVisibility, adjustProductionRequirementsToLevel } from '../../actions/Factories';
 import { IMarketPriceState } from '../../types/marketPrices';
 import { getPricesByID } from '../helperFunctions';
-
+import { Table } from 'rbx';
 export interface FactoryProps {
   factory: IFactory;
   setLevel: typeof setLevel;
@@ -31,10 +31,7 @@ const getTurnoverPerHour = (workload: number, producedQuantity: number, price: n
 
 const getTurnoverPerUpgrade = (scaling: FactoryScalings, price: number) => (scaling * price).toLocaleString();
 
-const getRequirementCostPerHour = (
-  productionRequirements: IFactoryProductionRequirements[],
-  marketPrices: IMarketPriceState[],
-) =>
+const getRequirementCostPerHour = (productionRequirements: IFactoryProductionRequirements[], marketPrices: IMarketPriceState[]) =>
   Math.round(
     productionRequirements.reduce((sum, requirement) => {
       /* cash requirement*/
@@ -48,13 +45,7 @@ const getRequirementCostPerHour = (
   ).toLocaleString();
 
 export const FactoryOverview = memo(
-  ({
-    marketPrices,
-    factory,
-    setLevel,
-    toggleFactoryDetailsVisibility,
-    adjustProductionRequirementsToLevel,
-  }: FactoryProps) => {
+  ({ marketPrices, factory, setLevel, toggleFactoryDetailsVisibility, adjustProductionRequirementsToLevel }: FactoryProps) => {
     const { id, level, productionRequirements, scaling } = factory;
 
     const price = getPricesByID(marketPrices, factory.productID);
@@ -66,9 +57,9 @@ export const FactoryOverview = memo(
     const turnoverPerHour = getTurnoverPerHour(workload, producedQuantity, currentPrice);
 
     return (
-      <tr>
-        <td>ID {id}</td>
-        <td>
+      <Table.Row>
+        <Table.Cell>ID {id}</Table.Cell>
+        <Table.Cell>
           <Level
             {...{
               id,
@@ -78,24 +69,29 @@ export const FactoryOverview = memo(
               adjustProductionRequirementsToLevel,
             }}
           />
-        </td>
-        <td>{producedQuantity.toLocaleString()}</td>
-        <td>
+        </Table.Cell>
+        <Table.Cell className="has-text-right">
+          <span>
+            {producedQuantity.toLocaleString()}
+            <i className={`icon-${factory.productID}`} />
+          </span>
+        </Table.Cell>
+        <Table.Cell className="has-text-right">
           {Object.values(productionRequirements).map(requirement => (
             <span key={requirement.id}>
-              <i className={`icon-${requirement.id}`} /> {requirement.currentRequiredAmount.toLocaleString()} <br />
+              {requirement.currentRequiredAmount.toLocaleString()} <i className={`icon-${requirement.id}`} /> <br />
             </span>
           ))}
-        </td>
-        <td>{(workload * 100).toFixed(2).toString()}%</td>
-        <td title={price.player > 0 ? price.player.toLocaleString() : price.ai.toLocaleString()}>{turnoverPerHour}</td>
-        <td>{getTurnoverPerUpgrade(scaling, currentPrice)}</td>
-        <td>{getRequirementCostPerHour(productionRequirements, marketPrices)}</td>
-        <td>GD Order Indicator</td>
-        <td>
+        </Table.Cell>
+        <Table.Cell className="has-text-right">{(workload * 100).toFixed(2).toString()}%</Table.Cell>
+        <Table.Cell title={price.player > 0 ? price.player.toLocaleString() : price.ai.toLocaleString()}>{turnoverPerHour}</Table.Cell>
+        <Table.Cell className="has-text-right">{getTurnoverPerUpgrade(scaling, currentPrice)}</Table.Cell>
+        <Table.Cell className="has-text-right">{getRequirementCostPerHour(productionRequirements, marketPrices)}</Table.Cell>
+        <Table.Cell>GD Order Indicator</Table.Cell>
+        <Table.Cell>
           <DetailsToggler {...{ id, toggleFactoryDetailsVisibility }} />
-        </td>
-      </tr>
+        </Table.Cell>
+      </Table.Row>
     );
   },
 );

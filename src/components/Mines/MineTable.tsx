@@ -5,7 +5,7 @@ import { IMineState } from '../../types/mines';
 import { getMineAmountSum, getHourlyMineIncome, mineOrder, getMineByID } from '../helperFunctions';
 import { Mine } from './Mine';
 import { IMarketPriceState } from '../../types/marketPrices';
-
+import { Table } from 'rbx';
 interface PropsFromState {
   mines: IMineState[];
   marketPrices: IMarketPriceState[];
@@ -23,9 +23,9 @@ const ConnectedMineTable = memo((props: MineTableType) => {
   const { setMineCount, setTechedMiningRate, mines, marketPrices } = props;
 
   return (
-    <table>
-      <thead>
-        <tr>
+    <Table fullwidth narrow striped bordered hoverable>
+      <Table.Head>
+        <Table.Row>
           {[
             'Mine type',
             'Your rate per hour',
@@ -37,26 +37,28 @@ const ConnectedMineTable = memo((props: MineTableType) => {
             '505%',
             '505% in your HQ',
           ].map((text, index) => (
-            <th key={index}>{text}</th>
+            <Table.Heading key={index}>
+              <abbr title={text}>{text}</abbr>
+            </Table.Heading>
           ))}
-        </tr>
-      </thead>
-      <tbody>
+        </Table.Row>
+      </Table.Head>
+      <Table.Body>
         {mineOrder.map(mineID => {
           const mine = getMineByID(mines, mineID);
 
           return <Mine {...{ mines, mine, marketPrices, setMineCount, setTechedMiningRate, key: mineID }} />;
         })}
-      </tbody>
-      <tfoot>
-        <tr>
-          <td />
-          <td />
-          <td>{getMineAmountSum(mines)}</td>
-          <td>{getHourlyMineIncome(mines, marketPrices)}</td>
-        </tr>
-      </tfoot>
-    </table>
+      </Table.Body>
+      <Table.Foot>
+        <Table.Row>
+          <Table.Cell />
+          <Table.Cell />
+          <Table.Cell>{getMineAmountSum(mines)}</Table.Cell>
+          <Table.Cell>{getHourlyMineIncome(mines, marketPrices)}</Table.Cell>
+        </Table.Row>
+      </Table.Foot>
+    </Table>
   );
 });
 

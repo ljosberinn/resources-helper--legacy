@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@sentry/browser": "^5.0.7",
+    "@sentry/browser": "^5.0.8",
     "connected-react-router": "^6.3.2",
     "history": "^4.9.0",
+    "rbx": "^2.1.0",
     "react": "^16.8.6",
     "react-debounce-input": "^3.2.0",
     "react-dom": "^16.8.6",
@@ -34,10 +35,10 @@
     "@types/jest": "24.0.11",
     "@types/node": "11.13.4",
     "@types/react": "^16.8.13",
-    "@types/react-dom": "16.8.3",
+    "@types/react-dom": "16.8.4",
     "@types/react-redux": "^7.0.6",
-    "@types/react-router-dom": "^4.3.1",
-    "@welldone-software/why-did-you-render": "^3.0.2",
+    "@types/react-router-dom": "^4.3.2",
+    "@welldone-software/why-did-you-render": "^3.0.3",
     "redux-devtools-extension": "^2.13.8"
   },
   "browserslist": [

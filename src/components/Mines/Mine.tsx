@@ -4,7 +4,7 @@ import { setTechedMiningRate, setMineCount } from '../../actions/Mines';
 import { IMarketPriceState } from '../../types/marketPrices';
 import { getPricesByID } from '../helperFunctions';
 import { DebounceInput } from 'react-debounce-input';
-
+import { Table, Input } from 'rbx';
 interface MineProps {
   mines: IMineState[];
   mine: IMineState;
@@ -32,7 +32,7 @@ export const Mine = memo(({ mines, mine, marketPrices, setTechedMiningRate, setM
   const updateTechedMiningRate = (e: ChangeEvent<HTMLInputElement>) => {
     const miningRate = parseInt(e.target.value);
 
-    setTechedMiningRate(mine.resourceID, Number.isNaN(miningRate) ? 0 : miningRate);
+    setTechedMiningRate(resourceID, Number.isNaN(miningRate) ? 0 : miningRate);
   };
 
   const updateMineCount = (e: ChangeEvent<HTMLInputElement>) => {
@@ -47,10 +47,11 @@ export const Mine = memo(({ mines, mine, marketPrices, setTechedMiningRate, setM
   const perfectIncome = getPerfectIncome(maxHourlyRate, price);
 
   return (
-    <tr>
-      <td>ID {resourceID}</td>
-      <td>
-        <DebounceInput
+    <Table.Row>
+      <Table.Cell>ID {resourceID}</Table.Cell>
+      <Table.Cell>
+        <Input
+          as={DebounceInput}
           type="number"
           min="0"
           max="200000000"
@@ -58,10 +59,12 @@ export const Mine = memo(({ mines, mine, marketPrices, setTechedMiningRate, setM
           value={sumTechRate.toString()}
           placeholder="rate/hr"
           debounceTimeout={300}
+          size={'small'}
         />
-      </td>
-      <td>
-        <DebounceInput
+      </Table.Cell>
+      <Table.Cell>
+        <Input
+          as={DebounceInput}
           type="number"
           min="0"
           max="35000"
@@ -69,15 +72,21 @@ export const Mine = memo(({ mines, mine, marketPrices, setTechedMiningRate, setM
           value={amount.toString()}
           placeholder="mine amount"
           debounceTimeout={300}
+          size={'small'}
         />
-      </td>
-      <td>{getMineIncomePerHour(price, mine).toLocaleString()}</td>
-      <td>{nextMinePrice.toLocaleString()}</td>
-      <td>{perfectIncome.toLocaleString()}</td>
-      <td>{getMineROI(nextMinePrice, perfectIncome)}</td>
-      <td>{getMineROI(nextMinePrice, perfectIncome, 5.05)}</td>
-      <td>{getMineROI(nextMinePrice, perfectIncome, 5.05 * 10)}</td>
-    </tr>
+      </Table.Cell>
+
+      {[
+        getMineIncomePerHour(price, mine).toLocaleString(),
+        nextMinePrice.toLocaleString(),
+        perfectIncome.toLocaleString(),
+        getMineROI(nextMinePrice, perfectIncome),
+        getMineROI(nextMinePrice, perfectIncome, 5.05),
+        getMineROI(nextMinePrice, perfectIncome, 5.05 * 10),
+      ].map(value => (
+        <Table.Cell className="has-text-right">{value}</Table.Cell>
+      ))}
+    </Table.Row>
   );
 });
 

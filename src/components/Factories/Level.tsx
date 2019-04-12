@@ -2,7 +2,7 @@ import React, { ChangeEvent, FocusEvent } from 'react';
 import { setLevel, adjustProductionRequirementsToLevel } from '../../actions/Factories';
 import { IFactoryProductionRequirements, FactoryIDs } from '../../types/factory';
 import { DebounceInput } from 'react-debounce-input';
-
+import { Input } from 'rbx';
 interface ILevelProps {
   level: number;
   id: FactoryIDs;
@@ -18,13 +18,7 @@ const scaleRequirements = (requirements: IFactoryProductionRequirements[], level
     currentRequiredAmount: requirement.amountPerLevel * level,
   }));
 
-export const Level = ({
-  level,
-  id,
-  productionRequirements,
-  setLevel,
-  adjustProductionRequirementsToLevel,
-}: ILevelProps) => {
+export const Level = ({ level, id, productionRequirements, setLevel, adjustProductionRequirementsToLevel }: ILevelProps) => {
   const handleFocus = (e: FocusEvent<HTMLInputElement>) => e.target.select();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const level = parseInt(e.target.value);
@@ -40,7 +34,8 @@ export const Level = ({
   };
 
   return (
-    <DebounceInput
+    <Input
+      as={DebounceInput}
       type="number"
       placeholder="PH"
       value={level.toString()}
@@ -49,6 +44,8 @@ export const Level = ({
       onFocus={handleFocus}
       onChange={handleChange}
       debounceTimeout={300}
+      size={'small'}
+      className="has-text-right"
     />
   );
 };
