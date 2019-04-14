@@ -4,13 +4,13 @@
   "private": true,
   "dependencies": {
     "@sentry/browser": "^5.0.8",
-    "connected-react-router": "^6.3.2",
+    "connected-react-router": "^6.4.0",
     "history": "^4.9.0",
     "rbx": "^2.1.0",
     "react": "^16.8.6",
     "react-debounce-input": "^3.2.0",
     "react-dom": "^16.8.6",
-    "react-redux": "^7.0.1",
+    "react-redux": "^7.0.2",
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
     "redux": "^4.0.1",
@@ -38,7 +38,8 @@
     "@types/react-dom": "16.8.4",
     "@types/react-redux": "^7.0.6",
     "@types/react-router-dom": "^4.3.2",
-    "@welldone-software/why-did-you-render": "^3.0.3",
+    "@welldone-software/why-did-you-render": "^3.0.6",
+    "node-sass": "^4.11.0",
     "redux-devtools-extension": "^2.13.8"
   },
   "browserslist": [
