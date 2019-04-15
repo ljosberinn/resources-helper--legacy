@@ -1,12 +1,16 @@
 import React, { memo } from 'react';
 import { connect } from 'react-redux';
 import { setMineCount, setMines, setTechedMiningRate } from '../../actions/Mines';
+import { adjustProductionRequirementsToGivenAmount } from '../../actions/Factories';
 import { IMineState } from '../../types/mines';
 import { getMineAmountSum, getHourlyMineIncome, mineOrder, getMineByID } from '../helperFunctions';
 import { Mine } from './Mine';
 import { IMarketPriceState } from '../../types/marketPrices';
+import { MineHeading } from './MineHeading';
 import { Table } from 'rbx';
+
 interface PropsFromState {
+  factories: IFactory[];
   mines: IMineState[];
   marketPrices: IMarketPriceState[];
 }
@@ -15,40 +19,30 @@ interface PropsFromDispatch {
   setMineCount: typeof setMineCount;
   setMines: typeof setMines;
   setTechedMiningRate: typeof setTechedMiningRate;
+  adjustProductionRequirementsToGivenAmount: typeof adjustProductionRequirementsToGivenAmount;
 }
 
 type MineTableType = PropsFromState & PropsFromDispatch;
 
-const ConnectedMineTable = memo((props: MineTableType) => {
-  const { setMineCount, setTechedMiningRate, mines, marketPrices } = props;
-
-  return (
+const ConnectedMineTable = memo(
+  ({ factories, setMineCount, setTechedMiningRate, adjustProductionRequirementsToGivenAmount, mines, marketPrices }: MineTableType) => (
     <Table fullwidth narrow striped bordered hoverable>
-      <Table.Head>
-        <Table.Row>
-          {[
-            'Mine type',
-            'Your rate per hour',
-            'Your amount of mines',
-            'Worth @ 100% condition',
-            'Mine price',
-            '100% quality income',
-            'ROI 100%',
-            '505%',
-            '505% in your HQ',
-          ].map((text, index) => (
-            <Table.Heading key={index}>
-              <abbr title={text}>{text}</abbr>
-            </Table.Heading>
-          ))}
-        </Table.Row>
-      </Table.Head>
+      <MineHeading />
       <Table.Body>
-        {mineOrder.map(mineID => {
-          const mine = getMineByID(mines, mineID);
-
-          return <Mine {...{ mines, mine, marketPrices, setMineCount, setTechedMiningRate, key: mineID }} />;
-        })}
+        {mineOrder.map(mineID => (
+          <Mine
+            {...{
+              factories,
+              mines,
+              mine: getMineByID(mines, mineID),
+              marketPrices,
+              setMineCount,
+              setTechedMiningRate,
+              adjustProductionRequirementsToGivenAmount,
+              key: mineID,
+            }}
+          />
+        ))}
       </Table.Body>
       <Table.Foot>
         <Table.Row>
@@ -59,15 +53,16 @@ const ConnectedMineTable = memo((props: MineTableType) => {
         </Table.Row>
       </Table.Foot>
     </Table>
-  );
-});
+  ),
+);
 
-const mapStateToProps = ({ mines, marketPrices }: MineTableType) => ({ mines, marketPrices });
+const mapStateToProps = ({ mines, factories, marketPrices }: MineTableType) => ({ mines, factories, marketPrices });
 
 const mapDispatchToProps = {
   setMineCount,
   setMines,
   setTechedMiningRate,
+  adjustProductionRequirementsToGivenAmount,
 };
 
 const preconnect = connect(

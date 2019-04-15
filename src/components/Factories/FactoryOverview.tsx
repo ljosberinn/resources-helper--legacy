@@ -1,27 +1,62 @@
 import React, { memo } from 'react';
 import { Level } from './Level';
 import { DetailsToggler } from './DetailsToggler';
-import { IFactory, IFactoryProductionRequirements, FactoryScalings } from '../../types/factory';
-import { setLevel, toggleFactoryDetailsVisibility, adjustProductionRequirementsToLevel } from '../../actions/Factories';
+import { IFactory, IFactoryProductionRequirements, FactoryScalings, ProductIDs } from '../../types/factory';
+import { ResourceIDs } from '../../types/mines';
+import {
+  setLevel,
+  toggleFactoryDetailsVisibility,
+  adjustProductionRequirementsToLevel,
+  setWorkload,
+  adjustProductionRequirementsToGivenAmount,
+} from '../../actions/Factories';
 import { IMarketPriceState } from '../../types/marketPrices';
 import { getPricesByID } from '../helperFunctions';
-import { Table } from 'rbx';
+import { store } from '../..';
+import { ProducedQuantity } from './ProducedQuantity';
+import { Workload } from './Workload';
+
 export interface FactoryProps {
   factory: IFactory;
+  factories: IFactory[];
   setLevel: typeof setLevel;
   marketPrices: IMarketPriceState[];
   toggleFactoryDetailsVisibility: typeof toggleFactoryDetailsVisibility;
   adjustProductionRequirementsToLevel: typeof adjustProductionRequirementsToLevel;
+  adjustProductionRequirementsToGivenAmount: typeof adjustProductionRequirementsToGivenAmount;
+  setWorkload: typeof setWorkload;
 }
 
-const getWorkload = (factory: IFactory) => {
+const isFactoryRequirement = (requirementID: ResourceIDs | ProductIDs | 1) =>
+  [7, 22, 24, 28, 30, 32, 35, 36, 38, 51, 60, 58, 67, 66, 75, 79, 84, 93, 92, 87, 117, 124].includes(requirementID);
+
+const getFactoryByProductID = (factories: IFactory[], productID: ResourceIDs | ProductIDs | 1) =>
+  factories.find(factory => factory.productID === productID);
+
+export const getWorkload = (factory: IFactory) => {
   const minWorkload = Math.min(
     ...factory.productionRequirements
       .filter(requirement => requirement.id !== 1)
-      .map(requirement => requirement.currentGivenAmount / requirement.currentRequiredAmount),
+      .map(requirement => {
+        if (!isFactoryRequirement(requirement.id)) {
+          return requirement.currentGivenAmount / requirement.currentRequiredAmount;
+        }
+
+        const { workload } = getFactoryByProductID(store.getState().factories, requirement.id) as IFactory;
+
+        if (workload === 0) {
+          return 0;
+        }
+
+        if (workload >= 1) {
+          return requirement.currentGivenAmount / requirement.currentRequiredAmount;
+        }
+
+        return (requirement.currentGivenAmount * workload) / requirement.currentRequiredAmount;
+      }),
   );
 
-  return Number.isNaN(minWorkload) ? 0.0 : minWorkload;
+  return Number.isNaN(minWorkload) || minWorkload === Infinity ? 0.0 : minWorkload;
 };
 
 const getScaling = (level: number, scaling: FactoryScalings) => scaling * (Number.isNaN(level) ? 0 : level);
@@ -29,15 +64,16 @@ const getScaling = (level: number, scaling: FactoryScalings) => scaling * (Numbe
 const getTurnoverPerHour = (workload: number, producedQuantity: number, price: number) =>
   Math.round((workload > 1 ? 1 : workload) * producedQuantity * price).toLocaleString();
 
-const getTurnoverPerUpgrade = (scaling: FactoryScalings, price: number) => (scaling * price).toLocaleString();
+const getProfitIncreasePerUpgrade = (scaling: FactoryScalings, price: number) => (scaling * price).toLocaleString();
 
 const getRequirementCostPerHour = (productionRequirements: IFactoryProductionRequirements[], marketPrices: IMarketPriceState[]) =>
   Math.round(
     productionRequirements.reduce((sum, requirement) => {
-      /* cash requirement*/
+      // cash requirement
       if (requirement.id === 1) {
         return sum + requirement.currentRequiredAmount;
       }
+
       const { ai, player } = getPricesByID(marketPrices, requirement.id);
       // material requirement
       return sum + requirement.currentRequiredAmount * (player > 0 ? player : ai);
@@ -45,53 +81,68 @@ const getRequirementCostPerHour = (productionRequirements: IFactoryProductionReq
   ).toLocaleString();
 
 export const FactoryOverview = memo(
-  ({ marketPrices, factory, setLevel, toggleFactoryDetailsVisibility, adjustProductionRequirementsToLevel }: FactoryProps) => {
-    const { id, level, productionRequirements, scaling } = factory;
+  ({
+    factories,
+    marketPrices,
+    factory,
+    setLevel,
+    toggleFactoryDetailsVisibility,
+    adjustProductionRequirementsToLevel,
+    adjustProductionRequirementsToGivenAmount,
+    setWorkload,
+  }: FactoryProps) => {
+    const { id, level, productionRequirements, scaling, dependantFactories, workload } = factory;
 
     const price = getPricesByID(marketPrices, factory.productID);
-
     const currentPrice = price.player > 0 ? price.player : price.ai;
 
-    const workload = getWorkload(factory);
+    const currentWorkload = getWorkload(factory);
+    if (currentWorkload !== workload) {
+      setWorkload(id, currentWorkload);
+    }
+
     const producedQuantity = getScaling(level, scaling);
     const turnoverPerHour = getTurnoverPerHour(workload, producedQuantity, currentPrice);
 
     return (
-      <Table.Row>
-        <Table.Cell>ID {id}</Table.Cell>
-        <Table.Cell>
+      <tr>
+        <td>ID {id}</td>
+        <td>
           <Level
             {...{
+              factories,
               id,
               level,
               productionRequirements,
+              dependantFactories,
               setLevel,
               adjustProductionRequirementsToLevel,
+              adjustProductionRequirementsToGivenAmount,
+              getWorkload,
+              setWorkload,
             }}
           />
-        </Table.Cell>
-        <Table.Cell className="has-text-right">
-          <span>
-            {producedQuantity.toLocaleString()}
-            <i className={`icon-${factory.productID}`} />
-          </span>
-        </Table.Cell>
-        <Table.Cell className="has-text-right">
+        </td>
+        <ProducedQuantity {...{ producedQuantity, productID: factory.productID }} />
+        <td className="has-text-right">
           {Object.values(productionRequirements).map(requirement => (
             <span key={requirement.id}>
-              {requirement.currentRequiredAmount.toLocaleString()} <i className={`icon-${requirement.id}`} /> <br />
+              {requirement.currentRequiredAmount.toLocaleString()} <i className={`icon-${requirement.id}`} />
             </span>
           ))}
-        </Table.Cell>
-        <Table.Cell className="has-text-right">{(workload * 100).toFixed(2).toString()}%</Table.Cell>
-        <Table.Cell title={price.player > 0 ? price.player.toLocaleString() : price.ai.toLocaleString()}>{turnoverPerHour}</Table.Cell>
-        <Table.Cell className="has-text-right">{getTurnoverPerUpgrade(scaling, currentPrice)}</Table.Cell>
-        <Table.Cell className="has-text-right">{getRequirementCostPerHour(productionRequirements, marketPrices)}</Table.Cell>
-        <Table.Cell>GD Order Indicator</Table.Cell>
-        <Table.Cell>
+        </td>
+        <Workload {...{ workload }} />
+        <td className="has-text-right" title={currentPrice.toLocaleString()}>
+          {turnoverPerHour}
+        </td>
+        <td className="has-text-right">{getProfitIncreasePerUpgrade(scaling, currentPrice)}</td>
+        <td className="has-text-right">{getRequirementCostPerHour(productionRequirements, marketPrices)}</td>
+        <td className="has-text-right">{0}</td>
+        <td>GD Order Indicator</td>
+        <td>
           <DetailsToggler {...{ id, toggleFactoryDetailsVisibility }} />
-        </Table.Cell>
-      </Table.Row>
+        </td>
+      </tr>
     );
   },
 );

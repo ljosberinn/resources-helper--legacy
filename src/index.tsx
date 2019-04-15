@@ -1,6 +1,6 @@
-import * as Sentry from '@sentry/browser';
+/*import * as Sentry from '@sentry/browser';*/
 import { createBrowserHistory } from 'history';
-import React, { StrictMode } from 'react';
+import React from 'react';
 import { render } from 'react-dom';
 import { RHelper } from './components/RHelper';
 import { preloadedState } from './constants';
@@ -17,23 +17,21 @@ if (process.env.NODE_ENV !== 'production') {
   whyDidYouRender(React);
 }
 
-Sentry.init({
+/*Sentry.init({
   dsn: 'https://7b1b186565cf49e282d282f55c8e615c@sentry.io/1422548',
-});
+});*/
 
 const history = createBrowserHistory();
 
 export const { store, persistor } = configureStore(history, preloadedState);
 
 render(
-  <StrictMode>
-    <Provider store={store}>
-      <PersistGate loading={<Loading />} persistor={persistor}>
-        <ConnectedRouter history={history}>
-          <RHelper store={store} />
-        </ConnectedRouter>
-      </PersistGate>
-    </Provider>
-  </StrictMode>,
+  <Provider store={store}>
+    <PersistGate loading={<Loading />} persistor={persistor}>
+      <ConnectedRouter history={history}>
+        <RHelper store={store} />
+      </ConnectedRouter>
+    </PersistGate>
+  </Provider>,
   document.getElementById('root') as HTMLElement,
 );

@@ -1,10 +1,12 @@
 import { FactoryIDs, ProductIDs } from './../types/factory';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, FocusEvent } from 'react';
 import { DEV_SETTINGS } from '../developmentSettings';
 import { IFactory } from '../types/factory';
 import { IMineState, ResourceIDs } from '../types/mines';
 import { IMarketPriceState } from '../types/marketPrices';
 import { store } from '..';
+import { getWorkload } from './Factories/FactoryOverview';
+import { setWorkload } from './../actions/Factories/';
 
 const uri = DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development;
 
@@ -93,17 +95,14 @@ export const calculationOrder: FactoryIDs[] = [
 
 export const mineOrder: ResourceIDs[] = [2, 20, 3, 13, 8, 10, 53, 26, 12, 90, 49, 15, 14, 81];
 
-export const getMineByID = (mines: IMineState[], id: ResourceIDs) =>
-  mines.find(mine => mine.resourceID === id) as IMineState;
+export const getMineByID = (mines: IMineState[], id: ResourceIDs) => mines.find(mine => mine.resourceID === id) as IMineState;
 
 export const getPricesByID = (marketPrices: IMarketPriceState[], id: ResourceIDs | FactoryIDs | ProductIDs) =>
   marketPrices.find(price => price.id === id) as IMarketPriceState;
 
-export const getFactoryByID = (factories: IFactory[], id: FactoryIDs) =>
-  factories.find(factory => factory.id === id) as IFactory;
+export const getFactoryByID = (factories: IFactory[], id: FactoryIDs) => factories.find(factory => factory.id === id) as IFactory;
 
-export const getMineAmountSum = (mines: IMineState[]) =>
-  mines.reduce((sum, currentMine) => sum + currentMine.amount, 0);
+export const getMineAmountSum = (mines: IMineState[]) => mines.reduce((sum, currentMine) => sum + currentMine.amount, 0);
 
 export const getHourlyMineIncome = (mines: IMineState[], marketPrices: IMarketPriceState[]) =>
   mines
@@ -114,5 +113,35 @@ export const getHourlyMineIncome = (mines: IMineState[], marketPrices: IMarketPr
     }, 0)
     .toLocaleString();
 
-export const getFactoryUpgradeSum = (factories: IFactory[]) =>
-  factories.reduce((sum, factory) => sum + factory.level, 0);
+export const getFactoryUpgradeSum = (factories: IFactory[]) => factories.reduce((sum, factory) => sum + factory.level, 0);
+
+export const handleFocus = (e: FocusEvent<HTMLInputElement>) => e.target.select();
+
+export const recursiveFactoryWorkloadRecalculation = (
+  factories: IFactory[],
+  dependantFactories: FactoryIDs[],
+  workloadSetter: typeof setWorkload,
+) => {
+  const cascadedFactoryIDs: FactoryIDs[] = [];
+
+  dependantFactories.forEach(factoryID => {
+    const dependantFactory = getFactoryByID(factories, factoryID);
+    const { workload } = dependantFactory;
+    const newWorkload = getWorkload(dependantFactory);
+
+    if (workload !== newWorkload) {
+      workloadSetter(factoryID, newWorkload);
+    }
+
+    // proxy cascading to prevent duplicate re-calculation & -rendering for cross-dependencies (looking at you,)
+    dependantFactory.dependantFactories.forEach(dependantFactoryID => {
+      if (cascadedFactoryIDs.indexOf(dependantFactoryID) === -1) {
+        cascadedFactoryIDs.push(dependantFactoryID);
+      }
+    });
+  });
+
+  if (cascadedFactoryIDs.length > 0) {
+    recursiveFactoryWorkloadRecalculation(factories, cascadedFactoryIDs, workloadSetter);
+  }
+};

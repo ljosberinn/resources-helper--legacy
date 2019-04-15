@@ -6,6 +6,7 @@ import { Logout } from './Authentication/Logout';
 import { IPreloadedState } from '../types';
 import { Registration } from './Authentication/Registration';
 import { Mines } from './Mines';
+import { HQPlanner } from './HQPlanner';
 
 const devComponent = () => <div>coming soon</div>;
 
@@ -44,6 +45,11 @@ const routes = [
     component: Registration,
     requiresAuth: false,
   },
+  {
+    path: '/hqplanner',
+    component: HQPlanner,
+    requiresAuth: false,
+  },
 ];
 
 export const Routes = ({ state }: IRoutesProps) => (
@@ -57,18 +63,6 @@ export const Routes = ({ state }: IRoutesProps) => (
 
           return <Route path={route.path} component={route.component} exact={true} key={index} />;
         })}
-        {/*<Route exact path="/" component={devComponent} />
-        <Route exact path="/factories" component={Factories} />
-        <Route exact path="/mines" component={Mines} />
-        {state.user.isAuthenticated ? (
-          <Route exact path="/logout" component={Logout} />
-        ) : (
-          <Fragment>
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/register" component={Registration} />
-          </Fragment>
-        )}
-        <Route component={() => <div>404</div>} />*/}
       </Switch>
     </main>
   </Fragment>

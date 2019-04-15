@@ -15,6 +15,37 @@ import { MineActions } from '../actions/Mines';
 
 export const factories: Reducer<IFactory[]> = (state = preloadedState.factories, action) => {
   switch (action.type) {
+    case FactoryActions.ADJUST_PRODUCTION_REQUIREMENTS_TO_GIVEN_AMOUNT:
+      return state.map(factory => {
+        if (factory.id !== action.payload.factoryID) {
+          return factory;
+        }
+
+        return {
+          ...factory,
+          productionRequirements: factory.productionRequirements.map(requirement => {
+            if (requirement.id !== action.payload.requirementID) {
+              return requirement;
+            }
+
+            return {
+              ...requirement,
+              currentGivenAmount: action.payload.amount,
+            };
+          }),
+        };
+      });
+    case FactoryActions.SET_WORKLOAD:
+      return state.map(factory => {
+        if (factory.id !== action.payload.factoryID) {
+          return factory;
+        }
+
+        return {
+          ...factory,
+          workload: action.payload.workload,
+        };
+      });
     case FactoryActions.ADJUST_PRODUCTION_REQUIREMENTS_TO_LEVEL:
       return state.map(factory => {
         if (factory.id !== action.payload.factoryID) {

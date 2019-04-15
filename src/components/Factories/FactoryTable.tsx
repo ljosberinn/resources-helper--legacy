@@ -1,12 +1,20 @@
 import React, { Fragment } from 'react';
 import { IFactory } from '../../types/factory';
 import { connect } from 'react-redux';
-import { setLevel, toggleFactoryDetailsVisibility, adjustProductionRequirementsToLevel } from '../../actions/Factories';
+import {
+  setLevel,
+  toggleFactoryDetailsVisibility,
+  adjustProductionRequirementsToLevel,
+  adjustProductionRequirementsToGivenAmount,
+  setWorkload,
+} from '../../actions/Factories';
 import { getFactoryUpgradeSum, calculationOrder, getFactoryByID } from '../helperFunctions';
 import { FactoryOverview } from './FactoryOverview';
 import { FactoryDetails } from './FactoryDetails';
 import { IMarketPriceState } from '../../types/marketPrices';
 import { Table } from 'rbx';
+import { FactoryHeading } from './FactoryHeading';
+
 interface PropsFromState {
   factories: IFactory[];
   marketPrices: IMarketPriceState[];
@@ -15,6 +23,8 @@ interface PropsFromDispatch {
   setLevel: typeof setLevel;
   toggleFactoryDetailsVisibility: typeof toggleFactoryDetailsVisibility;
   adjustProductionRequirementsToLevel: typeof adjustProductionRequirementsToLevel;
+  adjustProductionRequirementsToGivenAmount: typeof adjustProductionRequirementsToGivenAmount;
+  setWorkload: typeof setWorkload;
 }
 
 type FactoryTableType = PropsFromState & PropsFromDispatch;
@@ -24,41 +34,28 @@ export const ConnectedFactoryTable = ({
   factories,
   toggleFactoryDetailsVisibility,
   adjustProductionRequirementsToLevel,
+  adjustProductionRequirementsToGivenAmount,
+  setWorkload,
   setLevel,
 }: FactoryTableType) => (
-  <Table hoverable narrow striped fullwidth>
-    <Table.Head>
-      <Table.Row>
-        {[
-          'factoryID',
-          'factoryLevel',
-          'production/h',
-          'dependencies',
-          'workload',
-          'profit/h',
-          'profit increase/upgrade',
-          'upgradeCost',
-          'GD Order Indicator',
-          '',
-        ].map(text => (
-          <Table.Heading>
-            <abbr title={text}>{text}</abbr>
-          </Table.Heading>
-        ))}
-      </Table.Row>
-    </Table.Head>
-    <Table.Body>
+  <Table hoverable narrow striped fullwidth bordered>
+    <FactoryHeading />
+    <tbody>
       {calculationOrder.map(factoryID => {
         const factory = getFactoryByID(factories, factoryID);
+
         return (
           <Fragment key={factoryID}>
             <FactoryOverview
               {...{
                 marketPrices,
+                factories,
                 factory,
                 setLevel,
                 toggleFactoryDetailsVisibility,
                 adjustProductionRequirementsToLevel,
+                adjustProductionRequirementsToGivenAmount,
+                setWorkload,
                 key: factoryID,
               }}
             />
@@ -66,12 +63,12 @@ export const ConnectedFactoryTable = ({
           </Fragment>
         );
       })}
-    </Table.Body>
-    <Table.Foot>
-      <Table.Row>
-        <Table.Cell>{getFactoryUpgradeSum(factories)}</Table.Cell>
-      </Table.Row>
-    </Table.Foot>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td>{getFactoryUpgradeSum(factories)}</td>
+      </tr>
+    </tfoot>
   </Table>
 );
 
@@ -81,6 +78,8 @@ const mapDispatchToProps = {
   setLevel,
   toggleFactoryDetailsVisibility,
   adjustProductionRequirementsToLevel,
+  adjustProductionRequirementsToGivenAmount,
+  setWorkload,
 };
 
 const preconnect = connect(

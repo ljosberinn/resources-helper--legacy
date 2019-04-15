@@ -15,6 +15,7 @@ const navElements = [
   { displayName: 'Special Buildings', href: 'buildings', requiresGuest: false, requiresLogin: false },
   { displayName: 'Recycling', href: 'recycling', requiresGuest: false, requiresLogin: false },
   { displayName: 'Units', href: 'units', requiresGuest: false, requiresLogin: false },
+  { displayName: 'HQ Planner', href: 'hqplanner', requiresGuest: false, requiresLogin: false },
 
   { displayName: 'Logout', href: 'logout', requiresGuest: false, requiresLogin: true },
 ];

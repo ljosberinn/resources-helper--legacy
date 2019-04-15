@@ -125,6 +125,7 @@ class Factories {
                 'productionRequirements' => [],
                 'upgradeRequirements'    => [],
                 'level'                  => 0,
+                'workload'               => 0.00,
                 'hasDetailsVisible'      => false,
             ];
 
