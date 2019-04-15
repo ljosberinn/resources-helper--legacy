@@ -3,10 +3,11 @@ import { IMineState, MaxMineRates, MinePrices } from '../../types/mines';
 import { setTechedMiningRate, setMineCount } from '../../actions/Mines';
 import { adjustProductionRequirementsToGivenAmount } from '../../actions/Factories';
 import { IMarketPriceState } from '../../types/marketPrices';
-import { getPricesByID, handleFocus, recursiveFactoryWorkloadRecalculation } from '../helperFunctions';
+import { getPricesByID, handleFocus, recursiveFactoryWorkloadRecalculation } from '../../helperFunctions';
 import { DebounceInput } from 'react-debounce-input';
 import { Table, Input } from 'rbx';
 import { IFactory } from '../../types/factory';
+import { setWorkload } from '../../actions/Factories';
 
 interface MineProps {
   factories: IFactory[];
@@ -47,7 +48,9 @@ export const Mine = memo(
         adjustProductionRequirementsToGivenAmount(factoryID, resourceID, miningRate);
       });
 
-      recursiveFactoryWorkloadRecalculation(factories, mine.dependantFactories);
+      return;
+
+      recursiveFactoryWorkloadRecalculation(factories, mine.dependantFactories, setWorkload);
     };
 
     const updateMineCount = (e: ChangeEvent<HTMLInputElement>) => {

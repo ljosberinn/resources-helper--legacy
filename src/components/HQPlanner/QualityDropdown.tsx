@@ -12,7 +12,7 @@ export const QualityDropdown = ({ handleOnClick }: QualityDropdownProps) => (
     <Dropdown.Menu>
       <Dropdown.Content>
         {QUALITY_THRESHOLDS.map((quality, index) => (
-          <Dropdown.Item key={index} onClick={e => handleOnClick(e, quality / 100)}>
+          <Dropdown.Item key={index} onClick={(e: MouseEvent<Element>) => handleOnClick(e, quality / 100)}>
             {quality}%
           </Dropdown.Item>
         ))}

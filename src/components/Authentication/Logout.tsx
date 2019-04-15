@@ -32,4 +32,5 @@ const preconnect = connect(
   mapDispatchToProps,
 );
 
-export const Logout = withRouter(preconnect(ConnectedLogout));
+const Logout = withRouter(preconnect(ConnectedLogout));
+export default Logout;

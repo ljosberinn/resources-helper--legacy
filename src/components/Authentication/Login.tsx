@@ -100,4 +100,6 @@ const preconnect = connect(
   mapDispatchToProps,
 );
 
-export const Login = withRouter(preconnect(ConnectedLogin));
+const Login = withRouter(preconnect(ConnectedLogin));
+
+export default Login;

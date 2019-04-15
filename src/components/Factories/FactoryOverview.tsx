@@ -11,7 +11,7 @@ import {
   adjustProductionRequirementsToGivenAmount,
 } from '../../actions/Factories';
 import { IMarketPriceState } from '../../types/marketPrices';
-import { getPricesByID } from '../helperFunctions';
+import { getPricesByID } from '../../helperFunctions';
 import { store } from '../..';
 import { ProducedQuantity } from './ProducedQuantity';
 import { Workload } from './Workload';

@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="066808a2-98af-4c61-aca7-8ec5da128a5e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="066808a2-98af-4c61-aca7-8ec5da128a5e" name="Default Changelist" comment="fixed re-render of HQPlannerCells&#10;moved HelperFunctions&#10;implemented code-splitting via react-loadable">
+      <change afterPath="$PROJECT_DIR$/src/components/placeholderComponent.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/dependencies/classes/Factories.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/dependencies/classes/Factories.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/actions/Factories/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/Factories/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Authentication/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Authentication/Login.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Authentication/Logout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Authentication/Logout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Authentication/Registration.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Authentication/Registration.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Factories/FactoryOverview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Factories/FactoryOverview.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Factories/FactoryTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Factories/FactoryTable.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Factories/Level.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Factories/Level.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Factories/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Factories/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/HQPlanner/Cell.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HQPlanner/Cell.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/HQPlanner/MineTypeDropdown.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HQPlanner/MineTypeDropdown.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/HQPlanner/QualityDropdown.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HQPlanner/QualityDropdown.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/HQPlanner/index.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HQPlanner/index.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/HQPlanner/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HQPlanner/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Mines/Mine.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Mines/Mine.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Mines/MineTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Mines/MineTable.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Mines/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Mines/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Navigation/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Navigation/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Routes.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Routes.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/helperFunctions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/helperFunctions.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reducers/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/reducers/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/factory.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/factory.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constants/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/constants/index.tsx" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/node_modules/" />
     <ignored path="$PROJECT_DIR$/vendor/composer/" />
@@ -100,18 +102,6 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/dependencies/classes/Login.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1160">
-              <caret line="70" column="71" selection-start-line="70" selection-start-column="71" selection-end-line="70" selection-end-column="71" />
-              <folding>
-                <element signature="n#isRegisteredUser#0;n#Login#0;n#!!top" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/dependencies/classes/UserFactories.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="860">
@@ -129,11 +119,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/api/game/cache/1.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="188">
-              <caret line="69" column="17" selection-start-line="69" selection-start-column="13" selection-end-line="69" selection-end-column="17" />
+            <state relative-caret-position="388">
+              <caret line="79" column="3" selection-start-line="79" selection-start-column="3" selection-end-line="79" selection-end-column="3" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/package.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="220">
+              <caret line="11" column="27" lean-forward="true" selection-start-line="11" selection-start-column="27" selection-end-line="11" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -268,6 +267,7 @@
         <option value="$PROJECT_DIR$/public/dependencies/classes/Factory.php" />
         <option value="$PROJECT_DIR$/public/dependencies/classes/Factories.php" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/package.json" />
       </list>
     </option>
   </component>
@@ -528,7 +528,42 @@
       <option name="project" value="LOCAL" />
       <updated>1554761018667</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="npm updates, added node-sass">
+      <created>1555286398569</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1555286398569</updated>
+    </task>
+    <task id="LOCAL-00019" summary="updated gitignore">
+      <created>1555286430293</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1555286430293</updated>
+    </task>
+    <task id="LOCAL-00020" summary="added preliminary workload state management">
+      <created>1555286520863</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1555286520863</updated>
+    </task>
+    <task id="LOCAL-00021" summary="added HQPlanner start">
+      <created>1555286549023</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1555286549023</updated>
+    </task>
+    <task id="LOCAL-00022" summary="added react-loadable for another try&#10;regression to TS3.3.4 due to grave performance issues with 3.4 and hot reloading">
+      <created>1555366311160</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1555366311160</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -536,14 +571,14 @@
     <editor active="true" />
     <layout>
       <window_info id="Favorites" order="0" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.1056" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.1056" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="TypeScript" order="0" weight="0.32896176" />
       <window_info anchor="bottom" id="Docker" order="1" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="2" weight="0.32896176" />
-      <window_info anchor="bottom" id="Version Control" order="3" sideWeight="0.49937266" visible="true" weight="0.29289618" />
+      <window_info anchor="bottom" id="Version Control" order="3" sideWeight="0.49749058" visible="true" weight="0.2863388" />
       <window_info anchor="bottom" id="Terminal" order="4" sideWeight="0.49964464" weight="0.5136612" />
-      <window_info active="true" anchor="bottom" id="Event Log" order="5" sideWeight="0.50062734" side_tool="true" visible="true" weight="0.29289618" />
+      <window_info anchor="bottom" id="Event Log" order="5" sideWeight="0.5025094" side_tool="true" visible="true" weight="0.2863388" />
       <window_info anchor="bottom" id="Message" order="6" />
       <window_info anchor="bottom" id="Find" order="7" />
       <window_info anchor="bottom" id="Run" order="8" weight="0.32896176" />
@@ -628,7 +663,12 @@
     <MESSAGE value="inner composer updates (sentry, tracy)" />
     <MESSAGE value="more types&#10;most columns for mines preliminarily done" />
     <MESSAGE value="npm updates (redux 7, ts, sentry)" />
-    <option name="LAST_COMMIT_MESSAGE" value="npm updates (redux 7, ts, sentry)" />
+    <MESSAGE value="npm updates, added node-sass" />
+    <MESSAGE value="updated gitignore" />
+    <MESSAGE value="added preliminary workload state management" />
+    <MESSAGE value="added HQPlanner start" />
+    <MESSAGE value="added react-loadable for another try&#10;regression to TS3.3.4 due to grave performance issues with 3.4 and hot reloading" />
+    <option name="LAST_COMMIT_MESSAGE" value="added react-loadable for another try&#10;regression to TS3.3.4 due to grave performance issues with 3.4 and hot reloading" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/public/static/specialBuildings/86.php" />
@@ -701,11 +741,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/api/cron.marketPrices.php">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-72" />
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/_boot.php">
       <provider selected="true" editor-type-id="text-editor" />
@@ -841,8 +876,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/api/game/cache/1.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="69" column="17" selection-start-line="69" selection-start-column="13" selection-end-line="69" selection-end-column="17" />
+        <state relative-caret-position="388">
+          <caret line="79" column="3" selection-start-line="79" selection-start-column="3" selection-end-line="79" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="11" column="27" lean-forward="true" selection-start-line="11" selection-start-column="27" selection-end-line="11" selection-end-column="27" />
         </state>
       </provider>
     </entry>

@@ -3,7 +3,7 @@ import React, { useState, ChangeEvent, Fragment } from 'react';
 import { store } from '../..';
 import { Cell } from './Cell';
 import { useAsyncEffect } from '../Hooks';
-import { getStaticData, evaluateLoadingAnimationTimeout, getElapsedLoadingTime } from '../helperFunctions';
+import { getStaticData, evaluateLoadingAnimationTimeout, getElapsedLoadingTime } from '../../helperFunctions';
 import { IMarketPriceState } from '../../types/marketPrices';
 import { IMineState } from '../../types/mines';
 import { Loading } from '../Shared/Loading';
@@ -12,12 +12,12 @@ import { setPrices } from '../../actions/MarketPrices';
 import { setMines } from '../../actions/Mines';
 import { connect } from 'react-redux';
 import { DebounceInput } from 'react-debounce-input';
-import { handleFocus } from '../helperFunctions';
+import { handleFocus } from '../../helperFunctions';
 import './index.scss';
 
 interface PropsFromState {
-  hasError: boolean;
-  errorType: string;
+  hasError?: boolean;
+  errorType?: string;
   mines: IMineState[];
   marketPrices: IMarketPriceState[];
 }
@@ -39,7 +39,7 @@ type HQPlannerProps = PropsFromState & PropsFromDispatch;
 const getHQLevelBoostFactor = (hqLevel: number) => 1 + hqLevel * 0.9;
 
 const getResourcesIncome = (resources: HQPlannerObj[], hqLevel: number) =>
-  Math.round(resources.reduce((sum, resource) => sum + resource.worth, 0) * getHQLevelBoostFactor(hqLevel));
+  Math.round(resources.reduce((sum, resource) => sum + resource.worth, 0) * getHQLevelBoostFactor(hqLevel) * 5.05);
 
 const getAverageResourceQuality = (resources: HQPlannerObj[]) => {
   const average = resources.reduce((sum, resource) => sum + resource.quality, 0) / resources.length;
@@ -47,37 +47,45 @@ const getAverageResourceQuality = (resources: HQPlannerObj[]) => {
   return Number.isNaN(average) ? 0 : average * 100;
 };
 
+export interface ReduceResourcesParams {
+  hqPlannerObj: HQPlannerObj;
+  resources: HQPlannerObj[];
+  setResources: React.Dispatch<React.SetStateAction<HQPlannerObj[]>>;
+}
+
+const reduceResources = ({ hqPlannerObj, resources, setResources }: ReduceResourcesParams) => {
+  const { id, resourceID, quality, worth } = hqPlannerObj;
+
+  if (resources.find(resource => resource.id === id)) {
+    setResources(
+      resources.map(dataset => {
+        if (dataset.id !== id) {
+          return dataset;
+        }
+
+        return {
+          ...dataset,
+          resourceID,
+          quality,
+          worth,
+        };
+      }),
+    );
+    return;
+  }
+
+  setResources([...resources, { id, resourceID, quality, worth }]);
+};
+
 export const ConnectedHQPlanner = (props: HQPlannerProps) => {
   const { marketPrices, mines } = store.getState();
 
   const [hasError, setError] = useState(false);
-  const [errorType, setErrorType] = useState(null);
+  const [errorType, setErrorType] = useState<null | string>(null);
   const [isLoading, setIsLoading] = useState(mines.length === 0 || marketPrices.length === 0);
   const [gridSize, setGridSize] = useState(17);
   const [hqLevel, setHQLevel] = useState(1);
   const [resources, setResources] = useState<HQPlannerObj[]>([]);
-
-  const reduceResources = ({ id, resourceID, quality, worth }: HQPlannerObj) => {
-    if (resources.find(resource => resource.id === id)) {
-      setResources(
-        resources.map(dataset => {
-          if (dataset.id !== id) {
-            return dataset;
-          }
-
-          return {
-            ...dataset,
-            resourceID,
-            quality,
-            worth,
-          };
-        }),
-      );
-      return;
-    }
-
-    setResources([...resources, { id, resourceID, quality, worth }]);
-  };
 
   useAsyncEffect(async () => {
     if (!hasError && isLoading) {
@@ -168,9 +176,18 @@ export const ConnectedHQPlanner = (props: HQPlannerProps) => {
       <Box>
         {grid.map((_, row) => (
           <Column.Group className="hq-plan-grid" key={row}>
-            {grid.map((_, item) => (
-              <Cell {...{ id: parseInt(`${row}${item}`), reduceResources, marketPrices, mines }} key={item} />
-            ))}
+            {grid.map((_, item) => {
+              const cellProps = {
+                id: parseInt(`${row}${item}`),
+                resources,
+                marketPrices,
+                mines,
+                reduceResources,
+                setResources,
+              };
+
+              return <Cell {...cellProps} key={item} />;
+            })}
           </Column.Group>
         ))}
         <hr />
@@ -197,7 +214,9 @@ const preconnect = connect(
   mapDispatchToProps,
 );
 
-export const HQPlanner = preconnect(ConnectedHQPlanner);
+const HQPlanner = preconnect(ConnectedHQPlanner);
 ConnectedHQPlanner.displayName = 'ConnectedHQPlanner';
 //@ts-ignore
 ConnectedHQPlanner.whyDidYouRender = true;
+
+export default HQPlanner;

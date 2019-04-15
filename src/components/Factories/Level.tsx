@@ -8,7 +8,7 @@ import {
 import { IFactoryProductionRequirements, FactoryIDs, IFactory } from '../../types/factory';
 import { DebounceInput } from 'react-debounce-input';
 import { Input } from 'rbx';
-import { handleFocus, recursiveFactoryWorkloadRecalculation, getFactoryByID } from '../helperFunctions';
+import { handleFocus, recursiveFactoryWorkloadRecalculation, getFactoryByID } from '../../helperFunctions';
 import { getWorkload } from './FactoryOverview';
 
 interface ILevelProps {

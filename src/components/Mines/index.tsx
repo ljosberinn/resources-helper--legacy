@@ -4,7 +4,7 @@ import { store } from '../..';
 import { setMines } from '../../actions/Mines';
 import { IPreloadedState } from '../../types';
 import { IMineState } from '../../types/mines';
-import { evaluateLoadingAnimationTimeout, getStaticData, getElapsedLoadingTime } from '../helperFunctions';
+import { evaluateLoadingAnimationTimeout, getStaticData, getElapsedLoadingTime } from '../../helperFunctions';
 import { Loading } from '../Shared/Loading';
 import { MineTable } from './MineTable';
 import { setPrices } from '../../actions/MarketPrices';
@@ -14,8 +14,8 @@ import { setFactories } from '../../actions/Factories';
 import { IFactory } from '../../types/factory';
 
 interface PropsFromState {
-  hasError: boolean;
-  errorType: string;
+  hasError?: boolean;
+  errorType?: string;
   mines: IMineState[];
 }
 
@@ -31,7 +31,7 @@ const ConnectedMines = memo((props: MinesProps) => {
   const { mines, factories, marketPrices } = store.getState();
 
   const [hasError, setError] = useState(false);
-  const [errorType, setErrorType] = useState(null);
+  const [errorType, setErrorType] = useState<null | string>(null);
   const [isLoading, setIsLoading] = useState(mines.length === 0 || marketPrices.length === 0 || factories.length === 0);
 
   useAsyncEffect(async () => {
@@ -79,5 +79,6 @@ const preconnect = connect(
   mapDispatchToProps,
 );
 
-export const Mines = preconnect(ConnectedMines);
+const Mines = preconnect(ConnectedMines);
+export default Mines;
 ConnectedMines.displayName = 'ConnectedMines';

@@ -1,4 +1,6 @@
 import { IPreloadedState } from '../types';
+import { FactoryIDs } from '../types/factory';
+import { ResourceIDs } from '../types/mines';
 
 export const preloadedState: IPreloadedState = {
   version: '4.0.0',
@@ -47,3 +49,32 @@ export const preloadedState: IPreloadedState = {
     warehouses: 0,
   },
 };
+
+export const FACTORY_CALCULATION_ORDER: FactoryIDs[] = [
+  6,
+  23,
+  25,
+  31,
+  33,
+  34,
+  37,
+  39,
+  52,
+  63,
+  80,
+  91,
+  // secondary order, relying on mines and products
+  29,
+  61,
+  68,
+  69,
+  85,
+  // tertiary order, relying on products of other factories
+  76,
+  95,
+  101,
+  118,
+  125,
+];
+
+export const MINE_ORDER: ResourceIDs[] = [2, 20, 3, 13, 8, 10, 53, 26, 12, 90, 49, 15, 14, 81];

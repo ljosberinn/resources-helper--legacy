@@ -1,10 +1,10 @@
-import React, { useState, memo } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { store } from '../..';
 import { setFactories } from '../../actions/Factories';
 import { setPrices } from '../../actions/MarketPrices';
 import { IPreloadedState } from '../../types';
-import { evaluateLoadingAnimationTimeout, getStaticData, getElapsedLoadingTime } from '../helperFunctions';
+import { evaluateLoadingAnimationTimeout, getStaticData, getElapsedLoadingTime } from '../../helperFunctions';
 import { Loading } from '../Shared/Loading';
 import { FactoryTable } from './FactoryTable';
 import { IFactory } from '../../types/factory';
@@ -14,8 +14,8 @@ import { IMineState } from '../../types/mines';
 import { useAsyncEffect } from '../Hooks';
 
 interface PropsFromState {
-  hasError: boolean;
-  errorType: string;
+  hasError?: boolean;
+  errorType?: string;
   factories: IFactory[];
   mines: IMineState[];
   marketPrices: IMarketPriceState[];
@@ -29,11 +29,11 @@ interface PropsFromDispatch {
 
 type FactoriesProps = PropsFromState & PropsFromDispatch;
 
-const ConnectedFactory = memo((props: FactoriesProps) => {
+const ConnectedFactory = (props: FactoriesProps) => {
   const { marketPrices, factories, mines } = store.getState();
 
   const [hasError, setError] = useState(false);
-  const [errorType, setErrorType] = useState(null);
+  const [errorType, setErrorType] = useState<null | string>(null);
   const [isLoading, setIsLoading] = useState(marketPrices.length === 0 || factories.length === 0 || mines.length === 0);
 
   useAsyncEffect(async () => {
@@ -66,7 +66,7 @@ const ConnectedFactory = memo((props: FactoriesProps) => {
   }
 
   return <FactoryTable />;
-});
+};
 
 const mapStateToProps = (state: IPreloadedState) => ({
   factories: state.factories,
@@ -85,7 +85,8 @@ const preconnect = connect(
   mapDispatchToProps,
 );
 
-export const Factories = preconnect(ConnectedFactory);
+const Factories = preconnect(ConnectedFactory);
+export default Factories;
 ConnectedFactory.displayName = 'ConnectedFactory';
 //@ts-ignore
 ConnectedFactory.whyDidYouRender = true;

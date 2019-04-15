@@ -1,23 +1,53 @@
 import React, { Fragment } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { Factories } from './Factories';
-import { Login } from './Authentication/Login';
-import { Logout } from './Authentication/Logout';
 import { IPreloadedState } from '../types';
-import { Registration } from './Authentication/Registration';
-import { Mines } from './Mines';
-import { HQPlanner } from './HQPlanner';
+import Loadable, { LoadingComponentProps } from 'react-loadable';
+import { Loading } from './Shared/Loading';
 
-const devComponent = () => <div>coming soon</div>;
+const LoadInterceptor = (props: LoadingComponentProps) => {
+  if (props.error) {
+    return (
+      <div>
+        Error! <button onClick={props.retry}>Retry</button>
+      </div>
+    );
+  }
 
-interface IRoutesProps {
-  state: IPreloadedState;
-}
+  if (props.timedOut) {
+    return (
+      <div>
+        Taking a long time... <button onClick={props.retry}>Retry</button>
+      </div>
+    );
+  }
+
+  if (props.pastDelay) {
+    return <Loading />;
+  }
+
+  return null;
+};
+
+const LoadingFactory = (component: Promise<React.ComponentType | { default: React.ComponentType }>) =>
+  Loadable({
+    loader: () => component,
+    loading: LoadInterceptor,
+    timeout: 10000,
+    delay: 300,
+  });
+
+const Factories = LoadingFactory(import('./Factories'));
+const Mines = LoadingFactory(import('./Mines'));
+const Login = LoadingFactory(import('./Authentication/Login'));
+const Logout = LoadingFactory(import('./Authentication/Logout'));
+const Registration = LoadingFactory(import('./Authentication/Registration'));
+const HQPlanner = LoadingFactory(import('./HQPlanner'));
+const PlaceholderComponent = LoadingFactory(import('./placeholderComponent'));
 
 const routes = [
   {
     path: '/',
-    component: devComponent,
+    component: PlaceholderComponent,
     requiresAuth: false,
   },
   {
@@ -50,18 +80,25 @@ const routes = [
     component: HQPlanner,
     requiresAuth: false,
   },
+  ,
 ];
+
+interface IRoutesProps {
+  state: IPreloadedState;
+}
 
 export const Routes = ({ state }: IRoutesProps) => (
   <Fragment>
     <main>
       <Switch>
         {routes.map((route, index) => {
+          //@ts-ignore
           if (!state.user.isAuthenticated && route.requiresAuth) {
             return null;
           }
 
-          return <Route path={route.path} component={route.component} exact={true} key={index} />;
+          //@ts-ignore
+          return <Route path={route.path} component={route.component} exact={true} key={index} onMouseOver={route.component.preload()} />;
         })}
       </Switch>
     </main>

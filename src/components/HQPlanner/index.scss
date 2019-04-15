@@ -11,7 +11,7 @@
 }
 
 
-.hq-plan-cell {
+.hq-planner-cell {
   height: 1.75rem;
   width: 1.75rem;
   cursor: pointer;
@@ -22,60 +22,64 @@
   flex-basis: unset !important;
   margin-right: 1px;
 
+  &[class^="mine-"]::before {
+      background-image: url('https://resources-helper.de/assets/img/sprite.png');
+  }
+
   &.mine-2::before {
-      background-image: url('https://resources-helper.de/assets/img/sprite.png')
+
   }
 
   &.mine-3::before {
-      background-image: url('https://resources-helper.de/assets/img/sprite.png')
+
   }
 
   &.mine-8::before {
-      background-image: url('https://resources-helper.de/assets/img/sprite.png')
+
   }
 
   &.mine-10::before {
-      background-image: url('https://resources-helper.de/assets/img/sprite.png')
+
   }
 
   &.mine-12::before {
-      background-image: url('https://resources-helper.de/assets/img/sprite.png')
+
   }
 
   &.mine-13::before {
-      background-image: url('https://resources-helper.de/assets/img/sprite.png')
+
   }
 
   &.mine-14::before {
-      background-image: url('https://resources-helper.de/assets/img/sprite.png')
+
   }
 
   &.mine-15::before {
-      background-image: url('https://resources-helper.de/assets/img/sprite.png')
+
   }
 
   &.mine-20::before {
-      background-image: url('https://resources-helper.de/assets/img/sprite.png')
+
   }
 
   &.mine-26::before {
-      background-image: url('https://resources-helper.de/assets/img/sprite.png')
+
   }
 
   &.mine-49::before {
-      background-image: url('https://resources-helper.de/assets/img/sprite.png')
+
   }
 
   &.mine-53::before {
-      background-image: url('https://resources-helper.de/assets/img/sprite.png')
+
   }
 
   &.mine-81::before {
-      background-image: url('https://resources-helper.de/assets/img/sprite.png')
+
   }
 
   &.mine-90::before {
-      background-image: url('https://resources-helper.de/assets/img/sprite.png')
+
   }
 
   &::before {

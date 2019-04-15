@@ -1,10 +1,8 @@
-import React, { memo } from 'react';
+import React, { memo, Fragment } from 'react';
 import { Link } from 'react-router-dom';
+import { Navbar, Button } from 'rbx';
 
 const navElements = [
-  { displayName: 'Login', href: 'login', requiresGuest: true, requiresLogin: false },
-  { displayName: 'Registration', href: 'register', requiresGuest: true, requiresLogin: false },
-
   { displayName: 'Dashboard', href: 'dashboard', requiresGuest: false, requiresLogin: false },
   { displayName: 'API', href: 'api', requiresGuest: false, requiresLogin: false },
 
@@ -16,8 +14,6 @@ const navElements = [
   { displayName: 'Recycling', href: 'recycling', requiresGuest: false, requiresLogin: false },
   { displayName: 'Units', href: 'units', requiresGuest: false, requiresLogin: false },
   { displayName: 'HQ Planner', href: 'hqplanner', requiresGuest: false, requiresLogin: false },
-
-  { displayName: 'Logout', href: 'logout', requiresGuest: false, requiresLogin: true },
 ];
 
 interface INavigationProps {
@@ -25,21 +21,44 @@ interface INavigationProps {
 }
 
 export const Navigation = memo(({ isAuthenticated }: INavigationProps) => (
-  <nav>
-    <ul>
-      {Object.entries(navElements).map(([key, { displayName, href, requiresGuest, requiresLogin }]) => {
-        const invisible = (isAuthenticated && requiresGuest) || (!isAuthenticated && requiresLogin);
+  <Navbar>
+    <Navbar.Burger />
+    <Navbar.Menu>
+      <Navbar.Segment align="start">
+        {Object.entries(navElements).map(([key, { displayName, href, requiresGuest, requiresLogin }]) => {
+          const invisible = (isAuthenticated && requiresGuest) || (!isAuthenticated && requiresLogin);
 
-        if (invisible) {
-          return null;
-        }
+          if (invisible) {
+            return null;
+          }
 
-        return (
-          <li key={key}>
-            <Link to={`/${href}`}>{displayName}</Link>
-          </li>
-        );
-      })}
-    </ul>
-  </nav>
+          return (
+            <Navbar.Item key={key} as={Link} to={`/${href}`}>
+              {displayName}
+            </Navbar.Item>
+          );
+        })}
+      </Navbar.Segment>
+
+      <Navbar.Segment align="end">
+        {!isAuthenticated && (
+          <Fragment>
+            <Navbar.Item as={Link} to={'/register'}>
+              <Button color="primary">
+                <strong>Register</strong>
+              </Button>
+            </Navbar.Item>
+            <Navbar.Item as={Link} to={'/login'}>
+              <Button color="success">Login</Button>
+            </Navbar.Item>
+          </Fragment>
+        )}
+        {isAuthenticated && (
+          <Navbar.Item as={Link} to={'/logout'}>
+            <Button color="warning">Logout</Button>
+          </Navbar.Item>
+        )}
+      </Navbar.Segment>
+    </Navbar.Menu>
+  </Navbar>
 ));

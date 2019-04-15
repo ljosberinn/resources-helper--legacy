@@ -12,7 +12,7 @@ export const MineTypeDropdown = ({ mines, handleOnClick }: MineTypeDropdownProps
     <Dropdown.Menu>
       <Dropdown.Content>
         {mines.map((mine, index) => (
-          <Dropdown.Item key={index} onClick={e => handleOnClick(e, mine.resourceID)}>
+          <Dropdown.Item key={index} onClick={(e:MouseEvent<Element>) => handleOnClick(e, mine.resourceID)}>
             {mine.resourceID}
           </Dropdown.Item>
         ))}

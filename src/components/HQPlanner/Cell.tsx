@@ -4,16 +4,18 @@ import { IMineState } from '../../types/mines';
 import { MineTypeDropdown } from './MineTypeDropdown';
 import { QualityDropdown } from './QualityDropdown';
 import { IMarketPriceState } from '../../types/marketPrices';
-import { HQPlannerObj } from '.';
+import { HQPlannerObj, ReduceResourcesParams } from '.';
 
 interface CellProps {
   id: number;
   mines: IMineState[];
   marketPrices: IMarketPriceState[];
-  reduceResources: ({ id, resourceID, quality, worth }: HQPlannerObj) => void;
+  reduceResources: ({ hqPlannerObj, resources, setResources }: ReduceResourcesParams) => void;
+  setResources: React.Dispatch<React.SetStateAction<HQPlannerObj[]>>;
+  resources: HQPlannerObj[];
 }
 
-export const Cell = memo(({ id, marketPrices, mines, reduceResources }: CellProps) => {
+export const Cell = memo(({ id, marketPrices, mines, reduceResources, setResources, resources }: CellProps) => {
   const [hasMineTypeDropdownActive, setMineTypeDropdownActive] = useState(false);
   const [hasQualityDropdownActive, setQualityDropdownActive] = useState(false);
 
@@ -51,10 +53,14 @@ export const Cell = memo(({ id, marketPrices, mines, reduceResources }: CellProp
     const { ai, player } = marketPrices.find(price => price.id === resourceID) as IMarketPriceState;
 
     reduceResources({
-      id,
-      resourceID: resourceID as number,
-      quality,
-      worth: (maxHourlyRate as number) * quality * (player > 0 ? player : ai),
+      hqPlannerObj: {
+        id,
+        resourceID: resourceID as number,
+        quality,
+        worth: Math.round((maxHourlyRate as number) * quality * (player > 0 ? player : ai)),
+      },
+      resources,
+      setResources,
     });
 
     setQualityDropdownActive(false);
@@ -62,7 +68,7 @@ export const Cell = memo(({ id, marketPrices, mines, reduceResources }: CellProp
 
   return (
     <Column
-      className={`hq-plan-cell ${resourceID !== null ? `mine-${resourceID}` : ''}`}
+      className={`hq-planner-cell ${resourceID !== null ? `mine-${resourceID}` : ''}`}
       onClick={handleOnClick}
       style={quality < 1 ? { '--opacity': quality } : {}}
     >
@@ -71,3 +77,7 @@ export const Cell = memo(({ id, marketPrices, mines, reduceResources }: CellProp
     </Column>
   );
 });
+
+Cell.displayName = 'Cell';
+//@ts-ignore
+Cell.whyDidYouRender = true;

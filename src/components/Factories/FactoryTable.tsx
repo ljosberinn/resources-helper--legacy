@@ -8,12 +8,13 @@ import {
   adjustProductionRequirementsToGivenAmount,
   setWorkload,
 } from '../../actions/Factories';
-import { getFactoryUpgradeSum, calculationOrder, getFactoryByID } from '../helperFunctions';
+import { getFactoryUpgradeSum, getFactoryByID } from '../../helperFunctions';
 import { FactoryOverview } from './FactoryOverview';
 import { FactoryDetails } from './FactoryDetails';
 import { IMarketPriceState } from '../../types/marketPrices';
 import { Table } from 'rbx';
 import { FactoryHeading } from './FactoryHeading';
+import { FACTORY_CALCULATION_ORDER } from '../../constants';
 
 interface PropsFromState {
   factories: IFactory[];
@@ -41,7 +42,7 @@ export const ConnectedFactoryTable = ({
   <Table hoverable narrow striped fullwidth bordered>
     <FactoryHeading />
     <tbody>
-      {calculationOrder.map(factoryID => {
+      {FACTORY_CALCULATION_ORDER.map(factoryID => {
         const factory = getFactoryByID(factories, factoryID);
 
         return (
