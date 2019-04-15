@@ -1,19 +1,19 @@
-import { FactoryIDs, ProductIDs } from './../types/factory';
+import { FactoryIDs, ProductIDs } from './types/factory';
 import { Dispatch, SetStateAction, FocusEvent } from 'react';
-import { DEV_SETTINGS } from '../developmentSettings';
-import { IFactory } from '../types/factory';
-import { IMineState, ResourceIDs } from '../types/mines';
-import { IMarketPriceState } from '../types/marketPrices';
-import { store } from '..';
-import { getWorkload } from './Factories/FactoryOverview';
-import { setWorkload } from './../actions/Factories/';
+import { DEV_SETTINGS } from './developmentSettings';
+import { IFactory } from './types/factory';
+import { IMineState, ResourceIDs } from './types/mines';
+import { IMarketPriceState } from './types/marketPrices';
+import { store } from '.';
+import { getWorkload } from './components/Factories/FactoryOverview';
+import { setWorkload } from './actions/Factories';
 
 const uri = DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development;
 
 export const getStaticData = async (
   component: string,
   setError: Dispatch<SetStateAction<boolean>>,
-  setErrorType: Dispatch<SetStateAction<null>>,
+  setErrorType: Dispatch<SetStateAction<null | string>>,
 ) => {
   const currentStore = store.getState();
   // @ts-ignore
@@ -27,8 +27,8 @@ export const getStaticData = async (
 
 export const abortableAsyncFetch = async (
   url: string,
-  setError: Dispatch<SetStateAction<boolean>> | null = null,
-  setErrorType: Dispatch<SetStateAction<null>> | null = null,
+  setError: Dispatch<SetStateAction<boolean>> | null,
+  setErrorType: Dispatch<SetStateAction<null | string>> | null,
 ) => {
   try {
     const controller = new AbortController();
@@ -65,35 +65,6 @@ export const getElapsedLoadingTime = (start: number) => new Date().getTime() - s
 // or resolve it after LOADING_THRESHOLD - timePassed
 export const evaluateLoadingAnimationTimeout = (timePassed: number, LOADING_THRESHOLD: number = 750) =>
   timePassed > LOADING_THRESHOLD ? 5 : LOADING_THRESHOLD - timePassed;
-
-export const calculationOrder: FactoryIDs[] = [
-  6,
-  23,
-  25,
-  31,
-  33,
-  34,
-  37,
-  39,
-  52,
-  63,
-  80,
-  91,
-  // secondary order, relying on mines and products
-  29,
-  61,
-  68,
-  69,
-  85,
-  // tertiary order, relying on products of other factories
-  76,
-  95,
-  101,
-  118,
-  125,
-];
-
-export const mineOrder: ResourceIDs[] = [2, 20, 3, 13, 8, 10, 53, 26, 12, 90, 49, 15, 14, 81];
 
 export const getMineByID = (mines: IMineState[], id: ResourceIDs) => mines.find(mine => mine.resourceID === id) as IMineState;
 
