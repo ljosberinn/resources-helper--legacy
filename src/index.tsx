@@ -9,7 +9,6 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Loading } from './components/Shared/Loading';
 import { ConnectedRouter } from 'connected-react-router';
-
 import 'rbx/index.css';
 
 if (process.env.NODE_ENV !== 'production') {

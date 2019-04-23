@@ -37,7 +37,6 @@ const LoadingFactory = (component: Promise<React.ComponentType | { default: Reac
   });
 
 const Factories = LoadingFactory(import('./Factories'));
-const Mines = LoadingFactory(import('./Mines'));
 const Login = LoadingFactory(import('./Authentication/Login'));
 const Logout = LoadingFactory(import('./Authentication/Logout'));
 const Registration = LoadingFactory(import('./Authentication/Registration'));
@@ -53,11 +52,6 @@ const routes = [
   {
     path: '/factories',
     component: Factories,
-    requiresAuth: false,
-  },
-  {
-    path: '/mines',
-    component: Mines,
     requiresAuth: false,
   },
   {

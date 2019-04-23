@@ -1,28 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="066808a2-98af-4c61-aca7-8ec5da128a5e" name="Default Changelist" comment="fixed re-render of HQPlannerCells&#10;moved HelperFunctions&#10;implemented code-splitting via react-loadable">
-      <change afterPath="$PROJECT_DIR$/src/components/placeholderComponent.tsx" afterDir="false" />
+    <list default="true" id="066808a2-98af-4c61-aca7-8ec5da128a5e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Authentication/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Authentication/Login.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Authentication/Logout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Authentication/Logout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Authentication/Registration.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Authentication/Registration.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Factories/FactoryOverview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Factories/FactoryOverview.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Factories/FactoryTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Factories/FactoryTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Factories/Level.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Factories/Level.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Factories/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Factories/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/HQPlanner/Cell.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HQPlanner/Cell.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/HQPlanner/MineTypeDropdown.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HQPlanner/MineTypeDropdown.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/HQPlanner/QualityDropdown.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HQPlanner/QualityDropdown.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/HQPlanner/index.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HQPlanner/index.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/HQPlanner/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HQPlanner/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Mines/Mine.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Mines/Mine.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Mines/MineTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Mines/MineTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Mines/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Mines/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Navigation/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Navigation/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Routes.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Routes.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constants/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/constants/index.tsx" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/node_modules/" />
     <ignored path="$PROJECT_DIR$/vendor/composer/" />
@@ -563,7 +543,14 @@
       <option name="project" value="LOCAL" />
       <updated>1555366311160</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="fixed re-render of HQPlannerCells&#10;moved HelperFunctions&#10;implemented code-splitting via react-loadable">
+      <created>1555366386939</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1555366386939</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -643,7 +630,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="moving TradeLog to JSONParser" />
     <MESSAGE value="inner composer updates" />
     <MESSAGE value="outer composer updates" />
     <MESSAGE value="added legacyImport to transfer old marketPrices in time" />
@@ -668,7 +654,8 @@
     <MESSAGE value="added preliminary workload state management" />
     <MESSAGE value="added HQPlanner start" />
     <MESSAGE value="added react-loadable for another try&#10;regression to TS3.3.4 due to grave performance issues with 3.4 and hot reloading" />
-    <option name="LAST_COMMIT_MESSAGE" value="added react-loadable for another try&#10;regression to TS3.3.4 due to grave performance issues with 3.4 and hot reloading" />
+    <MESSAGE value="fixed re-render of HQPlannerCells&#10;moved HelperFunctions&#10;implemented code-splitting via react-loadable" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed re-render of HQPlannerCells&#10;moved HelperFunctions&#10;implemented code-splitting via react-loadable" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/public/static/specialBuildings/86.php" />
