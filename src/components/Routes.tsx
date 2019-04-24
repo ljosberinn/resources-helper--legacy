@@ -74,7 +74,6 @@ const routes = [
     component: HQPlanner,
     requiresAuth: false,
   },
-  ,
 ];
 
 interface IRoutesProps {

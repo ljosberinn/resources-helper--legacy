@@ -2,6 +2,9 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { regExp, htmlPattern } from './Shared';
 import { DEV_SETTINGS } from '../../developmentSettings';
 import { DebounceInput } from 'react-debounce-input';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { push } from 'connected-react-router';
+import { connect } from 'react-redux';
 
 const authenticationURL = `${DEV_SETTINGS.isLive ? DEV_SETTINGS.uri.live : DEV_SETTINGS.uri.development}/auth/register`;
 
@@ -15,7 +18,14 @@ interface RegistrationError {
   error: string;
 }
 
-const Registration = () => {
+interface PropsFromState extends RouteComponentProps {}
+interface PropsFromDispatch {
+  push: typeof push;
+} 
+
+type RegistrationType = PropsFromState & PropsFromDispatch;
+
+const ConnectedRegistration = (props:RegistrationType) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [hasError, setError] = useState(false);
@@ -61,7 +71,7 @@ const Registration = () => {
         setErrorText('');
       }
 
-      location.href = '/login';
+      props.history.push('/login');
       return;
     }
 
@@ -123,8 +133,19 @@ const Registration = () => {
   );
 };
 
-Registration.displayName = 'Registration';
+const mapDispatchToProps = {
+  push,
+}
+
+const preconnect = connect(
+  null,
+  mapDispatchToProps
+)
+
+ConnectedRegistration.displayName = 'Registration';
 //@ts-ignore
-Registration.whyDidYouRender = true;
+ConnectedRegistration.whyDidYouRender = true;
+
+const Registration = withRouter(preconnect(ConnectedRegistration));
 
 export default Registration;

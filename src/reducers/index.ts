@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 import { MarketPriceActions } from './../actions/MarketPrices/index';
 import { AuthenticationActions } from './../actions/Authentication/index';
 import { Reducer } from 'redux';

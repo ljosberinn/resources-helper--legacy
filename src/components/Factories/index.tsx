@@ -1,5 +1,5 @@
 import { Input, Table } from 'rbx';
-import React, { ChangeEvent, useMemo, useState, useCallback } from 'react';
+import React, { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { DebounceInput } from 'react-debounce-input';
 import { connect } from 'react-redux';
 import { store } from '../..';
@@ -51,65 +51,48 @@ interface PropsFromDispatch {
 type FactoriesProps = PropsFromState & PropsFromDispatch;
 
 const ConnectedFactory = (props: FactoriesProps) => {
+  const {
+    toggleFactoryDetailsVisibility,
+    adjustProductionRequirementsToGivenAmount,
+    setWorkload,
+    setLevel,
+    adjustProductionRequirementsToLevel,
+  } = props;
   const { marketPrices, factories, mines } = store.getState();
 
   const [hasError, setError] = useState(false);
   const [errorType, setErrorType] = useState<null | string>(null);
   const [isLoading, setIsLoading] = useState(marketPrices.length === 0 || factories.length === 0 || mines.length === 0);
 
-  useAsyncEffect(async () => {
-    if (!hasError && isLoading) {
-      const loadingStart = new Date().getTime();
+  const handleDetailsOnClick = useCallback((factoryID: FactoryIDs) => toggleFactoryDetailsVisibility(factoryID), [
+    toggleFactoryDetailsVisibility,
+  ]);
 
-      const prices = (await getStaticData('marketPrices', setError, setErrorType)) as IMarketPriceState[];
-      const factories = (await getStaticData('factories', setError, setErrorType)) as IFactory[];
-      const mines = (await getStaticData('mines', setError, setErrorType)) as IMineState[];
+  const handleLevelChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>, factory: IFactory) => {
+      const { level, productionRequirements, scaling, dependantFactories, id, productID } = factory;
 
-      setTimeout(() => {
-        props.setPrices(prices);
-        props.setFactories(factories);
-        props.setMines(mines);
-        setIsLoading(false);
-      }, evaluateLoadingAnimationTimeout(getElapsedLoadingTime(loadingStart)));
-    }
-  }, []);
+      const newLevel = parseInt(e.target.value);
 
-  if (hasError) {
-    if (errorType === 'AbortError') {
-      return <p>Server unavailable</p>;
-    }
+      if (Number.isNaN(newLevel) || level === newLevel) {
+        return;
+      }
 
-    return <p>Error</p>;
-  }
+      const newWorkload = getWorkload(factory);
+      const newGivenAmount = Math.round(scaling * newLevel * (newWorkload > 1 ? 1 : newWorkload));
 
-  if (isLoading) {
-    return <Loading />;
-  }
+      dependantFactories.forEach(dependantFactoryID => {
+        adjustProductionRequirementsToGivenAmount(dependantFactoryID, productID, newGivenAmount);
+      });
 
-  const handleDetailsOnClick = useCallback((factoryID: FactoryIDs) => props.toggleFactoryDetailsVisibility(factoryID), []);
+      setWorkload(id, newWorkload);
+      setLevel(newLevel, id);
+      adjustProductionRequirementsToLevel(id, scaleRequirements(productionRequirements, newLevel));
 
-  const handleLevelChange = useCallback((e: ChangeEvent<HTMLInputElement>, factory: IFactory) => {
-    const { level, productionRequirements, scaling, dependantFactories, id, productID } = factory;
-
-    const newLevel = parseInt(e.target.value);
-
-    if (Number.isNaN(newLevel) || level === newLevel) {
-      return;
-    }
-
-    const newWorkload = getWorkload(factory);
-    const newGivenAmount = Math.round(scaling * newLevel * (newWorkload > 1 ? 1 : newWorkload));
-
-    dependantFactories.forEach(dependantFactoryID => {
-      props.adjustProductionRequirementsToGivenAmount(dependantFactoryID, productID, newGivenAmount);
-    });
-
-    props.setWorkload(id, newWorkload);
-    props.setLevel(newLevel, id);
-    props.adjustProductionRequirementsToLevel(id, scaleRequirements(productionRequirements, newLevel));
-
-    recursiveFactoryWorkloadRecalculation(factories, dependantFactories, props.setWorkload);
-  }, []);
+      recursiveFactoryWorkloadRecalculation(factories, dependantFactories, setWorkload);
+    },
+    [factories, adjustProductionRequirementsToGivenAmount, setWorkload, setLevel, adjustProductionRequirementsToLevel],
+  );
 
   const Thead = useMemo(
     () => (
@@ -138,19 +121,22 @@ const ConnectedFactory = (props: FactoriesProps) => {
     [],
   );
 
-  const Tbody = FACTORY_CALCULATION_ORDER.map(factoryID => {
-    const factory = getFactoryByID(factories, factoryID);
+  const Tbody = useMemo(() => {
+    if (factories.length === 0) {
+      return null;
+    }
 
-    const { workload, level, productID, productionRequirements, scaling, hasDetailsVisible } = factory;
+    return FACTORY_CALCULATION_ORDER.map(factoryID => {
+      const factory = getFactoryByID(factories, factoryID);
+      const { workload, level, productID, productionRequirements, scaling, hasDetailsVisible } = factory;
 
-    const price = getPricesByID(marketPrices, productID);
-    const currentPrice = price.player > 0 ? price.player : price.ai;
+      const price = getPricesByID(marketPrices, productID);
+      const currentPrice = price.player > 0 ? price.player : price.ai;
 
-    const producedQuantity = getProducedQuantity(level, scaling);
-    const turnoverPerHour = getTurnoverPerHour(workload, producedQuantity, currentPrice);
+      const producedQuantity = getProducedQuantity(level, scaling);
+      const turnoverPerHour = getTurnoverPerHour(workload, producedQuantity, currentPrice);
 
-    return useMemo(
-      () => (
+      return (
         <tbody key={factoryID}>
           <tr>
             <td>ID {factoryID}</td>
@@ -192,10 +178,40 @@ const ConnectedFactory = (props: FactoriesProps) => {
             <td>Total Materials built with</td>
           </tr>
         </tbody>
-      ),
-      [factory],
-    );
-  });
+      );
+    });
+  }, [factories, handleDetailsOnClick, handleLevelChange, marketPrices]);
+
+  useAsyncEffect(async () => {
+    if (!hasError && isLoading) {
+      const loadingStart = new Date().getTime();
+
+      const prices = (await getStaticData('marketPrices', setError, setErrorType)) as IMarketPriceState[];
+      const factories = (await getStaticData('factories', setError, setErrorType)) as IFactory[];
+      const mines = (await getStaticData('mines', setError, setErrorType)) as IMineState[];
+
+      if ([prices, factories, mines].reduce((sum, arr) => sum + arr.length, 0) >= 3) {
+        setTimeout(() => {
+          props.setPrices(prices);
+          props.setFactories(factories);
+          props.setMines(mines);
+          setIsLoading(false);
+        }, evaluateLoadingAnimationTimeout(getElapsedLoadingTime(loadingStart)));
+      }
+    }
+  }, []);
+
+  if (hasError) {
+    if (errorType === 'AbortError') {
+      return <p>Server unavailable</p>;
+    }
+
+    return <p>Error</p>;
+  }
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <Table hoverable narrow striped fullwidth bordered>
