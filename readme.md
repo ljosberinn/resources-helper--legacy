@@ -1,141 +1,64 @@
-## Project Setup
+# Resources Helper
 
-`git clone https://github.com/ljosberinn/resources-helper/tree/rhelper4`
+your go-to calculator for Resources mobile GPS real-time economy simulation
 
-`cd rhelper4`
+# IMPORTANT
 
-`composer install && npm install && cd public && composer install && cd .. && cd composer run analysis && npm run start`
+For the remaining development of Resources Helper 4.0, the submodules are private. Expect this to change once v4.0 has been released.
 
-## Deployment
+# Frontend
 
-Run `npm run build` to deploy to `build`. Change `src/developmentSettings` => `isLive` to true and adjust paths.
+### Technologies:
 
-## Local development
+- bootstrapped via [create-react-app --typescript](https://github.com/facebook/create-react-app)
+- Hooks-only React 16.8
+- state management via [storeon](https://github.com/ai/storeon)
+- code-splitting via [react-loadable](https://github.com/jamiebuilds/react-loadable)
+- Bulma via [rbx](https://github.com/dfee/rbx)
+- SCSS
+- [Sentry](https://github.com/getsentry/sentry-javascript)
 
-Run whatever PHP you have locally under `localhost/rhelper4` or adjust `src/developmentSettings.ts` accordingly.
+### Editor plugins (VS Code):
 
-## Git Hooks
+- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+- [ES7 React/Redux/GraphQL/React-Native snippets](https://marketplace.visualstudio.com/items?itemName=dsznajder.es7-react-js-snippets)
 
-Pre-Commit
+# Backend
 
-`#!/bin/sh`
+### Technologies:
 
-`composer run analysis`
+- typed PHP 7.2 (upgrading once host enables next version)
+- MySQL via PDO
+- [Sentry](https://packagist.org/packages/sentry/sentry)
+- [dotenv](https://github.com/vlucas/phpdotenv)
+- [phpstan]()
 
-# Spec
+### Editor plugins (PHPStorm):
 
-### General
+- [CodeGlance](https://plugins.jetbrains.com/plugin/7275-codeglance)
+- [.env files Support](https://plugins.jetbrains.com/plugin/9525--env-files-support)
+- [GitToolbox](https://plugins.jetbrains.com/plugin/7499-gittoolbox)
+- [Rainbow Brackets](https://plugins.jetbrains.com/plugin/10080-rainbow-brackets)
 
-- better/easier internationalization (supporting at least JP | FR | EN | RU | CZ | DE | CN | SP)
-- better SEO via proper routing
-- ideally making [r.jakumo.org](http://r.jakumo.org) obsolete
-- reducing load time by at least 90%
-- _maybe_ CI via Jenkins
+# Deployment
 
-### API connection _/api_
+- tba
 
-- integration of all possible API queries as described on [the docs](https://resources-game.ch/resapi/)
-- fallbacks in case the API is not responding (UX/UI improvement)
+# How to clone this repository
 
-### Mines _/mines_
+```bash
+git clone https://github.com/ljosberinn/resources-helper
 
-- income per mine type
-- cost of new mines per type
-- ROI at 100% / 505% / 505% + HQ level
-- building habits per hour (graph) in comparison to everyone else
-- mine income progress (graph)
-- mine type distribution in comparison to mine income by type
+cd resources-helper
 
-### Factories _/factories_
+git submodule init
 
-- workload calculator
-- turnover
-- turnover increase per upgrade
-- upgrade cost
-- ROI
-- dependencies
-- output
-- factory upgrade progress (graph)
-- upgrade cost to level X
+git submodule update
+```
 
-### Giant Diamond Calculator _/gd_
+or
 
-- requirements
-- output
-- efficiency
-- profit
-
-### Material Flow _/flow_
-
-- distribution
-- surplus per hour per resource/product
-- actual income per hour
-
-### Warehouses _/wh_
-
-- content worth
-- calculator from level X to level Y
-- calculator from level X to contingency Y
-- current warehouse level worth
-
-### Special Buildings _/buildings_
-
-- requirements per building level
-- total building progress (graph)
-- requirements from level X to Y
-
-### Recycling _/recycling_
-
-- requirements, output, profit
-
-### Units _/units_
-
-- requirements, strength, profit
-
-### Tech-Upgrades _/tu_
-
-- remaining required Tech upgrades to highest possible boost
-- cheapest combinations (optionally including TU4)
-
-### Headquarter _/hq_
-
-- personal progress calculator
-- total headquarter progress (graph)
-- general requirements
-
-### Missions _/missions_
-
-- Goal, availability, duration, reward, profit, progress, penalty
-
-### Trade Log _/trade_
-
-- TBA
-
-### Attack Log _/attack_
-
-- TBA
-
-### Defense Log _/defense_
-
-- TBA
-
-### Maps _/maps_
-
-- personal mine map
-- global mine map, based on locally cached JSONs
-
-### Price History _/prices_
-
-- CSV, XML and JSON export of last 28|all days
-
-### Quality Comparator _/quality_
-
-- income comparison of scanned resource % to other resources
-
-### Leaderboard _/leaderboard_
-
-- TBA
-
-### Changelog _/changelog_
-
-### Discord _/discord_
+```bash
+git clone --recursive https://github.com/ljosberinn/resources-helper
+```
