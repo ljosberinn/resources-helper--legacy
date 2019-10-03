@@ -44,7 +44,7 @@
                     </td>
                 </tr>
 
-                <?php for ($i = 0; $i <= 13; $i += 1) { ?>
+                <?php for($i = 0; $i <= 13; ++$i) { ?>
                     <tr>
                         <td data-th="Minimum required quality" colspan="3" class="text-center">
                             <span class="resources-material-<?= $i ?>"></span>

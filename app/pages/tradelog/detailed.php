@@ -1,13 +1,13 @@
 <?php
 
-$textOrientation = "text-md-right text-sm-left";
+$textOrientation = 'text-md-right text-sm-left';
 
 $columns = [
-    "Trade partner" => "",
-    "Timestamp"     => $textOrientation,
-    "Amount"        => $textOrientation,
-    "Price"         => $textOrientation,
-    "Sum"           => $textOrientation,
+    'Trade partner' => '',
+    'Timestamp'     => $textOrientation,
+    'Amount'        => $textOrientation,
+    'Price'         => $textOrientation,
+    'Sum'           => $textOrientation,
 ];
 
 ?>
@@ -38,7 +38,7 @@ $columns = [
 
                 $i = 0;
 
-                foreach ($columns as $column => $classes) {
+                foreach($columns as $column => $classes) {
 
                     $class = empty($classes) ? $classes : 'class="' . $classes . '"';
 
@@ -46,7 +46,7 @@ $columns = [
                     <th id="tradelog-detail-th-<?= $i ?>" <?= $class ?>><?= $column ?></th>
                     <?php
 
-                    $i += 1;
+                    ++$i;
                 }
                 ?>
 

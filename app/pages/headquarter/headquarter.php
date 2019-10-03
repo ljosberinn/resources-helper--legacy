@@ -1,22 +1,22 @@
 <?php
 
 $columns = [
-    "Paid / required" => $textOrientation,
-    "Missing"         => $textOrientation,
-    "Cost"            => $textOrientation,
-    "Transportation"  => $textOrientation . " small text-danger",
+    'Paid / required' => $textOrientation,
+    'Missing'         => $textOrientation,
+    'Cost'            => $textOrientation,
+    'Transportation'  => $textOrientation . ' small text-danger',
 ];
 
-$textOrientation = "text-md-right text-sm-left";
+$textOrientation = 'text-md-right text-sm-left';
 
-$arrayKeys = array_keys ($columns);
+$arrayKeys = array_keys($columns);
 
 ?>
 
 <div class="row">
     <div class="col-xs-12 col-md-12">
         <div id="hq-sprite" class="justify-content-center">
-            <?php for ($i = 0; $i <= 9; $i += 1) { ?>
+            <?php for($i = 0; $i <= 9; ++$i) { ?>
                 <img class="hq-thumb-<?= $i ?>" alt="HQ <?= ($i + 1) ?>" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEsAAABLAQMAAAACgOipAAAAA1BMVEX///+nxBvIAAAAAXRSTlMAQObYZgAAABBJREFUeNpjYBgFo2AUkAwAAzkAAbSm0MAAAAAASUVORK5CYII=">
             <?php } ?>
         </div>
@@ -29,11 +29,11 @@ $arrayKeys = array_keys ($columns);
 
                     $i = 0;
 
-                    foreach ($columns as $column => $classes) { ?>
+                    foreach($columns as $column => $classes) { ?>
                         <th id="hq-personal-th-<?= $i ?>" class="<?= $classes ?>"><?= $column ?></th>
                         <?php
 
-                        $i += 1;
+                        ++$i;
                     }
 
                     ?>
@@ -41,7 +41,7 @@ $arrayKeys = array_keys ($columns);
                 </thead>
                 <tbody>
 
-                <?php for ($i = 0; $i <= 3; $i += 1) { ?>
+                <?php for($i = 0; $i <= 3; ++$i) { ?>
                     <tr>
                         <td data-th="<?= $arrayKeys[0] ?>">
                             <div class="input-group">
@@ -58,8 +58,8 @@ $arrayKeys = array_keys ($columns);
                 </tbody>
                 <tfoot>
                 <tr>
-                    <td data-th="HQ total cost" class="<?= $textOrientation; ?>" colspan="3" id="hq-content-cost-sum"></td>
-                    <td data-th="HQ total transportation" class="<?= $textOrientation; ?> small text-danger" id="hq-content-transportation-sum"></td>
+                    <td data-th="HQ total cost" class="<?= $textOrientation ?>" colspan="3" id="hq-content-cost-sum"></td>
+                    <td data-th="HQ total transportation" class="<?= $textOrientation ?> small text-danger" id="hq-content-transportation-sum"></td>
                 </tr>
                 </tfoot>
             </table>

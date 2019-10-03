@@ -1,6 +1,6 @@
 <?php
 
-$textOrientation = "text-md-right text-sm-left";
+$textOrientation = 'text-md-right text-sm-left';
 
 ?>
 

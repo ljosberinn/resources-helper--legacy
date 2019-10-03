@@ -1,15 +1,15 @@
 <?php
 
-$textOrientation = "text-md-right text-sm-left";
+$textOrientation = 'text-md-right text-sm-left';
 
 $columns = [
-    "Attacked player (level)" => "sorttable_nosort",
-    "Timestamp & position"    => "sorttable_nosort",
-    "Units lost"              => "text-sm-left text-md-center sorttable_nosort",
-    "Units destroyed"         => "text-sm-left text-md-center sorttable_nosort",
-    "Loot factor"             => $textOrientation,
-    "Loot"                    => "sorttable_nosort",
-    "Profit"                  => $textOrientation,
+    'Attacked player (level)' => 'sorttable_nosort',
+    'Timestamp & position'    => 'sorttable_nosort',
+    'Units lost'              => 'text-sm-left text-md-center sorttable_nosort',
+    'Units destroyed'         => 'text-sm-left text-md-center sorttable_nosort',
+    'Loot factor'             => $textOrientation,
+    'Loot'                    => 'sorttable_nosort',
+    'Profit'                  => $textOrientation,
 ];
 
 ?>
@@ -41,11 +41,11 @@ $columns = [
 
         $i = 0;
 
-        foreach ($columns as $column => $classes) { ?>
+        foreach($columns as $column => $classes) { ?>
             <th id="attacklog-detail-th-<?= $i ?>" class="<?= $classes ?>"><?= $column ?></th>
             <?php
 
-            $i += 1;
+            ++$i;
         }
 
         ?>

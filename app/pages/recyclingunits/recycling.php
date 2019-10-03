@@ -1,17 +1,17 @@
 <?php
 
 $columns = [
-    "Loot"           => $textOrientation . " sorttable_nosort",
-    "required/cycle" => $textOrientation,
-    "Products"       => $textOrientation . " sorttable_nosort",
-    "Input worth"    => $textOrientation,
-    "Output worth"   => $textOrientation,
-    "Profit"         => $textOrientation,
+    'Loot'           => $textOrientation . ' sorttable_nosort',
+    'required/cycle' => $textOrientation,
+    'Products'       => $textOrientation . ' sorttable_nosort',
+    'Input worth'    => $textOrientation,
+    'Output worth'   => $textOrientation,
+    'Profit'         => $textOrientation,
 ];
 
-$arrayKeys = array_keys ($columns);
+$arrayKeys = array_keys($columns);
 
-$textOrientation = "text-md-right text-sm-left";
+$textOrientation = 'text-md-right text-sm-left';
 
 ?>
 
@@ -25,10 +25,10 @@ $textOrientation = "text-md-right text-sm-left";
 
         $i = 0;
 
-        foreach ($columns as $column => $classes) { ?>
+        foreach($columns as $column => $classes) { ?>
             <th id="recycling-th-<?= $i ?>" class="<?= $classes ?>"><?= $column ?></th>
             <?php
-            $i += 1;
+            ++$i;
         }
 
         ?>
@@ -38,10 +38,10 @@ $textOrientation = "text-md-right text-sm-left";
 
     <?php
 
-    for ($i = 0; $i <= 15; $i += 1) {
+    for($i = 0; $i <= 15; ++$i) {
 
         // skip tech upgrades and giant diamonds
-        if ($i === 4 || $i >= 10 && $i <= 13) {
+        if($i === 4 || $i >= 10 && $i <= 13) {
             continue;
         }
 

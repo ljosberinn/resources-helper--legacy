@@ -8,19 +8,19 @@
         <?php
 
         $icons = [
-            "map",
-            "table",
-            "chart",
-            "flow",
-            "piechart",
-            "pencil",
+            'map',
+            'table',
+            'chart',
+            'flow',
+            'piechart',
+            'pencil',
         ];
 
-        foreach ($icons as $icon) {
-            ${"" . $icon . ""} = "<span>" . file_get_contents ("assets/img/icons/" . $icon . ".svg") . "</span>";
+        foreach($icons as $icon) {
+            ${'' . $icon . ''} = '<span>' . file_get_contents('assets/img/icons/' . $icon . '.svg') . '</span>';
         }
 
-        if (!isset($_SESSION["id"])) { ?>
+        if(!isset($_SESSION['id'])) { ?>
             <li class="nav-item">
                 <a class="nav-link" href="#registrationlogin" data-target="module-registrationlogin"><span><?= $pencil ?></span> Registration & Login</a>
             </li>
@@ -28,107 +28,105 @@
         }
 
         $navigationTabs = [
-            "API"                => [
-                "href" => "api",
+            'API'                => [
+                'href' => 'api',
             ],
-            "Mines"              => [
-                "href"      => "mines",
-                "spanClass" => "nav-icon-mines",
+            'Mines'              => [
+                'href'      => 'mines',
+                'spanClass' => 'nav-icon-mines',
             ],
-            "Factories"          => [
-                "href"      => "factories",
-                "class"     => "active",
-                "spanClass" => "nav-icon-factories",
+            'Factories'          => [
+                'href'      => 'factories',
+                'class'     => 'active',
+                'spanClass' => 'nav-icon-factories',
             ],
-            "Calc"               => [
-                "href" => "diamond",
-                "img"  => "<span><img src='assets/img/icons/gd.png' alt='Giant diamond' /></span>",
+            'Calc'               => [
+                'href' => 'diamond',
+                'img'  => "<span><img src='assets/img/icons/gd.png' alt='Giant diamond' /></span>",
             ],
-            "Material Flow"      => [
-                "href" => "flow",
-                "icon" => $flow,
+            'Material Flow'      => [
+                'href' => 'flow',
+                'icon' => $flow,
             ],
-            "Warehouses"         => [
-                "href"      => "warehouses",
-                "spanClass" => "nav-icon-warehouses",
+            'Warehouses'         => [
+                'href'      => 'warehouses',
+                'spanClass' => 'nav-icon-warehouses',
             ],
-            "Special Buildings"  => [
-                "href"      => "buildings",
-                "spanClass" => "nav-icon-buildings",
+            'Special Buildings'  => [
+                'href'      => 'buildings',
+                'spanClass' => 'nav-icon-buildings',
             ],
-            "Recycling & Units"  => [
-                "href" => "recyclingunits",
-                "icon" => $table,
+            'Recycling & Units'  => [
+                'href' => 'recyclingunits',
+                'icon' => $table,
             ],
-            "Tech-Upgrades"      => [
-                "href" => "techupgrades",
-                "icon" => $table,
+            'Tech-Upgrades'      => [
+                'href' => 'techupgrades',
+                'icon' => $table,
             ],
-            "Headquarter"        => [
-                "href"      => "headquarter",
-                "spanClass" => "nav-icon-headquarter",
+            'Headquarter'        => [
+                'href'      => 'headquarter',
+                'spanClass' => 'nav-icon-headquarter',
             ],
-            "Missions"           => [
-                "href"      => "missions",
-                "spanClass" => "nav-icon-missions",
-                "login"     => "required",
+            'Missions'           => [
+                'href'      => 'missions',
+                'spanClass' => 'nav-icon-missions',
+                'login'     => 'required',
             ],
-            "Trade Log"          => [
-                "href"  => "tradelog",
-                "icon"  => $piechart,
-                "login" => "required",
+            'Trade Log'          => [
+                'href'  => 'tradelog',
+                'icon'  => $piechart,
+                'login' => 'required',
             ],
-            "Attack Log"         => [
-                "href"  => "attacklog",
-                "icon"  => $table,
-                "login" => "required",
+            'Attack Log'         => [
+                'href'  => 'attacklog',
+                'icon'  => $table,
+                'login' => 'required',
             ],
-            "Maps"               => [
-                "href" => "maps",
-                "icon" => $map,
+            'Maps'               => [
+                'href' => 'maps',
+                'icon' => $map,
             ],
-            "Price History"      => [
-                "href" => "pricehistory",
-                "icon" => $chart,
+            'Price History'      => [
+                'href' => 'pricehistory',
+                'icon' => $chart,
             ],
-            "Quality Comparator" => [
-                "href"      => "qualitycomparator",
-                "spanClass" => "nav-icon-qualitycomparator",
+            'Quality Comparator' => [
+                'href'      => 'qualitycomparator',
+                'spanClass' => 'nav-icon-qualitycomparator',
             ],
-            "Leaderboard"        => [
-                "href"      => "leaderboard",
-                "spanClass" => "nav-icon-leaderboard",
+            'Leaderboard'        => [
+                'href'      => 'leaderboard',
+                'spanClass' => 'nav-icon-leaderboard',
             ],
-            "Discord"            => [
-                "href"      => "discord",
-                "spanClass" => "nav-icon-discord",
+            'Discord'            => [
+                'href'      => 'discord',
+                'spanClass' => 'nav-icon-discord',
             ],
-            "Changelog"          => [
-                "href"      => "changelog",
-                "spanClass" => "nav-icon-changelog",
+            'Changelog'          => [
+                'href'      => 'changelog',
+                'spanClass' => 'nav-icon-changelog',
             ],
         ];
 
-        foreach ($navigationTabs as $text => $subInfo) {
+        foreach($navigationTabs as $text => $subInfo) {
 
-            if ($subInfo["login"] && !isset($_SESSION["id"])) {
+            if(!isset($_SESSION['id']) && $subInfo['login']) {
                 continue;
             }
 
-            if ($subInfo["icon"]) {
-                $img = $subInfo["icon"];
+            if($subInfo['icon']) {
+                $img = $subInfo['icon'];
+            } elseif($subInfo['img']) {
+                $img = $subInfo['img'];
             } else {
-                if ($subInfo["img"]) {
-                    $img = $subInfo["img"];
-                } else {
-                    $img = '<span class="' . $subInfo["spanClass"] . '"></span>';
-                }
+                $img = '<span class="' . $subInfo['spanClass'] . '"></span>';
             }
 
             ?>
             <li class="nav-item">
-                <a class="nav-link <?= $subInfo[" class"] ?>" id="nav-<?= $subInfo["href"] ?>" data-target="module-<?= $subInfo["href"] ?>" href="#<?= $subInfo["href"] ?>">
-                    <?= $img ?> <span id="nav-<?= $subInfo[" href"] ?>-txt"><?= $text ?></span>
+                <a class="nav-link <?= $subInfo[' class'] ?>" id="nav-<?= $subInfo['href'] ?>" data-target="module-<?= $subInfo['href'] ?>" href="#<?= $subInfo['href'] ?>">
+                    <?= $img ?> <span id="nav-<?= $subInfo[' href'] ?>-txt"><?= $text ?></span>
                 </a>
             </li>
         <?php } ?>

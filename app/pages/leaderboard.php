@@ -2,32 +2,32 @@
 
 <?php
 
-$textOrientation = "text-md-right text-sm-left";
+$textOrientation = 'text-md-right text-sm-left';
 
 $columns = [
-    "Player (hover for details)"        => "sorttable_nosort",
-    "Points per day (total points)"     => $textOrientation,
-    "Factory upgrades"                  => $textOrientation,
-    "Amount of mines"                   => $textOrientation,
-    "Mines within HQ radius"            => $textOrientation,
-    "Mine income"                       => $textOrientation,
-    "Trade income per day"              => $textOrientation,
-    "Bought goods for..."               => $textOrientation,
-    "Sold goods for..."                 => $textOrientation,
-    "Sold goods to KI for..."           => $textOrientation,
-    "Company worth (hover for details)" => $textOrientation,
+    'Player (hover for details)'        => 'sorttable_nosort',
+    'Points per day (total points)'     => $textOrientation,
+    'Factory upgrades'                  => $textOrientation,
+    'Amount of mines'                   => $textOrientation,
+    'Mines within HQ radius'            => $textOrientation,
+    'Mine income'                       => $textOrientation,
+    'Trade income per day'              => $textOrientation,
+    'Bought goods for...'               => $textOrientation,
+    'Sold goods for...'                 => $textOrientation,
+    'Sold goods to KI for...'           => $textOrientation,
+    'Company worth (hover for details)' => $textOrientation,
 ];
 
 $unitInformation = [
-    "E" => 18,
-    "P" => 15,
-    "T" => 12,
-    "G" => 9,
-    "M" => 6,
-    "k" => 3,
+    'E' => 18,
+    'P' => 15,
+    'T' => 12,
+    'G' => 9,
+    'M' => 6,
+    'k' => 3,
 ];
 
-$arrayKeys = array_keys ($columns);
+$arrayKeys = array_keys($columns);
 
 ?>
 
@@ -37,7 +37,7 @@ $arrayKeys = array_keys ($columns);
 
     <p class="lead text-center">Unit information:
 
-        <?php foreach ($unitInformation as $unit => $exponent) { ?>
+        <?php foreach($unitInformation as $unit => $exponent) { ?>
             <?= $unit ?> <span class="small">(10<sup><?= $exponent ?></sup></span>
         <?php } ?>
 
@@ -53,10 +53,10 @@ $arrayKeys = array_keys ($columns);
 
                     $i = 0;
 
-                    foreach ($columns as $column => $specialClasses) { ?>
+                    foreach($columns as $column => $specialClasses) { ?>
                         <th id="leaderboard-th-<?= $i ?>" class="<?= $specialClasses ?>"><?= $column ?></th>
                         <?php
-                        $i += 1;
+                        ++$i;
                     }
 
                     ?>

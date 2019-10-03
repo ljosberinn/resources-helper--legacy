@@ -2,22 +2,22 @@
 
 <?php
 
-$textOrientation = "text-md-right text-sm-left";
+$textOrientation = 'text-md-right text-sm-left';
 
 $columns = [
-    "Mission"                 => "sorttable_nosort",
-    "Goal"                    => "sorttable_nosort " . $textOrientation,
-    "Cooldown"                => $textOrientation,
-    "Time to complete (days)" => $textOrientation,
-    "Reward"                  => "sorttable_nosort",
-    "Profit"                  => $textOrientation,
-    "Progress"                => "sorttable_nosort",
-    "Started at..."           => $textOrientation,
-    "Ends in... (days)"       => $textOrientation,
-    "Penalty"                 => $textOrientation,
+    'Mission'                 => 'sorttable_nosort',
+    'Goal'                    => 'sorttable_nosort ' . $textOrientation,
+    'Cooldown'                => $textOrientation,
+    'Time to complete (days)' => $textOrientation,
+    'Reward'                  => 'sorttable_nosort',
+    'Profit'                  => $textOrientation,
+    'Progress'                => 'sorttable_nosort',
+    'Started at...'           => $textOrientation,
+    'Ends in... (days)'       => $textOrientation,
+    'Penalty'                 => $textOrientation,
 ];
 
-$arrayKeys = array_keys ($columns);
+$arrayKeys = array_keys($columns);
 
 ?>
 
@@ -37,12 +37,12 @@ $arrayKeys = array_keys ($columns);
 
                     $i = 0;
 
-                    foreach ($columns as $column => $specialClasses) { ?>
+                    foreach($columns as $column => $specialClasses) { ?>
                         <th id="mission-th-<?= $i ?>" class="<?= $specialClasses ?>">
                             <?= $column ?>
                         </th>
                         <?php
-                        $i += 1;
+                        ++$i;
                     }
 
                     ?>
@@ -55,26 +55,26 @@ $arrayKeys = array_keys ($columns);
 
                 $missions = [];
 
-                $getExistingMissionsQuery = "SELECT `id`, `title`, `objective1`, `objective2` FROM `missions`";
-                $getExistingMissions      = $conn->query ($getExistingMissionsQuery);
+                $getExistingMissionsQuery = 'SELECT `id`, `title`, `objective1`, `objective2` FROM `missions`';
+                $getExistingMissions      = $conn->query($getExistingMissionsQuery);
 
-                if ($getExistingMissions->num_rows > 0) {
-                    while ($mission = $getExistingMissions->fetch_assoc ()) {
-                        $missions[$mission["id"]]["name"]       = $mission["title"];
-                        $missions[$mission["id"]]["objectives"] = [$mission["objective1"], $mission["objective2"]];
+                if($getExistingMissions->num_rows > 0) {
+                    while($mission = $getExistingMissions->fetch_assoc()) {
+                        $missions[$mission['id']]['name']       = $mission['title'];
+                        $missions[$mission['id']]['objectives'] = [$mission['objective1'], $mission['objective2']];
                     }
                 }
 
-                foreach ($missions as $missionId => $subObj) { ?>
+                foreach($missions as $missionId => $subObj) { ?>
                     <tr id="mission-<?= $missionId ?>">
                         <td data-th="<?= $arrayKeys[0] ?>">
                             <span class="rounded img-fluid resources-missions-<?= $missionId ?>"></span>
-                            <span class="ml-1"><?= $subObj["name"] ?></span>
+                            <span class="ml-1"><?= $subObj['name'] ?></span>
                         </td>
                         <td data-th="<?= $arrayKeys[1] ?>" class="<?= $textOrientation ?>">
-                            <?= $subObj["objectives"][0] ?>
+                            <?= $subObj['objectives'][0] ?>
                             <span id="mission-goal-<?= $missionId ?>"></span>
-                            <?= $subObj["objectives"][1] ?>
+                            <?= $subObj['objectives'][1] ?>
                         </td>
                         <td data-th="<?= $arrayKeys[2] ?>" class="<?= $textOrientation ?>" id="mission-interval-<?= $missionId ?>"></td>
                         <td data-th="<?= $arrayKeys[3] ?>" class="<?= $textOrientation ?>" id="mission-duration-<?= $missionId ?>"></td>

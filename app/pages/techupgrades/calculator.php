@@ -1,6 +1,6 @@
 <?php
 
-$textOrientation = "text-md-right text-sm-left";
+$textOrientation = 'text-md-right text-sm-left';
 
 ?>
 
@@ -32,7 +32,7 @@ $textOrientation = "text-md-right text-sm-left";
         <span class="rhombuses-circle"></span>
         <span class="rhombuses-circle"></span>
       </span>
-      <span id="techupgrades-finished"><?php echo file_get_contents ("assets/img/icons/success.svg"); ?></span>
+      <span id="techupgrades-finished"><?php echo file_get_contents('assets/img/icons/success.svg'); ?></span>
     </span>
         </div>
 

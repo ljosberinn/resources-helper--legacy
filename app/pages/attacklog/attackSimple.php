@@ -1,16 +1,16 @@
 <?php
 
-$textOrientation = "text-md-right text-sm-left";
+$textOrientation = 'text-md-right text-sm-left';
 
 $columns = [
-    "Attacked player (last known level)"                      => "sorttable_nosort",
-    "Last attack"                                             => "sorttable_nosort",
-    "Total attacks (Win %)"                                   => $textOrientation . " sorttable_nosort",
-    "Win"                                                     => $textOrientation,
-    "Loss"                                                    => $textOrientation,
-    "Average loot factor"                                     => $textOrientation,
-    "Average amount of units required to win against 200/5/2" => "sorttable_nosort",
-    "Profit"                                                  => $textOrientation,
+    'Attacked player (last known level)'                      => 'sorttable_nosort',
+    'Last attack'                                             => 'sorttable_nosort',
+    'Total attacks (Win %)'                                   => $textOrientation . ' sorttable_nosort',
+    'Win'                                                     => $textOrientation,
+    'Loss'                                                    => $textOrientation,
+    'Average loot factor'                                     => $textOrientation,
+    'Average amount of units required to win against 200/5/2' => 'sorttable_nosort',
+    'Profit'                                                  => $textOrientation,
 ];
 
 ?>
@@ -23,10 +23,10 @@ $columns = [
 
         $i = 0;
 
-        foreach ($columns as $column => $classes) { ?>
+        foreach($columns as $column => $classes) { ?>
             <th id="attacklog-simple-th-<?= $i ?>" class="<?= $classes ?>"><?= $column ?></th>
             <?php
-            $i += 1;
+            ++$i;
         }
 
         ?>

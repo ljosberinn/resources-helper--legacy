@@ -7,24 +7,24 @@
 
         <input required type="email" class="form-control" id="login-mail" name="login-mail"
 
-        <?php
+            <?php
 
-        if (isset($_GET["passwordResetSuccess"]) || isset($_GET["successfulRegistration"]) || isset($_COOKIE["returningUser"])) {
-            $possibleValues = [
-                $_GET["passwordResetSuccess"],
-                $_GET["successfulRegistration"],
-                $_COOKIE["returningUser"],
-            ];
+            if(isset($_GET['passwordResetSuccess']) || isset($_GET['successfulRegistration']) || isset($_COOKIE['returningUser'])) {
+                $possibleValues = [
+                    $_GET['passwordResetSuccess'],
+                    $_GET['successfulRegistration'],
+                    $_COOKIE['returningUser'],
+                ];
 
-            foreach ($possibleValues as $value) {
-                if (!empty($value)) {
-                    echo 'value="' .$value. '"';
+                foreach($possibleValues as $value) {
+                    if(!empty($value)) {
+                        echo 'value="' . $value . '"';
+                    }
                 }
             }
-        }
 
-        ?>
-        placeholder="Login mail" />
+            ?>
+               placeholder="Login mail"/>
     </div>
 
     <div class="form-group">

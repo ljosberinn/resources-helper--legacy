@@ -3,20 +3,20 @@
 <?php
 
 $columns = [
-    "Factory"                       => "sorttable_nosort",
-    "Factory Level"                 => "sorttable_nosort",
-    "Product"                       => "sorttable_nosort",
-    "Dependencies"                  => "sorttable_nosort",
-    "Workload"                      => "sorttable_numeric",
-    "Turnover"                      => "",
-    "Turnover Increase per Upgrade" => "",
-    "Upgrade Cost"                  => "",
-    "Return on Investment"          => "",
+    'Factory'                       => 'sorttable_nosort',
+    'Factory Level'                 => 'sorttable_nosort',
+    'Product'                       => 'sorttable_nosort',
+    'Dependencies'                  => 'sorttable_nosort',
+    'Workload'                      => 'sorttable_numeric',
+    'Turnover'                      => '',
+    'Turnover Increase per Upgrade' => '',
+    'Upgrade Cost'                  => '',
+    'Return on Investment'          => '',
 ];
 
-$textOrientation = "text-md-right text-sm-left";
+$textOrientation = 'text-md-right text-sm-left';
 
-$arrayKeys = array_keys ($columns);
+$arrayKeys = array_keys($columns);
 
 ?>
 
@@ -36,13 +36,13 @@ $arrayKeys = array_keys ($columns);
 
                     $i = 0;
 
-                    foreach ($columns as $column => $specialClasses) { ?>
+                    foreach($columns as $column => $specialClasses) { ?>
                         <th id="factories-th-<?= $i ?>" class="<?= $textOrientation ?> <?= $specialClasses ?>">
                             <?= $column ?>
                         </th>
                         <?php
 
-                        $i += 1;
+                        ++$i;
                     }
 
                     ?>
@@ -51,7 +51,7 @@ $arrayKeys = array_keys ($columns);
                 </thead>
                 <tbody>
 
-                <?php for ($i = 0; $i <= 21; $i += 1) { ?>
+                <?php for($i = 0; $i <= 21; ++$i) { ?>
                     <tr>
                         <td data-th="<?= $arrayKeys[0] ?>" class="<?= $textOrientation ?>">
                             <span class="resources-factories-<?= $i ?>"></span>

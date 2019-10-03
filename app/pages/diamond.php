@@ -2,18 +2,18 @@
 
 <?php
 
-$textOrientation = "text-md-right text-sm-left";
+$textOrientation = 'text-md-right text-sm-left';
 
 $columns = [
-    "Factory"                                 => $textOrientation . " sorttable_nosort",
-    "Factory Level"                           => $textOrientation . " sorttable_nosort",
-    "Product & required Warehouse level"      => $textOrientation . " sorttable_nosort",
-    "Dependencies & required Warehouse level" => "sorttable_nosort",
-    "Efficiency"                              => $textOrientation,
-    "Profit"                                  => $textOrientation,
+    'Factory'                                 => $textOrientation . ' sorttable_nosort',
+    'Factory Level'                           => $textOrientation . ' sorttable_nosort',
+    'Product & required Warehouse level'      => $textOrientation . ' sorttable_nosort',
+    'Dependencies & required Warehouse level' => 'sorttable_nosort',
+    'Efficiency'                              => $textOrientation,
+    'Profit'                                  => $textOrientation,
 ];
 
-$arrayKeys = array_keys ($columns);
+$arrayKeys = array_keys($columns);
 
 ?>
 
@@ -33,12 +33,12 @@ $arrayKeys = array_keys ($columns);
 
                     $i = 0;
 
-                    foreach ($columns as $column => $classes) { ?>
+                    foreach($columns as $column => $classes) { ?>
 
                         <th id="diamond-th-<?= $i ?>" class="<?= $classes ?>"><?= $column ?></th>
                         <?php
 
-                        $i += 1;
+                        ++$i;
                     }
 
                     ?>
@@ -46,7 +46,7 @@ $arrayKeys = array_keys ($columns);
                 </thead>
                 <tbody>
 
-                <?php for ($i = 0; $i <= 21; $i += 1) { ?>
+                <?php for($i = 0; $i <= 21; ++$i) { ?>
                     <tr>
                         <td data-th="<?= $arrayKeys[0] ?>">
                             <span class="resources-factories-<?= $i ?>"></span>

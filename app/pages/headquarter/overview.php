@@ -1,16 +1,16 @@
 <?php
 
 $columns = [
-    "Level"                      => $textOrientation,
-    "Required resource & amount" => $textOrientation,
-    "Total cost"                 => $textOrientation,
-    "Transportation"             => $textOrientation,
-    "Radius"                     => $textOrientation,
-    "Boost"                      => $textOrientation,
+    'Level'                      => $textOrientation,
+    'Required resource & amount' => $textOrientation,
+    'Total cost'                 => $textOrientation,
+    'Transportation'             => $textOrientation,
+    'Radius'                     => $textOrientation,
+    'Boost'                      => $textOrientation,
 ];
 
-$textOrientation = "text-md-right text-sm-left";
-$arrayKeys       = array_keys ($columns);
+$textOrientation = 'text-md-right text-sm-left';
+$arrayKeys       = array_keys($columns);
 
 ?>
 
@@ -25,10 +25,10 @@ $arrayKeys       = array_keys ($columns);
 
                 $i = 0;
 
-                foreach ($columns as $column => $classes) { ?>
+                foreach($columns as $column => $classes) { ?>
                     <th id="hq-general-th-<?= $i ?>" class="<?= $classes ?>"><?= $column ?></th>
                     <?php
-                    $i += 1;
+                    ++$i;
                 }
 
                 ?>
@@ -36,7 +36,7 @@ $arrayKeys       = array_keys ($columns);
             </thead>
             <tbody>
 
-            <?php for ($i = 0; $i <= 9; $i += 1) { ?>
+            <?php for($i = 0; $i <= 9; ++$i) { ?>
                 <tr>
                     <td data-th="<?= $arrayKeys[0] ?>" class="<?= $textOrientation ?>"><?= ($i + 1) ?></td>
                     <td data-th="<?= $arrayKeys[1] ?>" class="<?= $textOrientation ?>" id="hq-ovw-mat-<?= $i ?>"></td>

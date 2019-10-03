@@ -2,7 +2,7 @@
 
 <?php
 
-$textOrientation = "text-md-right text-sm-left";
+$textOrientation = 'text-md-right text-sm-left';
 
 ?>
 
@@ -24,7 +24,7 @@ $textOrientation = "text-md-right text-sm-left";
         </thead>
         <tbody>
 
-        <?php for ($i = 0; $i <= 13; $i += 1) { ?>
+        <?php for($i = 0; $i <= 13; ++$i) { ?>
             <tr>
                 <td data-th="Rate/hour">
                     <span class="resources-material-<?= $i ?>"></span>
@@ -61,7 +61,7 @@ $textOrientation = "text-md-right text-sm-left";
 
         <?php
 
-        for ($i = 0; $i <= 21; $i += 1) { ?>
+        for($i = 0; $i <= 21; ++$i) { ?>
             <tr>
                 <td data-th="Effective rate/hour">
                     <span class="resources-product-<?= $i ?>"></span>

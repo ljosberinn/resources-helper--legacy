@@ -3,7 +3,7 @@
     <!-- SETTING PAGE LANGUAGE -->
     <div class="form-group">
         <label class="text-success" for="settings-language">
-            <strong><?php echo file_get_contents ("assets/img/icons/text.svg"); ?> <span id="settings-language-header">Language</span></strong>
+            <strong><?php echo file_get_contents('assets/img/icons/text.svg'); ?> <span id="settings-language-header">Language</span></strong>
         </label>
 
         <br/>
@@ -13,13 +13,13 @@
 
             <?php
 
-            $languageQuery = "SELECT * FROM `languages` WHERE `active` = 1 ORDER BY `short` ASC";
-            $getLanguages  = $conn->query ($languageQuery);
+            $languageQuery = 'SELECT * FROM `languages` WHERE `active` = 1 ORDER BY `short`';
+            $getLanguages  = $conn->query($languageQuery);
 
-            if ($getLanguages->num_rows > 0) {
-                while ($language = $getLanguages->fetch_assoc ()) {
+            if($getLanguages->num_rows > 0) {
+                while($language = $getLanguages->fetch_assoc()) {
                     ?>
-                    <option value="<?= $language["id"] ?>"><?= $language["short"] ?> | <?= $language["name"] ?></option>
+                    <option value="<?= $language['id'] ?>"><?= $language['short'] ?> | <?= $language['name'] ?></option>
                     <?php
                 }
             } else { ?>
@@ -42,7 +42,7 @@
 
         <br/>
 
-        <?php for ($i = 1; $i <= 4; $i += 1) { ?>
+        <?php for($i = 1; $i <= 4; ++$i) { ?>
             <div class="input-group mb-1 mt-1">
                 <div class="input-group-addon resources-loot-1<?= ($i - 1) ?>" id="custom-tu-desc-<?= $i ?>"></div>
 
@@ -141,7 +141,7 @@
 
     <div class="form-group">
         <label class="text-success" for="settings-price-age">
-            <strong><?php echo file_get_contents ("assets/img/icons/numbers.svg"); ?> <span id="settings-price-age-txt">Price Age selection</span></strong>
+            <strong><?php echo file_get_contents('assets/img/icons/numbers.svg'); ?> <span id="settings-price-age-txt">Price Age selection</span></strong>
         </label>
 
         <br/>

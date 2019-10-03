@@ -2,7 +2,7 @@
 
 <div class="bg-light mt-3 mb-3 p-4 col-12 rounded" id="module-maps">
 
-    <h6><?= file_get_contents ("assets/img/icons/map.svg") ?> Maps</h6>
+    <h6><?= file_get_contents('assets/img/icons/map.svg') ?> Maps</h6>
     <hr class="mb-3">
 
     <div id="maps-accordion" role="tablist" aria-multiselectable="true" class="col">
@@ -20,9 +20,9 @@
 
                     <?php
 
-                    if (isset($_SESSION["id"])) {
+                    if(isset($_SESSION['id'])) {
 
-                        require_once "app/pages/maps/personalmap.php";
+                        require_once 'app/pages/maps/personalmap.php';
 
                     } else { ?>
                         <span class="text-danger text-center">Sorry, this feature is only available for registered users.</span>
@@ -45,7 +45,7 @@
             <div id="collapse-world-map" class="collapse show" role="tabpanel" aria-labelledby="heading-map-2">
                 <div class="card-block p-4 bg-light">
 
-                    <?php require_once "app/pages/maps/worldmap.php"; ?>
+                    <?php require_once 'app/pages/maps/worldmap.php'; ?>
 
                 </div>
             </div>

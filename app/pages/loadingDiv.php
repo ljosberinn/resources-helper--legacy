@@ -2,9 +2,9 @@
 
     <?php
 
-    $loadingAnimations = glob("assets/img/loadingAnimations/*.svg", GLOB_NOSORT);
+    $loadingAnimations = glob('assets/img/loadingAnimations/*.svg', GLOB_NOSORT);
 
-    require_once $loadingAnimations[array_rand ($loadingAnimations, 1)];
+    require_once $loadingAnimations[array_rand($loadingAnimations, 1)];
 
     ?>
 

@@ -2,7 +2,7 @@
 
 <div class="bg-light mt-3 mb-3 p-4 col-12 rounded" id="module-attacklog">
 
-    <h6><span><?php echo file_get_contents ("assets/img/icons/table.svg"); ?></span> <span id="attacklog-header">Attack Log</span></h6>
+    <h6><span><?php echo file_get_contents('assets/img/icons/table.svg'); ?></span> <span id="attacklog-header">Attack Log</span></h6>
     <hr class="mb-3">
 
     <div id="attacklog-accordion" role="tablist" aria-multiselectable="true" class="col">
@@ -20,7 +20,7 @@
 
                     <?php
 
-                    require_once "app/pages/attacklog/defenseSimple.php";
+                    require_once 'app/pages/attacklog/defenseSimple.php';
 
                     ?>
 
@@ -28,31 +28,27 @@
             </div>
         </div>
 
-        <?php if ($_SESSION['id'] == 1) { ?>
-
-            <div class="card">
-                <div class="card-header bg-dark" role="tab" id="heading-defenselog-detailed">
-                    <h5 class="mb-0">
-                        <a class="collapsed" data-toggle="collapse" data-parent="#attacklog-accordion" href="#collapse-defenselog-detailed" aria-expanded="false" aria-controls="collapse-defenselog-detailed" id="defenselog-detailed-header">
-                            Detailed Defense Log
-                        </a>
-                    </h5>
-                </div>
-
-                <div id="collapse-defenselog-detailed" class="collapse" role="tabpanel" aria-labelledby="heading-defenselog-detailed">
-                    <div class="card-block p-4 bg-light">
-
-                        <?php
-
-                        require_once "app/pages/attacklog/defenseDetailed.php";
-
-                        ?>
-
-                    </div>
-                </div>
+        <div class="card">
+            <div class="card-header bg-dark" role="tab" id="heading-defenselog-detailed">
+                <h5 class="mb-0">
+                    <a class="collapsed" data-toggle="collapse" data-parent="#attacklog-accordion" href="#collapse-defenselog-detailed" aria-expanded="false" aria-controls="collapse-defenselog-detailed" id="defenselog-detailed-header">
+                        Detailed Defense Log
+                    </a>
+                </h5>
             </div>
 
-        <?php } ?>
+            <div id="collapse-defenselog-detailed" class="collapse" role="tabpanel" aria-labelledby="heading-defenselog-detailed">
+                <div class="card-block p-4 bg-light">
+
+                    <?php
+
+                    require_once 'app/pages/attacklog/defenseDetailed.php';
+
+                    ?>
+
+                </div>
+            </div>
+        </div>
 
         <div class="card">
             <div class="card-header bg-dark" role="tab" id="heading-attacklog-1">
@@ -68,7 +64,7 @@
 
                     <?php
 
-                    require_once "app/pages/attacklog/attackSimple.php";
+                    require_once 'app/pages/attacklog/attackSimple.php';
 
                     ?>
 
@@ -91,7 +87,7 @@
 
                     <?php
 
-                    require_once "app/pages/attacklog/attackDetailed.php";
+                    require_once 'app/pages/attacklog/attackDetailed.php';
 
                     ?>
 

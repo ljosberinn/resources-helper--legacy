@@ -3,7 +3,7 @@
     <!-- SETTING CHANGE PASSWORD -->
     <div class="form-group">
         <label class="text-success">
-            <strong><?php echo file_get_contents ("assets/img/icons/security.svg"); ?> <span id="change-pw-txt">Change password</span></strong>
+            <strong><?php echo file_get_contents('assets/img/icons/security.svg'); ?> <span id="change-pw-txt">Change password</span></strong>
         </label>
 
         <br/>
@@ -64,7 +64,7 @@
     <!-- SETTING DELETE ACCOUNT -->
     <div class="form-group">
         <label class="text-success">
-            <strong><?php echo file_get_contents ("assets/img/icons/delete.svg"); ?> <span id="delete-acc-txt">Delete account</span></strong>
+            <strong><?php echo file_get_contents('assets/img/icons/delete.svg'); ?> <span id="delete-acc-txt">Delete account</span></strong>
         </label>
 
         <br/>

@@ -2,19 +2,19 @@
 
 <?php
 
-$textOrientation = "text-md-right text-sm-left";
+$textOrientation = 'text-md-right text-sm-left';
 
 $columns = [
-    "Type & Stock"         => "",
-    "Min. time until full" => "",
-    "Worth"                => "",
-    "Warehouse level"      => "",
-    "Upgrade calculator"   => "",
-    "Upgrade target"       => "",
-    "Upgrade cost"         => "",
+    'Type & Stock'         => '',
+    'Min. time until full' => '',
+    'Worth'                => '',
+    'Warehouse level'      => '',
+    'Upgrade calculator'   => '',
+    'Upgrade target'       => '',
+    'Upgrade cost'         => '',
 ];
 
-$arrayKeys = array_keys ($columns);
+$arrayKeys = array_keys($columns);
 
 ?>
 
@@ -34,11 +34,11 @@ $arrayKeys = array_keys ($columns);
 
                     $i = 0;
 
-                    foreach ($columns as $column => $specialClasses) { ?>
+                    foreach($columns as $column => $specialClasses) { ?>
                         <th id="warehouse-th-<?= $i ?>" class=" <?= $textOrientation ?><?= $specialClasses ?>"><?= $column ?></th>
                         <?php
 
-                        $i += 1;
+                        ++$i;
                     }
 
                     ?>
@@ -51,27 +51,27 @@ $arrayKeys = array_keys ($columns);
                 $trBreak = '
         <tr><td class="table-hr" colspan="7"></td></tr>';
 
-                for ($i = 0; $i < 58; $i += 1) {
+                for($i = 0; $i < 58; ++$i) {
 
-                    if ($i >= 0 && $i <= 13) {
-                        $imgClass = "material";
+                    if($i >= 0 && $i <= 13) {
+                        $imgClass = 'material';
                         $idClass  = $imgClass;
                         $k        = $i;
-                    } elseif ($i >= 14 && $i <= 35) {
-                        $imgClass = "product";
-                        $idClass  = "products";
+                    } elseif($i >= 14 && $i <= 35) {
+                        $imgClass = 'product';
+                        $idClass  = 'products';
                         $k        = $i - 14;
-                    } elseif ($i > 35 && $i < 52) {
-                        $imgClass = "loot";
+                    } elseif($i > 35 && $i < 52) {
+                        $imgClass = 'loot';
                         $idClass  = $imgClass;
                         $k        = $i - 36;
                     } else {
-                        $imgClass = "unit";
-                        $idClass  = "units";
+                        $imgClass = 'unit';
+                        $idClass  = 'units';
                         $k        = $i - 52;
                     }
 
-                    if ($i === 14 || $i === 36 || $i === 52) {
+                    if($i === 14 || $i === 36 || $i === 52) {
                         echo $trBreak;
                     }
 

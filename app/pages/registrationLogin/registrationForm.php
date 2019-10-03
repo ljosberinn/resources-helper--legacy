@@ -91,17 +91,17 @@
 
             <?php
 
-            $languageQuery = "SELECT * FROM `languages` WHERE `active` = 1 ORDER BY `short` ASC";
-            $getLanguages  = $conn->query ($languageQuery);
+            $languageQuery = 'SELECT * FROM `languages` WHERE `active` = 1 ORDER BY `short`';
+            $getLanguages  = $conn->query($languageQuery);
             $langIterator  = 0;
 
-            if ($getLanguages->num_rows > 0) {
-                while ($language = $getLanguages->fetch_assoc ()) {
+            if($getLanguages->num_rows > 0) {
+                while($language = $getLanguages->fetch_assoc()) {
 
                     $selected = $langIterator === 0 ? 'selected' : '';
 
                     ?>
-                    <option <?= $selected ?> value="<?= $language["id"] ?>"><?= $language["short"] ?> | <?= $language["name"] ?></option>
+                    <option <?= $selected ?> value="<?= $language['id'] ?>"><?= $language['short'] ?> | <?= $language['name'] ?></option>
                     <?php
                 }
             } else { ?>

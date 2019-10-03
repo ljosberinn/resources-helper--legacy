@@ -1,16 +1,16 @@
 <?php
 
 $columns = [
-    "Unit"               => $textOrientation . " sorttable_nosort",
-    "Crafting price"     => $textOrientation,
-    "Market price"       => $textOrientation,
-    "Price per strength" => $textOrientation,
-    "Profit"             => $textOrientation,
+    'Unit'               => $textOrientation . ' sorttable_nosort',
+    'Crafting price'     => $textOrientation,
+    'Market price'       => $textOrientation,
+    'Price per strength' => $textOrientation,
+    'Profit'             => $textOrientation,
 ];
 
-$arrayKeys = array_keys ($columns);
+$arrayKeys = array_keys($columns);
 
-$textOrientation = "text-md-right text-sm-left";
+$textOrientation = 'text-md-right text-sm-left';
 
 ?>
 
@@ -24,13 +24,13 @@ $textOrientation = "text-md-right text-sm-left";
 
         $i = 0;
 
-        foreach ($columns as $column => $classes) {
+        foreach($columns as $column => $classes) {
             ?>
 
             <th id="units-th-<?= $i ?>" class="<?= $classes ?>"><?= $column ?></th>
             <?php
 
-            $i += 1;
+            ++$i;
         }
 
         ?>
@@ -41,14 +41,14 @@ $textOrientation = "text-md-right text-sm-left";
 
     <?php
 
-    foreach ([
-                 0,
-                 2,
-                 3,
-                 5,
-                 4,
-                 1,
-             ] as $i) { ?>
+    foreach([
+                0,
+                2,
+                3,
+                5,
+                4,
+                1,
+            ] as $i) { ?>
         <tr>
             <td class="<?= $textOrientation ?>" data-th="<?= $arrayKeys[0] ?>">
                 <span class="resources-unit-<?= $i ?>"></span>

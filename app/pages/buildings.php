@@ -2,7 +2,7 @@
 
 <?php
 
-$textOrientation = "text-md-right text-sm-left";
+$textOrientation = 'text-md-right text-sm-left';
 
 ?>
 
@@ -13,7 +13,7 @@ $textOrientation = "text-md-right text-sm-left";
 
     <div class="row justify-content-center">
 
-        <?php for ($i = 0; $i <= 13; $i += 1) { ?>
+        <?php for($i = 0; $i <= 13; ++$i) { ?>
             <div class="col-sm-12 col-md-8 col-xl-4 rounded m-2 p-2" id="building-<?= $i ?>">
                 <table class="table table-break-medium table-striped mb-3">
                     <thead>
@@ -22,7 +22,7 @@ $textOrientation = "text-md-right text-sm-left";
                         <th colspan="2"><span id="buildings-name-<?= $i ?>"></span></th>
                         <th class="text-right">
                             <select class="custom-select" id="buildings-level-<?= $i ?>">
-                                <?php for ($k = 0; $k <= 10; $k += 1) { ?>
+                                <?php for($k = 0; $k <= 10; ++$k) { ?>
                                     <option value="<?= $k ?>">Level <?= $k ?></option>
                                 <?php } ?>
                             </select>

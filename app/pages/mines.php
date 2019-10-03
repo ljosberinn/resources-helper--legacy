@@ -3,20 +3,20 @@
 <?php
 
 $columns = [
-    "Mine type"                  => "sorttable_nosort",
-    "Your rate per hour"         => "sorttable_nosort",
-    "Your amount of mines"       => "sorttable_nosort",
-    "Worth @ 100% condition"     => "",
-    "Mine price"                 => "",
-    "100% quality income"        => "",
-    "Return on Investment: 100%" => "",
-    "505%"                       => "",
-    "505% + your HQ level"       => "",
+    'Mine type'                  => 'sorttable_nosort',
+    'Your rate per hour'         => 'sorttable_nosort',
+    'Your amount of mines'       => 'sorttable_nosort',
+    'Worth @ 100% condition'     => '',
+    'Mine price'                 => '',
+    '100% quality income'        => '',
+    'Return on Investment: 100%' => '',
+    '505%'                       => '',
+    '505% + your HQ level'       => '',
 ];
 
-$textOrientation = "text-md-right text-sm-left";
+$textOrientation = 'text-md-right text-sm-left';
 
-$arrayKeys = array_keys ($columns);
+$arrayKeys = array_keys($columns);
 
 ?>
 
@@ -35,13 +35,13 @@ $arrayKeys = array_keys ($columns);
 
                     $i = 0;
 
-                    foreach ($columns as $row => $specialClasses) { ?>
+                    foreach($columns as $row => $specialClasses) { ?>
                         <th id="mines-th-<?= $i ?>" class="<?= $textOrientation ?> <?= $specialClasses ?>">
                             <?= $row ?>
                         </th>
                         <?php
 
-                        $i += 1;
+                        ++$i;
                     }
 
                     ?>
@@ -49,7 +49,7 @@ $arrayKeys = array_keys ($columns);
                 </thead>
                 <tbody>
 
-                <?php for ($i = 0; $i <= 13; $i += 1) { ?>
+                <?php for($i = 0; $i <= 13; ++$i) { ?>
                     <tr>
                         <td class="<?= $textOrientation ?>" data-th="<?= $arrayKeys[0] ?>">
                             <span class="resources-material-<?= $i ?>"></span>
