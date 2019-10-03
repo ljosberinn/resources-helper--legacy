@@ -45,7 +45,7 @@
 <!-- Google+ page description -->
 <meta itemprop="name" content="Resources Helper"/>
 <meta itemprop="description" content="Resources Helper is your go-to calculator for Resources mobile GPS real-time economy simulation"/>
-<meta itemprop="lastReviewed" content="2018-11-07"/>
+<meta itemprop="lastReviewed" content="2019-10-03"/>
 
 <!-- Twitter page description -->
 <meta name="twitter:card" content="summary_large_image"/>
@@ -113,15 +113,15 @@ appendFiles ($cssFiles);
 <?php } ?>
 
 <!-- JS external -->
-<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-<script async src="https://cdn.jsdelivr.net/npm/sweetalert2@7.13.3/dist/sweetalert2.min.js" integrity="sha384-Y9tUtxNOtZ6td2fohELS1rJiv9Ktkpt6RVox+UOGikRop45QwDrzTAaUe6zsZdQ1" crossorigin="anonymous"></script>
-<script async src="https://unpkg.com/tippy.js@2.2.3/dist/tippy.all.min.js" integrity="sha384-7iCQEHkOskB8DnHBeVzB1nkyndqNZ1Tk7C4tc4hQkeSJpLDJ1CJWxmCPtnM6WoQ8" crossorigin="anonymous"></script>
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js" defer></script>
-<script src="https://code.highcharts.com/highcharts-more.js"></script>
-<script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7JN_jcvNN6DmE87oBDzLluIMZsvrF0zw" async></script>
-<script src="https://unpkg.com/sticky-table-headers"></script>
+<script src="//code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script async src="//cdn.jsdelivr.net/npm/sweetalert2@7.13.3/dist/sweetalert2.min.js" integrity="sha384-Y9tUtxNOtZ6td2fohELS1rJiv9Ktkpt6RVox+UOGikRop45QwDrzTAaUe6zsZdQ1" crossorigin="anonymous"></script>
+<script async src="//unpkg.com/tippy.js@2.2.3/dist/tippy.all.min.js" integrity="sha384-7iCQEHkOskB8DnHBeVzB1nkyndqNZ1Tk7C4tc4hQkeSJpLDJ1CJWxmCPtnM6WoQ8" crossorigin="anonymous"></script>
+<script src="//code.highcharts.com/highcharts.js"></script>
+<script src="//code.highcharts.com/modules/exporting.js" defer></script>
+<script src="//code.highcharts.com/highcharts-more.js"></script>
+<script src="//code.highcharts.com/modules/solid-gauge.js"></script>
+<script src="//maps.googleapis.com/maps/api/js?key=AIzaSyD7JN_jcvNN6DmE87oBDzLluIMZsvrF0zw" async></script>
+<script src="//unpkg.com/sticky-table-headers"></script>
 
 <!-- JS internal -->
 <?php
